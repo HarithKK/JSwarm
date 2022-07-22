@@ -1,0 +1,168 @@
+package org.usa.soc.core;
+
+/*
+This is the position vector
+ */
+
+import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Smoother;
+import org.usa.soc.util.Validator;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Vector {
+
+    private Double [] positionIndexes;
+    private int numberOfDimensions;
+
+    private double maxMagnitude = Double.MAX_VALUE;
+
+    public Vector(int numberOfDimensions) {
+        this.numberOfDimensions = numberOfDimensions;
+        setPositionIndexes(new Double[numberOfDimensions]);
+        resetAllValues(0.0);
+    }
+
+    public void setVector(Vector v){
+        if(v.getNumberOfDimensions() != this.getNumberOfDimensions()){
+            throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
+        }
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = v.positionIndexes[i];
+        }
+    }
+
+    public void setVector(Vector v, double []min, double []max){
+        if(v.getNumberOfDimensions() != this.getNumberOfDimensions()){
+            throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
+        }
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],v.positionIndexes[i]);
+        }
+    }
+
+    public Double[] getPositionIndexes() {
+        return positionIndexes;
+    }
+
+    public void setPositionIndexes(Double[] positionIndexes) {
+        if(positionIndexes.length != this.getNumberOfDimensions()){
+            throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
+        }
+        this.positionIndexes = positionIndexes;
+    }
+
+    public void setValues(Double []values){
+        int count = Math.min(values.length, this.getNumberOfDimensions());
+        for(int i=0; i< count; i++){
+            this.positionIndexes[i] = values[i];
+        }
+    }
+
+    public  void setValue(Double value, int index){
+        if(index >= this.getNumberOfDimensions()){
+            throw new ArrayIndexOutOfBoundsException("Index should be less than "+ this.getNumberOfDimensions());
+        }
+
+        this.positionIndexes[index] = value;
+    }
+
+    public Double getValue(int index){
+        return this.positionIndexes[index];
+    }
+
+    public void resetAllValues(Double value){
+        for(int i = 0; i< getNumberOfDimensions(); i++){
+            this.positionIndexes[i] = value;
+        }
+    }
+
+    public int getNumberOfDimensions() {
+        return numberOfDimensions;
+    }
+
+    public Vector operate(OPERATOR o, Double value) {
+        Vector tempV = this.getClonedVector();
+        for(int i=0; i< tempV.numberOfDimensions; i++){
+            Double currentVal = tempV.getValue(i);
+            switch (o){
+                case ADD: tempV.setValue((currentVal+value),i); break;
+                case SUB: tempV.setValue((currentVal-value),i); break;
+                case MULP: tempV.setValue((currentVal*value),i); break;
+                case DIV: tempV.setValue(( value == 0 ? Double.POSITIVE_INFINITY : currentVal/value),i); break;
+            }
+        }
+
+        return Smoother.smooth(tempV, this.maxMagnitude);
+    }
+
+    public Vector operate(OPERATOR o, Vector v) {
+        Vector tempV = this.getClonedVector();
+        for(int i=0; i< tempV.numberOfDimensions; i++){
+            Double currentVal = tempV.getValue(i);
+            Double value = v.getValue(i);
+            switch (o){
+                case ADD: tempV.setValue((currentVal+value),i); break;
+                case SUB: tempV.setValue((currentVal-value),i); break;
+                case MULP: tempV.setValue((currentVal*value),i); break;
+                case DIV: tempV.setValue(( value == 0 ? Double.POSITIVE_INFINITY : currentVal/value),i); break;
+            }
+        }
+        return Smoother.smooth(tempV, this.maxMagnitude);
+    }
+
+    public String toString(){
+        DecimalFormat f = new DecimalFormat("#.000");
+        StringBuilder sb = new StringBuilder();
+        int i=1;
+        for (double d: this.positionIndexes) {
+            sb.append("[").append(i++).append("] : ").append(d).append("\t");
+        }
+        return sb.toString();
+    }
+
+    public List<Double> toAbsList(int round){
+
+        ArrayList<Double> l = new ArrayList<>();
+        double deli = 10 * round;
+        for(Double d :this.positionIndexes){
+            l.add(Mathamatics.absRound(d, round));
+        }
+
+        return l;
+    }
+
+    public List<Double> toList(int round){
+
+        ArrayList<Double> l = new ArrayList<>();
+        double deli = 10 * round;
+        for(Double d :this.positionIndexes){
+            l.add(Mathamatics.round(d, round));
+        }
+
+        return l;
+    }
+
+    public double getMaxMagnitude() {
+        return maxMagnitude;
+    }
+
+    public void setMaxMagnitude(double maxMagnitude) {
+        this.maxMagnitude = maxMagnitude;
+    }
+
+    public enum OPERATOR {
+        ADD,
+        SUB,
+        MULP,
+        DIV
+    }
+
+    public Vector getClonedVector(){
+        Vector v = new Vector(this.numberOfDimensions);
+        v.setVector(this);
+        return v;
+    }
+}
