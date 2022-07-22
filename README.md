@@ -39,7 +39,7 @@ Testing the precision. robustness and general performance of optimization algori
 ### Single Objective
 
 1. Rastrigin function
-2. Ackley function	Ackley's 
+2. Ackley function
 3. Sphere function	
 4. Rosenbrock function	
 5. Beale function
