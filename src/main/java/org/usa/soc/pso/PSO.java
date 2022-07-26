@@ -23,6 +23,8 @@ public class PSO implements IAlgorithm {
 
     private Vector gBest;
 
+    private long nanoDuration;
+
     public PSO(
             ObjectiveFunction<Double> objectiveFunction,
             int particleCount,
@@ -55,6 +57,7 @@ public class PSO implements IAlgorithm {
         // initialize search space parameters
         this.initialize();
 
+        this.nanoDuration = System.nanoTime();
         // run the steps
         double currentBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
@@ -78,7 +81,7 @@ public class PSO implements IAlgorithm {
             }
 
         }
-
+        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void initialize(){
@@ -119,5 +122,7 @@ public class PSO implements IAlgorithm {
     }
 
 
-
+    public long getNanoDuration() {
+        return nanoDuration;
+    }
 }
