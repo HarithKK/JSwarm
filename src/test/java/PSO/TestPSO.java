@@ -1,22 +1,24 @@
 package PSO;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.intefaces.IAlgorithm;
 import org.usa.soc.pso.PSO;
+import utils.Logger;
 
 import java.util.List;
 
 public class TestPSO {
 
     private static final int LIMIT = 2;
+    private PSO p;
 
-    @Test
-    public void testPSOFunctionA() {
-
-        ObjectiveFunction fn = new FunctionA();
-        PSO p = new PSO(
+    private IAlgorithm getAlgorithm(ObjectiveFunction fn){
+        return new PSO(
                 fn,
                 1000,
                 fn.getNumberOfDimensions(),
@@ -27,7 +29,14 @@ public class TestPSO {
                 fn.getMin(),
                 fn.getMax(),
                 true);
+    }
 
+    @Test
+    public void testPSOFunctionA() {
+
+        ObjectiveFunction fn = new FunctionA();
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(1.5, p.getGBest().toAbsList(LIMIT).get(0));
@@ -38,18 +47,8 @@ public class TestPSO {
     public void testAckleysFunction() {
 
         ObjectiveFunction fn = new AckleysFunction();
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         List<Double> arr = p.getGBest().toAbsList(LIMIT);
@@ -62,18 +61,8 @@ public class TestPSO {
     public void testBoothFunction() {
 
         ObjectiveFunction fn = new BoothsFunction();
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         List<Double> arr = p.getGBest().toAbsList(LIMIT);
@@ -86,18 +75,8 @@ public class TestPSO {
     public void testMatyasFunction() {
 
         ObjectiveFunction fn = new MatyasFunction();
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         List<Double> arr = p.getGBest().toAbsList(LIMIT);
@@ -112,18 +91,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new RastriginFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                3000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
@@ -139,18 +108,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new SphereFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(p.getGBestAbsValue(LIMIT), 0);
@@ -166,18 +125,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new RosenbrockFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(p.getGBestAbsValue(LIMIT), 0);
@@ -193,18 +142,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new BealeFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
@@ -219,18 +158,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new BukinFunction();
 
-        PSO p = new PSO(
-                fn,
-                100,
-                fn.getNumberOfDimensions(),
-                3000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT-2));
@@ -242,18 +171,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new LevyFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
@@ -268,18 +187,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new HimmelblausFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
@@ -293,18 +202,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new ThreeHumpCamelFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
@@ -319,18 +218,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new EasomFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(-1, p.getGBestValue(LIMIT));
@@ -345,18 +234,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new CrossInTrayFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(-2.06, p.getGBestValue(LIMIT));
@@ -370,18 +249,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new EggholderFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                2000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(-959.64, p.getGBestValue(LIMIT));
@@ -395,18 +264,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new HolderTableFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(-19.21, p.getGBestValue(LIMIT));
@@ -420,18 +279,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new McCormickFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(-1.91, p.getGBestValue(LIMIT));
@@ -445,18 +294,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new SchafferFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
@@ -470,18 +309,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new SchafferFunctionN4();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(0.29, p.getGBestAbsValue(LIMIT));
@@ -495,18 +324,8 @@ public class TestPSO {
 
         ObjectiveFunction fn = new StyblinskiTangFunction();
 
-        PSO p = new PSO(
-                fn,
-                1000,
-                fn.getNumberOfDimensions(),
-                1000,
-                1.496180,
-                1.496180,
-                0.729844,
-                fn.getMin(),
-                fn.getMax(),
-                true);
-
+        p = (PSO)getAlgorithm(fn);
+        p.initialize();
         p.runOptimizer();
 
         Assertions.assertEquals(117.5, p.getGBestAbsValue(LIMIT));
@@ -515,5 +334,10 @@ public class TestPSO {
         Assertions.assertEquals(-2.9,arr.get(0));
         Assertions.assertEquals(-2.9,arr.get(1));
         Assertions.assertEquals(-2.9,arr.get(2));
+    }
+
+    @AfterEach
+    public void afterEach(){
+        Logger.showFunction(p);
     }
 }

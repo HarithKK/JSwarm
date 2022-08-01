@@ -21,16 +21,8 @@ public class Particle {
         setPosition(new Vector(numberOfDimensions));
         setVelocity(new Vector(numberOfDimensions));
 
-        setRandomPosition();
-
         pBest = this.getPosition().getClonedVector();
 
-    }
-
-    private void setRandomPosition() {
-        for(int i = 0; i < getPosition().getNumberOfDimensions(); i++){
-            getPosition().setValue(Randoms.rand(this.minBoundary[i], this.maxBoundary[i]), i);
-        }
     }
 
     public Vector getPosition() {
@@ -42,7 +34,8 @@ public class Particle {
     }
 
     public void updatePbest(ObjectiveFunction<Double> objectiveFunction, boolean isLocalMinima) {
-        double pBestVal =objectiveFunction.setParameters(this.getPBest().getPositionIndexes()).call();
+        ObjectiveFunction fn = objectiveFunction.setParameters(this.getPBest().getPositionIndexes());
+        double pBestVal =fn.call();
         double stepBestVal = objectiveFunction.setParameters(this.position.getPositionIndexes()).call();
         if(Validator.validateBestValue(stepBestVal, pBestVal, isLocalMinima)){
             this.getPBest().setVector(this.position, this.minBoundary, this.maxBoundary);
@@ -82,5 +75,14 @@ public class Particle {
 
     public Vector getPBest() {
         return pBest;
+    }
+
+    public void setPBest(Vector v) {
+        this.pBest = v.getClonedVector();
+    }
+
+    public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
+        this.minBoundary = minBoundary;
+        this.maxBoundary = maxBoundary;
     }
 }
