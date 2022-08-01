@@ -54,7 +54,7 @@ public class Vector {
         this.positionIndexes = positionIndexes;
     }
 
-    public void setValues(Double []values){
+    public void setValues(double []values){
         int count = Math.min(values.length, this.getNumberOfDimensions());
         for(int i=0; i< count; i++){
             this.positionIndexes[i] = values[i];
@@ -164,5 +164,13 @@ public class Vector {
         Vector v = new Vector(this.numberOfDimensions);
         v.setVector(this);
         return v;
+    }
+
+    public double getDistance(double[] coordinateChanges){
+        double sum = 0;
+        for(int i=0;i<this.numberOfDimensions;i++){
+            sum+= Math.pow(this.positionIndexes[i] - coordinateChanges[i],2);
+        }
+        return Math.sqrt(sum);
     }
 }

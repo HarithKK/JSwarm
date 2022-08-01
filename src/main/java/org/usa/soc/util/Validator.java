@@ -35,4 +35,9 @@ public class Validator {
             return val;
         }
     }
+
+    public static void checkMinMax(Double wMax, Double wMin) {
+        if(wMax < wMin)
+            throw new IllegalArgumentException("Validator: Min Max Mismatched!");
+    }
 }

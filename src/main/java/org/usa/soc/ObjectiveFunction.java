@@ -20,4 +20,8 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
     public abstract double[] getMin();
 
     public abstract double[] getMax();
+
+    public boolean validateRange(){
+        return true;
+    };
 }
