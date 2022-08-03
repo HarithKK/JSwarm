@@ -31,4 +31,9 @@ public class RosenbrockFunctionDish extends ObjectiveFunction {
         double y = (double)super.getParameters()[1];
         return Math.pow(x, 2) + Math.pow(y, 2) <= 2;
     };
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

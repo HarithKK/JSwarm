@@ -24,4 +24,9 @@ public class SphereFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{1000,1000,1000};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

@@ -27,4 +27,9 @@ public class EggholderFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{512, 512};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return -959.6404;
+    }
 }

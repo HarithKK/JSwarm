@@ -32,4 +32,9 @@ public class RastriginFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{5.12,5.12, 5.12};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

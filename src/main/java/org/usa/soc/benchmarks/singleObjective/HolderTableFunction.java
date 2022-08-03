@@ -27,4 +27,9 @@ public class HolderTableFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{10,10};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return -19.20;
+    }
 }

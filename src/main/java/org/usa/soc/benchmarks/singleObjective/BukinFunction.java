@@ -29,4 +29,9 @@ public class BukinFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{-5,3};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

@@ -31,4 +31,9 @@ public class RosenbrockFunction extends ObjectiveFunction {
         double y = (double)super.getParameters()[1];
         return Math.pow(x-1, 3) - y + 1<=0 && x + y -2 <=0;
     };
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

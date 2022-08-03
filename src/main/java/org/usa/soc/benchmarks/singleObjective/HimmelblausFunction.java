@@ -27,4 +27,9 @@ public class HimmelblausFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{5, 5};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

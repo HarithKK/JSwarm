@@ -29,4 +29,9 @@ public class StyblinskiTangFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{1, 1, 1};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

@@ -21,6 +21,8 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
 
     public abstract double[] getMax();
 
+    public abstract double getExpectedBestValue();
+
     public boolean validateRange(){
         return true;
     };

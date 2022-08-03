@@ -16,4 +16,6 @@ public interface IAlgorithm {
     ObjectiveFunction getFunction();
 
     String getBestVariables();
+
+    String getErrorPercentage();
 }
