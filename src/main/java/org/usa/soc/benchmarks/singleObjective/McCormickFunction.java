@@ -29,4 +29,9 @@ public class McCormickFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{4,4};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return -1.9133;
+    }
 }

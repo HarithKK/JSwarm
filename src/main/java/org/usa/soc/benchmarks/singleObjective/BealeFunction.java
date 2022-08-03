@@ -24,4 +24,9 @@ public class BealeFunction extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{4.5, 4.5};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
 }

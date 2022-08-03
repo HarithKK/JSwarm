@@ -37,4 +37,10 @@ public class AckleysFunction extends ObjectiveFunction {
     public double[] getMax() {
         return max;
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
+
 }

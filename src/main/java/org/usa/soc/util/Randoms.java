@@ -24,4 +24,12 @@ public class Randoms {
         }
         return v;
     }
+
+    public static Vector getRandomVector(int D, double min, double max) {
+        Vector v = new Vector(D);
+        for(int i=0;i<D;i++){
+            v.setValue(rand(min, max),i);
+        }
+        return v;
+    }
 }

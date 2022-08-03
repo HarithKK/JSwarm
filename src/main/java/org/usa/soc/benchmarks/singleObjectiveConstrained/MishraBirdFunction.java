@@ -30,6 +30,11 @@ public class MishraBirdFunction extends ObjectiveFunction {
     }
 
     @Override
+    public double getExpectedBestValue() {
+        return 0;
+    }
+
+    @Override
     public boolean validateRange(){
         double x = (double)super.getParameters()[0];
         double y = (double)super.getParameters()[1];

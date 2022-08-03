@@ -29,4 +29,9 @@ public class FunctionA extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{101};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return -1.69;
+    }
 }

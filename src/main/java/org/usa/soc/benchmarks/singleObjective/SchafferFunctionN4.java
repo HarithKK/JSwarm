@@ -28,4 +28,9 @@ public class SchafferFunctionN4 extends ObjectiveFunction {
     public double[] getMax() {
         return new double[]{100, 100};
     }
+
+    @Override
+    public double getExpectedBestValue() {
+        return 0.292579;
+    }
 }

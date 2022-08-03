@@ -98,7 +98,6 @@ public class PSO implements IAlgorithm {
             Double stepBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
             if(Validator.validateBestValue(stepBestValue, currentBestValue, isLocalMinima)){
-                Logger.getInstance().log("GBest [" + step + "] \t" + stepBestValue  + " |=> " + this.getGBest().toString() );
                 currentBestValue = stepBestValue;
             }
 
@@ -215,6 +214,14 @@ public class PSO implements IAlgorithm {
     @Override
     public String getBestVariables() {
         return this.gBest.toString();
+    }
+
+    @Override
+    public String getErrorPercentage() {
+        Double r = Math.abs(this.getGBestValue() - this.objectiveFunction.getExpectedBestValue());
+        r /= this.objectiveFunction.getExpectedBestValue() + + 0.00000000001;
+        r *= 100;
+        return Math.abs(r) + " %";
     }
 
     private void updateGBest(Vector pBestPosition, Vector gBestPosition) {
