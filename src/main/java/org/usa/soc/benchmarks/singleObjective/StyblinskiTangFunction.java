@@ -34,4 +34,9 @@ public class StyblinskiTangFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return 0;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{-2.903534, -2.903534, -2.903534};
+    }
 }

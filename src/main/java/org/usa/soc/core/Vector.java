@@ -6,9 +6,9 @@ This is the position vector
 
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Smoother;
+import org.usa.soc.util.StringFormatter;
 import org.usa.soc.util.Validator;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,13 +114,7 @@ public class Vector {
     }
 
     public String toString(){
-        DecimalFormat f = new DecimalFormat("#.000");
-        StringBuilder sb = new StringBuilder();
-        int i=1;
-        for (double d: this.positionIndexes) {
-            sb.append("[").append(i++).append("] : ").append(d).append("\t");
-        }
-        return sb.toString();
+        return StringFormatter.toString(this.positionIndexes);
     }
 
     public List<Double> toAbsList(int round){

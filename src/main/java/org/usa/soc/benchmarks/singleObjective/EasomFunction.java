@@ -31,4 +31,9 @@ public class EasomFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return -1;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{3.14, 3.14};
+    }
 }

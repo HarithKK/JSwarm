@@ -1,7 +1,7 @@
 package utils;
 
-import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.intefaces.IAlgorithm;
+import org.usa.soc.util.StringFormatter;
 
 import java.util.Arrays;
 
@@ -22,7 +22,8 @@ public class Logger {
                 StringFormatter.format(Arrays.toString(al.getFunction().getMax()), 30) + DL+
                 StringFormatter.format(String.valueOf(al.getFunction().getNumberOfDimensions()),5) + DL+
                 StringFormatter.format(String.valueOf(duration), 10) +DL+
-                StringFormatter.format(al.getBestVariables(),50)
+                StringFormatter.format(al.getBestVariables(),80) + DL +
+                StringFormatter.toString(al.getFunction().getExpectedParameters())
         );
     }
 }

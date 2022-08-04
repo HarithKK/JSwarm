@@ -32,4 +32,9 @@ public class EggholderFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return -959.6404;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{512, 404.2319};
+    }
 }

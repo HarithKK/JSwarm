@@ -32,4 +32,9 @@ public class HolderTableFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return -19.20;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{8.05502, -9.66459, -8.05502, 9.66459, -8.05502, -9.66459, 8.05502, 9.66459};
+    }
 }

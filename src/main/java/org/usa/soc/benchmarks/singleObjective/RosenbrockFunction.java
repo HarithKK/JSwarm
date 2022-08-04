@@ -34,6 +34,11 @@ public class RosenbrockFunction extends ObjectiveFunction {
 
     @Override
     public double getExpectedBestValue() {
-        return 3;
+        return 0;
+    }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{1,1,1};
     }
 }

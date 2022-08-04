@@ -43,4 +43,9 @@ public class AckleysFunction extends ObjectiveFunction {
         return 0;
     }
 
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{0.0, 0.0};
+    }
+
 }
