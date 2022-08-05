@@ -32,4 +32,9 @@ public class HimmelblausFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return 0;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{3,2,-2.805118,3.131312,-3.779310,-3.283186, 3.584428, -1.848126};
+    }
 }

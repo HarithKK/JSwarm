@@ -34,4 +34,9 @@ public class FunctionA extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return -1.69;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{1.5};
+    }
 }

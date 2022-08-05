@@ -23,6 +23,8 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
 
     public abstract double getExpectedBestValue();
 
+    public abstract double[] getExpectedParameters();
+
     public boolean validateRange(){
         return true;
     };

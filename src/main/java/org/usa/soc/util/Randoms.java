@@ -32,4 +32,9 @@ public class Randoms {
         }
         return v;
     }
+
+    public static int rand (int bound) {
+        Random randomValue = new java.util.Random();
+        return randomValue.nextInt(bound);
+    }
 }

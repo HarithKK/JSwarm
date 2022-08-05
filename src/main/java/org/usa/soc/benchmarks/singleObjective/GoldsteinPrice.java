@@ -31,4 +31,9 @@ public class GoldsteinPrice extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return 3;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{0,-1};
+    }
 }

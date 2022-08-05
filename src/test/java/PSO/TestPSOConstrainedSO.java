@@ -5,12 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.singleObjectiveConstrained.MishraBirdFunction;
 import org.usa.soc.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
-import org.usa.soc.benchmarks.singleObjectiveConstrained.RosenbrockFunctionDish;
 import org.usa.soc.intefaces.IAlgorithm;
 import org.usa.soc.pso.PSO;
-import org.usa.soc.util.Constraint;
 import utils.Logger;
 
 import java.util.List;

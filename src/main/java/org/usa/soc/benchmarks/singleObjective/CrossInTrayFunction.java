@@ -32,4 +32,9 @@ public class CrossInTrayFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return -2.06261;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{1.34941, -1.34941, -1.34941, 1.34941, -1.34941, -1.34941, 1.34941, 1.34941};
+    }
 }

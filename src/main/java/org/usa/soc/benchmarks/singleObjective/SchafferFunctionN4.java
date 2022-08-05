@@ -33,4 +33,9 @@ public class SchafferFunctionN4 extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return 0.292579;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{0,-1.25313, 0,1.25313, 1.25313,0, -1.25313, 0};
+    }
 }

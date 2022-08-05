@@ -33,4 +33,9 @@ public class MatyasFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return 0;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{0,0};
+    }
 }

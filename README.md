@@ -9,32 +9,13 @@ to solve their optimization problems.
 
 ## Implemented Algorithms
 
-### PSO (Particle Swarm Optimization)
-
-Developed by Kennedy, James, and Russell Eberhart [[1]](#1) in 1995 based on the movements of birds
-and fishes. 
-
-```
-PSO p = new PSO(
-                <ObjectiveFunction>,
-                <Number of Particles>,
-                <Number of Dimensions>,
-                <Number of Iterations>,
-                <c1>,
-                <c2>,
-                <w>,
-                <Minimum Boundary of Variables>,
-                <Maximum Boundary of Variables>,
-                <Whether you want to result global minima or global maxima>);
-
-p.runOptimizer();
-Double bestOptimizedValue = p.getGBestValue();
-List<Double> bestOptimizedLocations = p.getGBest().toList();
-```
+1. [PSO (Particle Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/pso/ReadMe.md)
+2. [ACO (Ant Colony Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/aco/ReadMe.md)
+3. [MBO (Marriage in Honey Bees Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/mbo/ReadMe.md)
 
 ## Testing Benchmark Functions
 
-Testing the precision. robustness and general performance of optimization algorithms [[2]](#2).
+Testing the precision. robustness and general performance of optimization algorithms [[1]](#1).
 
 ### Single Objective
 
@@ -66,11 +47,8 @@ This is an open source project.
 
 TBD : We will provide you the contribution guidelines soon.
 
-
-
 ## References
-<a id="1">[1]</a> Kennedy, James, and Russell Eberhart. "Particle swarm optimization." Proceedings of ICNN'95-international conference on neural networks. Vol. 4. IEEE, 1995.
-<a id="2">[2]</a> https://en.wikipedia.org/wiki/Test_functions_for_optimization
+<a id="1">[1]</a> https://en.wikipedia.org/wiki/Test_functions_for_optimization
 
 
 [java-image]: https://img.shields.io/badge/dynamic/xml?color=red&label=java&query=1.8&url=https%3A%2F%2Fopenjdk.java.net%2Fprojects%2Fjdk8%2F

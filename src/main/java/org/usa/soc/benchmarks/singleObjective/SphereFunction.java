@@ -29,4 +29,9 @@ public class SphereFunction extends ObjectiveFunction {
     public double getExpectedBestValue() {
         return 0;
     }
+
+    @Override
+    public double[] getExpectedParameters() {
+        return new double[]{0,0,0};
+    }
 }
