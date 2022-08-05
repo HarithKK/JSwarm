@@ -9,29 +9,7 @@ to solve their optimization problems.
 
 ## Implemented Algorithms
 
-### PSO (Particle Swarm Optimization)
-
-Developed by Kennedy, James, and Russell Eberhart [[1]](#1) in 1995 based on the movements of birds
-and fishes. 
-
-```
-PSO p = new PSO(
-                <ObjectiveFunction>,
-                <Number of Particles>,
-                <Number of Dimensions>,
-                <Number of Iterations>,
-                <c1>,
-                <c2>,
-                <w>,
-                <Minimum Boundary of Variables>,
-                <Maximum Boundary of Variables>,
-                <Whether you want to result global minima or global maxima>);
-
-p.initialize();
-p.runOptimizer();
-Double bestOptimizedValue = p.getGBestValue();
-List<Double> bestOptimizedLocations = p.getGBest().toList();
-```
+1. [PSO (Particle Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/pso/ReadMe.md)
 
 ### ACO (Ant Colony Optimization)
 
