@@ -15,7 +15,7 @@ to solve their optimization problems.
 
 ## Testing Benchmark Functions
 
-Testing the precision. robustness and general performance of optimization algorithms [[2]](#2).
+Testing the precision. robustness and general performance of optimization algorithms [[1]](#1).
 
 ### Single Objective
 
@@ -46,5 +46,9 @@ TBD : We hope to move the library to the Maven central dependency repository.
 This is an open source project. 
 
 TBD : We will provide you the contribution guidelines soon.
+
+## References
+<a id="1">[1]</a> https://en.wikipedia.org/wiki/Test_functions_for_optimization
+
 
 [java-image]: https://img.shields.io/badge/dynamic/xml?color=red&label=java&query=1.8&url=https%3A%2F%2Fopenjdk.java.net%2Fprojects%2Fjdk8%2F
