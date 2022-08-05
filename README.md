@@ -10,31 +10,8 @@ to solve their optimization problems.
 ## Implemented Algorithms
 
 1. [PSO (Particle Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/pso/ReadMe.md)
+2. [ACO (Ant Colony Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/aco/ReadMe.md)
 
-### ACO (Ant Colony Optimization)
-
-Developed by Dorigo, Birattari and Stutzle  [[3]](#3) in 2006 based on the food searching behaviours of ants. This is more 
-focused on path finding problems and Toksari and Duran [[4]](#4) focused with optimization problems.
-
-```
-ACO p = new ACO(
-                <ObjectiveFunction>,
-                <Number of Ants>,
-                <Number of Iterations>,
-                <Number of Process Iterations>,
-                <Number of Dimensions>,
-                <Minimum Boundary of Variables>,
-                <Maximum Boundary of Variables>,
-                <Alpha>
-                <Evaporation Rate>,
-                <Initial Pheromone Value>,
-                <Whether you want to result global minima or global maxima>);
-
-p.initialize();
-p.runOptimizer();
-Double bestOptimizedValue = p.getBestValue();
-List<Double> bestOptimizedLocations = p.getBest().toList();
-```
 
 ### MBO (Ant Colony Optimization)
 
