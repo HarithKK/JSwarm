@@ -8,6 +8,9 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.intefaces.IAlgorithm;
 import org.usa.soc.pso.PSO;
+import org.usa.soc.util.Mathamatics;
+import org.usa.soc.wso.WSO;
+import utils.AssertUtil;
 import utils.Logger;
 
 import java.util.List;
@@ -15,14 +18,16 @@ import java.util.List;
 public class TestPSO {
 
     private static final int LIMIT = 2;
-    private PSO p;
 
-    private IAlgorithm getAlgorithm(ObjectiveFunction fn){
+    private static final double PRECISION_VAL  = 0.2;
+    private PSO algo;
+
+    private PSO getAlgorithm(ObjectiveFunction fn){
         return new PSO(
                 fn,
                 1000,
                 fn.getNumberOfDimensions(),
-                1000,
+                1500,
                 1.496180,
                 1.496180,
                 0.729844,
@@ -31,58 +36,49 @@ public class TestPSO {
                 true);
     }
 
-    @Test
-    public void testPSOFunctionA() {
-
-        ObjectiveFunction fn = new FunctionA();
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
-
-        Assertions.assertEquals(1.5, p.getGBest().toAbsList(LIMIT).get(0));
-        Assertions.assertEquals(1.69,p.getGBestAbsValue(LIMIT));
+    public void evaluate(PSO algo, double best, double[] variables, int D, double variance){
+        AssertUtil.evaluate(
+                algo.getBestDValue(),
+                best,
+                algo.getGBest(),
+                variables,
+                D,
+                variance,
+                LIMIT
+        );
     }
 
     @Test
     public void testAckleysFunction() {
 
         ObjectiveFunction fn = new AckleysFunction();
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
-        Assertions.assertEquals(0,p.getGBestAbsValue(LIMIT));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
     public void testBoothFunction() {
 
         ObjectiveFunction fn = new BoothsFunction();
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(1, arr.get(0));
-        Assertions.assertEquals(3, arr.get(1));
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
     public void testMatyasFunction() {
 
         ObjectiveFunction fn = new MatyasFunction();
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
-        Assertions.assertEquals(0,p.getGBestAbsValue(LIMIT));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
 
@@ -91,16 +87,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new RastriginFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
-        Assertions.assertEquals(0,arr.get(2));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -108,16 +99,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new SphereFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(p.getGBestAbsValue(LIMIT), 0);
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
-        Assertions.assertEquals(0,arr.get(2));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -125,16 +111,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new RosenbrockFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(p.getGBestAbsValue(LIMIT), 0);
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(1,arr.get(0));
-        Assertions.assertEquals(1,arr.get(1));
-        Assertions.assertEquals(1,arr.get(2));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -142,15 +123,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new BealeFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(3,arr.get(0));
-        Assertions.assertEquals(0.5,arr.get(1));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -158,12 +135,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new BukinFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT-2));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),3);
     }
 
     @Test
@@ -171,15 +147,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new LevyFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(1,arr.get(0));
-        Assertions.assertEquals(1,arr.get(1));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -187,14 +159,12 @@ public class TestPSO {
 
         ObjectiveFunction fn = new HimmelblausFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toList(LIMIT);
-        Assertions.assertTrue(arr.get(0) == 3.0 || arr.get(0) == -2.81 || arr.get(0) == -3.78 || arr.get(0) == 3.58);
-        Assertions.assertTrue(arr.get(1) == 2.0 || arr.get(1) == 3.13 || arr.get(1) == -3.28 || arr.get(1) == -1.85);
+        Assertions.assertEquals(Mathamatics.round(algo.getGBestValue(), LIMIT), 0);
+
     }
 
     @Test
@@ -202,15 +172,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new ThreeHumpCamelFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -218,15 +184,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new EasomFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(-1, p.getGBestValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(3.14,arr.get(0));
-        Assertions.assertEquals(3.14,arr.get(1));
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -234,14 +196,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new CrossInTrayFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(-2.06, p.getGBestValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(1.35,arr.get(0));
-        Assertions.assertEquals(1.35,arr.get(1));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -249,14 +208,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new EggholderFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(-959.64, p.getGBestValue(LIMIT));
-        List<Double> arr = p.getGBest().toList(LIMIT);
-        Assertions.assertEquals(512,arr.get(0));
-        Assertions.assertEquals(404.23,arr.get(1));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -264,14 +220,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new HolderTableFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(-19.21, p.getGBestValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(8.06,arr.get(0));
-        Assertions.assertEquals(9.66,arr.get(1));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -279,14 +232,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new McCormickFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(-1.91, p.getGBestValue(LIMIT));
-        List<Double> arr = p.getGBest().toList(LIMIT);
-        Assertions.assertEquals(-0.55,arr.get(0));
-        Assertions.assertEquals(-1.55,arr.get(1));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -294,14 +244,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new SchafferFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -309,14 +256,11 @@ public class TestPSO {
 
         ObjectiveFunction fn = new SchafferFunctionN4();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(0.29, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toList(LIMIT);
-        Assertions.assertTrue(arr.get(0) == 0 || arr.get(0) == 0 || arr.get(0) == 1.25 || arr.get(0) == -1.25);
-        Assertions.assertTrue(arr.get(1) == 1.25 || arr.get(1) == -1.25 || arr.get(1) == 0 || arr.get(1) == 0);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1.25);
     }
 
     @Test
@@ -324,20 +268,19 @@ public class TestPSO {
 
         ObjectiveFunction fn = new StyblinskiTangFunction();
 
-        p = (PSO)getAlgorithm(fn);
-        p.initialize();
-        p.runOptimizer();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        algo.runOptimizer();
 
-        Assertions.assertEquals(117.5, p.getGBestAbsValue(LIMIT));
-        List<Double> arr = p.getGBest().toList(LIMIT);
+        double p = Mathamatics.round(algo.getGBestValue(),LIMIT);
+        Assertions.assertEquals(-117.5,p);
 
-        Assertions.assertEquals(-2.9,arr.get(0));
-        Assertions.assertEquals(-2.9,arr.get(1));
-        Assertions.assertEquals(-2.9,arr.get(2));
+        double []d = algo.getGBest().toDoubleArray(LIMIT);
+        Assertions.assertArrayEquals(new double[]{-2.9, -2.9, -2.9}, d);
     }
 
     @AfterEach
     public void afterEach(){
-        Logger.showFunction(p);
+        Logger.showFunction(algo);
     }
 }

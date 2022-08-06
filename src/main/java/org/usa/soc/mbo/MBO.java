@@ -87,6 +87,8 @@ public class MBO implements IAlgorithm {
 
         for(int i=0; i< this.steps; i++){
             for (Queen q: queens) {
+                if(q.getEnergy() == 0)
+                    continue;
                 // update the speed, energy and position
                 q.setPosition(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
                 q.setSpeed(q.getSpeed() * this.alpha);
@@ -216,6 +218,11 @@ public class MBO implements IAlgorithm {
     @Override
     public String getBestValue() {
         return String.valueOf(this.bestQueen.getpBest());
+    }
+
+    @Override
+    public Double getBestDValue() {
+        return this.bestQueen.getpBest();
     }
 
     public Double getBestValue(int round) {

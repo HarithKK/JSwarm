@@ -131,11 +131,19 @@ public class Vector {
     public List<Double> toList(int round){
 
         ArrayList<Double> l = new ArrayList<>();
-        double deli = 10 * round;
         for(Double d :this.positionIndexes){
             l.add(Mathamatics.round(d, round));
         }
 
+        return l;
+    }
+
+    public double[] toDoubleArray(int round){
+
+        double[] l = new double[this.numberOfDimensions];
+        for(int i=0;i< this.numberOfDimensions;i++){
+            l[i] = Mathamatics.round(this.positionIndexes[i], round);
+        }
         return l;
     }
 

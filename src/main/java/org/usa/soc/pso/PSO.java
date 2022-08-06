@@ -207,6 +207,11 @@ public class PSO implements IAlgorithm {
     }
 
     @Override
+    public Double getBestDValue() {
+        return this.getGBestValue();
+    }
+
+    @Override
     public ObjectiveFunction getFunction() {
         return this.objectiveFunction;
     }
