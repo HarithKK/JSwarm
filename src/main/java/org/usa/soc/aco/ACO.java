@@ -96,7 +96,7 @@ public class ACO implements IAlgorithm {
     @Override
     public void runOptimizer() {
         if(!this.isInitialized){
-            throw new RuntimeException("Particles Are Not Initialized");
+            throw new RuntimeException("Ants Are Not Initialized");
         }
 
         this.nanoDuration = System.nanoTime();
@@ -171,6 +171,11 @@ public class ACO implements IAlgorithm {
     @Override
     public String getBestValue() {
         return String.valueOf(this.fn.setParameters(this.gBest.getPositionIndexes()).call());
+    }
+
+    @Override
+    public Double getBestDValue() {
+        return this.fn.setParameters(this.gBest.getPositionIndexes()).call();
     }
 
     public Double getGBestValue() {

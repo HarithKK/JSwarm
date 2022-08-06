@@ -30,7 +30,7 @@ public class HolderTableFunction extends ObjectiveFunction {
 
     @Override
     public double getExpectedBestValue() {
-        return -19.20;
+        return -19.21;
     }
 
     @Override

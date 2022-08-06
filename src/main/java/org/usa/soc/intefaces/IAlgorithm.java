@@ -13,6 +13,8 @@ public interface IAlgorithm {
 
     String getBestValue();
 
+    Double getBestDValue();
+
     ObjectiveFunction getFunction();
 
     String getBestVariables();

@@ -26,4 +26,15 @@ public class Mathamatics {
         r = (1 - r) * 100;
         return Mathamatics.round(r,2) + " %";
     }
+
+    public static int calculateHammingDistance(double d1, double d2){
+        double d = Double.longBitsToDouble(Double.doubleToRawLongBits(d1) ^ Double.doubleToRawLongBits(d2));
+        String s = Long.toBinaryString(Double.doubleToRawLongBits(d));
+        int count =0;
+        for(char c : s.toCharArray()){
+            if(c=='1')
+                count++;
+        }
+        return count;
+    }
 }

@@ -12,7 +12,7 @@ to solve their optimization problems.
 1. [PSO (Particle Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/pso/ReadMe.md)
 2. [ACO (Ant Colony Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/aco/ReadMe.md)
 3. [MBO (Marriage in Honey Bees Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/mbo/src/main/java/org/usa/soc/mbo/ReadMe.md)
-
+4. [WSO (Wasp Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/WSO/src/main/java/org/usa/soc/wso/ReadMe.md)
 ## Testing Benchmark Functions
 
 Testing the precision. robustness and general performance of optimization algorithms [[1]](#1).

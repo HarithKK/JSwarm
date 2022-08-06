@@ -10,14 +10,19 @@ import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.intefaces.IAlgorithm;
 import org.usa.soc.mbo.MBO;
+import org.usa.soc.pso.PSO;
+import org.usa.soc.util.Mathamatics;
+import utils.AssertUtil;
 import utils.Logger;
 
 import java.util.List;
 
 public class TestMBO {
 
-    private static final int LIMIT = 2;
+    private static final int LIMIT = 15;
     private MBO algo;
+
+    private static final double PRECISION_VAL  = 50;
 
     private MBO getAlgorithm(ObjectiveFunction fn){
         return new MBO(
@@ -39,14 +44,36 @@ public class TestMBO {
         );
     }
 
-    public void evaluate(MBO algo, double best, double[] variables, int D, double variance){
-        double p = algo.getBestValue(LIMIT);
-        //Assertions.assertTrue(p > (best - variance) && p < (best + variance));
+    private MBO getAlgorithm(ObjectiveFunction fn, int i){
+        return new MBO(
+                fn,
+                500,
+                100,
+                30,
+                i,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                0.4,
+                0,
+                10,
+                0.8,
+                0.5,
+                1
+        );
+    }
 
-        for(int i=0;i<D; i++){
-            p = algo.getBest().toList(LIMIT).get(i);
-            //Assertions.assertTrue(p > (variables[i] - variance) && p < (variables[i] + variance));
-        }
+    public void evaluate(MBO algo, double best, double[] variables, int D, double variance){
+        AssertUtil.evaluate(
+                algo.getBestDValue(),
+                best,
+                algo.getBest(),
+                variables,
+                D,
+                variance,
+                LIMIT
+        );
     }
 
     @Test
@@ -57,11 +84,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.001);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
-    @Ignore
     public void testBoothFunction() {
 
         ObjectiveFunction fn = new BoothsFunction();
@@ -69,6 +95,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -79,7 +106,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
 
@@ -92,8 +119,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -105,8 +131,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -118,9 +143,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -132,9 +155,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -146,8 +167,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),3);
     }
 
     @Test
@@ -159,9 +179,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -173,8 +191,8 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        Assertions.assertEquals(Mathamatics.round(algo.getBestDValue(), LIMIT), 0);
+
     }
 
     @Test
@@ -186,8 +204,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -199,9 +216,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -213,8 +228,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -222,12 +236,11 @@ public class TestMBO {
 
         ObjectiveFunction fn = new EggholderFunction();
 
-        algo = getAlgorithm(fn);
+        algo = getAlgorithm(fn, 2000);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -239,8 +252,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -252,8 +264,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, -1.91, new double[]{-0.55,-1.55},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -265,7 +276,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -277,8 +288,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1.25);
     }
 
     @Test
@@ -290,8 +300,11 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        double p = Mathamatics.round(algo.getBestDValue(),LIMIT);
+        Assertions.assertEquals(-117.5,p);
+
+        double []d = algo.getBest().toDoubleArray(LIMIT);
+        Assertions.assertArrayEquals(new double[]{-2.9, -2.9, -2.9}, d);
     }
 
     @AfterEach

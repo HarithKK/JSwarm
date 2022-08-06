@@ -10,6 +10,8 @@ import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.intefaces.IAlgorithm;
 import org.usa.soc.pso.PSO;
+import org.usa.soc.util.Mathamatics;
+import utils.AssertUtil;
 import utils.Logger;
 
 import java.util.List;
@@ -19,7 +21,9 @@ public class TestACO {
     private static final int LIMIT = 2;
     private ACO algo;
 
-    private IAlgorithm getAlgorithm(ObjectiveFunction fn){
+    private static final double PRECISION_VAL  = 10;
+
+    private ACO getAlgorithm(ObjectiveFunction fn){
         return new ACO(
                 fn,
                 1000,
@@ -32,47 +36,62 @@ public class TestACO {
         );
     }
 
-    public void evaluate(ACO algo, double best, double[] variables, int D, double variance){
-        double p = algo.getGBestValue(LIMIT);
-        Assertions.assertTrue(p > (best - variance) && p < (best + variance));
+    private ACO getAlgorithm(ObjectiveFunction fn, int i){
+        return new ACO(
+                fn,
+                i,
+                100,
+                10,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true
+        );
+    }
 
-        for(int i=0;i<D; i++){
-            p = algo.getGBest().toList(LIMIT).get(i);
-            Assertions.assertTrue(p > (variables[i] - variance) && p < (variables[i] + variance));
-        }
+    public void evaluate(ACO algo, double best, double[] variables, int D, double variance){
+        AssertUtil.evaluate(
+                algo.getBestDValue(),
+                best,
+                algo.getGBest(),
+                variables,
+                D,
+                variance,
+                LIMIT
+        );
     }
 
     @Test
     public void testAckleysFunction() {
 
         ObjectiveFunction fn = new AckleysFunction();
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.001);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
-    @Ignore
     public void testBoothFunction() {
 
         ObjectiveFunction fn = new BoothsFunction();
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
     public void testMatyasFunction() {
 
         ObjectiveFunction fn = new MatyasFunction();
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
 
@@ -81,12 +100,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new RastriginFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -94,12 +112,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new SphereFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -107,13 +124,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new RosenbrockFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -121,13 +136,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new BealeFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -135,12 +148,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new BukinFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
-
+        AssertUtil.evaluate(algo.getGBestValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
 
     @Test
@@ -148,13 +160,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new LevyFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn, 2000);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        AssertUtil.evaluate(algo.getGBestValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
 
     @Test
@@ -162,12 +172,12 @@ public class TestACO {
 
         ObjectiveFunction fn = new HimmelblausFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn,2000);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        AssertUtil.evaluate(algo.getGBestValue(), fn.getExpectedBestValue(), 2, 2);
+
     }
 
     @Test
@@ -175,12 +185,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new ThreeHumpCamelFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, 0, new double[]{0,0},fn.getNumberOfDimensions(),0.3);
-
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -188,13 +197,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new EasomFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn, 2000);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
-
+        AssertUtil.evaluate(algo.getGBestValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
 
     @Test
@@ -202,12 +209,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new CrossInTrayFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1);
     }
 
     @Test
@@ -215,12 +221,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new EggholderFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn, 2000);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        AssertUtil.evaluate(algo.getGBestValue(), fn.getExpectedBestValue(), 100, 2);
     }
 
     @Test
@@ -228,12 +233,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new HolderTableFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -241,12 +245,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new McCormickFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, -1.91, new double[]{-0.55,-1.55},fn.getNumberOfDimensions(),0.3);
-
+        AssertUtil.evaluate(algo.getGBestValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
 
     @Test
@@ -254,14 +257,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new SchafferFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertEquals(0, algo.getGBestAbsValue(LIMIT));
-        List<Double> arr = algo.getGBest().toAbsList(LIMIT);
-        Assertions.assertEquals(0,arr.get(0));
-        Assertions.assertEquals(0,arr.get(1));
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -269,12 +269,11 @@ public class TestACO {
 
         ObjectiveFunction fn = new SchafferFunctionN4();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
 
     @Test
@@ -282,12 +281,12 @@ public class TestACO {
 
         ObjectiveFunction fn = new StyblinskiTangFunction();
 
-        algo = (ACO)getAlgorithm(fn);
+        algo = getAlgorithm(fn, 2000);
         algo.initialize();
         algo.runOptimizer();
 
-        // High difference, Not test
-        Assertions.assertTrue(true);
+        double p = Mathamatics.round(algo.getGBestValue(),LIMIT);
+        AssertUtil.evaluate(algo.getGBestValue(), 117.5, 15, 20);
     }
 
     @AfterEach
