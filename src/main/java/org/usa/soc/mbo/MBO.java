@@ -2,7 +2,7 @@ package org.usa.soc.mbo;
 
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.intefaces.IAlgorithm;
+import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
@@ -209,12 +209,6 @@ public class MBO implements IAlgorithm {
             this.bestQueen = queen;
         }
     }
-
-    @Override
-    public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
-
-    }
-
     @Override
     public String getBestValue() {
         return String.valueOf(this.bestQueen.getpBest());
@@ -244,7 +238,32 @@ public class MBO implements IAlgorithm {
     }
 
     @Override
-    public String getErrorPercentage() {
-        return Mathamatics.getErrorPercentage( Math.abs(this.bestQueen.getpBest() - this.fn.getExpectedBestValue()));
+    public IAlgorithm clone() throws CloneNotSupportedException {
+        return new MBO(
+                fn,
+                numberOfWorkers,
+                numberOfDrones,
+                numberOfQueens,
+                steps,
+                numberOfDimensions,
+                minBoundary,
+                maxBoundary,
+                isLocalMinima,
+                alpha,
+                minQueenSpeed,
+                maxQueenSpeed,
+                droneSelectionProbability,
+                mutationProbability,
+                mutationCount);
+    }
+
+    @Override
+    public boolean isMinima() {
+        return this.isLocalMinima;
+    }
+
+    @Override
+    public Vector getBestVector() {
+        return this.bestQueen.getBestPosition();
     }
 }

@@ -1,6 +1,6 @@
-package org.usa.soc.intefaces;
+package org.usa.soc;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Vector;
 
 public interface IAlgorithm {
     void runOptimizer();
@@ -9,15 +9,18 @@ public interface IAlgorithm {
 
     void initialize();
 
-    void setBoundaries(double []minBoundary, double []maxBoundary);
-
     String getBestValue();
 
     Double getBestDValue();
+
+    Vector getBestVector();
 
     ObjectiveFunction getFunction();
 
     String getBestVariables();
 
-    String getErrorPercentage();
+    IAlgorithm clone() throws CloneNotSupportedException;
+
+    boolean isMinima();
 }
+

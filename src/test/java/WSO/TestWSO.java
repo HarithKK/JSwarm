@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.multiRunner.MultiRunner;
 import org.usa.soc.wso.WSO;
 import utils.AssertUtil;
 import utils.Logger;
@@ -13,10 +14,10 @@ public class TestWSO {
         private static final int LIMIT = 2;
 
         private static final double PRECISION_VAL  = 20;
-        private WSO algo;
+        private MultiRunner algo;
 
-        private WSO getAlgorithm(ObjectiveFunction fn){
-            return new WSO(
+        private MultiRunner getAlgorithm(ObjectiveFunction fn){
+            return new MultiRunner(new WSO(
                     fn,
                     1000,
                     1000,
@@ -26,11 +27,11 @@ public class TestWSO {
                     0.4,
                     0.4,
                     true
-            );
+            ),5);
         }
 
-        private WSO getAlgorithm(ObjectiveFunction fn, int i){
-            return new WSO(
+        private MultiRunner getAlgorithm(ObjectiveFunction fn, int i){
+            return new MultiRunner(new WSO(
                     fn,
                     i,
                     1000,
@@ -40,14 +41,14 @@ public class TestWSO {
                     0.4,
                     0.4,
                     true
-            );
+            ),5);
         }
 
-        public void evaluate(WSO algo, double best, double[] variables, int D, double variance){
+        public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
             AssertUtil.evaluate(
                     algo.getBestDValue(),
                     best,
-                    algo.getGBest(),
+                    algo.getBestVector(),
                     variables,
                     D,
                     variance,

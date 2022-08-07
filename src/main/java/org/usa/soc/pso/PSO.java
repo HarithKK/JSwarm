@@ -2,13 +2,12 @@ package org.usa.soc.pso;
 
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.intefaces.IAlgorithm;
-import org.usa.soc.util.Logger;
+import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class PSO implements IAlgorithm {
+public class PSO implements IAlgorithm, Cloneable {
 
     private int particleCount;
     private int numberOfDimensions;
@@ -189,7 +188,6 @@ public class PSO implements IAlgorithm {
         return !shouldRun;
     }
 
-    @Override
     public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
         Validator.checkBoundaries(minBoundary, maxBoundary, this.numberOfDimensions);
 
@@ -212,6 +210,11 @@ public class PSO implements IAlgorithm {
     }
 
     @Override
+    public Vector getBestVector() {
+        return this.gBest;
+    }
+
+    @Override
     public ObjectiveFunction getFunction() {
         return this.objectiveFunction;
     }
@@ -219,14 +222,6 @@ public class PSO implements IAlgorithm {
     @Override
     public String getBestVariables() {
         return this.gBest.toString();
-    }
-
-    @Override
-    public String getErrorPercentage() {
-        Double r = Math.abs(this.getGBestValue() - this.objectiveFunction.getExpectedBestValue());
-        r /= this.objectiveFunction.getExpectedBestValue() + + 0.00000000001;
-        r *= 100;
-        return Math.abs(r) + " %";
     }
 
     private void updateGBest(Vector pBestPosition, Vector gBestPosition) {
@@ -240,6 +235,20 @@ public class PSO implements IAlgorithm {
         }
     }
 
+    @Override
+    public IAlgorithm clone() throws CloneNotSupportedException {
+        return new PSO(objectiveFunction, particleCount,
+                numberOfDimensions,
+                stepsCount,
+                c1,
+                c2,
+                wMax,
+                wMin,
+                minBoundary,
+                maxBoundary,
+                isLocalMinima);
+    }
+
     public Vector getGBest() {
         return gBest;
     }
@@ -247,10 +256,7 @@ public class PSO implements IAlgorithm {
     public Double getGBestValue() {
         return this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
     }
-    public Double getGBestValue(int round) {
-        Double d = this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
-        return Mathamatics.round(d, round);
-    }
+
     public Double getGBestAbsValue(int round) {
         Double d = this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
         return Mathamatics.absRound(d, round);
@@ -259,5 +265,10 @@ public class PSO implements IAlgorithm {
 
     public long getNanoDuration() {
         return nanoDuration;
+    }
+
+    @Override
+    public boolean isMinima() {
+        return this.isLocalMinima;
     }
 }
