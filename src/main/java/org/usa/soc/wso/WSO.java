@@ -2,8 +2,7 @@ package org.usa.soc.wso;
 
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.intefaces.IAlgorithm;
-import org.usa.soc.util.Mathamatics;
+import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -116,7 +115,6 @@ public class WSO implements IAlgorithm {
         }
     }
 
-    @Override
     public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
@@ -141,13 +139,30 @@ public class WSO implements IAlgorithm {
     public String getBestVariables() {
         return this.gBest.toString();
     }
-
-    @Override
-    public String getErrorPercentage() {
-        return Mathamatics.getErrorPercentage( Math.abs(this.getBestDValue() - this.fn.getExpectedBestValue()));
+    public Vector getGBest(){
+        return this.gBest;
     }
 
-    public Vector getGBest(){
+    @Override
+    public IAlgorithm clone() throws CloneNotSupportedException {
+        return new WSO(fn,
+                numberOfIterations,
+                numberOfWasps,
+                numberOfDimensions,
+                minBoundary,
+                maxBoundary,
+                c1,
+                c2,
+                isLocalMinima);
+    }
+
+    @Override
+    public boolean isMinima() {
+        return this.isLocalMinima;
+    }
+
+    @Override
+    public Vector getBestVector() {
         return this.gBest;
     }
 }

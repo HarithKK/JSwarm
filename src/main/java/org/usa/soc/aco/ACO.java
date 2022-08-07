@@ -2,7 +2,7 @@ package org.usa.soc.aco;
 
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.intefaces.IAlgorithm;
+import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
@@ -156,7 +156,6 @@ public class ACO implements IAlgorithm {
         }
     }
 
-    @Override
     public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
         Validator.checkBoundaries(minBoundary, maxBoundary, this.numberOfDimensions);
 
@@ -201,8 +200,29 @@ public class ACO implements IAlgorithm {
     }
 
     @Override
-    public String getErrorPercentage() {
-        return Mathamatics.getErrorPercentage( Math.abs(this.getGBestValue() - this.fn.getExpectedBestValue()));
+    public IAlgorithm clone() throws CloneNotSupportedException {
+        return new ACO(
+                fn,
+                numberOfAnts,
+                numberOfIterations,
+                numberOfProcessIterations,
+                numberOfDimensions,
+                minBoundary,
+                maxBoundary,
+                alpha,
+                evaporationRate,
+                pheromoneValue,
+                isLocalMinima);
+    }
+
+    @Override
+    public boolean isMinima() {
+        return this.isLocalMinima;
+    }
+
+    @Override
+    public Vector getBestVector() {
+        return this.gBest;
     }
 
     public Vector getGBest() {

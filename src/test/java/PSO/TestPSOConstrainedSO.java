@@ -1,17 +1,16 @@
 package PSO;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
+import org.junit.Ignore;
+import org.junit.jupiter.api.*;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
-import org.usa.soc.intefaces.IAlgorithm;
+import org.usa.soc.IAlgorithm;
 import org.usa.soc.pso.PSO;
 import utils.Logger;
 
 import java.util.List;
 
+@Ignore("Not Ready")
 public class TestPSOConstrainedSO {
 
     private static final int LIMIT = 2;
@@ -32,6 +31,7 @@ public class TestPSOConstrainedSO {
     }
 
     @Test
+    @Disabled
     public void testRosenbrockFunction() {
 
         ObjectiveFunction fn = new RosenbrockFunction();
@@ -49,6 +49,6 @@ public class TestPSOConstrainedSO {
 
     @AfterEach
     public void afterEach(TestInfo in){
-        Logger.showFunction(p);
+        //Logger.showFunction(p);
     }
 }

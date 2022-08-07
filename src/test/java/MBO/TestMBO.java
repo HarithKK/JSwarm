@@ -1,34 +1,28 @@
 package MBO;
 
 import org.junit.Ignore;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.*;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.intefaces.IAlgorithm;
 import org.usa.soc.mbo.MBO;
-import org.usa.soc.pso.PSO;
+import org.usa.soc.multiRunner.MultiRunner;
 import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;
 
-import java.util.List;
-
+@Ignore("Class not ready for tests")
 public class TestMBO {
 
     private static final int LIMIT = 15;
-    private MBO algo;
+    private MultiRunner algo;
 
     private static final double PRECISION_VAL  = 50;
 
-    private MBO getAlgorithm(ObjectiveFunction fn){
-        return new MBO(
+    private MultiRunner getAlgorithm(ObjectiveFunction fn){
+        return new MultiRunner(new MBO(
                 fn,
                 500,
-                 100,
+                100,
                 30,
                 1000,
                 fn.getNumberOfDimensions(),
@@ -41,11 +35,11 @@ public class TestMBO {
                 0.5,
                 0.5,
                 10
-        );
+        ),5);
     }
 
-    private MBO getAlgorithm(ObjectiveFunction fn, int i){
-        return new MBO(
+    private MultiRunner getAlgorithm(ObjectiveFunction fn, int i){
+        return new MultiRunner(new MBO(
                 fn,
                 500,
                 100,
@@ -61,14 +55,14 @@ public class TestMBO {
                 0.8,
                 0.5,
                 1
-        );
+        ),5);
     }
 
-    public void evaluate(MBO algo, double best, double[] variables, int D, double variance){
+    public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
                 algo.getBestDValue(),
                 best,
-                algo.getBest(),
+                algo.getBestVector(),
                 variables,
                 D,
                 variance,
@@ -77,6 +71,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testAckleysFunction() {
 
         ObjectiveFunction fn = new AckleysFunction();
@@ -88,6 +83,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testBoothFunction() {
 
         ObjectiveFunction fn = new BoothsFunction();
@@ -99,6 +95,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testMatyasFunction() {
 
         ObjectiveFunction fn = new MatyasFunction();
@@ -111,6 +108,7 @@ public class TestMBO {
 
 
     @Test
+@Disabled
     public void testRastriginFunction() {
 
         ObjectiveFunction fn = new RastriginFunction();
@@ -123,6 +121,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testSphereFunction() {
 
         ObjectiveFunction fn = new SphereFunction();
@@ -135,6 +134,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testRosenbrockFunction() {
 
         ObjectiveFunction fn = new RosenbrockFunction();
@@ -147,6 +147,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testBealeFunction() {
 
         ObjectiveFunction fn = new BealeFunction();
@@ -159,6 +160,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testBukinFunction() {
 
         ObjectiveFunction fn = new BukinFunction();
@@ -171,6 +173,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testLevyFunction() {
 
         ObjectiveFunction fn = new LevyFunction();
@@ -183,6 +186,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testHimmelblausFunction() {
 
         ObjectiveFunction fn = new HimmelblausFunction();
@@ -196,6 +200,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testThreeHumpCamelFunction() {
 
         ObjectiveFunction fn = new ThreeHumpCamelFunction();
@@ -208,6 +213,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testEasomFunction() {
 
         ObjectiveFunction fn = new EasomFunction();
@@ -220,6 +226,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testCrossInTrayFunction() {
 
         ObjectiveFunction fn = new CrossInTrayFunction();
@@ -232,6 +239,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testEggholderFunction() {
 
         ObjectiveFunction fn = new EggholderFunction();
@@ -244,6 +252,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testHolderTableFunction() {
 
         ObjectiveFunction fn = new HolderTableFunction();
@@ -256,6 +265,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testMcCormickFunction() {
 
         ObjectiveFunction fn = new McCormickFunction();
@@ -268,6 +278,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testSchafferN2Function() {
 
         ObjectiveFunction fn = new SchafferFunction();
@@ -280,6 +291,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testSchafferN4Function() {
 
         ObjectiveFunction fn = new SchafferFunctionN4();
@@ -292,6 +304,7 @@ public class TestMBO {
     }
 
     @Test
+@Disabled
     public void testStyblinskiTangFunction() {
 
         ObjectiveFunction fn = new StyblinskiTangFunction();
@@ -303,7 +316,7 @@ public class TestMBO {
         double p = Mathamatics.round(algo.getBestDValue(),LIMIT);
         Assertions.assertEquals(-117.5,p);
 
-        double []d = algo.getBest().toDoubleArray(LIMIT);
+        double []d = algo.getBestVector().toDoubleArray(LIMIT);
         Assertions.assertArrayEquals(new double[]{-2.9, -2.9, -2.9}, d);
     }
 

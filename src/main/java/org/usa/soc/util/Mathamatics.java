@@ -21,9 +21,13 @@ public class Mathamatics {
         return indexes;
     }
 
-    public static String getErrorPercentage(double r) {
-        r = (2 / (1 + Math.exp(-r))) - 1;
-        r = (1 - r) * 100;
+    public static String getErrorPercentage(double r, double range) {
+        range = Mathamatics.round(range,1);
+        if(range != 0){
+            r =  ( 4 * r ) / range;
+            r = (100 / (1 + Math.exp(-r)));
+            r = r - 50;
+        }
         return Mathamatics.round(r,2) + " %";
     }
 
