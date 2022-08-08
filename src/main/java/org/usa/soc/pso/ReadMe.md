@@ -18,7 +18,7 @@ PSO p = new PSO(
 
 p.initialize();
 p.runOptimizer();
-Double bestOptimizedValue = p.getGBestValue();
+Double bestOptimizedValue = p.getBestDoubleValue();
 List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
