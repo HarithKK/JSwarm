@@ -3,10 +3,9 @@ package PSO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.IAlgorithm;
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.multiRunner.MultiRunner;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
@@ -17,10 +16,10 @@ public class TestPSO {
     private static final int LIMIT = 2;
 
     private static final double PRECISION_VAL  = 0.2;
-    private MultiRunner algo;
+    private Algorithm algo;
 
-    private MultiRunner getAlgorithm(ObjectiveFunction fn){
-        IAlgorithm a = new PSO(
+    private Algorithm getAlgorithm(ObjectiveFunction fn){
+        return new PSO(
                 fn,
                 1000,
                 fn.getNumberOfDimensions(),
@@ -31,14 +30,13 @@ public class TestPSO {
                 fn.getMin(),
                 fn.getMax(),
                 true);
-        return new MultiRunner(a, 1);
     }
 
-    public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
+    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
-                algo.getBestDValue(),
+                algo.getBestDoubleValue(),
                 best,
-                algo.getBestVector(),
+                algo.getGBest(),
                 variables,
                 D,
                 variance,
@@ -161,7 +159,7 @@ public class TestPSO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertEquals(Mathamatics.round(algo.getBestDValue(), LIMIT), 0);
+        Assertions.assertEquals(Mathamatics.round(algo.getBestDoubleValue(), LIMIT), 0);
 
     }
 
@@ -270,10 +268,10 @@ public class TestPSO {
         algo.initialize();
         algo.runOptimizer();
 
-        double p = Mathamatics.round(algo.getBestDValue(),LIMIT);
+        double p = Mathamatics.round(algo.getBestDoubleValue(),LIMIT);
         Assertions.assertEquals(-117.5,p);
 
-        double []d = algo.getBestVector().toDoubleArray(LIMIT);
+        double []d = algo.getGBest().toDoubleArray(LIMIT);
         Assertions.assertArrayEquals(new double[]{-2.9, -2.9, -2.9}, d);
     }
 
