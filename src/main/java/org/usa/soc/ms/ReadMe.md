@@ -17,8 +17,8 @@ MS p = new MS(
 
 p.initialize();
 p.runOptimizer();
-Double bestOptimizedValue = p.getBestValue();
-List<Double> bestOptimizedLocations = p.getBest().toList();
+Double bestOptimizedValue = p.getBestDoubleValue();
+List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
