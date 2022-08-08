@@ -16,8 +16,8 @@ WSO p = WSO(<ObjectiveFunction>
 
 p.initialize();
 p.runOptimizer();
-Double bestOptimizedValue = p.getBestDValue();
-List<Double> bestOptimizedLocations = p.getGBest();
+Double bestOptimizedValue = p.getBestDoubleValue();
+List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
