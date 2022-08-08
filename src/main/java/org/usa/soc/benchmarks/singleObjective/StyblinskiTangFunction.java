@@ -32,7 +32,7 @@ public class StyblinskiTangFunction extends ObjectiveFunction {
 
     @Override
     public double getExpectedBestValue() {
-        return 0;
+        return -117.5;
     }
 
     @Override
