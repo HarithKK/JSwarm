@@ -2,6 +2,7 @@ package ACO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.singleObjective.*;
@@ -13,12 +14,12 @@ import utils.Logger;
 public class TestACO {
 
     private static final int LIMIT = 2;
-    private MultiRunner algo;
+    private Algorithm algo;
 
     private static final double PRECISION_VAL  = 10;
 
-    private MultiRunner getAlgorithm(ObjectiveFunction fn){
-        return new MultiRunner(new ACO(
+    private Algorithm getAlgorithm(ObjectiveFunction fn){
+        return new ACO(
                 fn,
                 1000,
                 100,
@@ -27,11 +28,11 @@ public class TestACO {
                 fn.getMin(),
                 fn.getMax(),
                 true
-        ),1);
+        );
     }
 
-    private MultiRunner getAlgorithm(ObjectiveFunction fn, int i){
-        return new MultiRunner(new ACO(
+    private Algorithm getAlgorithm(ObjectiveFunction fn, int i){
+        return new ACO(
                 fn,
                 i,
                 100,
@@ -40,14 +41,14 @@ public class TestACO {
                 fn.getMin(),
                 fn.getMax(),
                 true
-        ),5);
+        );
     }
 
-    public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
+    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
-                algo.getBestDValue(),
+                algo.getBestDoubleValue(),
                 best,
-                algo.getBestVector(),
+                algo.getGBest(),
                 variables,
                 D,
                 variance,
@@ -146,7 +147,7 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
 
     @Test
@@ -158,7 +159,7 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
 
     @Test
@@ -170,7 +171,7 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), 2, 2);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 2, 2);
 
     }
 
@@ -195,7 +196,7 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
 
     @Test
@@ -219,7 +220,7 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), 100, 2);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 100, 2);
     }
 
     @Test
@@ -243,7 +244,7 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
 
     @Test
@@ -279,8 +280,8 @@ public class TestACO {
         algo.initialize();
         algo.runOptimizer();
 
-        double p = Mathamatics.round(algo.getBestDValue(),LIMIT);
-        AssertUtil.evaluate(algo.getBestDValue(), 117.5, 15, 20);
+        double p = Mathamatics.round(algo.getBestDoubleValue(),LIMIT);
+        AssertUtil.evaluate(p, 117.5, 15, 20);
     }
 
     @AfterEach

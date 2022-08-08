@@ -1,34 +1,22 @@
 package org.usa.soc.pso;
 
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class PSO implements IAlgorithm, Cloneable {
+public class PSO extends Algorithm implements Cloneable {
 
-    private final int particleCount;
-    private final int numberOfDimensions;
-    private final int stepsCount;
+    private int particleCount;
+
     private final Double c1;
     private final Double c2;
     private final Double wMax;
     private final Double wMin;
 
-    private final boolean isLocalMinima;
-
-    private double[] minBoundary, maxBoundary;
-    private final ObjectiveFunction<Double> objectiveFunction;
-
     private final Particle[] particles;
-
-    private final Vector gBest;
-
-    private long nanoDuration;
-
-    private boolean isInitialized = false;
 
     public PSO(
             ObjectiveFunction<Double> objectiveFunction,
@@ -46,11 +34,12 @@ public class PSO implements IAlgorithm, Cloneable {
         this.numberOfDimensions = numberOfDimensions;
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
+        this.minBoundary = minBoundary;
+        this.maxBoundary = maxBoundary;
         this.c1 = c1;
         this.c2 = c2;
         this.wMax = this.wMin = w;
-        this.minBoundary = minBoundary;
-        this.maxBoundary = maxBoundary;
+
         this.particles = new Particle[particleCount];
         this.gBest = new Vector(numberOfDimensions);
         this.isLocalMinima = isLocalMinima;
@@ -86,6 +75,7 @@ public class PSO implements IAlgorithm, Cloneable {
         this.getGBest().resetAllValues(isLocalMinima ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
     }
 
+    @Override
     public void runOptimizer() {
 
         if (!this.isInitialized()) {
@@ -126,17 +116,10 @@ public class PSO implements IAlgorithm, Cloneable {
         }
     }
 
-    private boolean isInitialized() {
-        if (!this.isInitialized) {
-            this.isInitialized = true;
-            return false;
-        }
-        return true;
-    }
-
+    @Override
     public void initialize() {
 
-        this.isInitialized();
+        this.setInitialized(true);
 
         Validator.checkBoundaries(this.minBoundary, this.maxBoundary, this.numberOfDimensions);
         Validator.checkMinMax(wMax, wMin);
@@ -191,31 +174,6 @@ public class PSO implements IAlgorithm, Cloneable {
         return !shouldRun;
     }
 
-    @Override
-    public String getBestValue() {
-        return String.valueOf(this.getGBestValue());
-    }
-
-    @Override
-    public Double getBestDValue() {
-        return this.getGBestValue();
-    }
-
-    @Override
-    public Vector getBestVector() {
-        return this.gBest;
-    }
-
-    @Override
-    public ObjectiveFunction getFunction() {
-        return this.objectiveFunction;
-    }
-
-    @Override
-    public String getBestVariables() {
-        return this.gBest.toString();
-    }
-
     private void updateGBest(Vector pBestPosition, Vector gBestPosition) {
 
         ObjectiveFunction tfn = this.objectiveFunction.setParameters(pBestPosition.getPositionIndexes());
@@ -228,7 +186,7 @@ public class PSO implements IAlgorithm, Cloneable {
     }
 
     @Override
-    public IAlgorithm clone() throws CloneNotSupportedException {
+    public Algorithm clone() throws CloneNotSupportedException {
         return new PSO(objectiveFunction, particleCount,
                 numberOfDimensions,
                 stepsCount,
@@ -239,28 +197,5 @@ public class PSO implements IAlgorithm, Cloneable {
                 minBoundary,
                 maxBoundary,
                 isLocalMinima);
-    }
-
-    public Vector getGBest() {
-        return gBest;
-    }
-
-    public Double getGBestValue() {
-        return this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
-    }
-
-    public Double getGBestAbsValue(int round) {
-        Double d = this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
-        return Mathamatics.absRound(d, round);
-    }
-
-
-    public long getNanoDuration() {
-        return nanoDuration;
-    }
-
-    @Override
-    public boolean isMinima() {
-        return this.isLocalMinima;
     }
 }

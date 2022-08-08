@@ -1,19 +1,16 @@
 package org.usa.soc.multiRunner;
 
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.IAlgorithm;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Validator;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class MultiRunner implements IAlgorithm {
+public class MultiRunner {
 
-    private IAlgorithm algorithm;
+    private Algorithm algorithm;
     private int numberOfRunners;
 
     private double minimumBestValue;
@@ -24,21 +21,23 @@ public class MultiRunner implements IAlgorithm {
 
     private boolean isInitialized = false;
 
-    private Queue<IAlgorithm> completedAlgos;
+    private Queue<Algorithm> completedAlgos;
 
-    public MultiRunner(IAlgorithm algorithm, int numberOfRunners) {
+    private long nanoDuration;
+
+    public MultiRunner(Algorithm algorithm, int numberOfRunners) {
         this.algorithm = algorithm;
         this.numberOfRunners = numberOfRunners;
     }
 
-    @Override
     public void runOptimizer() {
         if(!this.isInitialized){
             throw new RuntimeException("Multi runner Are Not Initialized");
         }
+        this.nanoDuration = System.nanoTime();
         try {
             for(int i = 0; i < this.numberOfRunners; i++){
-                IAlgorithm algo = this.getAlgorithm().clone();
+                Algorithm algo = this.algorithm.clone();
                 algo.initialize();
                 algo.runOptimizer();
                 this.completedAlgos.add(algo);
@@ -47,69 +46,53 @@ public class MultiRunner implements IAlgorithm {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void finalizeAll() {
 
         while(!this.completedAlgos.isEmpty()){
-            IAlgorithm a = this.completedAlgos.poll();
-            if(Validator.validateBestValue(a.getBestDValue(), this.gbestValue, this.isMinima())){
-                this.gbestValue = a.getBestDValue();
-                this.gbest = a.getBestVector();
-                this.setMinimumBestValue(Math.min(a.getBestDValue(), this.getMinimumBestValue()));
-                this.setMaximumBestValue(Math.max(a.getBestDValue(), this.getMaximumBestValue()));
+            Algorithm a = this.completedAlgos.poll();
+            if(Validator.validateBestValue(a.getBestDoubleValue(), this.gbestValue, this.isMinima())){
+                this.gbestValue = a.getBestDoubleValue();
+                this.gbest = a.getGBest();
+                this.setMinimumBestValue(Math.min(a.getBestDoubleValue(), this.getMinimumBestValue()));
+                this.setMaximumBestValue(Math.max(a.getBestDoubleValue(), this.getMaximumBestValue()));
                 this.algorithm = a;
             }
         }
     }
 
-    @Override
-    public long getNanoDuration() {
-        return 0;
-    }
-
-    @Override
     public void initialize() {
         this.isInitialized = true;
         this.setMinimumBestValue(Double.MAX_VALUE);
         this.setMaximumBestValue(Double.MIN_VALUE);
-        this.gbestValue = this.getAlgorithm().isMinima() ? Double.MAX_VALUE : Double.MIN_VALUE;
+        this.gbestValue = this.algorithm.isMinima() ? Double.MAX_VALUE : Double.MIN_VALUE;
         this.completedAlgos = new LinkedList<>();
     }
 
-    @Override
-    public String getBestValue() {
+    public String getBestStringValue() {
         return String.valueOf(this.gbestValue);
     }
 
-    @Override
-    public Double getBestDValue() {
+    public Double getBestDoubleValue() {
         return this.gbestValue;
     }
 
-    @Override
-    public Vector getBestVector() {
+    public Vector getGBest() {
         return this.gbest;
     }
 
-    @Override
     public ObjectiveFunction getFunction() {
-        return this.getAlgorithm().getFunction();
+        return this.algorithm.getFunction();
     }
 
-    @Override
     public String getBestVariables() {
-        return this.getAlgorithm().getBestVariables();
+        return this.algorithm.getBestVariables();
     }
 
-    @Override
-    public IAlgorithm clone() throws CloneNotSupportedException {
-        return (IAlgorithm) super.clone();
-    }
-
-    @Override
     public boolean isMinima() {
-        return this.getAlgorithm().isMinima();
+        return this.algorithm.isMinima();
     }
 
     public double getMinimumBestValue() {
@@ -128,7 +111,11 @@ public class MultiRunner implements IAlgorithm {
         this.maximumBestValue = maximumBestValue;
     }
 
-    public IAlgorithm getAlgorithm() {
+    public Algorithm getAlgorithm() {
         return algorithm;
+    }
+
+    public long getNanoDuration() {
+        return nanoDuration;
     }
 }

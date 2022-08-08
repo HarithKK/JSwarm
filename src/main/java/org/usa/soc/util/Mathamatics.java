@@ -25,8 +25,8 @@ public class Mathamatics {
         range = Mathamatics.round(range,1);
         if(range != 0){
             r =  ( 4 * r ) / range;
-            r = (100 / (1 + Math.exp(-r)));
-            r = r - 50;
+            r = ((2 * range) / (1 + Math.exp(-r)));
+            r = r - range;
         }
         return Mathamatics.round(r,2) + " %";
     }

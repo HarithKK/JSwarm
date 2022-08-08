@@ -1,9 +1,8 @@
 package org.usa.soc.mbo;
 
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.IAlgorithm;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -16,23 +15,17 @@ import java.util.List;
 H. A. Abbass, "MBO: marriage in honey bees optimization-a Haplometrosis polygynous swarming approach," Proceedings of the 2001 Congress on Evolutionary Computation (IEEE Cat. No.01TH8546), 2001, pp. 207-214 vol. 1, doi: 10.1109/CEC.2001.934391.
  */
 
-public class MBO implements IAlgorithm {
+public class MBO extends Algorithm {
 
     private static final int SPERM_COUNT = 1;
-    private int numberOfWorkers, numberOfQueens,numberOfDrones, steps, numberOfDimensions, mutationCount;
-    private ObjectiveFunction fn;
+    private int numberOfWorkers, numberOfQueens,numberOfDrones, mutationCount;
 
     private List<Queen> queens;
     private Worker[] workers;
     private Drone[] drones;
     private List<Brood> broodsList;
 
-    private boolean isInitialized, isLocalMinima;
-    private double[] minBoundary;
-    private double[] maxBoundary;
-
     private Queen bestQueen;
-    private long nanoDuration;
     private Double alpha;
 
     private double minQueenSpeed, maxQueenSpeed, droneSelectionProbability, mutationProbability;
@@ -54,11 +47,11 @@ public class MBO implements IAlgorithm {
             double mutationProbability,
             int mutationCount
     ){
-        this.fn = fn;
+        this.objectiveFunction = fn;
         this.numberOfQueens = numberOfQueens;
         this.numberOfWorkers = numberOfWorkers;
         this.numberOfDimensions = numberOfDimensions;
-        this.steps = steps;
+        this.stepsCount = steps;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.isLocalMinima = isLocalMinima;
@@ -79,13 +72,13 @@ public class MBO implements IAlgorithm {
     @Override
     public void runOptimizer() {
 
-        if(!this.isInitialized){
+        if(!this.isInitialized()){
             throw new RuntimeException("Particles Are Not Initialized");
         }
 
         this.nanoDuration = System.nanoTime();
 
-        for(int i=0; i< this.steps; i++){
+        for(int i=0; i< this.stepsCount; i++){
             for (Queen q: queens) {
                 if(q.getEnergy() == 0)
                     continue;
@@ -93,14 +86,14 @@ public class MBO implements IAlgorithm {
                 q.setPosition(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
                 q.setSpeed(q.getSpeed() * this.alpha);
                 q.setEnergy(q.getEnergy() - i);
-                q.updateBestValue(this.fn, this.isLocalMinima);
+                q.updateBestValue(this.objectiveFunction, this.isLocalMinima);
                 updateSpermatheca(q);
             }
             sortQueensList();
 
             // came to the nest generate broods
             for (Queen q: queens) {
-                Brood b = q.generateBrood(this.fn, this.mutationProbability, this.mutationCount, this.isLocalMinima);
+                Brood b = q.generateBrood(this.objectiveFunction, this.mutationProbability, this.mutationCount, this.isLocalMinima);
                 if(b!=null){
                     this.broodsList.add(b);
                 }
@@ -155,10 +148,10 @@ public class MBO implements IAlgorithm {
 
     private void updateSpermatheca(Queen q) {
 
-        Double f1 = this.fn.setParameters(q.getPosition().getPositionIndexes()).call();
+        Double f1 = this.objectiveFunction.setParameters(q.getPosition().getPositionIndexes()).call();
 
         for (Drone d: this.drones) {
-            Double f2 = this.fn.setParameters(d.getPosition().getPositionIndexes()).call();
+            Double f2 = this.objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call();
 
             double p = Math.exp(-Math.abs(f1-f2)/q.getSpeed());
 
@@ -170,13 +163,8 @@ public class MBO implements IAlgorithm {
     }
 
     @Override
-    public long getNanoDuration() {
-        return this.nanoDuration;
-    }
-
-    @Override
     public void initialize() {
-        this.isInitialized = true;
+        this.setInitialized(true);
         Validator.checkBoundaries(this.minBoundary, this.maxBoundary, this.numberOfDimensions);
 
         for(int i=0;i<this.numberOfWorkers; i++){
@@ -192,8 +180,8 @@ public class MBO implements IAlgorithm {
         for(int i=0;i<this.numberOfQueens; i++){
             Queen queen = new Queen(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             queen.setSpeed(Randoms.rand(this.minQueenSpeed, this.maxQueenSpeed));
-            queen.setEnergy(steps);
-            queen.updateBestValue(this.fn, this.isLocalMinima);
+            queen.setEnergy(stepsCount);
+            queen.updateBestValue(this.objectiveFunction, this.isLocalMinima);
             this.queens.add(queen);
             this.updateBestQueen(queen);
         }
@@ -210,22 +198,13 @@ public class MBO implements IAlgorithm {
         }
     }
     @Override
-    public String getBestValue() {
-        return String.valueOf(this.bestQueen.getpBest());
+    public String getBestStringValue() {
+        return String.valueOf(this.getBestDoubleValue());
     }
 
     @Override
-    public Double getBestDValue() {
+    public Double getBestDoubleValue() {
         return this.bestQueen.getpBest();
-    }
-
-    public Double getBestValue(int round) {
-        return Mathamatics.round(this.bestQueen.getpBest(), round);
-    }
-
-    @Override
-    public ObjectiveFunction getFunction() {
-        return this.fn;
     }
 
     @Override
@@ -233,18 +212,17 @@ public class MBO implements IAlgorithm {
         return this.bestQueen.getBestPosition().toString();
     }
 
-    public Vector getBest() {
-        return this.bestQueen.getBestPosition();
-    }
+    @Override
+    public Vector getGBest() { return this.bestQueen.getBestPosition(); }
 
     @Override
-    public IAlgorithm clone() throws CloneNotSupportedException {
+    public Algorithm clone() throws CloneNotSupportedException {
         return new MBO(
-                fn,
+                objectiveFunction,
                 numberOfWorkers,
                 numberOfDrones,
                 numberOfQueens,
-                steps,
+                stepsCount,
                 numberOfDimensions,
                 minBoundary,
                 maxBoundary,
@@ -255,15 +233,5 @@ public class MBO implements IAlgorithm {
                 droneSelectionProbability,
                 mutationProbability,
                 mutationCount);
-    }
-
-    @Override
-    public boolean isMinima() {
-        return this.isLocalMinima;
-    }
-
-    @Override
-    public Vector getBestVector() {
-        return this.bestQueen.getBestPosition();
     }
 }
