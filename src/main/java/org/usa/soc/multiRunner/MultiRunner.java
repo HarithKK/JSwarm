@@ -24,11 +24,7 @@ public class MultiRunner implements IAlgorithm {
 
     private boolean isInitialized = false;
 
-    private ExecutorService executorService;
-
     private Queue<IAlgorithm> completedAlgos;
-
-    private CountDownLatch countDownLatch;
 
     public MultiRunner(IAlgorithm algorithm, int numberOfRunners) {
         this.algorithm = algorithm;
@@ -38,24 +34,16 @@ public class MultiRunner implements IAlgorithm {
     @Override
     public void runOptimizer() {
         if(!this.isInitialized){
-            throw new RuntimeException("Particles Are Not Initialized");
+            throw new RuntimeException("Multi runner Are Not Initialized");
         }
         try {
             for(int i = 0; i < this.numberOfRunners; i++){
-                IAlgorithm algo = this.algorithm.clone();
+                IAlgorithm algo = this.getAlgorithm().clone();
                 algo.initialize();
                 algo.runOptimizer();
-                this.executorService.submit(()->{
-                    algo.initialize();
-                    algo.runOptimizer();
-                    this.completedAlgos.add(algo);
-                    this.countDownLatch.countDown();
-                });
+                this.completedAlgos.add(algo);
             }
-            countDownLatch.await();
             finalizeAll();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -83,13 +71,10 @@ public class MultiRunner implements IAlgorithm {
     @Override
     public void initialize() {
         this.isInitialized = true;
-        this.executorService = Executors.newFixedThreadPool(this.numberOfRunners);
         this.setMinimumBestValue(Double.MAX_VALUE);
         this.setMaximumBestValue(Double.MIN_VALUE);
-        this.gbest = new Vector(this.algorithm.getFunction().getNumberOfDimensions());
-        this.gbestValue = this.algorithm.isMinima() ? Double.MAX_VALUE : Double.MAX_VALUE;
+        this.gbestValue = this.getAlgorithm().isMinima() ? Double.MAX_VALUE : Double.MIN_VALUE;
         this.completedAlgos = new LinkedList<>();
-        this.countDownLatch = new CountDownLatch(this.numberOfRunners);
     }
 
     @Override
@@ -109,12 +94,12 @@ public class MultiRunner implements IAlgorithm {
 
     @Override
     public ObjectiveFunction getFunction() {
-        return this.algorithm.getFunction();
+        return this.getAlgorithm().getFunction();
     }
 
     @Override
     public String getBestVariables() {
-        return this.algorithm.getBestVariables();
+        return this.getAlgorithm().getBestVariables();
     }
 
     @Override
@@ -124,7 +109,7 @@ public class MultiRunner implements IAlgorithm {
 
     @Override
     public boolean isMinima() {
-        return this.algorithm.isMinima();
+        return this.getAlgorithm().isMinima();
     }
 
     public double getMinimumBestValue() {
@@ -141,5 +126,9 @@ public class MultiRunner implements IAlgorithm {
 
     public void setMaximumBestValue(double maximumBestValue) {
         this.maximumBestValue = maximumBestValue;
+    }
+
+    public IAlgorithm getAlgorithm() {
+        return algorithm;
     }
 }

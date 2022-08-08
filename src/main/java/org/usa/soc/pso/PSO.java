@@ -9,19 +9,22 @@ import org.usa.soc.util.Validator;
 
 public class PSO implements IAlgorithm, Cloneable {
 
-    private int particleCount;
-    private int numberOfDimensions;
-    private int stepsCount;
-    private Double c1, c2, wMax, wMin;
+    private final int particleCount;
+    private final int numberOfDimensions;
+    private final int stepsCount;
+    private final Double c1;
+    private final Double c2;
+    private final Double wMax;
+    private final Double wMin;
 
-    private boolean isLocalMinima;
+    private final boolean isLocalMinima;
 
     private double[] minBoundary, maxBoundary;
-    private ObjectiveFunction<Double> objectiveFunction;
+    private final ObjectiveFunction<Double> objectiveFunction;
 
-    private Particle[] particles;
+    private final Particle[] particles;
 
-    private Vector gBest;
+    private final Vector gBest;
 
     private long nanoDuration;
 
@@ -35,8 +38,8 @@ public class PSO implements IAlgorithm, Cloneable {
             double c1,
             double c2,
             double w,
-            double []minBoundary,
-            double []maxBoundary,
+            double[] minBoundary,
+            double[] maxBoundary,
             boolean isLocalMinima) {
 
         this.particleCount = particleCount;
@@ -63,8 +66,8 @@ public class PSO implements IAlgorithm, Cloneable {
             double c2,
             double wMax,
             double wMin,
-            double []minBoundary,
-            double []maxBoundary,
+            double[] minBoundary,
+            double[] maxBoundary,
             boolean isLocalMinima) {
 
         this.particleCount = particleCount;
@@ -83,9 +86,9 @@ public class PSO implements IAlgorithm, Cloneable {
         this.getGBest().resetAllValues(isLocalMinima ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
     }
 
-    public void runOptimizer(){
+    public void runOptimizer() {
 
-        if(!this.isInitialized()){
+        if (!this.isInitialized()) {
             throw new RuntimeException("Particles Are Not Initialized");
         }
 
@@ -93,21 +96,21 @@ public class PSO implements IAlgorithm, Cloneable {
         // run the steps
         double currentBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
-        for(int step = 1; step <= this.stepsCount; step++){
+        for (int step = 1; step <= this.stepsCount; step++) {
             Double stepBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
-            if(Validator.validateBestValue(stepBestValue, currentBestValue, isLocalMinima)){
+            if (Validator.validateBestValue(stepBestValue, currentBestValue, isLocalMinima)) {
                 currentBestValue = stepBestValue;
             }
 
             // update positions
-            for (Particle p: this.particles) {
+            for (Particle p : this.particles) {
                 p.updatePbest(this.objectiveFunction, this.isLocalMinima);
                 this.updateGBest(p.getPBest(), this.getGBest());
             }
 
             // update velocity factor
-            for (Particle p: this.particles) {
+            for (Particle p : this.particles) {
                 p.updateVelocityAndPosition(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
             }
 
@@ -116,22 +119,22 @@ public class PSO implements IAlgorithm, Cloneable {
     }
 
     private Double calculateW(Double wMax, Double wMin, int step) {
-        if(wMax == wMin)
+        if (wMax == wMin)
             return wMin;
-        else{
-            return wMax - step*((wMax - wMin)/this.stepsCount);
+        else {
+            return wMax - step * ((wMax - wMin) / this.stepsCount);
         }
     }
 
-    private boolean isInitialized(){
-        if(!this.isInitialized){
+    private boolean isInitialized() {
+        if (!this.isInitialized) {
             this.isInitialized = true;
             return false;
         }
         return true;
     }
 
-    public void initialize(){
+    public void initialize() {
 
         this.isInitialized();
 
@@ -139,9 +142,9 @@ public class PSO implements IAlgorithm, Cloneable {
         Validator.checkMinMax(wMax, wMin);
 
         // initialize particles
-        for(int i=0;i<this.particleCount; i++){
+        for (int i = 0; i < this.particleCount; i++) {
             Particle p = new Particle(this.minBoundary, this.maxBoundary, this.numberOfDimensions);
-            Vector vc = getRandomPosition(Randoms.getRandomVector(numberOfDimensions,this.minBoundary, this.maxBoundary));
+            Vector vc = getRandomPosition(Randoms.getRandomVector(numberOfDimensions, this.minBoundary, this.maxBoundary));
             p.setPosition(vc);
             p.setPBest(vc);
             this.particles[i] = p;
@@ -153,21 +156,21 @@ public class PSO implements IAlgorithm, Cloneable {
 
         Double[] center = Mathamatics.getCenterPoint(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
 
-        if(objectiveFunction.setParameters(v.getPositionIndexes()).validateRange()){
+        if (objectiveFunction.setParameters(v.getPositionIndexes()).validateRange()) {
             return v;
         }
 
         boolean[] isPlus = new boolean[numberOfDimensions];
-        for(int i=0;i<numberOfDimensions;i++){
+        for (int i = 0; i < numberOfDimensions; i++) {
             isPlus[i] = v.getValue(i) < center[i];
         }
 
-        while(!isTerminated(isPlus, v.getPositionIndexes(), center, numberOfDimensions)){
+        while (!isTerminated(isPlus, v.getPositionIndexes(), center, numberOfDimensions)) {
 
-            for(int i=0;i<numberOfDimensions;i++){
+            for (int i = 0; i < numberOfDimensions; i++) {
                 Double dt = v.getValue(i) + (isPlus[i] ? 0.1 : -0.1);
-                v.setValue( dt , i);
-                if(objectiveFunction.setParameters(v.getPositionIndexes()).validateRange()){
+                v.setValue(dt, i);
+                if (objectiveFunction.setParameters(v.getPositionIndexes()).validateRange()) {
                     return v;
                 }
             }
@@ -178,25 +181,14 @@ public class PSO implements IAlgorithm, Cloneable {
 
     private boolean isTerminated(boolean[] isPlus, Double[] positionIndexes, Double[] center, int D) {
         boolean shouldRun = true;
-        for(int i=0;i< D; i++){
-            if(isPlus[i]){
+        for (int i = 0; i < D; i++) {
+            if (isPlus[i]) {
                 shouldRun = shouldRun && positionIndexes[i] < center[i];
-            }else{
+            } else {
                 shouldRun = shouldRun && positionIndexes[i] > center[i];
             }
         }
         return !shouldRun;
-    }
-
-    public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
-        Validator.checkBoundaries(minBoundary, maxBoundary, this.numberOfDimensions);
-
-        this.minBoundary = minBoundary;
-        this.maxBoundary = maxBoundary;
-
-        for(int i=0;i<this.particleCount; i++){
-            this.particles[i].setBoundaries(minBoundary, maxBoundary);
-        }
     }
 
     @Override
@@ -230,7 +222,7 @@ public class PSO implements IAlgorithm, Cloneable {
         Double fpbest = tfn.call();
         Double fgbest = this.objectiveFunction.setParameters(gBestPosition.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
             this.getGBest().setVector(getRandomPosition(pBestPosition));
         }
     }

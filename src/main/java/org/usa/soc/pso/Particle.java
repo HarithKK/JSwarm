@@ -51,8 +51,8 @@ public class Particle {
      */
     public void updateVelocityAndPosition(Vector gBest, Double c1, Double c2, Double w) {
 
-        double c1r1 = c1 * Randoms.getDoubleRand();
-        double c2r2 = c2 * Randoms.getDoubleRand();
+        double c1r1 = c1 * Randoms.rand(0,1);;
+        double c2r2 = c2 * Randoms.rand(0,1);;
 
         Vector v1 = this.getVelocity().operate(Vector.OPERATOR.MULP, w);
         Vector v2 = this.getPBest().operate(Vector.OPERATOR.SUB, this.position)

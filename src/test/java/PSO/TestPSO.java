@@ -31,7 +31,7 @@ public class TestPSO {
                 fn.getMin(),
                 fn.getMax(),
                 true);
-        return new MultiRunner(a, 5);
+        return new MultiRunner(a, 1);
     }
 
     public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
@@ -137,7 +137,7 @@ public class TestPSO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),3);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
 
     @Test

@@ -156,17 +156,6 @@ public class ACO implements IAlgorithm {
         }
     }
 
-    public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
-        Validator.checkBoundaries(minBoundary, maxBoundary, this.numberOfDimensions);
-
-        this.minBoundary = minBoundary;
-        this.maxBoundary = maxBoundary;
-
-        for(int i=0;i<this.numberOfAnts; i++){
-            this.ants[i].setBoundaries(minBoundary, maxBoundary);
-        }
-    }
-
     @Override
     public String getBestValue() {
         return String.valueOf(this.fn.setParameters(this.gBest.getPositionIndexes()).call());
@@ -175,18 +164,6 @@ public class ACO implements IAlgorithm {
     @Override
     public Double getBestDValue() {
         return this.fn.setParameters(this.gBest.getPositionIndexes()).call();
-    }
-
-    public Double getGBestValue() {
-        return this.fn.setParameters(this.getGBest().getPositionIndexes()).call();
-    }
-    public Double getGBestValue(int round) {
-        Double d = this.fn.setParameters(this.getGBest().getPositionIndexes()).call();
-        return Mathamatics.round(d, round);
-    }
-    public Double getGBestAbsValue(int round) {
-        Double d = this.fn.setParameters(this.getGBest().getPositionIndexes()).call();
-        return Mathamatics.absRound(d, round);
     }
 
     @Override
@@ -225,7 +202,4 @@ public class ACO implements IAlgorithm {
         return this.gBest;
     }
 
-    public Vector getGBest() {
-        return gBest;
-    }
 }

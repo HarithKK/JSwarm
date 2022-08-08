@@ -25,6 +25,14 @@ public class Randoms {
         return v;
     }
 
+    public static Vector getRandomVector(int D, double[] min, double[] max, double rMin, double rMax) {
+        Vector v = new Vector(D);
+        for(int i=0;i<D;i++){
+            v.setValue((min[i] + rand(rMin, rMax)*(max[i]-min[i])),i);
+        }
+        return v;
+    }
+
     public static Vector getRandomVector(int D, double min, double max) {
         Vector v = new Vector(D);
         for(int i=0;i<D;i++){

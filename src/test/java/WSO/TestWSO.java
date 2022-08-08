@@ -27,7 +27,7 @@ public class TestWSO {
                     0.4,
                     0.4,
                     true
-            ),5);
+            ),1);
         }
 
         private MultiRunner getAlgorithm(ObjectiveFunction fn, int i){

@@ -35,7 +35,7 @@ public class TestMBO {
                 0.5,
                 0.5,
                 10
-        ),5);
+        ),1);
     }
 
     private MultiRunner getAlgorithm(ObjectiveFunction fn, int i){
