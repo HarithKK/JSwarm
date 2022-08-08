@@ -3,11 +3,10 @@ package MS;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.IAlgorithm;
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.ms.MS;
-import org.usa.soc.multiRunner.MultiRunner;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -16,10 +15,10 @@ public class TestMS {
     private static final int LIMIT = 2;
 
     private static final double PRECISION_VAL  = 10;
-    private MultiRunner algo;
+    private Algorithm algo;
 
-    private MultiRunner getAlgorithm(ObjectiveFunction fn, int rounds){
-        IAlgorithm a = new MS(
+    private Algorithm getAlgorithm(ObjectiveFunction fn, int rounds){
+        return new MS(
                 fn,
                 rounds,
                 1000,
@@ -30,18 +29,17 @@ public class TestMS {
                 0.2,
                 true
         );
-        return new MultiRunner(a, 1);
     }
 
-    private MultiRunner getAlgorithm(ObjectiveFunction fn){
+    private Algorithm getAlgorithm(ObjectiveFunction fn){
         return getAlgorithm(fn, 100);
     }
 
-    public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
+    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
-                algo.getBestDValue(),
+                algo.getBestDoubleValue(),
                 best,
-                algo.getBestVector(),
+                algo.getGBest(),
                 variables,
                 D,
                 variance,
