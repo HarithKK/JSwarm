@@ -3,7 +3,6 @@ package org.usa.soc.wso;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 

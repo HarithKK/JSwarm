@@ -58,4 +58,9 @@ public abstract class Algorithm implements Cloneable {
     public ObjectiveFunction getFunction() {
         return this.objectiveFunction;
     }
+
+    @Override
+    public Algorithm clone() throws CloneNotSupportedException{
+        return null;
+    }
 }

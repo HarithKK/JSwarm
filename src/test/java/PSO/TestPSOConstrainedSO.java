@@ -5,10 +5,8 @@ import org.junit.jupiter.api.*;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
-import org.usa.soc.IAlgorithm;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.util.Mathamatics;
-import utils.Logger;
 
 import java.util.List;
 
