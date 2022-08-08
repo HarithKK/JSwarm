@@ -1,28 +1,15 @@
 package org.usa.soc.wso;
 
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.IAlgorithm;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class WSO implements IAlgorithm {
-
-    private ObjectiveFunction fn;
+public class WSO extends Algorithm {
     private Wasp[] wasps;
-    private int numberOfIterations;
     private int numberOfWasps;
-    private int numberOfDimensions;
-
-    private double[] minBoundary, maxBoundary;
-
-    private boolean isInitialized = false;
-
-    private Vector gBest;
-
-    private boolean isLocalMinima;
-
-    private long nanoDuration;
 
     private double c1, c2;
 
@@ -37,8 +24,8 @@ public class WSO implements IAlgorithm {
                double c1,
                double c2,
                boolean isLocalMinima) {
-        this.fn = fn;
-        this.numberOfIterations = numberOfIterations;
+        this.objectiveFunction = fn;
+        this.stepsCount = numberOfIterations;
         this.numberOfWasps = numberOfWasps;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
@@ -53,13 +40,13 @@ public class WSO implements IAlgorithm {
 
     @Override
     public void runOptimizer() {
-        if(!this.isInitialized){
+        if(!this.isInitialized()){
             throw new RuntimeException("Wasps Are Not Initialized");
         }
 
         this.nanoDuration = System.nanoTime();
 
-        for(int step = 0; step < this.numberOfIterations; step++){
+        for(int step = 0; step < this.stepsCount; step++){
             Wasp w0 = createNewRandomWasp();
             double p0 = w0.getForce() / totalForce;
 
@@ -68,8 +55,8 @@ public class WSO implements IAlgorithm {
 
                 if(p > p0){
                     w.setSolution(w0.getBestSolution());
-                    w.updateDiversity(fn, isLocalMinima);
-                    w.updateForce(this.c1, this.c2, this.fn);
+                    w.updateDiversity(objectiveFunction, isLocalMinima);
+                    w.updateForce(this.c1, this.c2, this.objectiveFunction);
                     this.updateBest(w);
                 }
             }
@@ -85,7 +72,7 @@ public class WSO implements IAlgorithm {
 
     @Override
     public void initialize() {
-        this.isInitialized = true;
+        this.setInitialized(true);
         for(int i=0; i< this.numberOfWasps;i++){
             Wasp wasp = createNewRandomWasp();
             this.totalForce += wasp.getForce();
@@ -100,53 +87,25 @@ public class WSO implements IAlgorithm {
                 this.maxBoundary,
                 this.numberOfDimensions);
         wasp.setSolution(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
-        wasp.updateDiversity(fn, isLocalMinima);
-        wasp.updateForce(this.c1, this.c2, this.fn);
+        wasp.updateDiversity(objectiveFunction, isLocalMinima);
+        wasp.updateForce(this.c1, this.c2, this.objectiveFunction);
         this.updateBest(wasp);
         return wasp;
     }
 
     private void updateBest(Wasp w) {
-        Double fgbest = fn.setParameters(this.gBest.getPositionIndexes()).call();
-        Double fpbest = fn.setParameters(w.getBestSolution().getPositionIndexes()).call();
+        Double fgbest = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = objectiveFunction.setParameters(w.getBestSolution().getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
             this.gBest = w.getBestSolution().getClonedVector();
         }
     }
 
-    public void setBoundaries(double[] minBoundary, double[] maxBoundary) {
-        this.minBoundary = minBoundary;
-        this.maxBoundary = maxBoundary;
-    }
-
     @Override
-    public String getBestValue() {
-        return String.valueOf(getBestDValue());
-    }
-
-    @Override
-    public Double getBestDValue() {
-        return fn.setParameters(this.gBest.getPositionIndexes()).call();
-    }
-
-    @Override
-    public ObjectiveFunction getFunction() {
-        return this.fn;
-    }
-
-    @Override
-    public String getBestVariables() {
-        return this.gBest.toString();
-    }
-    public Vector getGBest(){
-        return this.gBest;
-    }
-
-    @Override
-    public IAlgorithm clone() throws CloneNotSupportedException {
-        return new WSO(fn,
-                numberOfIterations,
+    public Algorithm clone() throws CloneNotSupportedException {
+        return new WSO(objectiveFunction,
+                stepsCount,
                 numberOfWasps,
                 numberOfDimensions,
                 minBoundary,
@@ -154,15 +113,5 @@ public class WSO implements IAlgorithm {
                 c1,
                 c2,
                 isLocalMinima);
-    }
-
-    @Override
-    public boolean isMinima() {
-        return this.isLocalMinima;
-    }
-
-    @Override
-    public Vector getBestVector() {
-        return this.gBest;
     }
 }

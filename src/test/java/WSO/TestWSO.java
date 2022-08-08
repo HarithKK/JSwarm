@@ -2,6 +2,7 @@ package WSO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.multiRunner.MultiRunner;
@@ -14,10 +15,10 @@ public class TestWSO {
         private static final int LIMIT = 2;
 
         private static final double PRECISION_VAL  = 20;
-        private MultiRunner algo;
+        private Algorithm algo;
 
-        private MultiRunner getAlgorithm(ObjectiveFunction fn){
-            return new MultiRunner(new WSO(
+        private Algorithm getAlgorithm(ObjectiveFunction fn){
+            return new WSO(
                     fn,
                     1000,
                     1000,
@@ -27,11 +28,11 @@ public class TestWSO {
                     0.4,
                     0.4,
                     true
-            ),1);
+            );
         }
 
-        private MultiRunner getAlgorithm(ObjectiveFunction fn, int i){
-            return new MultiRunner(new WSO(
+        private Algorithm getAlgorithm(ObjectiveFunction fn, int i){
+            return new WSO(
                     fn,
                     i,
                     1000,
@@ -41,14 +42,14 @@ public class TestWSO {
                     0.4,
                     0.4,
                     true
-            ),5);
+            );
         }
 
-        public void evaluate(MultiRunner algo, double best, double[] variables, int D, double variance){
+        public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
             AssertUtil.evaluate(
-                    algo.getBestDValue(),
+                    algo.getBestDoubleValue(),
                     best,
-                    algo.getBestVector(),
+                    algo.getGBest(),
                     variables,
                     D,
                     variance,
@@ -147,7 +148,7 @@ public class TestWSO {
             algo.initialize();
             algo.runOptimizer();
 
-            AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
+            AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
         }
 
         @Test
@@ -171,7 +172,7 @@ public class TestWSO {
             algo.initialize();
             algo.runOptimizer();
 
-            AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(),3, 1);
+            AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(),3, 1);
 
         }
 
@@ -220,7 +221,7 @@ public class TestWSO {
             algo.initialize();
             algo.runOptimizer();
 
-            AssertUtil.evaluate(algo.getBestDValue(), fn.getExpectedBestValue(), 50, LIMIT);
+            AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 50, LIMIT);
         }
 
         @Test
@@ -280,7 +281,7 @@ public class TestWSO {
             algo.initialize();
             algo.runOptimizer();
 
-            AssertUtil.evaluate(algo.getBestDValue(), 117.5, 20, LIMIT);
+            AssertUtil.evaluate(algo.getBestDoubleValue(), 117.5, 20, LIMIT);
 
         }
 
