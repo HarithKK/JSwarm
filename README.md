@@ -14,6 +14,7 @@ to solve their optimization problems.
 3. [MBO (Marriage in Honey Bees Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/mbo)
 4. [WSO (Wasp Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/wso)
 5. [MS (Monkey Search Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ms)
+6. [CSO (Cat Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cso)
 ## Testing Benchmark Functions
 
 Testing the precision. robustness and general performance of optimization algorithms [[1]](#1).
