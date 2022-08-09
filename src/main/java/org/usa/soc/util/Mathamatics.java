@@ -3,6 +3,7 @@ package org.usa.soc.util;
 import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.util.Precision;
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Vector;
 
 public class Mathamatics {
     public static Double absRound(Double value, int r){
@@ -40,5 +41,21 @@ public class Mathamatics {
                 count++;
         }
         return count;
+    }
+
+    public static double getMinimumDimensionDistance(double []min, double []max, int D){
+        double minD = Double.MAX_VALUE;
+        for(int i=0; i< D;i++){
+            minD = Math.min(minD, max[i] - min[i]);
+        }
+        return minD;
+    }
+
+    public static double getMaximumDimensionDistance(double []min, double []max, int D){
+        double maxD = Double.MIN_VALUE;
+        for(int i=0; i< D;i++){
+            maxD = Math.max(maxD, max[i] - min[i]);
+        }
+        return maxD;
     }
 }
