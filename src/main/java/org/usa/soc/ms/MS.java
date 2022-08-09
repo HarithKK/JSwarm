@@ -40,7 +40,7 @@ public class MS extends Algorithm {
     @Override
     public void runOptimizer() {
         if (!this.isInitialized()) {
-            throw new RuntimeException("Ants Are Not Initialized");
+            throw new RuntimeException("Monkeys Are Not Initialized");
         }
 
         this.nanoDuration = System.nanoTime();

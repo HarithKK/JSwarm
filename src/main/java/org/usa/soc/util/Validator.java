@@ -40,4 +40,11 @@ public class Validator {
         if(wMax < wMin)
             throw new IllegalArgumentException("Validator: Min Max Mismatched!");
     }
+
+    public static boolean validateRangeInOneAndZero(double seekersToTracersRatio) {
+        if(seekersToTracersRatio > 1 || seekersToTracersRatio <0){
+            return false;
+        }
+        return true;
+    }
 }

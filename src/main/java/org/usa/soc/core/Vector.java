@@ -34,6 +34,13 @@ public class Vector {
         }
     }
 
+    public Vector setMaxVector(){
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = Double.POSITIVE_INFINITY;
+        }
+        return this;
+    }
+
     public void setVector(Vector v, double []min, double []max){
         if(v.getNumberOfDimensions() != this.getNumberOfDimensions()){
             throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
