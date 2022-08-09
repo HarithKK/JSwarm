@@ -41,6 +41,13 @@ public class Vector {
         return this;
     }
 
+    public Vector setMinVector(){
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = Double.NEGATIVE_INFINITY;
+        }
+        return this;
+    }
+
     public void setVector(Vector v, double []min, double []max){
         if(v.getNumberOfDimensions() != this.getNumberOfDimensions()){
             throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
@@ -175,10 +182,10 @@ public class Vector {
         return v;
     }
 
-    public double getDistance(double[] coordinateChanges){
+    public double getDistance(Vector v){
         double sum = 0;
         for(int i=0;i<this.numberOfDimensions;i++){
-            sum+= Math.pow(this.positionIndexes[i] - coordinateChanges[i],2);
+            sum+= Math.pow(this.positionIndexes[i] - v.getValue(i),2);
         }
         return Math.sqrt(sum);
     }

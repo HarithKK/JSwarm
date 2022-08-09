@@ -18,7 +18,7 @@ public class Logger {
         System.out.println(
                 al.getAlgorithm().getClass().getSimpleName() + DL+
                 StringFormatter.format(al.getFunction().getClass().getSimpleName(), 23)+ DL+
-                StringFormatter.format(al.getBestStringValue(), 20) + DL+
+                StringFormatter.format(String.valueOf(Mathamatics.round(al.getBestDoubleValue(), 4)), 10) + DL+
                 StringFormatter.format(String.valueOf(Mathamatics.round(al.getFunction().getExpectedBestValue(),4)), 10) + DL+
                 StringFormatter.format(Mathamatics.getErrorPercentage(ep, 100), 25) + DL +
                 StringFormatter.format("["+Mathamatics.round(al.getMinimumBestValue(),4)+","+Mathamatics.round(al.getMaximumBestValue(),4)+"]", 30) + DL+
@@ -40,7 +40,7 @@ public class Logger {
         System.out.println(
                 al.getClass().getSimpleName() + DL+
                         StringFormatter.format(al.getFunction().getClass().getSimpleName(), 23)+ DL+
-                        StringFormatter.format(al.getBestStringValue(), 20) + DL+
+                        StringFormatter.format(String.valueOf(Mathamatics.round(al.getBestDoubleValue(), 4)), 10) + DL+
                         StringFormatter.format(String.valueOf(Mathamatics.round(al.getFunction().getExpectedBestValue(),4)), 10) + DL+
                         StringFormatter.format(Mathamatics.getErrorPercentage(ep, 100), 25) + DL +
                         StringFormatter.format(Arrays.toString(al.getFunction().getMin()), 30)+ DL+

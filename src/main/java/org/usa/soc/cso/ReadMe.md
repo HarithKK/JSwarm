@@ -1,9 +1,9 @@
-# CSO (Cat Swarm Optimization)
+# CSO.CSO (Cat Swarm Optimization)
 
 Developed by  Chu, Shu-Chuan, Pei-Wei Tsai, and Jeng-Shyang Pan  [[1]](#1) in 2006 based on the searching behaviour and tracing a prey behaviour of cats.
 
 ```
-CSO p = new CSO(
+CSO.CSO p = new CSO.CSO(
                 <ObjectiveFunction>,
                 <Number of Dimensions>,
                 <Number of Iterations>,

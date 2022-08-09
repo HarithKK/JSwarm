@@ -4,7 +4,6 @@ Developed by Mucherino, Antonio, and Seref  [[1]](#1) in 2007 based on the food 
 
 ```
 MS p = new MS(
-            boolean isLocalMinima
                 <ObjectiveFunction>,
                 <Number of Iterations>,
                 <Number of Monkeys>,
