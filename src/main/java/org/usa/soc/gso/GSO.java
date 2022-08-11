@@ -4,6 +4,7 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.cso.Cat;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
@@ -91,7 +92,8 @@ public class GSO extends Algorithm {
                     continue;
                 }
 
-                double eNormDistance = ithWarm.getPosition().getDistance(jthWarm.getPosition());
+                double eNormDistance = Mathamatics.getEuclideanNorm(ithWarm.getPosition().operate(Vector.OPERATOR.SUB, jthWarm.getPosition()));
+
                 Vector diffVec = jthWarm.getPosition().
                         operate(Vector.OPERATOR.SUB, ithWarm.getPosition()).
                         operate(Vector.OPERATOR.DIV, eNormDistance).
