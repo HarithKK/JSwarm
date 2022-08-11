@@ -41,6 +41,12 @@ Testing the precision. robustness and general performance of optimization algori
 16. Schaffer function N. 4
 17. Styblinski–Tang function
 
+### Display Functions
+
+```
+new FunctionDisplay();
+```
+
 ## Installing and Using the Library
 
 TBD : We hope to move the library to the Maven central dependency repository. 
