@@ -50,6 +50,7 @@ public class MS extends Algorithm {
                 m.climbTree(this.c1,this.isLocalMinima);
                 updateGBest(m);
             }
+            this.stepAction.performAction(this.gBest);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;

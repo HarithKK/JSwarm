@@ -114,6 +114,7 @@ public class MBO extends Algorithm {
             for (Queen q: queens){
                 this.updateBestQueen(q);
             }
+            this.stepAction.performAction(this.gBest);
         }
 
 

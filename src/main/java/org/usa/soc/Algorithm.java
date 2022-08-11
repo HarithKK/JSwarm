@@ -1,5 +1,6 @@
 package org.usa.soc;
 
+import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
 
 public abstract class Algorithm implements Cloneable {
@@ -8,6 +9,8 @@ public abstract class Algorithm implements Cloneable {
 
     protected double[] minBoundary;
     protected double[] maxBoundary;
+
+    protected Action stepAction;
 
     protected ObjectiveFunction<Double> objectiveFunction;
 
@@ -62,5 +65,9 @@ public abstract class Algorithm implements Cloneable {
     @Override
     public Algorithm clone() throws CloneNotSupportedException{
         return null;
+    }
+
+    public void addStepAction(Action a){
+        this.stepAction =a;
     }
 }

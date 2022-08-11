@@ -103,7 +103,7 @@ public class PSO extends Algorithm implements Cloneable {
             for (Particle p : this.particles) {
                 p.updateVelocityAndPosition(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
             }
-
+            this.stepAction.performAction(this.gBest);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

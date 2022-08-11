@@ -6,6 +6,8 @@ import org.usa.soc.core.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.EventListener;
+
 /*
 Toksari, M. Duran. "Ant colony optimization for finding the global minimum." Applied Mathematics and computation 176.1 (2006): 308-316.
  */
@@ -70,6 +72,7 @@ public class ACO extends Algorithm {
         this.evaporationRate = 0.01;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = new Vector(this.numberOfDimensions);
+        this.gBest = isLocalMinima ? this.gBest.setMaxVector() : this.gBest.setMinVector();
         this.pheromoneValue = 0.1;
         this.isLocalMinima = isLocalMinima;
         this.ants = new Ant[this.numberOfAnts];
@@ -100,7 +103,9 @@ public class ACO extends Algorithm {
 
                     // update pheromones
                     this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
+                    updateBest(a);
                 }
+                this.stepAction.performAction(this.gBest);
             }
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -129,6 +134,7 @@ public class ACO extends Algorithm {
     }
 
     private void updateBest(Ant a){
+
         Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
