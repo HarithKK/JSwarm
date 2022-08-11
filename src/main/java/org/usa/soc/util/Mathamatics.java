@@ -58,4 +58,12 @@ public class Mathamatics {
         }
         return maxD;
     }
+
+    public static double getEuclideanNorm(Vector v){
+        double sum =0;
+        for (double d: v.getPositionIndexes()) {
+            sum += Math.pow(d,2);
+        }
+        return Math.sqrt(sum);
+    }
 }
