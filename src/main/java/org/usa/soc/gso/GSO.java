@@ -103,7 +103,7 @@ public class GSO extends Algorithm {
 
                 this.updateGBest(ithWarm);
             }
-            this.stepAction.performAction(this.gBest);
+            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
         }
     }
 

@@ -105,7 +105,7 @@ public class ACO extends Algorithm {
                     this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
                     updateBest(a);
                 }
-                this.stepAction.performAction(this.gBest);
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
             }
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;

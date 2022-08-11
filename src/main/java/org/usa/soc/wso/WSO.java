@@ -59,7 +59,7 @@ public class WSO extends Algorithm {
                     this.updateBest(w);
                 }
             }
-            this.stepAction.performAction(this.gBest);
+            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;

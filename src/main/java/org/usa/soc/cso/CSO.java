@@ -68,7 +68,7 @@ public class CSO extends Algorithm {
                 cat.updateMode();
                 updateBestCat(cat);
             }
-            this.stepAction.performAction(this.gBest);
+            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
