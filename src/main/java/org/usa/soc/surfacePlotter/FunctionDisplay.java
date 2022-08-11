@@ -1,6 +1,7 @@
 package org.usa.soc.surfacePlotter;
 
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.FunctionsList;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.benchmarks.singleObjectiveConstrained.RosenbrockFunctionDish;
 
@@ -16,28 +17,7 @@ This is only for displaying function
 public class FunctionDisplay {
     Plot p;
 
-    ObjectiveFunction[] fns = new ObjectiveFunction[]{
-            new AckleysFunction(),
-            new BealeFunction(),
-            new BoothsFunction(),
-            new BukinFunction(),
-            new CrossInTrayFunction(),
-            new EasomFunction(),
-            new EggholderFunction(),
-            new GoldsteinPrice(),
-            new HimmelblausFunction(),
-            new HolderTableFunction(),
-            new LevyFunction(),
-            new MatyasFunction(),
-            new McCormickFunction(),
-            new RastriginFunction(),
-            new RosenbrockFunctionDish(),
-            new SchafferFunctionN4(),
-            new SchafferFunction(),
-            new SphereFunction(),
-            new StyblinskiTangFunction(),
-            new ThreeHumpCamelFunction()
-    };
+    ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
 
     private void setPloat(ObjectiveFunction fn){
         p = new Plot(new FunctionToMapper(fn),"Function Display", true);
