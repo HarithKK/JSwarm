@@ -3,7 +3,6 @@ package org.usa.soc.surfacePlotter;
 import net.ericaro.surfaceplotter.JSurfacePanel;
 import net.ericaro.surfaceplotter.Mapper;
 import net.ericaro.surfaceplotter.ProgressiveSurfaceModel;
-import net.ericaro.surfaceplotter.surface.JSurface;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -11,8 +10,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class Plot extends JPanel {
 
@@ -28,6 +25,7 @@ public class Plot extends JPanel {
         model.setMapper(m);
         model.plot().execute();
         model.setPlotFunction12(true, false);
+
     }
 
     private void initComponents(String title, boolean c) {
@@ -43,6 +41,7 @@ public class Plot extends JPanel {
         panel.setBackground(Color.white);
         panel.setTitleFont(panel.getTitleFont().deriveFont(panel.getTitleFont().getStyle() | Font.BOLD, panel.getTitleFont().getSize() + 6f));
         panel.setConfigurationVisible(c);
+
         add(panel, BorderLayout.CENTER);
 
         {
