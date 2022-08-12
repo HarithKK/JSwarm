@@ -13,6 +13,19 @@ public class Randoms {
         return number / precision;
     }
 
+    public static double randAny (double f1, double f2) {
+
+        if(Double.isNaN(f1) || Double.isNaN(f2)){
+            return rand(0,1);
+        }else if(f1 < f2){
+            return rand(f1, f2);
+        }else if (f1 > f2){
+            return rand(f2, f1);
+        }else{
+            return rand(f1, f1+1);
+        }
+    }
+
     public static double getDoubleRand () {
         return new java.util.Random().nextDouble();
     }

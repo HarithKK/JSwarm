@@ -27,8 +27,9 @@ public class FunctionChartPlotter {
 
     public void setChart(Algorithm a){
         this.algorithm = a;
-        this.xdata = new double[(int)(a.getFunction().getMax()[0] - a.getFunction().getMin()[0])+50];
-        this.ydata = new double[(int)(a.getFunction().getMax()[1] - a.getFunction().getMin()[1])+50];
+        double m = Math.max(a.getFunction().getMax()[0] - a.getFunction().getMin()[0], a.getFunction().getMax()[1] - a.getFunction().getMin()[1]);
+        this.xdata = new double[(int)(m)+50];
+        this.ydata = new double[(int)(m)+50];
 
         try {
             chart.removeSeries("Agents");

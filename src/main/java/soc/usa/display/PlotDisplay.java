@@ -49,8 +49,6 @@ public class PlotDisplay {
         fp.setChart(ad);
         fp.display();
         fp.execute();
-
-
     }
 
     private Algorithm getAlgorithm(int a, int f) {
@@ -94,22 +92,22 @@ public class PlotDisplay {
                     true
             );
             case 3: {
-                double sr = Mathamatics.getMinimumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
+                double sr = Mathamatics.getMaximumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
                 return new org.usa.soc.gso.GSO(
                         fn,
                         fn.getNumberOfDimensions(),
-                        1500,
+                        1000,
                         1000,
                         fn.getMin(),
                         fn.getMax(),
-                        5,
+                        10,
                         sr,
                         0.4,
                         0.6,
-                        5,
+                        10,
                         sr,
                         0.08,
-                        0.03,
+                        2.0,
                         true
                 );
             }
@@ -132,13 +130,13 @@ public class PlotDisplay {
             );
             case 5: return new MS(
                     fn,
-                    100,
+                    1000,
                     1000,
                     fn.getNumberOfDimensions(),
-                    10,
+                    50,
                     fn.getMin(),
                     fn.getMax(),
-                    0.2,
+                    0.5,
                     true
             );
             case 6: return new WSO(

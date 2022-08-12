@@ -48,7 +48,7 @@ public class MS extends Algorithm {
 
         for (int i = 0; i < this.stepsCount; i++) {
             for (Monky m : this.monkeys) {
-                m.climbTree(this.c1,this.isLocalMinima);
+                m.climbTree(this.c1,this.isLocalMinima, this.gBest);
                 updateGBest(m);
             }
             if(this.stepAction != null)

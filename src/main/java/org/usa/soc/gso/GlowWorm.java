@@ -17,13 +17,16 @@ public class GlowWorm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+        this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.setR(r);
     }
 
 
     public void updateLuciferin(double ldc, double lac, ObjectiveFunction fn) {
         this.l = ((1-ldc)* getL()) + (lac * fn.setParameters(this.getPosition().getPositionIndexes()).call());
+        if(Double.isNaN(this.l)){
+            this.l = 0;
+        }
     }
 
     public double getL() {
@@ -38,8 +41,8 @@ public class GlowWorm {
         return r;
     }
 
-    public void setPosition(Vector position) {
-        this.position = position;
+    public void setPosition(Vector v) {
+        this.position.setVector(v, minBoundary, maxBoundary);
     }
 
     public void setR(double r) {

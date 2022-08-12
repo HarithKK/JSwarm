@@ -7,13 +7,13 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.Arrays;
+
 public class WSO extends Algorithm {
     private Wasp[] wasps;
     private int numberOfWasps;
 
     private double c1, c2;
-
-    private double totalForce;
 
     public WSO(ObjectiveFunction fn,
                int numberOfIterations,
@@ -47,18 +47,21 @@ public class WSO extends Algorithm {
         this.nanoDuration = System.nanoTime();
 
         for(int step = 0; step < this.stepsCount; step++){
-            Wasp w0 = createNewRandomWasp();
-            double p0 = w0.getForce() / totalForce;
+
+            // tournament
+            double totalForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).sum();
+            double minForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).min().getAsDouble();
+
+            double p0 = Randoms.randAny(minForce, totalForce);
 
             for(Wasp w: this.wasps){
                 double p = w.getForce() / totalForce;
-
-                if(p < p0){
-                    w.setSolution(w0.getBestSolution());
-                    w.updateDiversity(objectiveFunction, isLocalMinima);
-                    w.updateForce(this.c1, this.c2, this.objectiveFunction);
+                if(p >= p0){
                     this.updateBest(w);
                 }
+                w.setSolution(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                w.updateDiversity(objectiveFunction, isLocalMinima);
+                w.updateForce(this.c1, this.c2, this.objectiveFunction);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
@@ -78,8 +81,6 @@ public class WSO extends Algorithm {
         this.setInitialized(true);
         for(int i=0; i< this.numberOfWasps;i++){
             Wasp wasp = createNewRandomWasp();
-            this.totalForce += wasp.getForce();
-
             this.wasps[i] = wasp;
         }
     }
@@ -123,7 +124,7 @@ public class WSO extends Algorithm {
         double[][] data = new double[this.numberOfDimensions][this.numberOfWasps];
         for(int i=0; i< this.numberOfWasps; i++){
             for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.wasps[i].getBestSolution().getValue(j),2);
+                data[j][i] = Mathamatics.round(this.wasps[i].getSolution().getValue(j),2);
             }
         }
         return data;
