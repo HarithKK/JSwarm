@@ -30,6 +30,7 @@ public class CSO {
                 0.2,
                 true,
                 0.5,
+                0.2,
                 true
         );
     }

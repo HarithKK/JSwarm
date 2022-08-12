@@ -21,7 +21,7 @@ public class FunctionsList {
                 new MatyasFunction(),
                 new McCormickFunction(),
                 new RastriginFunction(),
-                new RosenbrockFunctionDish(),
+                new RosenbrockFunction(),
                 new SchafferFunctionN4(),
                 new SchafferFunction(),
                 new SphereFunction(),

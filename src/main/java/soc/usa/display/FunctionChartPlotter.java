@@ -6,10 +6,6 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.Algorithm;
 import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
-
-import javax.swing.*;
-import java.awt.*;
-
 public class FunctionChartPlotter {
 
     private XYChart chart= null;

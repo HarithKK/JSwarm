@@ -4,24 +4,21 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.FunctionsList;
-import org.usa.soc.benchmarks.singleObjective.AckleysFunction;
 import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
-import org.usa.soc.surfacePlotter.FunctionToMapper;
-import org.usa.soc.surfacePlotter.Plot;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.wso.WSO;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class PlotDisplay {
+
+    public static void main(String[] args) {
+        new PlotDisplay();
+    }
 
     ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
     FunctionChartPlotter fp;
@@ -29,8 +26,6 @@ public class PlotDisplay {
     public PlotDisplay() {
 
         Scanner scanner = new Scanner(System.in);
-
-
 
         List<String> r = generateAlgo();
         for (int i=0;i<r.size();i++){
@@ -173,9 +168,5 @@ public class PlotDisplay {
         algo.add("WSO");
 
         return algo;
-    }
-
-    public static void main(String[] args) {
-        new PlotDisplay();
     }
 }
