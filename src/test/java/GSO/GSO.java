@@ -31,7 +31,7 @@ public class GSO {
                 5,
                 sr,
                 0.08,
-                0.03,
+                1,
                 true
         );
     }

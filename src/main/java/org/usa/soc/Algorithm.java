@@ -1,5 +1,6 @@
 package org.usa.soc;
 
+import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
 
 public abstract class Algorithm implements Cloneable {
@@ -8,6 +9,8 @@ public abstract class Algorithm implements Cloneable {
 
     protected double[] minBoundary;
     protected double[] maxBoundary;
+
+    protected Action stepAction;
 
     protected ObjectiveFunction<Double> objectiveFunction;
 
@@ -21,7 +24,11 @@ public abstract class Algorithm implements Cloneable {
 
     private boolean isInitialized = false;
 
-    public abstract void runOptimizer();
+    public void runOptimizer(){
+        this.runOptimizer(0);
+    };
+
+    public abstract void runOptimizer(int time);
 
     public abstract void initialize();
 
@@ -38,11 +45,6 @@ public abstract class Algorithm implements Cloneable {
     public Double getBestDoubleValue() {
         return this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
     }
-
-    public String getBestStringValue() {
-        return String.valueOf(this.getBestDoubleValue());
-    }
-
     public long getNanoDuration() {
         return nanoDuration;
     }
@@ -63,4 +65,20 @@ public abstract class Algorithm implements Cloneable {
     public Algorithm clone() throws CloneNotSupportedException{
         return null;
     }
+    public void addStepAction(Action a){
+        this.stepAction =a;
+    }
+
+    public void sleep(int time){
+        if(time == 0){
+            return;
+        }
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public abstract double[][] getDataPoints();
 }

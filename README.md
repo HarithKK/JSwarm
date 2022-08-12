@@ -47,6 +47,8 @@ Testing the precision. robustness and general performance of optimization algori
 new FunctionDisplay();
 ```
 
+![Display](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/step_action/image.png)
+
 ## Installing and Using the Library
 
 TBD : We hope to move the library to the Maven central dependency repository. 

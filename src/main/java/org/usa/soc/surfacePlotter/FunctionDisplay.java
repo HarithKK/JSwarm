@@ -25,7 +25,7 @@ public class FunctionDisplay {
 
     public FunctionDisplay() {
 
-        JFrame jf = new JFrame("sample");
+        JFrame jf = new JFrame("Functions");
         JToolBar toolBar = new JToolBar();
         JComboBox b = new JComboBox();
 
@@ -49,6 +49,18 @@ public class FunctionDisplay {
         toolBar.add(b);
 
         jf.add(toolBar, BorderLayout.NORTH);
+        jf.setSize(650, 650);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.getContentPane().add(p);
+        jf.setVisible(true);
+    }
+
+    public FunctionDisplay(int y) {
+
+        JFrame jf = new JFrame("Functions");
+
+        setPloat(fns[y]);
+
         jf.setSize(650, 650);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.getContentPane().add(p);

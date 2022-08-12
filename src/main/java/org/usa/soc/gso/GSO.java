@@ -5,6 +5,7 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.cso.Cat;
 import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
@@ -51,20 +52,20 @@ public class GSO extends Algorithm {
         this.rs= rs;
         this.beta = beta;
         this.nt = nt;
-        this.s =s ;
+        this.s = s;
 
         this.glowWorms = new GlowWorm[numberOfGlowWorms];
         this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
 
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
         }
 
-        for(int step=0; step< stepsCount; step++){
+        for(float step=0; step< stepsCount; step += s){
 
             // update luciferin
             for(GlowWorm worm: this.glowWorms){
@@ -76,18 +77,8 @@ public class GSO extends Algorithm {
 
                 GlowWorm ithWarm = this.glowWorms[i];
 
-                GlowWorm []nWarms = getNeighbourWarms(i);
-                double totalP = Arrays.stream(nWarms).mapToDouble(f -> Math.abs(f.getL() - ithWarm.getL())).sum();
-                double minP = 0;
-                GlowWorm jthWarm = null;
-                for(GlowWorm w: nWarms){
-                    double p = Math.abs(w.getL() - ithWarm.getL()) / totalP;
-                    if(p>minP){
-                        minP = p;
-                        jthWarm = w;
-                    }
-                }
-
+                List<GlowWorm> nWarms = getNeighbourWarms(i);
+                GlowWorm jthWarm = getJthGlowWorm(nWarms,ithWarm);
                 if(jthWarm == null){
                     continue;
                 }
@@ -99,12 +90,33 @@ public class GSO extends Algorithm {
                         operate(Vector.OPERATOR.DIV, eNormDistance).
                         operate(Vector.OPERATOR.MULP, s);
                 ithWarm.setPosition(ithWarm.getPosition().operate(Vector.OPERATOR.ADD, diffVec));
-                ithWarm.setR(calculateNewR(ithWarm, nWarms.length));
+                ithWarm.setR(calculateNewR(ithWarm, nWarms.size()));
 
                 this.updateGBest(ithWarm);
             }
-
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
+    }
+
+    private GlowWorm getJthGlowWorm(List<GlowWorm> nWarms, GlowWorm ithWarm) {
+
+        if(nWarms.size() ==0)
+            return null;
+
+        double totalFs = nWarms.stream().mapToDouble(f -> f.getL() - ithWarm.getL()).sum();
+        double minFs = nWarms.stream().mapToDouble(f -> f.getL() - ithWarm.getL()).min().getAsDouble();
+        double relFitness = minFs;
+        double randP = Randoms.randAny(minFs, totalFs);
+
+        for(GlowWorm w: nWarms){
+            relFitness += (w.getL() - ithWarm.getL()) / totalFs;
+            if(randP<=relFitness){
+                return w;
+            }
+        }
+        return  null;
     }
 
     private void updateGBest(GlowWorm ithWarm) {
@@ -121,7 +133,7 @@ public class GSO extends Algorithm {
         return Math.min(rs, Math.max(0, ithWarm.getR() + d));
     }
 
-    private GlowWorm[] getNeighbourWarms(int i) {
+    private List<GlowWorm> getNeighbourWarms(int i) {
 
         GlowWorm ithWarm = glowWorms[i];
         List<GlowWorm> w = new ArrayList<>();
@@ -130,22 +142,14 @@ public class GSO extends Algorithm {
             if(i==j){
                 continue;
             }
-            GlowWorm jthWarm = glowWorms[i];
+            GlowWorm jthWarm = glowWorms[j];
 
-            if(ithWarm.getL() >= jthWarm.getL()){
-                continue;
-            }
-
-            if(Math.abs(ithWarm.getPosition().getValue(0) - jthWarm.getPosition().getValue(0)) >= ithWarm.getR()){
-                continue;
-            }
-
-            if(ithWarm.getPosition().getDistance(jthWarm.getPosition()) >= ithWarm.getR()){
+            if(ithWarm.getPosition().getDistance(jthWarm.getPosition()) > ithWarm.getR()){
                 continue;
             }
             w.add(jthWarm);
         }
-        return w.toArray(GlowWorm[]::new);
+        return w;
 
     }
 
@@ -160,4 +164,15 @@ public class GSO extends Algorithm {
             this.glowWorms[i] = g;
         }
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfGlowWorms];
+        for(int i=0; i< this.numberOfGlowWorms; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.glowWorms[i].getPosition().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }

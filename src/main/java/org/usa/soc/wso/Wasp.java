@@ -28,16 +28,16 @@ public class Wasp {
     }
 
     public void setSolution(Vector v){
-        this.solution = v.getClonedVector();
+        this.solution.setVector(v, minBoundary, maxBoundary);
     }
 
     public void updateDiversity(ObjectiveFunction fn, boolean isLocalMinima) {
 
         Double fgbest = fn.setParameters(this.getBestSolution().getPositionIndexes()).call();
-        Double fpbest = fn.setParameters(this.solution.getPositionIndexes()).call();
+        Double fpbest = fn.setParameters(this.getSolution().getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
-            this.bestSolution = this.solution.getClonedVector();
+            this.bestSolution.setVector(this.solution, minBoundary, maxBoundary);
             this.diversitySolution = Mathamatics.calculateHammingDistance(fpbest.doubleValue(), fgbest.doubleValue());
         }
 
@@ -53,5 +53,9 @@ public class Wasp {
 
     public Double getForce() {
         return force;
+    }
+
+    public Vector getSolution() {
+        return solution;
     }
 }

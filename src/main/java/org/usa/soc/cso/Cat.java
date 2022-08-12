@@ -3,6 +3,7 @@ package org.usa.soc.cso;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Randoms;
+import org.usa.soc.util.Validator;
 
 public class Cat {
 
@@ -67,33 +68,46 @@ public class Cat {
             memoryPool[i] = c;
         }
 
-        double deltaFs = maxFs - minFs;
-
-        if(deltaFs == 0){
-            this.nextBestShadowCat = this.memoryPool[0];
-            return;
-        }
-
-        this.nextBestShadowCat = this.memoryPool[0];
-
-        double fsb = isMinima ? maxFs : minFs;
-
-        for(int i=1; i<smp; i++){
-            double p = Math.abs(memoryPool[i].getFsValue() - fsb) / deltaFs;
-            memoryPool[i].setSelectingProbability(p);
-            if(p < nextBestShadowCat.getSelectingProbability()){
-                nextBestShadowCat = memoryPool[i];
-            }
-        }
+        nextBestShadowCat = selectNextBestCat(maxFs, minFs, isMinima);
 
     }
 
-    public void trace(double c) {
+    private ClonedCat selectNextBestCat(double maxFs, double minFs, boolean isMinima){
+        double deltaFs = maxFs - minFs;
+
+        if(deltaFs == 0){
+            return this.memoryPool[0];
+        }
+
+        double fsb = isMinima ? maxFs : minFs;
+        double p0 = Randoms.rand(0,1);
+
+        // rouletteWheelSelection
+        for(int i=0; i<smp; i++){
+            double p = Math.abs(memoryPool[i].getFsValue() - fsb) / deltaFs;
+            if(p > p0){
+                return memoryPool[i];
+            }
+        }
+
+        // tournament
+        ClonedCat tmp = memoryPool[0];
+        for(int i=1; i<smp; i++){
+            if(Validator.validateBestValue(memoryPool[i].getFsValue(), tmp.getFsValue(), isMinima)){
+                tmp = memoryPool[i];
+            }
+        }
+        return tmp;
+    }
+
+    public void trace(double c, double w, Vector best) {
         double rc = c * Randoms.rand(0,1);
         Vector v = nextBestShadowCat == null ? position : nextBestShadowCat.getPosition();
-        v = v.operate(Vector.OPERATOR.SUB, position).operate(Vector.OPERATOR.MULP, rc);
-        this.velocity =  position.operate(Vector.OPERATOR.ADD, v);
-        this.position.setVector(position.operate(Vector.OPERATOR.ADD, v), minBoundary, maxBoundary);
+        Vector v1 = best.operate(Vector.OPERATOR.SUB, v).operate(Vector.OPERATOR.MULP, rc);
+        Vector v2 = v.operate(Vector.OPERATOR.MULP, w);
+
+        this.velocity.setVector(v1.operate(Vector.OPERATOR.ADD, v2), minBoundary, maxBoundary);
+        this.position.setVector(position.operate(Vector.OPERATOR.ADD, velocity), minBoundary, maxBoundary);
     }
 
     public void updateMode() {
