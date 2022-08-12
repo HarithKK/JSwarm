@@ -58,7 +58,7 @@ public class GSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
 
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
@@ -103,7 +103,9 @@ public class GSO extends Algorithm {
 
                 this.updateGBest(ithWarm);
             }
-            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
     }
 
@@ -160,4 +162,15 @@ public class GSO extends Algorithm {
             this.glowWorms[i] = g;
         }
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfGlowWorms];
+        for(int i=0; i< this.numberOfGlowWorms; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.glowWorms[i].getPosition().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }

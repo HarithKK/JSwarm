@@ -3,6 +3,7 @@ package org.usa.soc.mbo;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -70,7 +71,7 @@ public class MBO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
 
         if(!this.isInitialized()){
             throw new RuntimeException("Particles Are Not Initialized");
@@ -114,7 +115,9 @@ public class MBO extends Algorithm {
             for (Queen q: queens){
                 this.updateBestQueen(q);
             }
-            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
 
 
@@ -198,10 +201,6 @@ public class MBO extends Algorithm {
             this.bestQueen = queen;
         }
     }
-    @Override
-    public String getBestStringValue() {
-        return String.valueOf(this.getBestDoubleValue());
-    }
 
     @Override
     public Double getBestDoubleValue() {
@@ -235,4 +234,15 @@ public class MBO extends Algorithm {
                 mutationProbability,
                 mutationCount);
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfQueens];
+        for(int i=0; i< this.numberOfQueens; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.queens.get(i).getPosition().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }

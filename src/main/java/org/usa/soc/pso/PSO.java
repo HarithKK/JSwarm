@@ -76,7 +76,7 @@ public class PSO extends Algorithm implements Cloneable {
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
 
         if (!this.isInitialized()) {
             throw new RuntimeException("Particles Are Not Initialized");
@@ -103,7 +103,9 @@ public class PSO extends Algorithm implements Cloneable {
             for (Particle p : this.particles) {
                 p.updateVelocityAndPosition(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
             }
-            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -181,7 +183,7 @@ public class PSO extends Algorithm implements Cloneable {
         Double fgbest = this.objectiveFunction.setParameters(gBestPosition.getPositionIndexes()).call();
 
         if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
-            this.getGBest().setVector(getRandomPosition(pBestPosition));
+            this.getGBest().setVector(getRandomPosition(pBestPosition), minBoundary, maxBoundary);
         }
     }
 
@@ -198,4 +200,15 @@ public class PSO extends Algorithm implements Cloneable {
                 maxBoundary,
                 isLocalMinima);
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.particleCount];
+        for(int i=0; i< this.particleCount; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.particles[i].getPosition().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }

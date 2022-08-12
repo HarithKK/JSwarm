@@ -4,6 +4,7 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.pso.Particle;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Validator;
 
 public class CSO extends Algorithm {
@@ -14,7 +15,7 @@ public class CSO extends Algorithm {
     private double seekersToTracersRatio;
 
     private int smp;
-    private double cdc, srd, c;
+    private double cdc, srd, c, w;
     private boolean spc;
 
     public CSO(
@@ -30,6 +31,7 @@ public class CSO extends Algorithm {
             double srd,
             boolean spc,
             double c,
+            double w,
             boolean isLocalMinima) {
 
         this.numberOfDimensions = numberOfDimensions;
@@ -46,11 +48,12 @@ public class CSO extends Algorithm {
         this.srd = srd;
         this.spc = spc;
         this.c = c;
+        this.w =w;
         this.cats = new Cat[numberOfCats];
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
 
         if(!this.isInitialized()){
             throw new RuntimeException("Cats Are Not Initialized");
@@ -63,12 +66,14 @@ public class CSO extends Algorithm {
                 if(cat.isSeeker()){
                     cat.seek(objectiveFunction, isMinima());
                 }else{
-                    cat.trace(c);
+                    cat.trace(c, w, gBest);
                 }
                 cat.updateMode();
                 updateBestCat(cat);
             }
-            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -110,4 +115,15 @@ public class CSO extends Algorithm {
             this.gBest.setVector(cat.getPosition().getClonedVector(), this.minBoundary, this.maxBoundary);
         }
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfCats];
+        for(int i=0; i< this.numberOfCats; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.cats[i].getPosition().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }

@@ -3,6 +3,7 @@ package org.usa.soc.aco;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -83,7 +84,7 @@ public class ACO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
         }
@@ -107,6 +108,9 @@ public class ACO extends Algorithm {
                 }
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
             }
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -158,5 +162,16 @@ public class ACO extends Algorithm {
                 pheromoneValue,
                 isLocalMinima);
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfAnts];
+        for(int i=0; i< this.numberOfAnts; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.ants[i].getPosition().getValue(j),2);
+            }
+        }
+        return data;
+    };
 
 }

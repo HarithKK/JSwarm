@@ -3,6 +3,7 @@ package org.usa.soc.wso;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -34,11 +35,11 @@ public class WSO extends Algorithm {
         this.c2 = c2;
 
         this.wasps = new Wasp[numberOfWasps];
-        this.gBest = new Vector(this.numberOfDimensions);
+        this.gBest = isLocalMinima? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
         if(!this.isInitialized()){
             throw new RuntimeException("Wasps Are Not Initialized");
         }
@@ -52,14 +53,16 @@ public class WSO extends Algorithm {
             for(Wasp w: this.wasps){
                 double p = w.getForce() / totalForce;
 
-                if(p > p0){
+                if(p < p0){
                     w.setSolution(w0.getBestSolution());
                     w.updateDiversity(objectiveFunction, isLocalMinima);
                     w.updateForce(this.c1, this.c2, this.objectiveFunction);
                     this.updateBest(w);
                 }
             }
-            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -114,4 +117,15 @@ public class WSO extends Algorithm {
                 c2,
                 isLocalMinima);
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfWasps];
+        for(int i=0; i< this.numberOfWasps; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.wasps[i].getBestSolution().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }

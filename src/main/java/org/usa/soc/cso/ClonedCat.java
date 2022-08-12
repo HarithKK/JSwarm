@@ -5,7 +5,6 @@ import org.usa.soc.util.Randoms;
 
 public class ClonedCat {
     private Vector position;
-    private double selectingProbability;
     private double fsValue;
 
     void randomUpdatePosition(int n, int D, double srd){
@@ -31,13 +30,5 @@ public class ClonedCat {
 
     public void setFsValue(double fsValue) {
         this.fsValue = fsValue;
-    }
-
-    public double getSelectingProbability() {
-        return selectingProbability;
-    }
-
-    public void setSelectingProbability(double selectingProbability) {
-        this.selectingProbability = selectingProbability;
     }
 }

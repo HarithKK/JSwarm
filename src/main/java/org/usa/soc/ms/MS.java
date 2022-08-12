@@ -2,6 +2,7 @@ package org.usa.soc.ms;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -38,7 +39,7 @@ public class MS extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() {
+    public void runOptimizer(int time) {
         if (!this.isInitialized()) {
             throw new RuntimeException("Monkeys Are Not Initialized");
         }
@@ -50,7 +51,9 @@ public class MS extends Algorithm {
                 m.climbTree(this.c1,this.isLocalMinima);
                 updateGBest(m);
             }
-            this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            if(this.stepAction != null)
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+            sleep(time);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -100,4 +103,15 @@ public class MS extends Algorithm {
                 isLocalMinima
         );
     }
+
+    @Override
+    public double[][] getDataPoints(){
+        double[][] data = new double[this.numberOfDimensions][this.numberOfMonkeys];
+        for(int i=0; i< this.numberOfMonkeys; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.monkeys[i].getBestRoot().getValue(j),2);
+            }
+        }
+        return data;
+    };
 }
