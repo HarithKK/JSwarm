@@ -46,6 +46,7 @@ public class PlotDisplay {
         new org.usa.soc.surfacePlotter.FunctionDisplay(f);
 
         fp = new FunctionChartPlotter("Algorithm Viewer", 600, 600);
+        fp.setTime(50);
         fp.setChart(ad);
         fp.display();
         fp.execute();
