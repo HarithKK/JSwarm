@@ -14,6 +14,8 @@ public class FunctionChartPlotter {
     private SwingWrapper<XYChart> sw;
 
     private Algorithm algorithm;
+
+    private int time = 10;
     public FunctionChartPlotter(String title, int w, int h){
 
         this.chart = new XYChartBuilder()
@@ -64,8 +66,12 @@ public class FunctionChartPlotter {
                 sw.repaintChart();
             }
         });
-        algorithm.runOptimizer(10);
+        algorithm.runOptimizer(time);
         System.out.println(algorithm.getBestDoubleValue() +" "+algorithm.getFunction().getExpectedBestValue());
         System.out.println(algorithm.getGBest().toString());
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }
