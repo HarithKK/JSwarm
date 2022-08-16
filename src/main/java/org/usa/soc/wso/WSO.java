@@ -64,7 +64,7 @@ public class WSO extends Algorithm {
                 w.updateForce(this.c1, this.c2, this.objectiveFunction);
             }
             if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
             sleep(time);
         }
 

@@ -66,4 +66,13 @@ public class Mathamatics {
         }
         return Math.sqrt(sum);
     }
+
+    public static Vector getLevyVector(int t, int D, double min, double max){
+        Vector v = new Vector(D);
+
+        for(int i=0; i< D; i++){
+            v.setValue(min < 1 ? t : Math.pow(t, Randoms.rand(min, max)), i);
+        }
+        return v;
+    }
 }

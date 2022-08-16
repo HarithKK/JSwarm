@@ -189,4 +189,11 @@ public class Vector {
         }
         return Math.sqrt(sum);
     }
+
+    public Vector fixVector(double []min, double []max){
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);
+        }
+        return this;
+    }
 }

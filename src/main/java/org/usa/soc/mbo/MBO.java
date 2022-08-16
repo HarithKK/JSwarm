@@ -116,7 +116,7 @@ public class MBO extends Algorithm {
                 this.updateBestQueen(q);
             }
             if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue());
+                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
             sleep(time);
         }
 

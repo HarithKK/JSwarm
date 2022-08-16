@@ -16,6 +16,7 @@ to solve their optimization problems.
 5. [MS (Monkey Search Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ms)
 6. [CSO (Cat Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cso)
 7. [GSO (Glowworm Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/gso)
+7. [CS (Cuckoo Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cs)
 
 ## Testing Benchmark Functions
 
