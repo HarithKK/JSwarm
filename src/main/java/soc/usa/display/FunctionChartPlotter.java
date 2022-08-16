@@ -1,14 +1,18 @@
 package soc.usa.display;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Stream.generate;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.Algorithm;
 import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
+
 public class FunctionChartPlotter {
 
     private XYChart chart= null;
+
     private double xdata[], ydata[];
 
     private SwingWrapper<XYChart> sw;
@@ -54,15 +58,17 @@ public class FunctionChartPlotter {
 
     public void execute(){
         algorithm.initialize();
-
+        int step =0;
         algorithm.addStepAction(new Action() {
             @Override
-            public void performAction(Vector best, Double bestValue) {
+            public void performAction(Vector best, Double bestValue, int step) {
+                step = step +1;
                 double[][] d = algorithm.getDataPoints();
                 xdata = d[0];
                 ydata = d[1];
 
                 chart.updateXYSeries("Agents", xdata, ydata, null);
+                System.out.print("\r ["+step+"]" + generate(() -> "#").limit(step).collect(joining()));
                 sw.repaintChart();
             }
         });

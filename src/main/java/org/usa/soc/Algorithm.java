@@ -16,6 +16,28 @@ public abstract class Algorithm implements Cloneable {
 
     protected int stepsCount;
 
+    public Algorithm(
+            ObjectiveFunction<Double> objectiveFunction,
+            int stepsCount,
+            int numberOfDimensions,
+            double[] minBoundary,
+            double[] maxBoundary,
+            long nanoDuration,
+            boolean isLocalMinima
+    ) {
+        this.isLocalMinima = isLocalMinima;
+        this.minBoundary = minBoundary;
+        this.maxBoundary = maxBoundary;
+        this.objectiveFunction = objectiveFunction;
+        this.stepsCount = stepsCount;
+        this.numberOfDimensions = numberOfDimensions;
+        this.nanoDuration = nanoDuration;
+    }
+
+    protected Algorithm(){
+
+    }
+
     protected int numberOfDimensions;
 
     protected Vector gBest;

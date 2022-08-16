@@ -1,14 +1,16 @@
-package soc.usa.display;
+package ui;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.FunctionsList;
+import org.usa.soc.cs.CS;
 import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.wso.WSO;
+import soc.usa.display.FunctionChartPlotter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,9 @@ public class PlotDisplay {
         new org.usa.soc.surfacePlotter.FunctionDisplay(f);
 
         fp = new FunctionChartPlotter("Algorithm Viewer", 600, 600);
+        if(a==7){
+            fp.setTime(10);
+        }
         fp.setTime(50);
         fp.setChart(ad);
         fp.display();
@@ -151,6 +156,17 @@ public class PlotDisplay {
                     0.4,
                     true
             );
+            case 7: return new CS(
+                    fn,
+                    100,
+                    fn.getNumberOfDimensions(),
+                    1000,
+                    fn.getMin(),
+                    fn.getMax(),
+                    1,
+                    0.5,
+                    true
+            );
         }
         return null;
     }
@@ -165,6 +181,7 @@ public class PlotDisplay {
         algo.add("MBO");
         algo.add("MS");
         algo.add("WSO");
+        algo.add("CS");
 
         return algo;
     }
