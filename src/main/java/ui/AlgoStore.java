@@ -2,6 +2,7 @@ package ui;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.abc.ABC;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
@@ -146,6 +147,16 @@ public class AlgoStore {
                     1,
                     true
             );
+            case 9: return new ABC(
+                    fn,
+                    300,
+                    fn.getNumberOfDimensions(),
+                    300,
+                    fn.getMin(),
+                    fn.getMax(),
+                    100,
+                    true
+            );
         }
         return null;
     }
@@ -162,6 +173,7 @@ public class AlgoStore {
         algo.add("WSO");
         algo.add("CS");
         algo.add("FA");
+        algo.add("ABC");
 
         return algo;
     }

@@ -16,9 +16,9 @@ to solve their optimization problems.
 5. [MS (Monkey Search Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ms)
 6. [CSO (Cat Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cso)
 7. [GSO (Glowworm Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/gso)
-7. [CS (Cuckoo Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cs)
-7. [FA (Firefly Algorithms)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/fa)
-
+8. [CS (Cuckoo Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cs)
+9. [FA (Firefly Algorithms)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/fa)
+10. [ABC (Artificial Bee Colony)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/abc)
 
 ## Testing Benchmark Functions
 
