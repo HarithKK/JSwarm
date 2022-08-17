@@ -8,8 +8,8 @@ public class Validator {
         }
     }
 
-    public static boolean validateBestValue(Double fpbest, Double fgbest, boolean isMin){
-        return (isMin && fpbest.compareTo(fgbest) < 0 ) || (!isMin && fpbest.compareTo(fgbest) > 0);
+    public static boolean validateBestValue(Double comparatee, Double comparator, boolean isMin){
+        return (isMin && comparatee.compareTo(comparator) < 0 ) || (!isMin && comparatee.compareTo(comparator) > 0);
     }
 
     public static void checkBoundaries(double[] minBoundary, double[] maxBoundary, int numberOfDimensions) {

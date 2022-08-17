@@ -12,17 +12,17 @@ public class SphereFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 3;
+        return 2;
     }
 
     @Override
     public double[] getMin() {
-        return new double[]{-1000,-1000,-1000};
+        return new double[]{-1000,-1000};
     }
 
     @Override
     public double[] getMax() {
-        return new double[]{1000,1000,1000};
+        return new double[]{1000,1000};
     }
 
     @Override
@@ -32,6 +32,6 @@ public class SphereFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{0,0,0};
+        return new double[]{0,0};
     }
 }

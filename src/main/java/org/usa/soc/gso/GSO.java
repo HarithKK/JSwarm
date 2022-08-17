@@ -3,13 +3,11 @@ package org.usa.soc.gso;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.cso.Cat;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GSO extends Algorithm {
@@ -65,7 +63,7 @@ public class GSO extends Algorithm {
             throw new RuntimeException("Ants Are Not Initialized");
         }
 
-        for(float step=0; step< stepsCount; step += s){
+        for(float step = 0; step< getStepsCount(); step += s){
 
             // update luciferin
             for(GlowWorm worm: this.glowWorms){

@@ -17,6 +17,8 @@ to solve their optimization problems.
 6. [CSO (Cat Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cso)
 7. [GSO (Glowworm Swarm Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/gso)
 7. [CS (Cuckoo Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cs)
+7. [FA (Firefly Algorithms)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/fa)
+
 
 ## Testing Benchmark Functions
 

@@ -8,6 +8,7 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.Algorithm;
 import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Mathamatics;
 
 public class FunctionChartPlotter {
 
@@ -59,20 +60,25 @@ public class FunctionChartPlotter {
     public void execute(){
         algorithm.initialize();
         int step =0;
+        int fraction = algorithm.getStepsCount()/100;
         algorithm.addStepAction(new Action() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
-                step = step +1;
+
                 double[][] d = algorithm.getDataPoints();
                 xdata = d[0];
                 ydata = d[1];
 
                 chart.updateXYSeries("Agents", xdata, ydata, null);
-                System.out.print("\r ["+step+"]" + generate(() -> "#").limit(step).collect(joining()));
+                if((step % fraction) == 0){
+                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit(step/fraction).collect(joining()));
+                }
                 sw.repaintChart();
+                step = step +1;
             }
         });
         algorithm.runOptimizer(time);
+        System.out.println("");
         System.out.println(algorithm.getBestDoubleValue() +" "+algorithm.getFunction().getExpectedBestValue());
         System.out.println(algorithm.getGBest().toString());
     }

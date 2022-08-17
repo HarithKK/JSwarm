@@ -46,7 +46,7 @@ public class MS extends Algorithm {
 
         this.nanoDuration = System.nanoTime();
 
-        for (int i = 0; i < this.stepsCount; i++) {
+        for (int i = 0; i < this.getStepsCount(); i++) {
             for (Monky m : this.monkeys) {
                 m.climbTree(this.c1,this.isLocalMinima, this.gBest);
                 updateGBest(m);
@@ -93,7 +93,7 @@ public class MS extends Algorithm {
     @Override
     public Algorithm clone() throws CloneNotSupportedException {
         return new MS(objectiveFunction,
-                stepsCount,
+                getStepsCount(),
                 numberOfMonkeys,
                 numberOfDimensions,
                 maxHeightOfTheTree,

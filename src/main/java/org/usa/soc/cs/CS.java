@@ -46,7 +46,7 @@ public class CS extends Algorithm {
             throw new RuntimeException("Nests Are Not Initialized");
         }
         this.nanoDuration = System.nanoTime();
-        for(int step=0 ;step<stepsCount; step++){
+        for(int step = 0; step< getStepsCount(); step++){
 
             for (int i=0; i< numberOfNests; i++) {
                 // get cuckoo
