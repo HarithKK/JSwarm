@@ -7,8 +7,6 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-import java.util.EventListener;
-
 /*
 Toksari, M. Duran. "Ant colony optimization for finding the global minimum." Applied Mathematics and computation 176.1 (2006): 308-316.
  */
@@ -90,7 +88,7 @@ public class ACO extends Algorithm {
         }
 
         this.nanoDuration = System.nanoTime();
-        long I = Math.round(Math.sqrt(this.stepsCount));
+        long I = Math.round(Math.sqrt(this.getStepsCount()));
 
         for(int i=1; i<= numberOfProcessIterations; i++){
 
@@ -152,7 +150,7 @@ public class ACO extends Algorithm {
         return new ACO(
                 objectiveFunction,
                 numberOfAnts,
-                stepsCount,
+                getStepsCount(),
                 numberOfProcessIterations,
                 numberOfDimensions,
                 minBoundary,

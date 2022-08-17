@@ -103,4 +103,8 @@ public abstract class Algorithm implements Cloneable {
     }
 
     public abstract double[][] getDataPoints();
+
+    public int getStepsCount() {
+        return stepsCount;
+    }
 }

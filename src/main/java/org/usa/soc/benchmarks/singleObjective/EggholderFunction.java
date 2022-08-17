@@ -8,9 +8,12 @@ public class EggholderFunction extends ObjectiveFunction {
         Double x = (Double) super.getParameters()[0];
         Double y = (Double) super.getParameters()[1];
 
-        double d1 =  (y+47) * Math.sin(Math.sqrt(Math.abs((x/2) + (y+47))));
-        double d2 = x * Math.sin(Math.sqrt(Math.abs(x - (y+47))));
-        return (-1) * (d1+d2);
+        double d1 = Math.sin(Math.sqrt(Math.abs(y + (x / 2) + 47))) * (y + 47);
+        d1 = -d1;
+        double d2 = (y+47);
+        d2 = Math.sin(Math.sqrt(Math.abs(x - d2))) * x;
+
+        return d1 - d2;
     }
 
     @Override

@@ -3,7 +3,6 @@ package org.usa.soc.cso;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
-import org.usa.soc.pso.Particle;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Validator;
 
@@ -60,7 +59,7 @@ public class CSO extends Algorithm {
         }
         this.nanoDuration = System.nanoTime();
 
-        for(int i=0; i< this.stepsCount; i++){
+        for(int i = 0; i< this.getStepsCount(); i++){
 
             for (Cat cat: this.cats) {
                 if(cat.isSeeker()){

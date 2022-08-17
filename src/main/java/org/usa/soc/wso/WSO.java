@@ -46,7 +46,7 @@ public class WSO extends Algorithm {
 
         this.nanoDuration = System.nanoTime();
 
-        for(int step = 0; step < this.stepsCount; step++){
+        for(int step = 0; step < this.getStepsCount(); step++){
 
             // tournament
             double totalForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).sum();
@@ -109,7 +109,7 @@ public class WSO extends Algorithm {
     @Override
     public Algorithm clone() throws CloneNotSupportedException {
         return new WSO(objectiveFunction,
-                stepsCount,
+                getStepsCount(),
                 numberOfWasps,
                 numberOfDimensions,
                 minBoundary,

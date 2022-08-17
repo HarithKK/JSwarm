@@ -79,7 +79,7 @@ public class MBO extends Algorithm {
 
         this.nanoDuration = System.nanoTime();
 
-        for(int i=0; i< this.stepsCount; i++){
+        for(int i = 0; i< this.getStepsCount(); i++){
             for (Queen q: queens) {
                 if(q.getEnergy() == 0)
                     continue;
@@ -184,7 +184,7 @@ public class MBO extends Algorithm {
         for(int i=0;i<this.numberOfQueens; i++){
             Queen queen = new Queen(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             queen.setSpeed(Randoms.rand(this.minQueenSpeed, this.maxQueenSpeed));
-            queen.setEnergy(stepsCount);
+            queen.setEnergy(getStepsCount());
             queen.updateBestValue(this.objectiveFunction, this.isLocalMinima);
             this.queens.add(queen);
             this.updateBestQueen(queen);
@@ -222,7 +222,7 @@ public class MBO extends Algorithm {
                 numberOfWorkers,
                 numberOfDrones,
                 numberOfQueens,
-                stepsCount,
+                getStepsCount(),
                 numberOfDimensions,
                 minBoundary,
                 maxBoundary,

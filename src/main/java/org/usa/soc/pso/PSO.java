@@ -86,7 +86,7 @@ public class PSO extends Algorithm implements Cloneable {
         // run the steps
         double currentBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
-        for (int step = 1; step <= this.stepsCount; step++) {
+        for (int step = 1; step <= this.getStepsCount(); step++) {
             Double stepBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
             if (Validator.validateBestValue(stepBestValue, currentBestValue, isLocalMinima)) {
@@ -114,7 +114,7 @@ public class PSO extends Algorithm implements Cloneable {
         if (wMax == wMin)
             return wMin;
         else {
-            return wMax - step * ((wMax - wMin) / this.stepsCount);
+            return wMax - step * ((wMax - wMin) / this.getStepsCount());
         }
     }
 
@@ -191,7 +191,7 @@ public class PSO extends Algorithm implements Cloneable {
     public Algorithm clone() throws CloneNotSupportedException {
         return new PSO(objectiveFunction, particleCount,
                 numberOfDimensions,
-                stepsCount,
+                getStepsCount(),
                 c1,
                 c2,
                 wMax,
