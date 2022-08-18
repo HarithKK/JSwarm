@@ -53,6 +53,15 @@ public class Randoms {
         return v;
     }
 
+    public static Vector getRandomVector(Vector s, double r) {
+        Vector v = new Vector(s.getNumberOfDimensions());
+        for(int i=0;i<s.getNumberOfDimensions();i++){
+            double val = v.getValue(i);
+            v.setValue(rand(val-r, val+r),i);
+        }
+        return v;
+    }
+
     public static int rand (int bound) {
         Random randomValue = new java.util.Random();
         return randomValue.nextInt(bound);

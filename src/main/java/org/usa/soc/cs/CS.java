@@ -56,7 +56,7 @@ public class CS extends Algorithm {
                         .fixVector(minBoundary, maxBoundary);
 
                 // select the nest randomly
-                int j = (int) Math.abs(Randoms.rand(0, 1) * numberOfNests + 1) -1;
+                int j = Math.min( (int) Math.abs(Randoms.rand(0, 1) * numberOfNests + 1) -1, numberOfNests -1);
 
                 Double fj = this.objectiveFunction.setParameters(this.nests[j].getPosition().getPositionIndexes()).call();
                 Double fi = this.objectiveFunction.setParameters(this.nests[i].getPosition().getPositionIndexes()).call();
