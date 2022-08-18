@@ -19,6 +19,7 @@ to solve their optimization problems.
 8. [CS (Cuckoo Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/cs)
 9. [FA (Firefly Algorithms)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/fa)
 10. [ABC (Artificial Bee Colony)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/abc)
+11. [BA (Bat-Inspired Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ba)
 
 ## Testing Benchmark Functions
 
