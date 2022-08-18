@@ -14,13 +14,13 @@ public class FunctionChartPlotter {
 
     private XYChart chart= null;
 
-    private double xdata[], ydata[];
+    private double xdata[], ydata[], xbest[], ybest[];
 
     private SwingWrapper<XYChart> sw;
 
     private Algorithm algorithm;
 
-    private int time = 10;
+    private int time = 10, bestIndex;
     public FunctionChartPlotter(String title, int w, int h){
 
         this.chart = new XYChartBuilder()
@@ -37,6 +37,9 @@ public class FunctionChartPlotter {
         double m = Math.max(a.getFunction().getMax()[0] - a.getFunction().getMin()[0], a.getFunction().getMax()[1] - a.getFunction().getMin()[1]);
         this.xdata = new double[(int)(m)+50];
         this.ydata = new double[(int)(m)+50];
+        this.xbest = new double[100];
+        this.ybest = new double[100];
+        this.bestIndex = 0;
 
         try {
             chart.removeSeries("Agents");
@@ -46,6 +49,8 @@ public class FunctionChartPlotter {
         }
         XYSeries series = this.chart.addSeries("Agents", xdata, ydata);
         series.setMarker(SeriesMarkers.CIRCLE);
+        XYSeries seriesb = this.chart.addSeries("Best Search Trial", xbest, ybest);
+        seriesb.setMarker(SeriesMarkers.CROSS);
         XYSeries series1 = this.chart.addSeries("Best",
                 new double[]{a.getFunction().getExpectedParameters()[0]},
                 new double[]{a.getFunction().getExpectedParameters()[1]});
@@ -68,6 +73,12 @@ public class FunctionChartPlotter {
                 double[][] d = algorithm.getDataPoints();
                 xdata = d[0];
                 ydata = d[1];
+
+                if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
+                    bestIndex++;
+                    xbest[bestIndex] = best.getValue(0);
+                    ybest[bestIndex] = best.getValue(1);
+                }
 
                 chart.updateXYSeries("Agents", xdata, ydata, null);
                 if((step % fraction) == 0){

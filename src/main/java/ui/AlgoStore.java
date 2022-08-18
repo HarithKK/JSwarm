@@ -10,6 +10,7 @@ import org.usa.soc.fa.FA;
 import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
+import org.usa.soc.tco.TCO;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
@@ -174,6 +175,19 @@ public class AlgoStore {
                     Randoms.rand(0,1),
                     true
             );
+            case 11: return new TCO(
+                    fn,
+                    500,
+                    fn.getNumberOfDimensions(),
+                    200,
+                    fn.getMin(),
+                    fn.getMax(),
+                    1,
+                    0.8,
+                    0.78,
+                    1.49,
+                    true
+            );
         }
         return null;
     }
@@ -192,6 +206,7 @@ public class AlgoStore {
         algo.add("FA");
         algo.add("ABC");
         algo.add("BA");
+        algo.add("TCO");
 
         return algo;
     }
