@@ -4,12 +4,14 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.abc.ABC;
 import org.usa.soc.aco.ACO;
+import org.usa.soc.ba.BA;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
 import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
 
 import java.util.ArrayList;
@@ -157,6 +159,21 @@ public class AlgoStore {
                     100,
                     true
             );
+            case 10:  return new BA(
+                    fn,
+                    100,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    100,
+                    0,
+                    100,
+                    0.9,
+                    0.9,
+                    100,
+                    Randoms.rand(0,1),
+                    true
+            );
         }
         return null;
     }
@@ -174,6 +191,7 @@ public class AlgoStore {
         algo.add("CS");
         algo.add("FA");
         algo.add("ABC");
+        algo.add("BA");
 
         return algo;
     }
