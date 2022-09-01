@@ -1,15 +1,11 @@
 package ACO;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
-import org.usa.soc.multiRunner.MultiRunner;
 import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;
@@ -144,7 +140,7 @@ public class TestACO {
     @Test
     public void testBukinFunction() {
 
-        ObjectiveFunction fn = new BukinFunction();
+        ObjectiveFunction fn = new Bukin4Function();
 
         algo = getAlgorithm(fn);
         algo.initialize();

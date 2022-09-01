@@ -1,58 +1,29 @@
-package MBO;
+package GWO;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.mbo.MBO;
-import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;
 
-public class TestMBO {
+public class GWO {
 
-    private static final int LIMIT = 15;
+    private static final int LIMIT = 2;
     private Algorithm algo;
 
-    private static final double PRECISION_VAL  = 100;
+    private static final double PRECISION_VAL  = 10;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn){
-        return new MBO(
+        return new org.usa.soc.gwo.GWO(
                 fn,
-                500,
-                100,
-                30,
                 1000,
                 fn.getNumberOfDimensions(),
+                50,
                 fn.getMin(),
                 fn.getMax(),
-                true,
-                0.9,
-                0,
-                10,
-                0.5,
-                0.5,
-                10
-        );
-    }
-
-    private Algorithm getAlgorithm(ObjectiveFunction fn, int i){
-        return new MBO(
-                fn,
-                500,
-                100,
-                30,
-                i,
-                fn.getNumberOfDimensions(),
-                fn.getMin(),
-                fn.getMax(),
-                true,
-                0.9,
-                0,
-                10,
-                0.5,
-                0.5,
-                10
+                true
         );
     }
 
@@ -69,7 +40,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testAckleysFunction() {
 
         ObjectiveFunction fn = new AckleysFunction();
@@ -81,7 +51,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testBoothFunction() {
 
         ObjectiveFunction fn = new BoothsFunction();
@@ -93,7 +62,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testMatyasFunction() {
 
         ObjectiveFunction fn = new MatyasFunction();
@@ -106,7 +74,6 @@ public class TestMBO {
 
 
     @Test
-
     public void testRastriginFunction() {
 
         ObjectiveFunction fn = new RastriginFunction();
@@ -119,7 +86,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testSphereFunction() {
 
         ObjectiveFunction fn = new SphereFunction();
@@ -128,12 +94,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
-
     public void testRosenbrockFunction() {
 
         ObjectiveFunction fn = new RosenbrockFunction();
@@ -142,12 +106,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
-
     public void testBealeFunction() {
 
         ObjectiveFunction fn = new BealeFunction();
@@ -160,7 +122,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testBukinFunction() {
 
         ObjectiveFunction fn = new Bukin4Function();
@@ -169,12 +130,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-//        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),3);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
 
     @Test
-
     public void testLevyFunction() {
 
         ObjectiveFunction fn = new LevyFunction();
@@ -183,11 +142,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
 
     @Test
-
     public void testHimmelblausFunction() {
 
         ObjectiveFunction fn = new HimmelblausFunction();
@@ -196,12 +154,11 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertEquals(Mathamatics.round(algo.getBestDoubleValue(), LIMIT), 0);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 2, 2);
 
     }
 
     @Test
-
     public void testThreeHumpCamelFunction() {
 
         ObjectiveFunction fn = new ThreeHumpCamelFunction();
@@ -214,7 +171,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testEasomFunction() {
 
         ObjectiveFunction fn = new EasomFunction();
@@ -223,12 +179,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
 
     @Test
-
     public void testCrossInTrayFunction() {
 
         ObjectiveFunction fn = new CrossInTrayFunction();
@@ -237,26 +191,22 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1);
     }
 
     @Test
-
     public void testEggholderFunction() {
 
         ObjectiveFunction fn = new EggholderFunction();
 
-        algo = getAlgorithm(fn, 2000);
+        algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-//        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 100, 2);
     }
 
     @Test
-
     public void testHolderTableFunction() {
 
         ObjectiveFunction fn = new HolderTableFunction();
@@ -265,12 +215,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
-
     public void testMcCormickFunction() {
 
         ObjectiveFunction fn = new McCormickFunction();
@@ -279,12 +227,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
 
     @Test
-
     public void testSchafferN2Function() {
 
         ObjectiveFunction fn = new SchafferFunction();
@@ -297,7 +243,6 @@ public class TestMBO {
     }
 
     @Test
-
     public void testSchafferN4Function() {
 
         ObjectiveFunction fn = new SchafferFunctionN4();
@@ -306,12 +251,10 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-        //evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1.25);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
 
     @Test
-
     public void testStyblinskiTangFunction() {
 
         ObjectiveFunction fn = new StyblinskiTangFunction();
@@ -320,12 +263,7 @@ public class TestMBO {
         algo.initialize();
         algo.runOptimizer();
 
-        Assertions.assertTrue(true);
-//        double p = Mathamatics.round(algo.getBestDoubleValue(),LIMIT);
-//        Assertions.assertEquals(-117.5,p);
-//
-//        double []d = algo.getGBest().toDoubleArray(LIMIT);
-//        Assertions.assertArrayEquals(new double[]{-2.9, -2.9, -2.9}, d);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
 
     @AfterEach

@@ -190,6 +190,14 @@ public class Vector {
         return Math.sqrt(sum);
     }
 
+    public double getMagnitude(){
+        double sum = 0;
+        for(int i=0;i<this.numberOfDimensions;i++){
+            sum+= Math.pow(this.positionIndexes[i],2);
+        }
+        return Math.sqrt(sum);
+    }
+
     public Vector fixVector(double []min, double []max){
         for(int i =0;i< this.getNumberOfDimensions();i++){
             this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);

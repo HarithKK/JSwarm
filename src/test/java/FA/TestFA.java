@@ -128,7 +128,7 @@ public class TestFA {
         @Test
         public void testBukinFunction() {
 
-            ObjectiveFunction fn = new BukinFunction();
+            ObjectiveFunction fn = new Bukin4Function();
 
             algo = getAlgorithm(fn);
             algo.initialize();

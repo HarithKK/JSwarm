@@ -188,6 +188,15 @@ public class AlgoStore {
                     1.49,
                     true
             );
+            case 12: return new org.usa.soc.gwo.GWO(
+                    fn,
+                    1000,
+                    fn.getNumberOfDimensions(),
+                    500,
+                    fn.getMin(),
+                    fn.getMax(),
+                    true
+            );
         }
         return null;
     }
@@ -207,6 +216,7 @@ public class AlgoStore {
         algo.add("ABC");
         algo.add("BA");
         algo.add("TCO");
+        algo.add("GWO");
 
         return algo;
     }

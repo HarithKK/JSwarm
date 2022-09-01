@@ -2,7 +2,6 @@ package org.usa.soc.benchmarks;
 
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.benchmarks.singleObjectiveConstrained.RosenbrockFunctionDish;
 
 public class FunctionsList {
     public ObjectiveFunction[] getFunctionList(){
@@ -10,7 +9,7 @@ public class FunctionsList {
                 new AckleysFunction(),
                 new BealeFunction(),
                 new BoothsFunction(),
-                new BukinFunction(),
+                new Bukin4Function(),
                 new CrossInTrayFunction(),
                 new EasomFunction(),
                 new EggholderFunction(),

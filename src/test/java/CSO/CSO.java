@@ -1,12 +1,10 @@
 package CSO;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -132,7 +130,7 @@ public class CSO {
     @Test
     public void testBukinFunction() {
 
-        ObjectiveFunction fn = new BukinFunction();
+        ObjectiveFunction fn = new Bukin4Function();
 
         algo = getAlgorithm(fn);
         algo.initialize();
