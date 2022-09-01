@@ -3,13 +3,13 @@ package org.usa.soc.util;
 import org.usa.soc.core.Vector;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Randoms {
     static double precision = 1000D;
     public static double rand (double min, double max) {
         Random randomValue = new java.util.Random();
-        double number = randomValue.nextInt((int) ((max - min) * precision + 1)) + min * precision;
-        return number / precision;
+        return ThreadLocalRandom.current().nextDouble(min, max+1);
     }
 
     public static double randAny (double f1, double f2) {
@@ -50,6 +50,12 @@ public class Randoms {
         for(int i=0;i<D;i++){
             v.setValue(rand(min, max),i);
         }
+        return v;
+    }
+
+    public static Vector getRandomUniVector(double min, double max) {
+        Vector v = new Vector(1);
+        v.setValue(rand(min, max),0);
         return v;
     }
 

@@ -10,7 +10,7 @@ public class HolderTableFunction extends ObjectiveFunction {
         Double y = (Double) super.getParameters()[1];
 
         double d = Math.abs(1 - (Math.sqrt(Math.pow(x,2) + Math.pow(y,2)) / Math.PI));
-        return (-1)*Math.abs(Math.sin(x) * Math.cos(y) * Math.exp(d));
+        return -Math.abs(Math.sin(x) * Math.cos(y) * Math.exp(d));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class HolderTableFunction extends ObjectiveFunction {
 
     @Override
     public double getExpectedBestValue() {
-        return -19.21;
+        return -19.2085;
     }
 
     @Override

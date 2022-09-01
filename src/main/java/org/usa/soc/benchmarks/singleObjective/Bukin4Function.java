@@ -6,13 +6,13 @@ import org.usa.soc.ObjectiveFunction;
 f(x,y)=100{\sqrt {\left|y-0.01x^{2}\right|}}+0.01\left|x+10\right|.\quad
  */
 
-public class BukinFunction extends ObjectiveFunction {
+public class Bukin4Function extends ObjectiveFunction {
     @Override
     public Double call() {
         Double x = (Double) super.getParameters()[0];
         Double y = (Double) super.getParameters()[1];
 
-        return (100 * Math.sqrt(Math.abs(y - (0.01*Math.pow(x,2))))) + (0.01*Math.abs(x+ 10));
+        return 100*Math.pow(y,2) + 0.01*Math.abs(x + 10);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BukinFunction extends ObjectiveFunction {
 
     @Override
     public double getExpectedBestValue() {
-        return 0;
+        return 0.0;
     }
 
     @Override

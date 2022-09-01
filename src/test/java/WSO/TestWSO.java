@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.multiRunner.MultiRunner;
 import org.usa.soc.wso.WSO;
 import utils.AssertUtil;
 import utils.Logger;
@@ -142,7 +141,7 @@ public class TestWSO {
         @Test
         public void testBukinFunction() {
 
-            ObjectiveFunction fn = new BukinFunction();
+            ObjectiveFunction fn = new Bukin4Function();
 
             algo = getAlgorithm(fn);
             algo.initialize();

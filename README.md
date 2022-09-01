@@ -21,6 +21,7 @@ to solve their optimization problems.
 10. [ABC (Artificial Bee Colony)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/abc)
 11. [BA (Bat-Inspired Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ba)
 12. [TCO (Termite Colony Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/tco)
+13. [GWO (Grey Wolf Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/gwo)
 
 ## Testing Benchmark Functions
 
