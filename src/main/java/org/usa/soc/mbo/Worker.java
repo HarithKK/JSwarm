@@ -15,6 +15,6 @@ public class Worker {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 }

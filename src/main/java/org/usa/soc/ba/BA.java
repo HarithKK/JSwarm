@@ -67,7 +67,7 @@ public class BA extends Algorithm {
                 b.updateLoudness();
                 at += b.getA();
             }
-            Aavg = at /numberOfBats;
+            Aavg = at /(double)numberOfBats;
 
             for(Bat b: bats){
                 updateGBest(b);

@@ -21,7 +21,7 @@ public class Fly {
 
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public double calculateIntensity(ObjectiveFunction<Double> fn, double gama, double r) {

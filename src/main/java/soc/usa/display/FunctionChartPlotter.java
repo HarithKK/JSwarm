@@ -75,7 +75,9 @@ public class FunctionChartPlotter {
                 ydata = d[1];
 
                 if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
-                    bestIndex++;
+                    if(bestIndex < xbest.length-1){
+                        bestIndex++;
+                    }
                     xbest[bestIndex] = best.getValue(0);
                     ybest[bestIndex] = best.getValue(1);
                 }

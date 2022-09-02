@@ -58,7 +58,7 @@ public class Bat {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public void setPosition(Vector position) {
@@ -96,6 +96,6 @@ public class Bat {
     }
 
     public Vector getBest() {
-        return best;
+        return best.getClonedVector();
     }
 }

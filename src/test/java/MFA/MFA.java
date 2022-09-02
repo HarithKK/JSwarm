@@ -1,4 +1,4 @@
-package GWO;
+package MFA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.usa.soc.benchmarks.singleObjective.*;
 import utils.AssertUtil;
 import utils.Logger;
 
-public class GWO {
+public class MFA {
 
     private static final int LIMIT = 2;
     private Algorithm algo;
@@ -16,14 +16,14 @@ public class GWO {
     private static final double PRECISION_VAL  = 10;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn){
-        return new org.usa.soc.gwo.GWO(
+        return new org.usa.soc.mfa.MFA(
                 fn,
                 500,
                 fn.getNumberOfDimensions(),
                 100,
                 fn.getMin(),
                 fn.getMax(),
-                true
+                1.0
         );
     }
 

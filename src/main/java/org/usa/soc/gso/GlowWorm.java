@@ -34,7 +34,7 @@ public class GlowWorm {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public double getR() {
