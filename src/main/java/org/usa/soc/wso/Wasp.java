@@ -44,7 +44,7 @@ public class Wasp {
     }
 
     public Vector getBestSolution() {
-        return bestSolution;
+        return bestSolution.getClonedVector();
     }
 
     public void updateForce(double c1, double c2, ObjectiveFunction fn) {
@@ -56,6 +56,6 @@ public class Wasp {
     }
 
     public Vector getSolution() {
-        return solution;
+        return solution.getClonedVector();
     }
 }

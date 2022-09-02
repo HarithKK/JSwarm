@@ -27,7 +27,7 @@ public class Termite {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public void updatePositionByRandomWalk(double r) {

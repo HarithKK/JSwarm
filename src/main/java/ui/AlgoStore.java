@@ -197,6 +197,15 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
+            case 13: return new org.usa.soc.mfa.MFA(
+                    fn,
+                    200,
+                    fn.getNumberOfDimensions(),
+                    50,
+                    fn.getMin(),
+                    fn.getMax(),
+                    1.0
+            );
         }
         return null;
     }
@@ -217,6 +226,7 @@ public class AlgoStore {
         algo.add("BA");
         algo.add("TCO");
         algo.add("GWO");
+        algo.add("MFA");
 
         return algo;
     }

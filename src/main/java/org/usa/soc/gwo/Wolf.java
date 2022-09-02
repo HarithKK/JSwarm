@@ -20,20 +20,11 @@ public class Wolf {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public void setPosition(Vector position) {
         this.position.setVector(position, minBoundary, maxBoundary);
-    }
-
-    public void updatePosition(Vector newX, ObjectiveFunction objectiveFunction, boolean isLocalMinima) {
-        Double fpbest = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
-        Double fgbest = objectiveFunction.setParameters(this.position.getPositionIndexes()).call();
-
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
-            this.position.setVector(newX);
-        }
     }
 
     public void setFitnessValue(double fitnessValue) {

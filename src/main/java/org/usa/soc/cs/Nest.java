@@ -18,7 +18,7 @@ public class Nest {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public void setPosition(Vector position) {

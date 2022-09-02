@@ -20,8 +20,8 @@ public class GSO {
         return new org.usa.soc.gso.GSO(
                 fn,
                 fn.getNumberOfDimensions(),
-                1500,
                 1000,
+                100,
                 fn.getMin(),
                 fn.getMax(),
                 5,

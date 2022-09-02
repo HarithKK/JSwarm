@@ -22,7 +22,7 @@ public class Monky {
     }
 
     public Vector getBestRoot() {
-        return bestRoot;
+        return bestRoot.getClonedVector();
     }
 
     public void climbTree(double c1, boolean isLocalMinima, Vector bestRoot) {

@@ -31,7 +31,7 @@ public class Queen {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
 

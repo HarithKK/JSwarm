@@ -46,7 +46,7 @@ public class Cat {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public boolean isSeeker() {
