@@ -2,17 +2,9 @@ package ui;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.aco.ACO;
 import org.usa.soc.benchmarks.FunctionsList;
-import org.usa.soc.cs.CS;
-import org.usa.soc.mbo.MBO;
-import org.usa.soc.ms.MS;
-import org.usa.soc.pso.PSO;
-import org.usa.soc.util.Mathamatics;
-import org.usa.soc.wso.WSO;
 import soc.usa.display.FunctionChartPlotter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 

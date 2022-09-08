@@ -14,9 +14,8 @@ public class GWO extends Algorithm {
 
     private static final Double MAX_A = 2.0;
     private int numberOfWolfs;
-    private Wolf[] wolfs, topWolfs;
-
-    private int alphaIndex =0, betaIndex= 1, deltaIndex=2;
+    private Wolf alpha, beta, delta;
+    private Wolf[] wolfs;
 
     private Vector a;
 
@@ -39,7 +38,6 @@ public class GWO extends Algorithm {
         this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
 
         this.wolfs = new Wolf[numberOfWolfs];
-        this.topWolfs = new Wolf[3];
 
         this.a = new Vector(numberOfDimensions);
         this.a.resetAllValues(MAX_A);
@@ -53,9 +51,9 @@ public class GWO extends Algorithm {
         for(int step = 0; step< stepsCount; step++){
             double aDecrement = 2*(1.0 - (step/ stepsCount));
             for(Wolf w: wolfs){
-                Vector X1 = getUpdatedPositionVector(w, topWolfs[alphaIndex], calcA(), calcC());
-                Vector X2 = getUpdatedPositionVector(w, topWolfs[betaIndex],  calcA(), calcC());
-                Vector X3 = getUpdatedPositionVector(w, topWolfs[deltaIndex],  calcA(), calcC());
+                Vector X1 = getUpdatedPositionVector(w, alpha, calcA(), calcC());
+                Vector X2 = getUpdatedPositionVector(w, beta,  calcA(), calcC());
+                Vector X3 = getUpdatedPositionVector(w, delta,  calcA(), calcC());
 
                 Vector newX = X1
                         .operate(Vector.OPERATOR.ADD, X2)
@@ -70,7 +68,7 @@ public class GWO extends Algorithm {
 
             updateWolfHirarchy();
 
-            this.a.operate(Vector.OPERATOR.SUB, aDecrement);
+            this.a.resetAllValues(aDecrement);
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
@@ -80,9 +78,9 @@ public class GWO extends Algorithm {
     }
 
     private Vector getUpdatedPositionVector(Wolf w, Wolf prey, Vector C, Vector A){
-        Vector D = prey.getPosition().getClonedVector().operate(Vector.OPERATOR.MULP, C).operate(Vector.OPERATOR.SUB, w.getPosition());
+        Vector D = prey.getPosition().operate(Vector.OPERATOR.MULP, C).operate(Vector.OPERATOR.SUB, w.getPosition());
         Vector AD = A.operate(Vector.OPERATOR.MULP, D);
-        return w.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, AD);
+        return w.getPosition().operate(Vector.OPERATOR.SUB, AD);
     }
 
     private Vector calcA(){
@@ -111,21 +109,55 @@ public class GWO extends Algorithm {
             w.setFitnessValue(this.objectiveFunction.setParameters(w.getPosition().getPositionIndexes()).call());
             wolfs[i] = w;
         }
-        for(int i=0; i<3 ;i++){
-            topWolfs[i] = wolfs[i];
-        }
+
+        this.alpha = wolfs[0].getClonedWolf();
+        this.beta = wolfs[1].getClonedWolf();
+        this.delta = wolfs[2].getClonedWolf();
+
         updateWolfHirarchy();
     }
 
     private void updateWolfHirarchy(){
-        for(int i=0; i<3 ;i++){
-            for(int j= i;j < this.numberOfWolfs; j++){
-                if(Validator.validateBestValue(wolfs[j].getFitnessValue(), topWolfs[i].getFitnessValue(), isLocalMinima)){
-                    topWolfs[i] = wolfs[j];
-                }
+
+        findAlpha();
+        findBeta();
+        findDelta();
+
+        this.gBest.setVector(this.alpha.getPosition());
+    }
+
+    private void findAlpha(){
+        for(int j= 0;j < this.numberOfWolfs; j++){
+            if(Validator.validateBestValue(wolfs[j].getFitnessValue(), alpha.getFitnessValue(), isLocalMinima)){
+                this.alpha = wolfs[j].getClonedWolf();
             }
         }
-        this.gBest.setVector(topWolfs[alphaIndex].getPosition());
+    }
+
+    private void findBeta(){
+        for(int j= 0;j < this.numberOfWolfs; j++){
+            double falpha = alpha.getFitnessValue();
+            double fbeta = beta.getFitnessValue();
+            double f = wolfs[j].getFitnessValue();
+            if(Validator.validateBestValue(f, fbeta, isLocalMinima) &&
+                    Validator.validateBestValue(falpha, fbeta, isLocalMinima)
+            ){
+                this.beta = wolfs[j].getClonedWolf();
+            }
+        }
+    }
+
+    private void findDelta(){
+        for(int j= 0;j < this.numberOfWolfs; j++){
+            double fbeta = beta.getFitnessValue();
+            double fdelta = delta.getFitnessValue();
+            double f = wolfs[j].getFitnessValue();
+            if(Validator.validateBestValue(f, fdelta, isLocalMinima) &&
+                    Validator.validateBestValue(fbeta, fdelta, isLocalMinima)
+            ){
+                this.delta = wolfs[j].getClonedWolf();
+            }
+        }
     }
 
     @Override
