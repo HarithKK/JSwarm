@@ -34,4 +34,11 @@ public class Wolf {
     public double getFitnessValue() {
         return fitnessValue;
     }
+
+    public Wolf getClonedWolf(){
+        Wolf w = new Wolf(this.position.getNumberOfDimensions(), minBoundary, maxBoundary);
+        w.setPosition(this.getPosition());
+        w.setFitnessValue(this.fitnessValue);
+        return w;
+    }
 }

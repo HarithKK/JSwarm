@@ -29,7 +29,7 @@ public class FunctionChartPlotter {
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
         chart.getStyler().setChartTitleVisible(true);
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideSW);
-        chart.getStyler().setMarkerSize(5);
+        chart.getStyler().setMarkerSize(8);
     }
 
     public void setChart(Algorithm a){
