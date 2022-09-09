@@ -206,6 +206,15 @@ public class AlgoStore {
                     fn.getMax(),
                     1.0
             );
+            case 14: return new org.usa.soc.alo.ALO(
+                    fn,
+                    25,
+                    600,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    fn.getClass().getSimpleName() == "HimmelblausFunction" ? false : true
+            );
         }
         return null;
     }
@@ -227,6 +236,7 @@ public class AlgoStore {
         algo.add("TCO");
         algo.add("GWO");
         algo.add("MFA");
+        algo.add("ALO");
 
         return algo;
     }

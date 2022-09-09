@@ -10,6 +10,10 @@ import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class FunctionChartPlotter {
 
     private XYChart chart= null;
@@ -92,8 +96,8 @@ public class FunctionChartPlotter {
         });
         algorithm.runOptimizer(time);
         System.out.println("");
-        System.out.println(algorithm.getBestDoubleValue() +" "+algorithm.getFunction().getExpectedBestValue());
-        System.out.println(algorithm.getGBest().toString());
+        System.out.println("Actual: "+algorithm.getBestDoubleValue() +" , Expected: "+algorithm.getFunction().getExpectedBestValue());
+        System.out.println("Actual: "+algorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(algorithm.getFunction().getExpectedParameters()));
     }
 
     public void setTime(int time) {
