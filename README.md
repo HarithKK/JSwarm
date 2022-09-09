@@ -22,7 +22,8 @@ to solve their optimization problems.
 11. [BA (Bat-Inspired Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ba)
 12. [TCO (Termite Colony Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/tco)
 13. [GWO (Grey Wolf Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/gwo)
-13. [MFA (Moth-Flame Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/mfa)
+14. [MFA (Moth-Flame Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/mfa)
+15. [ALO (Ant Lion Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/alo)
 
 
 ## Testing Benchmark Functions
