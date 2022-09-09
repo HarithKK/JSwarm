@@ -8,7 +8,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Randoms {
     static double precision = 1000D;
     public static double rand (double min, double max) {
-        Random randomValue = new java.util.Random();
         return ThreadLocalRandom.current().nextDouble(min, max+1);
     }
 

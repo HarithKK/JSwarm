@@ -14,6 +14,7 @@ public class PlotDisplay {
         new PlotDisplay();
     }
 
+    private int TIME = 50;
     FunctionChartPlotter fp;
     ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
 
@@ -43,7 +44,7 @@ public class PlotDisplay {
         if(a==7){
             fp.setTime(10);
         }
-        fp.setTime(50);
+        fp.setTime(TIME);
         fp.setChart(ad);
         fp.display();
         fp.execute();
