@@ -28,6 +28,9 @@ public class FunctionChartPlotter {
     private EmptyAction action;
 
     private int time = 10, bestIndex;
+
+    private boolean isExecute = false;
+
     public FunctionChartPlotter(String title, int w, int h){
 
         this.chart = new XYChartBuilder()
@@ -99,6 +102,10 @@ public class FunctionChartPlotter {
     }
 
     public void execute(){
+        if(isExecute){
+            return;
+        }
+        setExecute(true);
         algorithm.initialize();
         int step =0;
         int fraction = algorithm.getStepsCount()/100;
@@ -130,6 +137,7 @@ public class FunctionChartPlotter {
             }
         });
         algorithm.runOptimizer(time);
+        setExecute(false);
         System.out.println("");
         System.out.println("Actual: "+algorithm.getBestDoubleValue() +" , Expected: "+algorithm.getFunction().getExpectedBestValue());
         System.out.println("Actual: "+algorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(algorithm.getFunction().getExpectedParameters()));
@@ -137,5 +145,13 @@ public class FunctionChartPlotter {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public boolean isExecute() {
+        return isExecute;
+    }
+
+    public void setExecute(boolean execute) {
+        isExecute = execute;
     }
 }

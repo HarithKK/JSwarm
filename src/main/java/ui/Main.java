@@ -19,9 +19,9 @@ public class Main {
 
     JFrame frame;
 
-    JPanel jPanelx;
+    JLabel jLabel4;
 
-    JPanel jPanel;
+    JButton jButton;
 
     int jpValue = 0;
     double value =0;
@@ -65,7 +65,7 @@ public class Main {
         jToolBar.add(jLabel2);
         jToolBar.add(jSpinner);
 
-        JButton jButton = new JButton("Run");
+        jButton = new JButton("Run");
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -73,10 +73,14 @@ public class Main {
                 functionChartPlotter.setTime((Integer) jSpinner.getValue());
                 functionChartPlotter.setChart(algorithm);
                 jpValue=0;
+                jLabel4.setText("Expected Best Value: "+ algorithm.getFunction().getExpectedBestValue());
                 new Thread(new Runnable() {
+
                     @Override
                     public void run() {
+                        jButton.setEnabled(false);
                         functionChartPlotter.execute();
+                        jButton.setEnabled(true);
                     }
                 }).start();
             }
@@ -100,11 +104,13 @@ public class Main {
         jp.setValue(jpValue);
 
         JLabel jLabel3 = new JLabel("Best Value: "+value);
+        jLabel4 = new JLabel("Expected Best Value: "+value);
 
         JPanel jPanel1 = new JPanel();
-        jPanel1.setLayout(new GridLayout(2,1));
+        jPanel1.setLayout(new GridLayout(3,1));
         jPanel1.add(jp);
         jPanel1.add(jLabel3);
+        jPanel1.add(jLabel4);
 
         frame.getContentPane().add(jPanel1, BorderLayout.SOUTH);
 
@@ -120,7 +126,7 @@ public class Main {
                 jpValue = (int)d;
                 value = d1;
                 jp.setValue(jpValue);
-                jLabel3.setText("  Best Value: "+decimalFormat.format(value)+"| Expected Best Value: "+algorithm.getFunction().getExpectedBestValue());
+                jLabel3.setText("  Best Value: "+decimalFormat.format(value));
                 chartPanel.updateUI();
                 frame.repaint();
             }
