@@ -50,7 +50,7 @@ public class FunctionDisplay {
 
         jf.add(toolBar, BorderLayout.NORTH);
         jf.setSize(650, 650);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jf.getContentPane().add(p);
         jf.setVisible(true);
     }
@@ -62,7 +62,7 @@ public class FunctionDisplay {
         setPloat(fns[y]);
 
         jf.setSize(500, 500);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jf.getContentPane().add(p);
         jf.setVisible(true);
     }
