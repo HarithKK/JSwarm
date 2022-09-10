@@ -3,16 +3,18 @@ package soc.usa.display;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Stream.generate;
 import org.knowm.xchart.*;
+import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.Algorithm;
 import org.usa.soc.core.Action;
+import org.usa.soc.core.EmptyAction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 
-import java.lang.reflect.Array;
+import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class FunctionChartPlotter {
 
@@ -20,9 +22,10 @@ public class FunctionChartPlotter {
 
     private double xdata[], ydata[], xbest[], ybest[];
 
-    private SwingWrapper<XYChart> sw;
-
     private Algorithm algorithm;
+    private JFrame frame;
+
+    private EmptyAction action;
 
     private int time = 10, bestIndex;
     public FunctionChartPlotter(String title, int w, int h){
@@ -48,6 +51,7 @@ public class FunctionChartPlotter {
         try {
             chart.removeSeries("Agents");
             chart.removeSeries("Best");
+            chart.removeSeries("Best Search Trial");
         }catch(Exception e){
 
         }
@@ -61,9 +65,37 @@ public class FunctionChartPlotter {
         series1.setMarker(SeriesMarkers.DIAMOND);
     }
 
+    public XYChart getChart(){
+        return this.chart;
+    }
+
+    public void setAction(EmptyAction action){
+        this.action = action;
+    }
+
     public void display(){
-        sw = new SwingWrapper(chart);
-        sw.displayChart();
+        frame = new JFrame("Algorithm");
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setAction(new EmptyAction() {
+            @Override
+            public void performAction(double d, double d1) {
+                frame.repaint();
+            }
+        });
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    XChartPanel<Chart<?, ?>> chartPanel = new XChartPanel(chart);
+                    frame.add(chartPanel);
+                    frame.pack();
+                    frame.setVisible(true);
+                }
+            });
+        } catch (InterruptedException var3) {
+            var3.printStackTrace();
+        } catch (InvocationTargetException var4) {
+            var4.printStackTrace();
+        }
     }
 
     public void execute(){
@@ -87,10 +119,13 @@ public class FunctionChartPlotter {
                 }
 
                 chart.updateXYSeries("Agents", xdata, ydata, null);
+                chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
+
                 if((step % fraction) == 0){
                     System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit(step/fraction).collect(joining()));
                 }
-                sw.repaintChart();
+                if(action != null)
+                    action.performAction(step/fraction, bestValue);
                 step = step +1;
             }
         });
