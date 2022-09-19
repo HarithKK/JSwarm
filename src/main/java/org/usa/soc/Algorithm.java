@@ -16,6 +16,10 @@ public abstract class Algorithm implements Cloneable {
 
     protected int stepsCount;
 
+    private Double bestValue = 1.0;
+
+    private double convergenceValue = Double.MAX_VALUE;
+
     public Algorithm(
             ObjectiveFunction<Double> objectiveFunction,
             int stepsCount,
@@ -91,7 +95,11 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction =a;
     }
 
-    public void sleep(int time){
+    public void stepCompleted(int time){
+
+        // calculate convergence
+        calculateConvergenceValue();
+
         if(time == 0){
             return;
         }
@@ -102,9 +110,25 @@ public abstract class Algorithm implements Cloneable {
         }
     }
 
+    private void calculateConvergenceValue() {
+        double xValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+
+        this.convergenceValue = Math.abs(xValue - objectiveFunction.getExpectedBestValue()) /
+                Math.pow(Math.abs(getBestValue() - objectiveFunction.getExpectedBestValue()), objectiveFunction.getOrderOfConvergence());
+        this.bestValue = xValue;
+    }
+
     public abstract double[][] getDataPoints();
 
     public int getStepsCount() {
         return stepsCount;
+    }
+
+    public double getConvergenceValue() {
+        return convergenceValue;
+    }
+
+    public double getBestValue() {
+        return bestValue;
     }
 }

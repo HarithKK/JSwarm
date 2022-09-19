@@ -130,12 +130,11 @@ public class FunctionChartPlotter {
                 chart.updateXYSeries("Agents", xdata, ydata, null);
                 chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
 
-                double trajectory = DoubleStream.of(ydata).average().getAsDouble();
                 if((step % fraction) == 0){
                     System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit(step/fraction).collect(joining()));
                 }
                 if(action != null)
-                    action.performAction(step, step/fraction, bestValue, trajectory);
+                    action.performAction(step, step/fraction, bestValue);
                 step = step +1;
             }
         });

@@ -33,9 +33,9 @@ public class AlgoStore {
         switch (a){
             case 0 : return new PSO(
                     fn,
-                    200,
+                    50,
                     fn.getNumberOfDimensions(),
-                    300,
+                    200,
                     1.496180,
                     1.496180,
                     0.729844,
@@ -118,8 +118,8 @@ public class AlgoStore {
             );
             case 6: return new WSO(
                     fn,
-                    1000,
-                    1000,
+                    500,
+                    100,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),

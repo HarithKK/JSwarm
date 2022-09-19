@@ -43,8 +43,9 @@ public class IterationChartPlotter {
     }
 
     public void addData(int step, double data){
-        if(this.yData.size() == 1){
-            this.yData.add(0,Double.valueOf(decimalFormat.format(data)));
+        if(this.yData.size() == 1 && this.yData.get(0) == initValue){
+            this.yData.remove(0);
+            this.yData.add(Double.valueOf(decimalFormat.format(data)));
             return;
         }
         this.yData.add(Double.valueOf(decimalFormat.format(data)));

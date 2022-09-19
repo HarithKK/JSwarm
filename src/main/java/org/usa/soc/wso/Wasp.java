@@ -37,7 +37,7 @@ public class Wasp {
         Double fpbest = fn.setParameters(this.getSolution().getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
-            this.bestSolution.setVector(this.solution, minBoundary, maxBoundary);
+            this.bestSolution.setVector(this.getSolution(), minBoundary, maxBoundary);
             this.diversitySolution = Mathamatics.calculateHammingDistance(fpbest.doubleValue(), fgbest.doubleValue());
         }
 

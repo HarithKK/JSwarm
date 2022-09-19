@@ -52,11 +52,10 @@ public class WSO extends Algorithm {
             double totalForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).sum();
             double minForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).min().getAsDouble();
 
-            double p0 = Randoms.randAny(minForce, totalForce);
-
             for(Wasp w: this.wasps){
+                double p0 = Randoms.randAny(minForce, totalForce);
                 double p = w.getForce() / totalForce;
-                if(p >= p0){
+                if(p <= p0){
                     this.updateBest(w);
                 }
                 w.setSolution(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
@@ -65,7 +64,7 @@ public class WSO extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            sleep(time);
+            stepCompleted(time);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -98,11 +97,11 @@ public class WSO extends Algorithm {
     }
 
     private void updateBest(Wasp w) {
-        Double fgbest = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fgbest = objectiveFunction.setParameters(this.getGBest().getClonedVector().getPositionIndexes()).call();
         Double fpbest = objectiveFunction.setParameters(w.getBestSolution().getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
-            this.gBest = w.getBestSolution().getClonedVector();
+            this.gBest.setVector(w.getBestSolution().getClonedVector(), minBoundary, maxBoundary);
         }
     }
 

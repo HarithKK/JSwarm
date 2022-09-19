@@ -22,7 +22,7 @@ public class Main {
      */
     JFrame frame;
 
-    JPanel pnlCenter, pnlProgress;
+    JPanel pnlCenter, pnlProgress, pnlRight;
     JToolBar jToolBar;
 
     JLabel lblFunctionComboBox, lblAlgorithmComboBox, lblInterval, lblBestValue, lblExpectedBestValue, lblBestValueExpectedBestValueSep;
@@ -44,7 +44,7 @@ public class Main {
     double bestValue;
 
 
-    IterationChartPlotter chp, trj;
+    IterationChartPlotter pltBestValue, pltConvergence;
 
     ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
 
@@ -76,6 +76,8 @@ public class Main {
     private void clearValues() {
         progressValue = 0;
         stepCount=0;
+        pltBestValue.clearChart();
+        pltConvergence.clearChart();
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
@@ -85,6 +87,8 @@ public class Main {
     private void fncActionPerformed(double... values){
         progressValue = (int)values[0];
         bestValue = values[1];
+        pltBestValue.addData(stepCount, bestValue);
+        pltConvergence.addData(stepCount, algorithm.getConvergenceValue());
         updateUI();
     }
 
@@ -100,6 +104,12 @@ public class Main {
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
         pnlCenter.add(swarmDisplayChart);
 
+        pltBestValue = new IterationChartPlotter(500, 300, "", "Best Value", -1000);
+        pnlRight.add(new XChartPanel(pltBestValue.getChart()));
+
+        pltConvergence = new IterationChartPlotter(500, 300, "", "Convergence Value", -1000);
+        pnlRight.add(new XChartPanel(pltConvergence.getChart()));
+
         functionChartPlotter.setAction(new EmptyAction() {
             @Override
             public void performAction(int step, double... values) {
@@ -107,59 +117,12 @@ public class Main {
                 fncActionPerformed(values);
             }
         });
-
-//        JProgressBar jp = new JProgressBar();
-//        jp.setMaximum(100);
-//        jp.setMinimum(0);
-//        jp.setValue(jpValue);
-//
-//        JLabel jLabel3 = new JLabel("Best Value: "+value);
-//        jLabel4 = new JLabel("Expected Best Value: "+value);
-//
-//        JPanel jPanel1 = new JPanel();
-//        jPanel1.setLayout(new GridLayout(3,1));
-//        jPanel1.add(jp);
-//        jPanel1.add(jLabel3);
-//        jPanel1.add(jLabel4);
-//
-//        frame.getContentPane().add(jPanel1, BorderLayout.SOUTH);
-//
-//        functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-//        Algorithm algorithm = new AlgoStore(0, fns[0]).getAlgorithm();
-//        functionChartPlotter.setChart(algorithm);
-//        XChartPanel<Chart<?, ?>> chartPanel = new XChartPanel(functionChartPlotter.getChart());
-//        frame.getContentPane().add(chartPanel, BorderLayout.CENTER);
-//
-//        JPanel jPanel = new JPanel();
-//        chp = new IterationChartPlotter(400, 400, "", "Best Value", 0);
-//        jPanel.add(new XChartPanel(chp.getChart()), BorderLayout.NORTH);
-//
-//        trj = new IterationChartPlotter(400, 400, "", "Trajectory", 0);
-//        jPanel.add(new XChartPanel(trj.getChart()), BorderLayout.SOUTH);
-//
-//        frame.getContentPane().add(jPanel, BorderLayout.EAST);
-//
-//        functionChartPlotter.setAction(new EmptyAction() {
-//            @Override
-//            public void performAction(int step, double []d) {
-//                jpValue = (int)d[0];
-//                value = d[1];
-//                jp.setValue(jpValue);
-//                jLabel3.setText("  Best Value: "+decimalFormat.format(value));
-//                chp.addData(step, value);
-//                trj.addData(step, d[2]);
-//                chartPanel.updateUI();
-//                jPanel.updateUI();
-//                frame.repaint();
-//            }
-//        });
     }
 
     private void updateUI() {
 
         progressBar.setValue(progressValue);
         lblBestValue.setText(decimalFormat.format(bestValue));
-        lblBestValue.updateUI();
         lblExpectedBestValue.setText(decimalFormat.format(algorithm.getFunction().getExpectedBestValue()));
         lblExpectedBestValue.updateUI();
         swarmDisplayChart.updateUI();
@@ -243,6 +206,10 @@ public class Main {
         pnlProgress.add(jPanel, BorderLayout.WEST);
         pnlProgress.add(progressBar, BorderLayout.CENTER);
 
+        pnlRight = new JPanel();
+        pnlRight.setLayout(new GridLayout(2,1));
+
+        frame.add(pnlRight, BorderLayout.EAST);
         frame.getContentPane().add(pnlProgress, BorderLayout.SOUTH);
 
         pnlCenter = new JPanel();

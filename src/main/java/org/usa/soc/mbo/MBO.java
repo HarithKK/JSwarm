@@ -117,7 +117,7 @@ public class MBO extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            sleep(time);
+            stepCompleted(time);
         }
 
 
