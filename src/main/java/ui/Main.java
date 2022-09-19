@@ -47,7 +47,7 @@ public class Main {
     double bestValue;
 
 
-    IterationChartPlotter pltBestValue, pltConvergence;
+    IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
 
     ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
 
@@ -81,6 +81,8 @@ public class Main {
         stepCount=0;
         pltBestValue.clearChart();
         pltConvergence.clearChart();
+        pltGradiantDecent.clearChart();
+        pltMeanBest.clearChart();
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
@@ -91,7 +93,13 @@ public class Main {
         progressValue = (int)values[0];
         bestValue = values[1];
         pltBestValue.addData(stepCount, bestValue);
-        if(algorithm.getConvergenceValue() < 10000)
+        if(algorithm.getGradiantDecent() < 100000){
+            pltGradiantDecent.addData(stepCount, algorithm.getGradiantDecent());
+        }
+        if(algorithm.getMeanBestValue() < 100000){
+            pltMeanBest.addData(stepCount, algorithm.getMeanBestValue());
+        }
+        if(algorithm.getConvergenceValue() < 100000)
             pltConvergence.addData(stepCount, algorithm.getConvergenceValue());
         infoData.setText(algorithm.toString());
         updateUI();
@@ -112,8 +120,14 @@ public class Main {
         pltBestValue = new IterationChartPlotter(300, 100, "", "Best Value", -1000);
         pnlRight.add(new XChartPanel(pltBestValue.getChart()));
 
+        pltMeanBest = new IterationChartPlotter(300, 100, "", "Mean Best", -1000);
+        pnlRight.add(new XChartPanel(pltMeanBest.getChart()));
+
         pltConvergence = new IterationChartPlotter(300, 100, "", "Convergence Value", -1000);
         pnlRight.add(new XChartPanel(pltConvergence.getChart()));
+
+        pltGradiantDecent = new IterationChartPlotter(300, 100, "", "Gradiant Decent", -1000);
+        pnlRight.add(new XChartPanel(pltGradiantDecent.getChart()));
 
         functionChartPlotter.setAction(new EmptyAction() {
             @Override

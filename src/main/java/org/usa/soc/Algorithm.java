@@ -2,6 +2,7 @@ package org.usa.soc;
 
 import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
 import java.util.Arrays;
@@ -22,6 +23,9 @@ public abstract class Algorithm implements Cloneable {
     private Double bestValue = Double.POSITIVE_INFINITY;
 
     private double convergenceValue = Double.MAX_VALUE;
+    private double gradiantDecent = Double.MAX_VALUE;
+
+    private double meanBestValue = Double.POSITIVE_INFINITY;
 
     public Algorithm(
             ObjectiveFunction<Double> objectiveFunction,
@@ -100,8 +104,13 @@ public abstract class Algorithm implements Cloneable {
 
     public void stepCompleted(int time, long step){
 
+        double xValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
         // calculate convergence
-        calculateConvergenceValue(step);
+        calculateMeanValue(step, xValue);
+        calculateConvergenceValue(step, xValue);
+        calculateGradiantDecent(step, xValue);
+
+        this.bestValue = xValue;
 
         if(time == 0){
             return;
@@ -113,11 +122,29 @@ public abstract class Algorithm implements Cloneable {
         }
     }
 
-    private void calculateConvergenceValue(long step) {
-        double xValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+    private void calculateMeanValue(long step, double xValue) {
+
+        if(getMeanBestValue() == Double.POSITIVE_INFINITY){
+            meanBestValue = xValue / (step+1);
+        }else{
+            meanBestValue = ((getMeanBestValue() * (step)) + xValue) / (step + 1);
+        }
+    }
+
+    private void calculateGradiantDecent(long step, double xValue) {
+        double dg = (xValue) / (step+1);
+        if(dg == Double.POSITIVE_INFINITY){
+            this.gradiantDecent =0;
+        }else{
+            this.gradiantDecent = getMeanBestValue() - Randoms.rand(0,1)* dg;
+        }
+        System.out.println(gradiantDecent);
+
+    }
+
+    private void calculateConvergenceValue(long step, double xValue) {
         double dev = Math.pow(Math.abs(objectiveFunction.getExpectedBestValue() - getBestValue()), (1/(step+1)));
         this.convergenceValue = 1 - ((objectiveFunction.getExpectedBestValue() - xValue) / dev);
-        this.bestValue = xValue;
     }
 
     public abstract double[][] getDataPoints();
@@ -180,6 +207,22 @@ public abstract class Algorithm implements Cloneable {
         sb.append(this.getConvergenceValue());
         sb.append('\n');
 
+        sb.append("Gradiant Decent: ");
+        sb.append(this.getGradiantDecent());
+        sb.append('\n');
+
+        sb.append("Mean Best Value: ");
+        sb.append(this.getMeanBestValue());
+        sb.append('\n');
+
         return sb.toString();
+    }
+
+    public double getGradiantDecent() {
+        return gradiantDecent;
+    }
+
+    public double getMeanBestValue() {
+        return meanBestValue;
     }
 }
