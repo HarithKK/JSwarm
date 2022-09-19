@@ -2,6 +2,9 @@ package org.usa.soc;
 
 import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.StringFormatter;
+
+import java.util.Arrays;
 
 public abstract class Algorithm implements Cloneable {
 
@@ -16,7 +19,7 @@ public abstract class Algorithm implements Cloneable {
 
     protected int stepsCount;
 
-    private Double bestValue = 1.0;
+    private Double bestValue = Double.POSITIVE_INFINITY;
 
     private double convergenceValue = Double.MAX_VALUE;
 
@@ -95,10 +98,10 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction =a;
     }
 
-    public void stepCompleted(int time){
+    public void stepCompleted(int time, long step){
 
         // calculate convergence
-        calculateConvergenceValue();
+        calculateConvergenceValue(step);
 
         if(time == 0){
             return;
@@ -110,11 +113,10 @@ public abstract class Algorithm implements Cloneable {
         }
     }
 
-    private void calculateConvergenceValue() {
+    private void calculateConvergenceValue(long step) {
         double xValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
-
-        this.convergenceValue = Math.abs(xValue - objectiveFunction.getExpectedBestValue()) /
-                Math.pow(Math.abs(getBestValue() - objectiveFunction.getExpectedBestValue()), objectiveFunction.getOrderOfConvergence());
+        double dev = Math.pow(Math.abs(objectiveFunction.getExpectedBestValue() - getBestValue()), (1/(step+1)));
+        this.convergenceValue = 1 - ((objectiveFunction.getExpectedBestValue() - xValue) / dev);
         this.bestValue = xValue;
     }
 
@@ -130,5 +132,54 @@ public abstract class Algorithm implements Cloneable {
 
     public double getBestValue() {
         return bestValue;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Name: " + this.getClass().getSimpleName());
+        sb.append('\n');
+
+        sb.append("Function: " + this.getFunction().getClass().getSimpleName());
+        sb.append('\n');
+
+        sb.append("Best Value: ");
+        sb.append(this.getBestDoubleValue());
+        sb.append('\n');
+
+        sb.append("Expected Best Value: ");
+        sb.append(this.getFunction().getExpectedBestValue());
+        sb.append('\n');
+
+        sb.append("Minimum Obtained Value: ");
+        sb.append(Arrays.toString(this.getFunction().getMin()));
+        sb.append('\n');
+
+        sb.append("Maximum Obtained Value: ");
+        sb.append(Arrays.toString(this.getFunction().getMax()));
+        sb.append('\n');
+
+        sb.append("Number of Dimensions: ");
+        sb.append(this.getFunction().getNumberOfDimensions());
+        sb.append('\n');
+
+        sb.append("Execution Time: ");
+        sb.append(this.getNanoDuration()/ 1000000);
+        sb.append('\n');
+
+        sb.append("Best Position: ");
+        sb.append(this.getBestVariables());
+        sb.append('\n');
+
+        sb.append("Expected Best Position: ");
+        sb.append(StringFormatter.toString(this.getFunction().getExpectedParameters()));
+        sb.append('\n');
+
+        sb.append("Convergence: ");
+        sb.append(this.getConvergenceValue());
+        sb.append('\n');
+
+        return sb.toString();
     }
 }

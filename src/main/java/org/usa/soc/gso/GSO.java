@@ -94,7 +94,7 @@ public class GSO extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), (int)step);
-            stepCompleted(time);
+            stepCompleted(time, (int)step);
         }
     }
 

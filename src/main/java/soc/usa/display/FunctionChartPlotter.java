@@ -64,6 +64,7 @@ public class FunctionChartPlotter {
         series.setMarker(SeriesMarkers.CIRCLE);
         XYSeries seriesb = this.chart.addSeries("Best Search Trial", xbest, ybest);
         seriesb.setMarker(SeriesMarkers.CROSS);
+        seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         XYSeries series1 = this.chart.addSeries("Best",
                 new double[]{a.getFunction().getExpectedParameters()[0]},
                 new double[]{a.getFunction().getExpectedParameters()[1]});

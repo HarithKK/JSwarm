@@ -104,11 +104,10 @@ public class ACO extends Algorithm {
                     this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
                     updateBest(a);
                 }
-
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
+                stepCompleted(time, step);
             }
-            stepCompleted(time);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -116,9 +115,9 @@ public class ACO extends Algorithm {
     private Vector getPositionVector(Ant a, Vector v) {
 
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(a.getPbest().operate(Vector.OPERATOR.ADD, 0.01).getPositionIndexes()).call();
+        Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
 
-        boolean sign = (isLocalMinima && fgbest <= fpbest) || (!isLocalMinima && fgbest >= fpbest);
+        boolean sign = !Validator.validateBestValue(fpbest, fgbest, isLocalMinima);
 
         return a.getPosition().operate(sign ? Vector.OPERATOR.ADD : Vector.OPERATOR.SUB, v);
     }
@@ -141,7 +140,7 @@ public class ACO extends Algorithm {
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
-            this.gBest.setVector(a.getPosition());
+            this.gBest.setVector(a.getPbest());
         }
     }
 

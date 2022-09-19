@@ -72,7 +72,7 @@ public class CSO extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            stepCompleted(time);
+            stepCompleted(time, i);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

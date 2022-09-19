@@ -6,6 +6,7 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.FunctionsList;
 import org.usa.soc.core.EmptyAction;
+import org.usa.soc.util.Mathamatics;
 import soc.usa.display.FunctionChartPlotter;
 import soc.usa.display.IterationChartPlotter;
 
@@ -22,12 +23,14 @@ public class Main {
      */
     JFrame frame;
 
-    JPanel pnlCenter, pnlProgress, pnlRight;
+    JPanel pnlCenter, pnlProgress, pnlRight, pnlLeft;
     JToolBar jToolBar;
 
     JLabel lblFunctionComboBox, lblAlgorithmComboBox, lblInterval, lblBestValue, lblExpectedBestValue, lblBestValueExpectedBestValueSep;
 
     JComboBox cmbFunction, cmbAlgorithm;
+
+    JTextPane infoData;
 
     JSpinner spnInterval;
 
@@ -88,7 +91,9 @@ public class Main {
         progressValue = (int)values[0];
         bestValue = values[1];
         pltBestValue.addData(stepCount, bestValue);
-        pltConvergence.addData(stepCount, algorithm.getConvergenceValue());
+        if(algorithm.getConvergenceValue() < 10000)
+            pltConvergence.addData(stepCount, algorithm.getConvergenceValue());
+        infoData.setText(algorithm.toString());
         updateUI();
     }
 
@@ -104,10 +109,10 @@ public class Main {
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
         pnlCenter.add(swarmDisplayChart);
 
-        pltBestValue = new IterationChartPlotter(500, 300, "", "Best Value", -1000);
+        pltBestValue = new IterationChartPlotter(300, 100, "", "Best Value", -1000);
         pnlRight.add(new XChartPanel(pltBestValue.getChart()));
 
-        pltConvergence = new IterationChartPlotter(500, 300, "", "Convergence Value", -1000);
+        pltConvergence = new IterationChartPlotter(300, 100, "", "Convergence Value", -1000);
         pnlRight.add(new XChartPanel(pltConvergence.getChart()));
 
         functionChartPlotter.setAction(new EmptyAction() {
@@ -207,9 +212,17 @@ public class Main {
         pnlProgress.add(progressBar, BorderLayout.CENTER);
 
         pnlRight = new JPanel();
-        pnlRight.setLayout(new GridLayout(2,1));
+        pnlRight.setLayout(new GridLayout(4,1));
+
+        pnlLeft = new JPanel();
+        pnlLeft.setLayout(new GridLayout(2,1));
+
+        infoData = new JTextPane();
+        infoData.setText("Info Data");
+        pnlLeft.add(infoData);
 
         frame.add(pnlRight, BorderLayout.EAST);
+        frame.add(pnlLeft, BorderLayout.WEST);
         frame.getContentPane().add(pnlProgress, BorderLayout.SOUTH);
 
         pnlCenter = new JPanel();

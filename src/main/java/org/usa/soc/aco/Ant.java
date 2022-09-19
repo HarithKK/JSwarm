@@ -12,7 +12,7 @@ public class Ant {
     private double[] minBoundary, maxBoundary;
 
     public Ant(int numberOfDimensions, double[] minBoundary, double[] maxBoundary) {
-        this.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+        this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.pbest = this.position.getClonedVector();
         this.maxBoundary = maxBoundary;
         this.minBoundary = minBoundary;
@@ -23,7 +23,7 @@ public class Ant {
     }
 
     public void setPosition(Vector position) {
-        this.position = position;
+        this.position.setVector(position, minBoundary, maxBoundary);
     }
 
     public Vector getPbest() {

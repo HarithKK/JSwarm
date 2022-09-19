@@ -74,7 +74,7 @@ public class BA extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(time);
+            stepCompleted(time, step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

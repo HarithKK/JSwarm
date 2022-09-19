@@ -44,9 +44,9 @@ public class AlgoStore {
                     true);
             case 1: return new ACO(
                     fn,
-                    1000,
                     100,
-                    10,
+                    100,
+                    5,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -55,8 +55,8 @@ public class AlgoStore {
             case 2: return new org.usa.soc.cso.CSO(
                     fn,
                     fn.getNumberOfDimensions(),
-                    1500,
-                    1000,
+                    200,
+                    100,
                     0.2,
                     fn.getMin(),
                     fn.getMax(),
