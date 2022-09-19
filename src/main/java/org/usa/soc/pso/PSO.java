@@ -38,7 +38,8 @@ public class PSO extends Algorithm implements Cloneable {
         this.maxBoundary = maxBoundary;
         this.c1 = c1;
         this.c2 = c2;
-        this.wMax = this.wMin = w;
+        this.wMax = w;
+        this.wMin = w;
 
         this.particles = new Particle[particleCount];
         this.gBest = new Vector(numberOfDimensions);
@@ -183,7 +184,7 @@ public class PSO extends Algorithm implements Cloneable {
         Double fgbest = this.objectiveFunction.setParameters(gBestPosition.getPositionIndexes()).call();
 
         if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
-            this.getGBest().setVector(getRandomPosition(pBestPosition), minBoundary, maxBoundary);
+            this.gBest.setVector(getRandomPosition(pBestPosition.getClonedVector()), minBoundary, maxBoundary);
         }
     }
 

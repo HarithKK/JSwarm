@@ -13,8 +13,10 @@ import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
 
 public class FunctionChartPlotter {
 
@@ -81,7 +83,7 @@ public class FunctionChartPlotter {
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setAction(new EmptyAction() {
             @Override
-            public void performAction(double d, double d1) {
+            public void performAction(int step, double []d) {
                 frame.repaint();
             }
         });
@@ -128,11 +130,12 @@ public class FunctionChartPlotter {
                 chart.updateXYSeries("Agents", xdata, ydata, null);
                 chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
 
+                double trajectory = DoubleStream.of(ydata).average().getAsDouble();
                 if((step % fraction) == 0){
                     System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit(step/fraction).collect(joining()));
                 }
                 if(action != null)
-                    action.performAction(step/fraction, bestValue);
+                    action.performAction(step, step/fraction, bestValue, trajectory);
                 step = step +1;
             }
         });

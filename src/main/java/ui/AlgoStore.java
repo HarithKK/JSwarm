@@ -33,9 +33,9 @@ public class AlgoStore {
         switch (a){
             case 0 : return new PSO(
                     fn,
-                    1000,
+                    200,
                     fn.getNumberOfDimensions(),
-                    100,
+                    300,
                     1.496180,
                     1.496180,
                     0.729844,
