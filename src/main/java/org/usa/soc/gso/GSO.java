@@ -110,7 +110,7 @@ public class GSO extends Algorithm {
 
         for(GlowWorm w: nWarms){
             relFitness += (w.getL() - ithWarm.getL()) / totalFs;
-            if(randP<=relFitness){
+            if(randP>=relFitness){
                 return w;
             }
         }
