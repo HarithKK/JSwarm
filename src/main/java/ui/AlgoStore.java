@@ -184,7 +184,7 @@ public class AlgoStore {
                     fn.getMax(),
                     1,
                     0.8,
-                    0.78,
+                    0.72,
                     1.49,
                     true
             );
