@@ -36,7 +36,7 @@ public class PlotDisplay {
         System.out.println("Function Id: ");
         int f = scanner.nextInt();
         System.out.println("Selected Function Is "+ fns[f].getClass().getSimpleName());
-        Algorithm ad = new AlgoStore(a, fns[f]).getAlgorithm();
+        Algorithm ad = new AlgoStore(a, fns[f]).getAlgorithm(100, 100);
 
         new org.usa.soc.surfacePlotter.FunctionDisplay(f);
 

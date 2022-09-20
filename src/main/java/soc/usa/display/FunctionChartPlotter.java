@@ -111,7 +111,7 @@ public class FunctionChartPlotter {
         setExecute(true);
         algorithm.initialize();
         int step =0;
-        int fraction = algorithm.getStepsCount()/100;
+        double fraction = algorithm.getStepsCount()/100;
         algorithm.addStepAction(new Action() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
@@ -132,7 +132,7 @@ public class FunctionChartPlotter {
                 chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
 
                 if((step % fraction) == 0){
-                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit(step/fraction).collect(joining()));
+                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
                 }
                 if(action != null)
                     action.performAction(step, step/fraction, bestValue);

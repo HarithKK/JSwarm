@@ -29,13 +29,13 @@ public class AlgoStore {
     }
 
 
-    public Algorithm getAlgorithm() {
+    public Algorithm getAlgorithm(int sc, int ac) {
         switch (a){
             case 0 : return new PSO(
                     fn,
-                    50,
+                    ac,
                     fn.getNumberOfDimensions(),
-                    200,
+                    sc,
                     1.496180,
                     1.496180,
                     0.729844,
@@ -44,8 +44,8 @@ public class AlgoStore {
                     true);
             case 1: return new ACO(
                     fn,
-                    100,
-                    100,
+                    ac,
+                    sc,
                     5,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
@@ -55,8 +55,8 @@ public class AlgoStore {
             case 2: return new org.usa.soc.cso.CSO(
                     fn,
                     fn.getNumberOfDimensions(),
-                    200,
-                    100,
+                    sc,
+                    ac,
                     0.2,
                     fn.getMin(),
                     fn.getMax(),
@@ -73,8 +73,8 @@ public class AlgoStore {
                 return new org.usa.soc.gso.GSO(
                         fn,
                         fn.getNumberOfDimensions(),
-                        1000,
-                        1000,
+                        sc,
+                        ac,
                         fn.getMin(),
                         fn.getMax(),
                         10,
@@ -90,10 +90,10 @@ public class AlgoStore {
             }
             case 4: return new MBO(
                     fn,
-                    500,
+                    ac,
                     100,
                     30,
-                    1000,
+                    sc,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -107,8 +107,8 @@ public class AlgoStore {
             );
             case 5: return new MS(
                     fn,
-                    1000,
-                    1000,
+                    sc,
+                    ac,
                     fn.getNumberOfDimensions(),
                     50,
                     fn.getMin(),
@@ -118,8 +118,8 @@ public class AlgoStore {
             );
             case 6: return new WSO(
                     fn,
-                    500,
-                    100,
+                    sc,
+                    ac,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -129,9 +129,9 @@ public class AlgoStore {
             );
             case 7: return new CS(
                     fn,
-                    100,
+                    sc,
                     fn.getNumberOfDimensions(),
-                    1000,
+                    ac,
                     fn.getMin(),
                     fn.getMax(),
                     1,
@@ -140,9 +140,9 @@ public class AlgoStore {
             );
             case 8: return new FA(
                     fn,
-                    100,
+                    sc,
                     fn.getNumberOfDimensions(),
-                    500,
+                    ac,
                     fn.getMin(),
                     fn.getMax(),
                     1,
@@ -152,9 +152,9 @@ public class AlgoStore {
             );
             case 9: return new ABC(
                     fn,
-                    300,
+                    sc,
                     fn.getNumberOfDimensions(),
-                    300,
+                    ac,
                     fn.getMin(),
                     fn.getMax(),
                     100,
@@ -162,11 +162,11 @@ public class AlgoStore {
             );
             case 10:  return new BA(
                     fn,
-                    100,
+                    sc,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
-                    100,
+                    ac,
                     0,
                     100,
                     0.9,
@@ -177,9 +177,9 @@ public class AlgoStore {
             );
             case 11: return new TCO(
                     fn,
-                    500,
+                    sc,
                     fn.getNumberOfDimensions(),
-                    200,
+                    ac,
                     fn.getMin(),
                     fn.getMax(),
                     1,
@@ -190,30 +190,30 @@ public class AlgoStore {
             );
             case 12: return new org.usa.soc.gwo.GWO(
                     fn,
-                    1000,
+                    sc,
                     fn.getNumberOfDimensions(),
-                    500,
+                    ac,
                     fn.getMin(),
                     fn.getMax(),
                     true
             );
             case 13: return new org.usa.soc.mfa.MFA(
                     fn,
-                    200,
+                    sc,
                     fn.getNumberOfDimensions(),
-                    50,
+                    ac,
                     fn.getMin(),
                     fn.getMax(),
                     1.0
             );
             case 14: return new org.usa.soc.alo.ALO(
                     fn,
-                    25,
-                    600,
+                    ac,
+                    sc,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
-                    fn.getClass().getSimpleName() == "HimmelblausFunction" ? false : true
+                    true
             );
         }
         return null;

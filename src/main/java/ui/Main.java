@@ -6,11 +6,13 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.FunctionsList;
 import org.usa.soc.core.EmptyAction;
-import org.usa.soc.util.Mathamatics;
 import soc.usa.display.FunctionChartPlotter;
 import soc.usa.display.IterationChartPlotter;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +25,7 @@ public class Main {
      */
     JFrame frame;
 
-    JPanel pnlCenter, pnlProgress, pnlRight, pnlLeft;
+    JPanel pnlCenter, pnlProgress, pnlRight, pnlLeft, pnlConfigs;
     JToolBar jToolBar;
 
     JLabel lblFunctionComboBox, lblAlgorithmComboBox, lblInterval, lblBestValue, lblExpectedBestValue, lblBestValueExpectedBestValueSep;
@@ -43,6 +45,7 @@ public class Main {
 
     int progressValue;
     int stepCount =0;
+    int iterationCount, agentsCount;
 
     double bestValue;
 
@@ -60,7 +63,7 @@ public class Main {
         int selectedFunction = cmbFunction.getSelectedIndex();
         int selectedInterval = (Integer) spnInterval.getValue();
 
-        algorithm = new AlgoStore(selectedAlgorithm, fns[selectedFunction]).getAlgorithm();
+        algorithm = new AlgoStore(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
         functionChartPlotter.setTime(selectedInterval);
         functionChartPlotter.setChart(algorithm);
 
@@ -111,7 +114,7 @@ public class Main {
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        Algorithm algorithm = new AlgoStore(0, fns[0]).getAlgorithm();
+        Algorithm algorithm = new AlgoStore(0, fns[0]).getAlgorithm(100, 100);
         functionChartPlotter.setChart(algorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -235,6 +238,9 @@ public class Main {
         infoData.setText("Info Data");
         pnlLeft.add(infoData);
 
+        pnlConfigs = getPanelConfigs();
+        pnlLeft.add(pnlConfigs);
+
         frame.add(pnlRight, BorderLayout.EAST);
         frame.add(pnlLeft, BorderLayout.WEST);
         frame.getContentPane().add(pnlProgress, BorderLayout.SOUTH);
@@ -244,6 +250,63 @@ public class Main {
         frame.add(pnlCenter, BorderLayout.CENTER);
 
         frame.setVisible(true);
+    }
+
+    private JPanel getPanelConfigs() {
+
+        JPanel jp = new JPanel();
+        GridBagLayout d = new GridBagLayout();
+        jp.setLayout(d);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill =  GridBagConstraints.VERTICAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.ipadx = GridBagConstraints.PAGE_START;
+
+        RowPanel rowPanel1 = new RowPanel(" Iterations", "100");
+        iterationCount = 100;
+        rowPanel1.txt.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                if(!rowPanel1.txt.getText().isEmpty()){
+                    iterationCount = Integer.parseInt(rowPanel1.txt.getText());
+                }
+            }
+        });
+        jp.add(rowPanel1, gbc);
+
+        gbc.gridy = 1;
+        RowPanel rowPanel2 = new RowPanel(" Agents Count", "100");
+        agentsCount = 100;
+        rowPanel2.txt.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                if(!rowPanel2.txt.getText().isEmpty()){
+                    agentsCount = Integer.parseInt(rowPanel2.txt.getText());
+                }
+            }
+        });
+        jp.add(rowPanel2, gbc);
+
+        return jp;
+
+    }
+
+    class RowPanel extends JPanel{
+        String key, value;
+        JTextField txt;
+
+        public RowPanel(String key, String value){
+            this.key = key;
+            this.value = value;
+            this.setLayout(new GridLayout(1,2));
+            this.add(new JLabel(key));
+
+            txt = new JTextField();
+            txt.setText(value);
+            this.add(txt);
+        }
     }
 
     public static void main(String[] args) {

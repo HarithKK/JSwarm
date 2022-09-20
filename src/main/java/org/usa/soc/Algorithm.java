@@ -138,7 +138,6 @@ public abstract class Algorithm implements Cloneable {
         }else{
             this.gradiantDecent = getMeanBestValue() - Randoms.rand(0,1)* dg;
         }
-        System.out.println(gradiantDecent);
 
     }
 
