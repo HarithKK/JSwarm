@@ -2,7 +2,6 @@ package org.usa.soc.ba;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.abc.FoodSource;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
@@ -75,7 +74,7 @@ public class BA extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            sleep(time);
+            stepCompleted(time, step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

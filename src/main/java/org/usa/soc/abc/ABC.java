@@ -50,7 +50,7 @@ public class ABC extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            sleep(time);
+            stepCompleted(time, step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

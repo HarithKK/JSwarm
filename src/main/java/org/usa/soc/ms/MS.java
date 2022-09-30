@@ -53,7 +53,7 @@ public class MS extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            sleep(time);
+            stepCompleted(time, i);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;

@@ -2,6 +2,10 @@ package org.usa.soc;
 
 import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Randoms;
+import org.usa.soc.util.StringFormatter;
+
+import java.util.Arrays;
 
 public abstract class Algorithm implements Cloneable {
 
@@ -15,6 +19,13 @@ public abstract class Algorithm implements Cloneable {
     protected ObjectiveFunction<Double> objectiveFunction;
 
     protected int stepsCount;
+
+    private Double bestValue = Double.POSITIVE_INFINITY;
+
+    private double convergenceValue = Double.MAX_VALUE;
+    private double gradiantDecent = Double.MAX_VALUE;
+
+    private double meanBestValue = Double.POSITIVE_INFINITY;
 
     public Algorithm(
             ObjectiveFunction<Double> objectiveFunction,
@@ -91,7 +102,16 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction =a;
     }
 
-    public void sleep(int time){
+    public void stepCompleted(int time, long step){
+
+        double xValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        // calculate convergence
+        calculateMeanValue(step, xValue);
+        calculateConvergenceValue(step, xValue);
+        calculateGradiantDecent(step, xValue);
+
+        this.bestValue = xValue;
+
         if(time == 0){
             return;
         }
@@ -102,9 +122,106 @@ public abstract class Algorithm implements Cloneable {
         }
     }
 
+    private void calculateMeanValue(long step, double xValue) {
+
+        if(getMeanBestValue() == Double.POSITIVE_INFINITY){
+            meanBestValue = xValue / (step+1);
+        }else{
+            meanBestValue = ((getMeanBestValue() * (step)) + xValue) / (step + 1);
+        }
+    }
+
+    private void calculateGradiantDecent(long step, double xValue) {
+        double dg = (xValue) / (step+1);
+        if(dg == Double.POSITIVE_INFINITY){
+            this.gradiantDecent =0;
+        }else{
+            this.gradiantDecent = getMeanBestValue() - Randoms.rand(0,1)* dg;
+        }
+
+    }
+
+    private void calculateConvergenceValue(long step, double xValue) {
+        double dev = Math.pow(Math.abs(objectiveFunction.getExpectedBestValue() - getBestValue()), (1/(step+1)));
+        this.convergenceValue = 1 - ((objectiveFunction.getExpectedBestValue() - xValue) / dev);
+    }
+
     public abstract double[][] getDataPoints();
 
     public int getStepsCount() {
         return stepsCount;
+    }
+
+    public double getConvergenceValue() {
+        return convergenceValue;
+    }
+
+    public double getBestValue() {
+        return bestValue;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Name: " + this.getClass().getSimpleName());
+        sb.append('\n');
+
+        sb.append("Function: " + this.getFunction().getClass().getSimpleName());
+        sb.append('\n');
+
+        sb.append("Best Value: ");
+        sb.append(this.getBestDoubleValue());
+        sb.append('\n');
+
+        sb.append("Expected Best Value: ");
+        sb.append(this.getFunction().getExpectedBestValue());
+        sb.append('\n');
+
+        sb.append("Minimum Obtained Value: ");
+        sb.append(Arrays.toString(this.getFunction().getMin()));
+        sb.append('\n');
+
+        sb.append("Maximum Obtained Value: ");
+        sb.append(Arrays.toString(this.getFunction().getMax()));
+        sb.append('\n');
+
+        sb.append("Number of Dimensions: ");
+        sb.append(this.getFunction().getNumberOfDimensions());
+        sb.append('\n');
+
+        sb.append("Execution Time: ");
+        sb.append(this.getNanoDuration()/ 1000000);
+        sb.append('\n');
+
+        sb.append("Best Position: ");
+        sb.append(this.getBestVariables());
+        sb.append('\n');
+
+        sb.append("Expected Best Position: ");
+        sb.append(StringFormatter.toString(this.getFunction().getExpectedParameters()));
+        sb.append('\n');
+
+        sb.append("Convergence: ");
+        sb.append(this.getConvergenceValue());
+        sb.append('\n');
+
+        sb.append("Gradiant Decent: ");
+        sb.append(this.getGradiantDecent());
+        sb.append('\n');
+
+        sb.append("Mean Best Value: ");
+        sb.append(this.getMeanBestValue());
+        sb.append('\n');
+
+        return sb.toString();
+    }
+
+    public double getGradiantDecent() {
+        return gradiantDecent;
+    }
+
+    public double getMeanBestValue() {
+        return meanBestValue;
     }
 }

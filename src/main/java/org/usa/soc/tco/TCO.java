@@ -2,7 +2,6 @@ package org.usa.soc.tco;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.abc.FoodSource;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Validator;
@@ -50,6 +49,19 @@ public class TCO extends Algorithm {
             throw new RuntimeException("Termites Are Not Initialized");
         }
         this.nanoDuration = System.nanoTime();
+
+        Vector tau = new Vector(numberOfDimensions);
+        Vector tauDecrements = new Vector(numberOfDimensions);
+
+        for(int i=0;i<numberOfDimensions;i++){
+            double diff = Math.abs(objectiveFunction.getMax()[i] - objectiveFunction.getMin()[i]);
+            double max = diff/2;
+            double min = diff/8;
+
+            tau.setValue(max, i);
+            tauDecrements.setValue((max - min)/stepsCount, i);
+        }
+
         for(int step = 0; step< getStepsCount(); step++){
 
             for (Termite t: termites) {
@@ -58,22 +70,26 @@ public class TCO extends Algorithm {
 
             for(int i=0 ;i< numberOfTermites; i++){
                 Termite ti = termites[i];
-                Termite tb = getClosestTermite(ti.getPosition(), i);
+                Termite tb = getClosestTermite(i,ti.getPosition(), tau.getMagnitude());
 
-                if(tb != null){
-                    ti.updatePositionByRandomWalk(r);
-                }else{
+                if(tb == null){
+                    ti.updatePositionByRandomWalk(tau);
+                }
+                else{
                     if(ti.getpValue() < tb.getpValue()){
-                        ti.updatePosition(omega, gBest);
+                        updateGBest(tb);
+                        ti.updatePosition(omega, tb.getPosition());
+                    }else{
+                        // Our Work
+                        //ti.updatePositionByRandomWalk(tau);
                     }
                 }
-
-                updateGBest(ti);
             }
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            sleep(time);
+            stepCompleted(time, step);
+            tau.setVector(tau.operate(Vector.OPERATOR.SUB, tauDecrements));
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -87,13 +103,15 @@ public class TCO extends Algorithm {
         }
     }
 
-    private Termite getClosestTermite(Vector position, int c) {
+    private Termite getClosestTermite(int j, Vector position, double c) {
         double diff = Double.MAX_VALUE;
         Termite t = null;
         for(int i=0 ;i< numberOfTermites; i++){
+            if(i==j)
+                continue;
             Termite tj = termites[i];
             double d = position.getDistance(tj.getPosition());
-            if(d <= r && d < diff){
+            if(d < c && d < diff){
                 diff = d;
                 t = tj;
             }

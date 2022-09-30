@@ -38,7 +38,7 @@ public class Particle {
         double pBestVal =fn.call();
         double stepBestVal = objectiveFunction.setParameters(this.position.getPositionIndexes()).call();
         if(Validator.validateBestValue(stepBestVal, pBestVal, isLocalMinima)){
-            this.getPBest().setVector(this.position, this.minBoundary, this.maxBoundary);
+            this.pBest.setVector(this.position.getClonedVector(), this.minBoundary, this.maxBoundary);
         }
     }
 
@@ -61,7 +61,7 @@ public class Particle {
                 .operate(Vector.OPERATOR.MULP, c2r2);
 
         this.setVelocity(v1.operate(Vector.OPERATOR.ADD, v2).operate(Vector.OPERATOR.ADD, v3));
-        this.position.setVector(this.position.operate(Vector.OPERATOR.ADD, this.getVelocity()), this.minBoundary, this.maxBoundary);
+        this.position.setVector(this.position.operate(Vector.OPERATOR.ADD, this.getVelocity()), minBoundary, maxBoundary);
 
     }
 
@@ -74,7 +74,7 @@ public class Particle {
     }
 
     public Vector getPBest() {
-        return pBest;
+        return pBest.getClonedVector();
     }
 
     public void setPBest(Vector v) {

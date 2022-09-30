@@ -13,8 +13,10 @@ import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
 
 public class FunctionChartPlotter {
 
@@ -28,6 +30,9 @@ public class FunctionChartPlotter {
     private EmptyAction action;
 
     private int time = 10, bestIndex;
+
+    private boolean isExecute = false;
+
     public FunctionChartPlotter(String title, int w, int h){
 
         this.chart = new XYChartBuilder()
@@ -59,6 +64,7 @@ public class FunctionChartPlotter {
         series.setMarker(SeriesMarkers.CIRCLE);
         XYSeries seriesb = this.chart.addSeries("Best Search Trial", xbest, ybest);
         seriesb.setMarker(SeriesMarkers.CROSS);
+        seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         XYSeries series1 = this.chart.addSeries("Best",
                 new double[]{a.getFunction().getExpectedParameters()[0]},
                 new double[]{a.getFunction().getExpectedParameters()[1]});
@@ -78,7 +84,7 @@ public class FunctionChartPlotter {
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setAction(new EmptyAction() {
             @Override
-            public void performAction(double d, double d1) {
+            public void performAction(int step, double []d) {
                 frame.repaint();
             }
         });
@@ -99,9 +105,13 @@ public class FunctionChartPlotter {
     }
 
     public void execute(){
+        if(isExecute){
+            return;
+        }
+        setExecute(true);
         algorithm.initialize();
         int step =0;
-        int fraction = algorithm.getStepsCount()/100;
+        double fraction = algorithm.getStepsCount()/100;
         algorithm.addStepAction(new Action() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
@@ -122,14 +132,15 @@ public class FunctionChartPlotter {
                 chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
 
                 if((step % fraction) == 0){
-                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit(step/fraction).collect(joining()));
+                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
                 }
                 if(action != null)
-                    action.performAction(step/fraction, bestValue);
+                    action.performAction(step, step/fraction, bestValue);
                 step = step +1;
             }
         });
         algorithm.runOptimizer(time);
+        setExecute(false);
         System.out.println("");
         System.out.println("Actual: "+algorithm.getBestDoubleValue() +" , Expected: "+algorithm.getFunction().getExpectedBestValue());
         System.out.println("Actual: "+algorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(algorithm.getFunction().getExpectedParameters()));
@@ -137,5 +148,13 @@ public class FunctionChartPlotter {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public boolean isExecute() {
+        return isExecute;
+    }
+
+    public void setExecute(boolean execute) {
+        isExecute = execute;
     }
 }

@@ -7,9 +7,6 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 public class GWO extends Algorithm {
 
     private static final Double MAX_A = 2.0;
@@ -72,7 +69,7 @@ public class GWO extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            sleep(time);
+            stepCompleted(time, step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

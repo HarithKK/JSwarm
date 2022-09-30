@@ -18,7 +18,7 @@ public class StringFormatter {
         StringBuilder sb = new StringBuilder();
         int i=1;
         for (double d: p) {
-            sb.append("[").append(i++).append("] : ").append(format(String.valueOf(d), 12)).append("\t");
+            sb.append("[").append(i++).append("] : ").append(d).append("\n");
         }
         return sb.toString();
     }

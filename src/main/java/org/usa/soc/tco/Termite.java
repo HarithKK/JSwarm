@@ -2,6 +2,7 @@ package org.usa.soc.tco;
 
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 
 public class Termite {
@@ -23,17 +24,16 @@ public class Termite {
 
     public void updatePheramoneValue(double eRate, ObjectiveFunction<Double> objectiveFunction) {
         double d = objectiveFunction.setParameters(this.getPosition().getPositionIndexes()).call();
-        this.pValue = ((1 - eRate) * this.getpValue()) + (1 / (d + 1));
+        this.pValue = ((1 - eRate) * this.getpValue()) + 1 / (d + 1);
     }
 
     public Vector getPosition() {
         return position.getClonedVector();
     }
 
-    public void updatePositionByRandomWalk(double r) {
-        Vector v = Randoms.getRandomVector(this.position.getClonedVector(), r)
-                .operate(Vector.OPERATOR.ADD, this.position);
-        this.position.setVector(v, minBoundary, maxBoundary);
+    public void updatePositionByRandomWalk(Vector v) {
+        Vector rv = Randoms.getRandomVector(this.position.getClonedVector(), v);
+        this.position.setVector(this.position.operate(Vector.OPERATOR.ADD, rv), minBoundary, maxBoundary );
     }
 
     public double getpValue() {

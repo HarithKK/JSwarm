@@ -94,7 +94,7 @@ public class GSO extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), (int)step);
-            sleep(time);
+            stepCompleted(time, (int)step);
         }
     }
 
@@ -110,7 +110,7 @@ public class GSO extends Algorithm {
 
         for(GlowWorm w: nWarms){
             relFitness += (w.getL() - ithWarm.getL()) / totalFs;
-            if(randP<=relFitness){
+            if(randP>=relFitness){
                 return w;
             }
         }
