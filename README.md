@@ -71,5 +71,9 @@ TBD : We will provide you the contribution guidelines soon.
 ## References
 <a id="1">[1]</a> https://en.wikipedia.org/wiki/Test_functions_for_optimization
 
+Momin Jamil and Xin-She Yang, A literature survey of benchmark functions for
+global optimization problems, Int. Journal of Mathematical Modelling and
+Numerical Optimisation, Vol. 4, No. 2, pp. 150–194 (2013).
+DOI: 10.1504/IJMMNO.2013.055204
 
 [java-image]: https://img.shields.io/badge/dynamic/xml?color=red&label=java&query=1.8&url=https%3A%2F%2Fopenjdk.java.net%2Fprojects%2Fjdk8%2F

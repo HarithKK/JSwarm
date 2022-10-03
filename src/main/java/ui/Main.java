@@ -120,16 +120,16 @@ public class Main {
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
         pnlCenter.add(swarmDisplayChart);
 
-        pltBestValue = new IterationChartPlotter(300, 100, "", "Best Value", -1000);
+        pltBestValue = new IterationChartPlotter(600, 100, "", "Best Value", -1000);
         pnlRight.add(new XChartPanel(pltBestValue.getChart()));
 
-        pltMeanBest = new IterationChartPlotter(300, 100, "", "Mean Best", -1000);
+        pltMeanBest = new IterationChartPlotter(600, 100, "", "Mean Best", -1000);
         pnlRight.add(new XChartPanel(pltMeanBest.getChart()));
 
-        pltConvergence = new IterationChartPlotter(300, 100, "", "Convergence Value", -1000);
+        pltConvergence = new IterationChartPlotter(600, 100, "", "Convergence Value", -1000);
         pnlRight.add(new XChartPanel(pltConvergence.getChart()));
 
-        pltGradiantDecent = new IterationChartPlotter(300, 100, "", "Gradiant Decent", -1000);
+        pltGradiantDecent = new IterationChartPlotter(600, 100, "", "Gradiant Decent", -1000);
         pnlRight.add(new XChartPanel(pltGradiantDecent.getChart()));
 
         functionChartPlotter.setAction(new EmptyAction() {
