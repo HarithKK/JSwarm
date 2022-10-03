@@ -6,6 +6,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public abstract class Algorithm implements Cloneable {
 
@@ -20,12 +21,12 @@ public abstract class Algorithm implements Cloneable {
 
     protected int stepsCount;
 
-    private Double bestValue = Double.POSITIVE_INFINITY;
+    private double bestValue = 0;
 
     private double convergenceValue = Double.MAX_VALUE;
     private double gradiantDecent = Double.MAX_VALUE;
 
-    private double meanBestValue = Double.POSITIVE_INFINITY;
+    private double meanBestValue = 0;
 
     public Algorithm(
             ObjectiveFunction<Double> objectiveFunction,
@@ -157,12 +158,15 @@ public abstract class Algorithm implements Cloneable {
     }
 
     public double getBestValue() {
-        return bestValue;
+        return this.bestValue;
     }
 
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
+
+        sb.append("Test ID: "+ new Date().getTime());
+        sb.append('\n');
 
         sb.append("Name: " + this.getClass().getSimpleName());
         sb.append('\n');
@@ -199,6 +203,7 @@ public abstract class Algorithm implements Cloneable {
         sb.append('\n');
 
         sb.append("Expected Best Position: ");
+        sb.append('\n');
         sb.append(StringFormatter.toString(this.getFunction().getExpectedParameters()));
         sb.append('\n');
 
@@ -208,6 +213,10 @@ public abstract class Algorithm implements Cloneable {
 
         sb.append("Gradiant Decent: ");
         sb.append(this.getGradiantDecent());
+        sb.append('\n');
+
+        sb.append("Mean Best Value: ");
+        sb.append(this.getMeanBestValue());
         sb.append('\n');
 
         sb.append("Mean Best Value: ");

@@ -81,7 +81,7 @@ public class TCO extends Algorithm {
                         ti.updatePosition(omega, tb.getPosition());
                     }else{
                         // Our Work
-                        //ti.updatePositionByRandomWalk(tau);
+                        ti.updatePositionByRandomWalk(tau);
                     }
                 }
             }
