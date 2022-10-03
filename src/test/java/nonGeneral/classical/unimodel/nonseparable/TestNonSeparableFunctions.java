@@ -5,6 +5,7 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
+import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.notincluded.RotatedEllipsisFunction;
 import org.usa.soc.pso.PSO;
 
 public class TestNonSeparableFunctions {
