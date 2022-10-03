@@ -4,6 +4,7 @@ package nonGeneral;
 Settings
  */
 
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ public class TestRunner {
 
     private static Algorithm algorithm = null;
     private static double[] meanBestValueTrial, meanMeanBestValueTrial, meanConvergence = null;
-    private static double meanBestValue = 0;
+    private static double meanBestValue = 0, std;
     private static long meanExecutionTime = 0;
 
     public static void main(String[] args) {
@@ -54,8 +55,10 @@ public class TestRunner {
         meanConvergence = new double[STEPS_COUNT];
         meanBestValue =0;
         meanExecutionTime =0;
+        std = 0;
         List<String[]> dataLines = new ArrayList<>();
         double fraction = STEPS_COUNT/100;
+        double[] bestValuesArray = new double[REPEATER];
         for(int i=0; i<REPEATER; i++){
             algorithm = new TestRunner().getAlgorithm();
             algorithm.initialize();
@@ -76,14 +79,17 @@ public class TestRunner {
             });
             algorithm.runOptimizer();
             meanBestValue += algorithm.getBestDoubleValue();
+            bestValuesArray[i] = algorithm.getBestDoubleValue();
             meanExecutionTime += algorithm.getNanoDuration();
         }
 
         dataLines.add(new String[]{algorithm.getClass().getSimpleName(), algorithm.getFunction().getClass().getSimpleName()});
         meanBestValue /= REPEATER;
         meanExecutionTime /= REPEATER;
+        std = new StandardDeviation().evaluate(bestValuesArray, meanBestValue);
         dataLines.add(new String[]{"Mean Best Value: ", String.valueOf(meanBestValue)});
-        dataLines.add(new String[]{"Mean Execution Time: (ms): ", String.valueOf(meanExecutionTime)});
+        dataLines.add(new String[]{"Mean Execution Time: (ms): ", String.valueOf( TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS))});
+        dataLines.add(new String[]{"STD of Best Values: ", String.valueOf(std)});
         dataLines.add(new String[]{"MBV", "MMBV", "MC"});
         for(int j=0;j< algorithm.getStepsCount();j++){
             meanBestValueTrial[j] /= REPEATER;
@@ -94,7 +100,7 @@ public class TestRunner {
         System.out.println();
         System.out.println("Mean Best Value: "+ meanBestValue);
         System.out.println("Mean Execution Time: (ms)"+ TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS));
-
+        System.out.println("STD of Best Values: "+std);
         writeToCsv(dataLines);
 
         List<XYChart> charts = new ArrayList<XYChart>();
