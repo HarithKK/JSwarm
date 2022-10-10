@@ -155,8 +155,8 @@ public class TestRunner {
 
         // list of Objective Functions
         List<ObjectiveFunction> multimodalNonSeparableFunctionList = Arrays.asList(
-                new AckleysFunction(),
-                new ColvilleFunction(),
+               // new AckleysFunction(),
+               // new ColvilleFunction(),
                 new CrossInTrayFunction(),
                 new GoldsteinPrice(),
                 new McCormickFunction(),
@@ -223,7 +223,7 @@ public class TestRunner {
     }
 
     private static Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new AlgorithmStore().getCS(fn, AGENT_COUNT, STEPS_COUNT);
+        return new AlgorithmStore().getFA(fn, AGENT_COUNT, STEPS_COUNT);
     }
 
     private static void appendToFile(Path path, String data){

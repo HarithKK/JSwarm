@@ -3,6 +3,7 @@ package nonGeneral;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.cs.CS;
+import org.usa.soc.fa.FA;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.wso.WSO;
@@ -86,6 +87,20 @@ public class AlgorithmStore {
                 fn.getMax(),
                 1,
                 0.25,
+                true
+        );
+    }
+    public Algorithm getFA(ObjectiveFunction fn, int ac, int sc){
+        return new FA(
+                fn,
+                sc,
+                fn.getNumberOfDimensions(),
+                ac,
+                fn.getMin(),
+                fn.getMax(),
+                1,
+                0.2,
+                1,
                 true
         );
     }
