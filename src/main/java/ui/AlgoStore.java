@@ -69,7 +69,6 @@ public class AlgoStore {
                     true
             );
             case 3: {
-                double sr = Mathamatics.getMaximumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
                 return new org.usa.soc.gso.GSO(
                         fn,
                         fn.getNumberOfDimensions(),
@@ -77,14 +76,14 @@ public class AlgoStore {
                         ac,
                         fn.getMin(),
                         fn.getMax(),
-                        10,
-                        sr,
+                        5,
+                        1,
                         0.4,
                         0.6,
-                        10,
-                        sr,
+                        2,
+                        1,
                         0.08,
-                        2.0,
+                        0.03,
                         true
                 );
             }
@@ -135,7 +134,7 @@ public class AlgoStore {
                     fn.getMin(),
                     fn.getMax(),
                     1,
-                    0.5,
+                    0.75,
                     true
             );
             case 8: return new FA(

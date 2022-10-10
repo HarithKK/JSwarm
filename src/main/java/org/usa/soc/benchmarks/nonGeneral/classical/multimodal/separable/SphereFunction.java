@@ -13,7 +13,7 @@ public class SphereFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 20;
+        return 10;
     }
 
     @Override

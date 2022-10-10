@@ -23,6 +23,8 @@ import org.usa.soc.core.Action;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 import ui.AlgoStore;
+
+import java.awt.*;
 import java.nio.file.Files;
 
 import java.io.*;
@@ -45,7 +47,7 @@ public class TestRunner {
 
     private static final int REPEATER = 5;
     private static final int AGENT_COUNT = 1000;
-    private static final int STEPS_COUNT = 5000;
+    private static final int STEPS_COUNT = 1000;
     private static final int ALGO_INDEX = 2;
 
     private static final int RIP_DIS = 10;
@@ -55,25 +57,25 @@ public class TestRunner {
         return new AlgoStore(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
     }
 
-    private static Algorithm algorithm = null;
-    private static double[] meanBestValueTrial, meanMeanBestValueTrial, meanConvergence = null;
-    private static double meanBestValue = 0, std;
-    private static long meanExecutionTime = 0;
+    private  static  Algorithm algorithm = null;
 
-    private String RunTest(Algorithm algorithm, String extra){
-        meanBestValueTrial = new double[STEPS_COUNT];
-        meanMeanBestValueTrial = new double[STEPS_COUNT];
-        meanConvergence = new double[STEPS_COUNT];
-        meanBestValue =0;
-        meanExecutionTime =0;
-        std = 0;
+    private String RunTest(ObjectiveFunction fn, String extra){
+        double[] meanBestValueTrial = new double[STEPS_COUNT];
+        double[] meanMeanBestValueTrial = new double[STEPS_COUNT];
+        double[] meanConvergence = new double[STEPS_COUNT];
+        double meanBestValue =0;
+        long meanExecutionTime =0;
+        double std = 0;
         List<String[]> dataLines = new ArrayList<>();
         double fraction = STEPS_COUNT/100;
         double[] bestValuesArray = new double[REPEATER];
-        Path p = createFile("data/"+System.currentTimeMillis() + ".csv");
+        String filename = "data/"+System.currentTimeMillis() + ".csv";
+        Path p = createFile(filename);
+        algorithm = getAlgorithm(fn);
         appendToFile(p, algorithm.getClass().getSimpleName() + ","+ algorithm.getFunction().getClass().getSimpleName());
 
         for(int i=0; i<REPEATER; i++){
+            algorithm = getAlgorithm(fn);
             algorithm.initialize();
             System.out.println();
             algorithm.addStepAction(new Action() {
@@ -123,6 +125,7 @@ public class TestRunner {
         sb.append(meanBestValue).append(',');
         sb.append(std).append(',');
         sb.append(TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS)).append(',');
+        sb.append(filename).append(',');
 
         sb.append('\n');
 
@@ -191,26 +194,28 @@ public class TestRunner {
                 new SumSquares()
         );
 
+        Toolkit.getDefaultToolkit().beep();
+
         // start log file writer
         Path p = createResultFile();
 
         for (ObjectiveFunction fn: multimodalNonSeparableFunctionList) {
-            String s = new TestRunner().RunTest(getAlgorithm(fn),"Multi Modal - Non Separable");
+            String s = new TestRunner().RunTest(fn,"Multi Modal - Non Separable");
             appendToFile(p, s);
         }
 
         for (ObjectiveFunction fn: multimodalSeparableFunctionList) {
-            String s = new TestRunner().RunTest(getAlgorithm(fn),"Multi Modal - Separable");
+            String s = new TestRunner().RunTest(fn,"Multi Modal - Separable");
             appendToFile(p, s);
         }
 
         for (ObjectiveFunction fn: unimodalNonSeparableFunctionList) {
-            String s = new TestRunner().RunTest(getAlgorithm(fn),"Uni Modal - Non Separable");
+            String s = new TestRunner().RunTest(fn,"Uni Modal - Non Separable");
             appendToFile(p, s);
         }
 
         for (ObjectiveFunction fn: unimodalSeparableFunctionList) {
-            String s = new TestRunner().RunTest(getAlgorithm(fn),"Uni Modal - Separable");
+            String s = new TestRunner().RunTest(fn,"Uni Modal - Separable");
             appendToFile(p, s);
         }
 
@@ -218,7 +223,7 @@ public class TestRunner {
     }
 
     private static Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new AlgorithmStore().getPSO(fn, AGENT_COUNT, STEPS_COUNT);
+        return new AlgorithmStore().getCS(fn, AGENT_COUNT, STEPS_COUNT);
     }
 
     private static void appendToFile(Path path, String data){

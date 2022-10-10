@@ -75,6 +75,7 @@ public class Main {
                 btnRun.setEnabled(false);
                 functionChartPlotter.execute();
                 btnRun.setEnabled(true);
+                infoData.setText(algorithm.toString());
             }
         }).start();
     }

@@ -15,7 +15,7 @@ public class Debfunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 20;
+        return 10;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Debfunction extends ObjectiveFunction {
 
     @Override
     public double getExpectedBestValue() {
-        return Math.pow(5, 20);
+        return -1;
     }
 
     @Override

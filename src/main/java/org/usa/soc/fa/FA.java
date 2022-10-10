@@ -13,7 +13,9 @@ public class FA extends Algorithm {
 
     private Fly[] flies;
 
-    private double gama, alpha, beta0;
+    private double gama, alpha, beta0, characteristicLength;
+
+    private static final double ALPHA_DECENT = 0.97;
 
     public FA(ObjectiveFunction<Double> objectiveFunction,
               int stepsCount,
@@ -32,7 +34,8 @@ public class FA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.isLocalMinima = isLocalMinima;
-        this.gama = characteristicLength;
+        this.characteristicLength = characteristicLength;
+        this.gama = 1 / Math.pow(characteristicLength, 2);
         this.alpha = alpha;
         this.beta0 = beta0;
 
@@ -49,40 +52,42 @@ public class FA extends Algorithm {
         }
         this.nanoDuration = System.nanoTime();
         for(int step = 0; step< getStepsCount(); step++){
-
             for(int i=0; i< numberOfFlies; i++){
 
                 Fly fi = flies[i];
-                for(int j=0; j< numberOfFlies; j++){
 
+                for(int j=0; j< numberOfFlies; j++){
                     if(i==j){
                         continue;
                     }
 
                     Fly fj = flies[j];
-                    double r = fi.getPosition().getDistance(fj.getPosition());
 
-                    double Ii = fi.calculateIntensity(this.objectiveFunction, this.gama, r);
-                    double Ij = fj.calculateIntensity(this.objectiveFunction, this.gama, r);
+                    if(fj.getIntensity() < fi.getIntensity()){
 
-                    if(Validator.validateBestValue(Ij, Ii, isLocalMinima)){
+                        double r = fi.getPosition().getDistance(fj.getPosition());
                         double beta = calculateAttractiveness(r);
-                        double thirdPart = alpha*(Randoms.rand(0,1) - 0.5);
-                        Vector secondPart = fj.getPosition()
+
+                        Vector v3 = Randoms.getRandomVector(this.numberOfDimensions, 0, 1)
+                                .operate(Vector.OPERATOR.SUB, 0.5)
+                                .operate(Vector.OPERATOR.MULP, alpha);
+                        Vector v2 = fj.getPosition()
                                 .operate(Vector.OPERATOR.SUB, fi.getPosition())
                                 .operate(Vector.OPERATOR.MULP, beta);
+
                         fi.setPosition(
                                 fi.getPosition()
-                                        .operate(Vector.OPERATOR.ADD, secondPart)
-                                        .operate(Vector.OPERATOR.ADD, thirdPart)
+                                        .operate(Vector.OPERATOR.ADD, v2)
+                                        .operate(Vector.OPERATOR.ADD, v3)
                                         .fixVector(minBoundary, maxBoundary)
                         );
+
+                        fi.updateIntensity(objectiveFunction, gama, r);
                     }
-
+                    updateGBest(fi);
+                    this.alpha *= ALPHA_DECENT;
                 }
-                updateGBest(fi);
             }
-
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
             stepCompleted(time, step);
@@ -113,6 +118,7 @@ public class FA extends Algorithm {
 
         for(int i = 0; i< numberOfFlies; i++){
             Fly d = new Fly(minBoundary, maxBoundary, numberOfDimensions);
+            d.setIntensity(objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call());
             updateGBest(d);
             this.flies[i] = d;
         }

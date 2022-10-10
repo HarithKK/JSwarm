@@ -16,12 +16,12 @@ public class Alpine1Function extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 20;
+        return 10;
     }
 
     @Override
     public double[] getMin() {
-        return Commons.fill(-10,0);
+        return Commons.fill(-10,getNumberOfDimensions());
     }
 
     @Override
