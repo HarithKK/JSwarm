@@ -59,7 +59,7 @@ public class TestRunner {
 
     private  static  Algorithm algorithm = null;
 
-    private String RunTest(ObjectiveFunction fn, String extra){
+    private String RunTest(int index, ObjectiveFunction fn, String extra){
         double[] meanBestValueTrial = new double[STEPS_COUNT];
         double[] meanMeanBestValueTrial = new double[STEPS_COUNT];
         double[] meanConvergence = new double[STEPS_COUNT];
@@ -71,11 +71,11 @@ public class TestRunner {
         double[] bestValuesArray = new double[REPEATER];
         String filename = "data/"+System.currentTimeMillis() + ".csv";
         Path p = createFile(filename);
-        algorithm = getAlgorithm(fn);
+        algorithm = getAlgorithm(index, fn);
         appendToFile(p, algorithm.getClass().getSimpleName() + ","+ algorithm.getFunction().getClass().getSimpleName());
 
         for(int i=0; i<REPEATER; i++){
-            algorithm = getAlgorithm(fn);
+            algorithm = getAlgorithm(index,fn);
             algorithm.initialize();
             System.out.println();
             algorithm.addStepAction(new Action() {
@@ -155,8 +155,8 @@ public class TestRunner {
 
         // list of Objective Functions
         List<ObjectiveFunction> multimodalNonSeparableFunctionList = Arrays.asList(
-               // new AckleysFunction(),
-               // new ColvilleFunction(),
+                new AckleysFunction(),
+                new ColvilleFunction(),
                 new CrossInTrayFunction(),
                 new GoldsteinPrice(),
                 new McCormickFunction(),
@@ -194,36 +194,52 @@ public class TestRunner {
                 new SumSquares()
         );
 
-        Toolkit.getDefaultToolkit().beep();
-
         // start log file writer
         Path p = createResultFile();
 
-        for (ObjectiveFunction fn: multimodalNonSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Multi Modal - Non Separable");
-            appendToFile(p, s);
-        }
+        for(int i=0;i<12;i++){
+            for (ObjectiveFunction fn: multimodalNonSeparableFunctionList) {
+                String s = new TestRunner().RunTest(i,fn,"Multi Modal - Non Separable");
+                appendToFile(p, s);
+            }
 
-        for (ObjectiveFunction fn: multimodalSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Multi Modal - Separable");
-            appendToFile(p, s);
-        }
+            for (ObjectiveFunction fn: multimodalSeparableFunctionList) {
+                String s = new TestRunner().RunTest(i,fn,"Multi Modal - Separable");
+                appendToFile(p, s);
+            }
 
-        for (ObjectiveFunction fn: unimodalNonSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Uni Modal - Non Separable");
-            appendToFile(p, s);
-        }
+            for (ObjectiveFunction fn: unimodalNonSeparableFunctionList) {
+                String s = new TestRunner().RunTest(i,fn,"Uni Modal - Non Separable");
+                appendToFile(p, s);
+            }
 
-        for (ObjectiveFunction fn: unimodalSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Uni Modal - Separable");
-            appendToFile(p, s);
+            for (ObjectiveFunction fn: unimodalSeparableFunctionList) {
+                String s = new TestRunner().RunTest(i,fn,"Uni Modal - Separable");
+                appendToFile(p, s);
+            }
         }
 
 
     }
 
-    private static Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new AlgorithmStore().getFA(fn, AGENT_COUNT, STEPS_COUNT);
+    private static Algorithm getAlgorithm(int index,ObjectiveFunction fn) {
+        AlgorithmStore algorithmStore = new AlgorithmStore();
+
+        switch (index){
+            case 0: return algorithmStore.getPSO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 1: return algorithmStore.getCSO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 2: return algorithmStore.getGSO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 3: return algorithmStore.getWSO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 4: return algorithmStore.getCS(fn, AGENT_COUNT, STEPS_COUNT);
+            case 5: return algorithmStore.getFA(fn, AGENT_COUNT, STEPS_COUNT);
+            case 6: return algorithmStore.getABC(fn, AGENT_COUNT, STEPS_COUNT);
+            case 7: return algorithmStore.getBA(fn, AGENT_COUNT, STEPS_COUNT);
+            case 8: return algorithmStore.getTCO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 9: return algorithmStore.getGWO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 10: return algorithmStore.getMFA(fn, AGENT_COUNT, STEPS_COUNT);
+            case 11: return algorithmStore.getALO(fn, AGENT_COUNT, STEPS_COUNT);
+        }
+        return null;
     }
 
     private static void appendToFile(Path path, String data){

@@ -2,10 +2,14 @@ package nonGeneral;
 
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.abc.ABC;
+import org.usa.soc.ba.BA;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
 import org.usa.soc.pso.PSO;
+import org.usa.soc.tco.TCO;
 import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
 
 public class AlgorithmStore {
@@ -104,6 +108,92 @@ public class AlgorithmStore {
                 true
         );
     }
+
+    public Algorithm getABC(ObjectiveFunction fn, int ac, int sc){
+        return new ABC(
+                fn,
+                sc,
+                fn.getNumberOfDimensions(),
+                ac,
+                fn.getMin(),
+                fn.getMax(),
+                100,
+                true
+        );
+    }
+
+    public Algorithm getBA(ObjectiveFunction fn, int ac, int sc){
+        return new BA(
+                fn,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                ac,
+                0,
+                100,
+                0.9,
+                0.9,
+                100,
+                Randoms.rand(0,1),
+                true
+        );
+    }
+
+    public Algorithm getTCO(ObjectiveFunction fn, int ac, int sc){
+        return new TCO(
+                fn,
+                sc,
+                fn.getNumberOfDimensions(),
+                ac,
+                fn.getMin(),
+                fn.getMax(),
+                1,
+                0.8,
+                0.72,
+                1.49,
+                true
+        );
+    }
+
+    public Algorithm getGWO(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.gwo.GWO(
+                fn,
+                sc,
+                fn.getNumberOfDimensions(),
+                ac,
+                fn.getMin(),
+                fn.getMax(),
+                true
+        );
+    }
+
+    public Algorithm getMFA(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.mfa.MFA(
+                fn,
+                sc,
+                fn.getNumberOfDimensions(),
+                ac,
+                fn.getMin(),
+                fn.getMax(),
+                1.0
+        );
+    }
+
+    public Algorithm getALO(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.alo.ALO(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true
+        );
+    }
+
+
+
 
 
 }
