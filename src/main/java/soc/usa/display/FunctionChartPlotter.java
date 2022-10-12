@@ -53,6 +53,12 @@ public class FunctionChartPlotter {
         this.ybest = new double[100];
         this.bestIndex = 0;
 
+        chart.getStyler().setXAxisMin(a.getFunction().getMin()[0]);
+        chart.getStyler().setYAxisMin(a.getFunction().getMin()[1]);
+
+        chart.getStyler().setXAxisMax(a.getFunction().getMax()[0]);
+        chart.getStyler().setYAxisMax(a.getFunction().getMax()[1]);
+
         try {
             chart.removeSeries("Agents");
             chart.removeSeries("Best");

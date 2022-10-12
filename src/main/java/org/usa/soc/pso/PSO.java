@@ -85,15 +85,8 @@ public class PSO extends Algorithm implements Cloneable {
 
         this.nanoDuration = System.nanoTime();
         // run the steps
-        double currentBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
 
         for (int step = 1; step <= this.getStepsCount(); step++) {
-            Double stepBestValue = objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
-
-            if (Validator.validateBestValue(stepBestValue, currentBestValue, isLocalMinima)) {
-                currentBestValue = stepBestValue;
-            }
-
             // update positions
             for (Particle p : this.particles) {
                 p.updatePbest(this.objectiveFunction, this.isLocalMinima);
@@ -102,7 +95,14 @@ public class PSO extends Algorithm implements Cloneable {
 
             // update velocity factor
             for (Particle p : this.particles) {
-                p.updateVelocityAndPosition(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
+                Vector v = p.updateVelocity(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
+                if(Validator.validateBestValue(
+                        objectiveFunction.setParameters(v.getPositionIndexes()).call(),
+                        objectiveFunction.setParameters(p.getPosition().getPositionIndexes()).call(),
+                        isLocalMinima
+                )){
+                 p.setPosition(v);
+                }
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);

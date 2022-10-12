@@ -61,7 +61,7 @@ public class FunctionDisplay {
 
         setPloat(fns[y]);
 
-        jf.setSize(500, 500);
+        jf.setSize(700, 700);
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jf.getContentPane().add(p);
         jf.setVisible(true);
