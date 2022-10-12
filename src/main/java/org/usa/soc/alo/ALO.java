@@ -89,7 +89,14 @@ public class ALO extends Algorithm {
                     antLions[i] = elite.cloneAnt();
                 }
             }
-            this.gBest = elite.getPosition();
+
+            if(Validator.validateBestValue(
+                    objectiveFunction.setParameters(elite.getPosition().getPositionIndexes()).call(),
+                    objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call(),
+                    isLocalMinima
+            )){
+                this.gBest.setVector(elite.getPosition());
+            }
 
             if (this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
