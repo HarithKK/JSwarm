@@ -16,7 +16,10 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.List;
 
 public class Main {
 
@@ -25,14 +28,13 @@ public class Main {
      */
     JFrame frame;
 
-    JPanel pnlCenter, pnlProgress, pnlRight, pnlLeft, pnlConfigs;
+    JPanel pnlCenter, pnlProgress, pnlRight, pnlLeft, pnlConfigs, pnlTop;
+    RowPanel[] pnlDetails;
     JToolBar jToolBar;
 
     JLabel lblFunctionComboBox, lblAlgorithmComboBox, lblInterval, lblBestValue, lblExpectedBestValue, lblBestValueExpectedBestValueSep;
 
     JComboBox cmbFunction, cmbAlgorithm;
-
-    JTextPane infoData;
 
     JSpinner spnInterval;
 
@@ -68,6 +70,7 @@ public class Main {
         functionChartPlotter.setChart(algorithm);
 
         clearValues();
+        pnlDetails[0].setTextValue(String.valueOf(new Date().getTime()));
 
         new Thread(new Runnable() {
             @Override
@@ -75,9 +78,22 @@ public class Main {
                 btnRun.setEnabled(false);
                 functionChartPlotter.execute();
                 btnRun.setEnabled(true);
-                infoData.setText(algorithm.toString());
+                setInfoData(algorithm.toList());
             }
         }).start();
+    }
+
+    private void setInfoData(List<String> str) {
+        pnlDetails[1].setTextValue(str.get(1));
+        pnlDetails[2].setTextValue(str.get(2));
+        pnlDetails[3].setTextValue(decimalFormat.format(Double.parseDouble(str.get(3))));
+        pnlDetails[4].setTextValue(str.get(4));
+        pnlDetails[5].setTextValue(str.get(7));
+        pnlDetails[6].setTextValue(str.get(8));
+        pnlDetails[7].setTextValue(decimalFormat.format(Double.parseDouble(str.get(11))));
+        pnlDetails[8].setTextValue(decimalFormat.format(Double.parseDouble(str.get(12))));
+        pnlDetails[9].setTextValue(decimalFormat.format(Double.parseDouble(str.get(13))));
+
     }
 
     private void clearValues() {
@@ -105,13 +121,13 @@ public class Main {
         }
         if(algorithm.getConvergenceValue() < 100000)
             pltConvergence.addData(stepCount, algorithm.getConvergenceValue());
-        infoData.setText(algorithm.toString());
+        setInfoData(algorithm.toList());
         updateUI();
     }
 
     Main(){
 
-        decimalFormat = new DecimalFormat("#.###");
+        decimalFormat = new DecimalFormat("#.#######");
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
@@ -121,16 +137,16 @@ public class Main {
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
         pnlCenter.add(swarmDisplayChart);
 
-        pltBestValue = new IterationChartPlotter(600, 100, "", "Best Value", -1000);
+        pltBestValue = new IterationChartPlotter(300, 100, "", "Best Value", -1000);
         pnlRight.add(new XChartPanel(pltBestValue.getChart()));
 
-        pltMeanBest = new IterationChartPlotter(600, 100, "", "Mean Best", -1000);
+        pltMeanBest = new IterationChartPlotter(300, 100, "", "Mean Best", -1000);
         pnlRight.add(new XChartPanel(pltMeanBest.getChart()));
 
-        pltConvergence = new IterationChartPlotter(600, 100, "", "Convergence Value", -1000);
+        pltConvergence = new IterationChartPlotter(300, 100, "", "Convergence Value", -1000);
         pnlRight.add(new XChartPanel(pltConvergence.getChart()));
 
-        pltGradiantDecent = new IterationChartPlotter(600, 100, "", "Gradiant Decent", -1000);
+        pltGradiantDecent = new IterationChartPlotter(300, 100, "", "Gradiant Decent", -1000);
         pnlRight.add(new XChartPanel(pltGradiantDecent.getChart()));
 
         functionChartPlotter.setAction(new EmptyAction() {
@@ -150,10 +166,14 @@ public class Main {
         lblExpectedBestValue.updateUI();
         swarmDisplayChart.updateUI();
         pnlCenter.updateUI();
+        pnlRight.updateUI();
         frame.repaint();
     }
 
     private void init() {
+
+        Font f1 = new Font("SenSerif", Font.PLAIN, 16);
+        Insets insets = new Insets(5,0,5,0);
 
         frame = new JFrame();
         frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -161,17 +181,22 @@ public class Main {
         frame.setLayout(new BorderLayout());
 
         jToolBar = new JToolBar();
+        jToolBar.setMargin(insets);
         frame.add(jToolBar, BorderLayout.NORTH);
 
         lblAlgorithmComboBox = new JLabel("Algorithm: ");
+        lblAlgorithmComboBox.setFont(f1);
         cmbAlgorithm = new JComboBox<>(AlgoStore.generateAlgo().toArray(new String[0]));
+        cmbAlgorithm.setFont(f1);
         jToolBar.add(lblAlgorithmComboBox);
         jToolBar.add(cmbAlgorithm);
 
         jToolBar.addSeparator();
 
         lblFunctionComboBox = new JLabel("Test Function: ");
+        lblFunctionComboBox.setFont(f1);
         cmbFunction = new JComboBox<>();
+        cmbFunction.setFont(f1);
         for (ObjectiveFunction f: fns) {
             cmbFunction.addItem(f.getClass().getSimpleName());
         }
@@ -181,8 +206,10 @@ public class Main {
         jToolBar.addSeparator();
 
         lblInterval = new JLabel("Interval :");
+        lblInterval.setFont(f1);
         spnInterval = new JSpinner();
-        spnInterval.setValue(50);
+        spnInterval.setFont(f1);
+        spnInterval.setValue(150);
 
         jToolBar.add(lblInterval);
         jToolBar.add(spnInterval);
@@ -190,6 +217,7 @@ public class Main {
         jToolBar.addSeparator();
 
         btnRun = new JButton("Run");
+        btnRun.setFont(f1);
         btnRun.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -201,6 +229,7 @@ public class Main {
         jToolBar.addSeparator();
 
         btnShowTF = new JButton("Show TF");
+        btnShowTF.setFont(f1);
         btnShowTF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -228,70 +257,75 @@ public class Main {
         jPanel.add(lblExpectedBestValue);
         pnlProgress.add(jPanel, BorderLayout.WEST);
         pnlProgress.add(progressBar, BorderLayout.CENTER);
+        frame.add(pnlProgress, BorderLayout.SOUTH);
+
+        pnlTop = new JPanel();
 
         pnlRight = new JPanel();
         pnlRight.setLayout(new GridLayout(4,1));
 
         pnlLeft = new JPanel();
-        pnlLeft.setLayout(new GridLayout(2,1));
+        pnlLeft.setLayout(new GridLayout(10,1));
 
-        infoData = new JTextPane();
-        infoData.setText("Info Data");
-        pnlLeft.add(infoData);
+        generatePanelList();
 
-        pnlConfigs = getPanelConfigs();
-        pnlLeft.add(pnlConfigs);
+        for(JPanel p : pnlDetails){
+            if(p!=null){
+                pnlLeft.add(p);
+            }
+        }
 
-        frame.add(pnlRight, BorderLayout.EAST);
-        frame.add(pnlLeft, BorderLayout.WEST);
-        frame.getContentPane().add(pnlProgress, BorderLayout.SOUTH);
+        RowPanel iterationPanel = new RowPanel(" Iterations", "100");
+        iterationCount = 100;
+        iterationPanel.txt.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                if(!iterationPanel.txt.getText().isEmpty()){
+                    iterationCount = Integer.parseInt(iterationPanel.txt.getText());
+                }
+            }
+        });
+        pnlTop.add(iterationPanel);
 
+        RowPanel pnlAgentsCount = new RowPanel(" Agents Count", "100");
+        agentsCount = 100;
+        pnlAgentsCount.txt.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                if(!pnlAgentsCount.txt.getText().isEmpty()){
+                    agentsCount = Integer.parseInt(pnlAgentsCount.txt.getText());
+                }
+            }
+        });
+        pnlTop.add(pnlAgentsCount);
+
+        Panel body = new Panel();
+        body.setLayout(new BorderLayout());
+
+        body.add(pnlTop, BorderLayout.NORTH);
+        body.add(pnlRight, BorderLayout.EAST);
+        body.add(pnlLeft, BorderLayout.WEST);
         pnlCenter = new JPanel();
         pnlCenter.setLayout(new GridLayout());
-        frame.add(pnlCenter, BorderLayout.CENTER);
+        body.add(pnlCenter, BorderLayout.CENTER);
 
+        frame.add(body, BorderLayout.CENTER);
         frame.setVisible(true);
     }
 
-    private JPanel getPanelConfigs() {
+    private void generatePanelList() {
+        pnlDetails = new RowPanel[15];
 
-        JPanel jp = new JPanel();
-        GridBagLayout d = new GridBagLayout();
-        jp.setLayout(d);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill =  GridBagConstraints.VERTICAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.ipadx = GridBagConstraints.PAGE_START;
-
-        RowPanel rowPanel1 = new RowPanel(" Iterations", "100");
-        iterationCount = 100;
-        rowPanel1.txt.addCaretListener(new CaretListener() {
-            @Override
-            public void caretUpdate(CaretEvent e) {
-                if(!rowPanel1.txt.getText().isEmpty()){
-                    iterationCount = Integer.parseInt(rowPanel1.txt.getText());
-                }
-            }
-        });
-        jp.add(rowPanel1, gbc);
-
-        gbc.gridy = 1;
-        RowPanel rowPanel2 = new RowPanel(" Agents Count", "100");
-        agentsCount = 100;
-        rowPanel2.txt.addCaretListener(new CaretListener() {
-            @Override
-            public void caretUpdate(CaretEvent e) {
-                if(!rowPanel2.txt.getText().isEmpty()){
-                    agentsCount = Integer.parseInt(rowPanel2.txt.getText());
-                }
-            }
-        });
-        jp.add(rowPanel2, gbc);
-
-        return jp;
-
+        pnlDetails[0]=new RowPanel("Test ID", "N/A", false);
+        pnlDetails[1]=new RowPanel("Algorithm Name", "N/A", false);
+        pnlDetails[2]=new RowPanel("Test Function", "N/A", false);
+        pnlDetails[3]=new RowPanel("Best Value", "N/A", false);
+        pnlDetails[4]=new RowPanel("Expected Value", "N/A", false);
+        pnlDetails[5]=new RowPanel("Number of Dimensions", "N/A", false);
+        pnlDetails[6]=new RowPanel("Execution Time (ms)", "N/A", false);
+        pnlDetails[7]=new RowPanel("Convergence", "N/A", false);
+        pnlDetails[8]=new RowPanel("Gradiant Decent", "N/A", false);
+        pnlDetails[9]=new RowPanel("Mean Best Value", "N/A", false);
     }
 
     class RowPanel extends JPanel{
@@ -299,6 +333,10 @@ public class Main {
         JTextField txt;
 
         public RowPanel(String key, String value){
+            setValues(key, value);
+        }
+
+        private void setValues(String key, String value){
             this.key = key;
             this.value = value;
             this.setLayout(new GridLayout(1,2));
@@ -307,6 +345,15 @@ public class Main {
             txt = new JTextField();
             txt.setText(value);
             this.add(txt);
+        }
+
+        public RowPanel(String key, String value, boolean enableText){
+            setValues(key, value);
+            txt.setEditable(enableText);
+        }
+
+        public void setTextValue(String v){
+            this.txt.setText(v);
         }
     }
 
