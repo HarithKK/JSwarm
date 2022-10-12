@@ -3,16 +3,15 @@ package org.usa.soc.abc;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Randoms;
-import org.usa.soc.util.Validator;
 
 public class FoodSource {
     private Vector position;
-    private Vector bestPosition;
     double[] minBoundary;
     double[] maxBoundary;
     int numberOfDimensions;
 
     private double fm;
+    private double counter;
 
     private double probability;
 
@@ -23,7 +22,6 @@ public class FoodSource {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0,1);
-        this.bestPosition = position.getClonedVector();
         this.trials =0;
     }
 
@@ -33,44 +31,32 @@ public class FoodSource {
     }
 
     public Vector getPosition() {
-        return position;
+        return position.getClonedVector();
     }
 
     public void setPosition(Vector position) {
         this.position.setVector(position);
     }
 
-    public void calculateNextBestPosition(FoodSource neighbourBeeOccupied) {
-        Vector v1 = this.getPosition()
-                .operate(Vector.OPERATOR.ADD, neighbourBeeOccupied.getPosition())
-                .operate(Vector.OPERATOR.MULP, Randoms.rand(-1,1));
-
-        this.position.setVector( this.position.operate(Vector.OPERATOR.SUB, v1).fixVector(minBoundary, maxBoundary));
+    public Vector calculateNextBestPosition(FoodSource neighbourBeeOccupied) {
+        return this.getPosition().operate(Vector.OPERATOR.SUB, neighbourBeeOccupied.getPosition())
+                .operate(Vector.OPERATOR.MULP, Randoms.rand(-1,1))
+                .operate(Vector.OPERATOR.ADD, this.getPosition());
     }
 
-    public void calculateFitness(ObjectiveFunction fn) {
-        double fm = fn.setParameters(position.getPositionIndexes()).call();
+    public double calculateFitness(ObjectiveFunction fn, Vector v) {
+        double fm = fn.setParameters(v.getPositionIndexes()).call();
         if(fm >= 0){
-            this.fm = 1 / (1+fm);
+            fm = 1 / (1+fm);
         }else{
-            this.fm = Math.abs(1+ fm);
+            fm = Math.abs(1+ fm);
         }
+        return fm;
     }
 
-    public void calculateProbabilities(double totalFm) {
-        this.probability = this.fm / totalFm;
-    }
-
-    public Vector getBestPosition() {
-        return bestPosition;
-    }
-
-    public void updateBestPosition() {
-        if(Randoms.rand(0,1) > probability){
-            this.bestPosition.setVector(this.position);
-        }else{
-            trials += 1;
-        }
+    public double calculateProbabilities(double totalFm) {
+        this.probability = this.getFm() / totalFm;
+        return this.getProbability();
     }
 
     public int getTrials() {
@@ -79,7 +65,22 @@ public class FoodSource {
 
     public void reInitiate() {
         this.position.setVector(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0,1));
-        this.bestPosition = position.getClonedVector();
         this.trials =0;
+    }
+
+    public void setFm(double fm) {
+        this.fm = fm;
+    }
+
+    public double getCounter() {
+        return counter;
+    }
+
+    public void setCounter(double counter) {
+        this.counter = counter;
+    }
+
+    public double getProbability() {
+        return probability;
     }
 }

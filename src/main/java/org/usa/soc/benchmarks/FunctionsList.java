@@ -1,6 +1,9 @@
 package org.usa.soc.benchmarks;
 
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
+import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
+import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.SumSquares;
 import org.usa.soc.benchmarks.singleObjective.*;
 
 public class FunctionsList {
@@ -25,7 +28,7 @@ public class FunctionsList {
                 new SchafferFunction(),
                 new SphereFunction(),
                 new StyblinskiTangFunction(),
-                new ThreeHumpCamelFunction()
+                new ThreeHumpCamelFunction(),
         };
     }
 }

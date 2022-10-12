@@ -62,13 +62,8 @@ public class GSO extends Algorithm {
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
         }
-
-        for(float step = 0; step< getStepsCount(); step += s){
-
-            // update luciferin
-            for(GlowWorm worm: this.glowWorms){
-                worm.updateLuciferin(ldc, lac, objectiveFunction);
-            }
+        this.nanoDuration = System.nanoTime();
+        for(float step = 0; step< getStepsCount(); step+=1){
 
             // movement phase
             for(int i=0; i< numberOfGlowWorms; i++){
@@ -81,21 +76,24 @@ public class GSO extends Algorithm {
                     continue;
                 }
 
-                double eNormDistance = Mathamatics.getEuclideanNorm(ithWarm.getPosition().operate(Vector.OPERATOR.SUB, jthWarm.getPosition()));
+                Vector diffVec = ithWarm.getPosition().operate(Vector.OPERATOR.SUB, jthWarm.getPosition());
+                double eNormDistance = Mathamatics.getEuclideanNorm(diffVec);
 
-                Vector diffVec = jthWarm.getPosition().
-                        operate(Vector.OPERATOR.SUB, ithWarm.getPosition()).
-                        operate(Vector.OPERATOR.DIV, eNormDistance).
-                        operate(Vector.OPERATOR.MULP, s);
-                ithWarm.setPosition(ithWarm.getPosition().operate(Vector.OPERATOR.ADD, diffVec));
+                Vector positionDiff = diffVec.operate(Vector.OPERATOR.DIV, eNormDistance).operate(Vector.OPERATOR.MULP, s);
+                Vector newVR = ithWarm.getPosition().operate(Vector.OPERATOR.ADD, positionDiff);
+                ithWarm.setPosition(newVR);
                 ithWarm.setR(calculateNewR(ithWarm, nWarms.size()));
-
-                this.updateGBest(ithWarm);
+            }
+            // update luciferin
+            for(GlowWorm worm: this.glowWorms){
+                worm.updateLuciferin(ldc, lac, objectiveFunction);
+                this.updateGBest(worm);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), (int)step);
             stepCompleted(time, (int)step);
         }
+        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private GlowWorm getJthGlowWorm(List<GlowWorm> nWarms, GlowWorm ithWarm) {
@@ -110,7 +108,7 @@ public class GSO extends Algorithm {
 
         for(GlowWorm w: nWarms){
             relFitness += (w.getL() - ithWarm.getL()) / totalFs;
-            if(randP>=relFitness){
+            if(randP<relFitness){
                 return w;
             }
         }
@@ -128,7 +126,7 @@ public class GSO extends Algorithm {
 
     private double calculateNewR(GlowWorm ithWarm, int N) {
         double d = ithWarm.getR() + (beta*(nt - N));
-        return Math.min(rs, Math.max(0, ithWarm.getR() + d));
+        return Math.min(rs, Math.max(0, d));
     }
 
     private List<GlowWorm> getNeighbourWarms(int i) {
@@ -141,11 +139,10 @@ public class GSO extends Algorithm {
                 continue;
             }
             GlowWorm jthWarm = glowWorms[j];
-
-            if(ithWarm.getPosition().getDistance(jthWarm.getPosition()) > ithWarm.getR()){
-                continue;
+            double distance = ithWarm.getPosition().getDistance(jthWarm.getPosition());
+            if(ithWarm.getL() < jthWarm.getL() && distance <  ithWarm.getR()){
+                w.add(jthWarm);
             }
-            w.add(jthWarm);
         }
         return w;
 

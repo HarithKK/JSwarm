@@ -7,9 +7,12 @@ import org.usa.soc.util.Randoms;
 public class Fly {
 
     private Vector position;
+
     double[] minBoundary;
     double[] maxBoundary;
     int numberOfDimensions;
+
+    private double intensity;
 
     public Fly(double[] minBoundary, double[] maxBoundary, int numberOfDimensions) {
         this.minBoundary = minBoundary;
@@ -24,13 +27,19 @@ public class Fly {
         return position.getClonedVector();
     }
 
-    public double calculateIntensity(ObjectiveFunction<Double> fn, double gama, double r) {
-        double I0 = fn.setParameters(this.getPosition().getPositionIndexes()).call();
-        double powValue = gama * Math.pow(r, 2);
-        return I0 * Math.exp(-powValue);
+    public double updateIntensity(ObjectiveFunction f, double gama, double r) {
+        return f.setParameters(this.getPosition().getPositionIndexes()).call() * Math.exp(-(gama * Math.pow(r, 2)));
     }
 
     public void setPosition(Vector position) {
         this.position.setVector(position);
+    }
+
+    public void setIntensity(double intensity) {
+        this.intensity = intensity;
+    }
+
+    public double getIntensity() {
+        return intensity;
     }
 }

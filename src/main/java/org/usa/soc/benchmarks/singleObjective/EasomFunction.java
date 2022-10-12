@@ -9,7 +9,7 @@ public class EasomFunction extends ObjectiveFunction {
         Double x = (Double) super.getParameters()[0];
         Double y = (Double) super.getParameters()[1];
 
-        return -Math.cos(x)*Math.cos(y)*Math.exp(-(Math.pow(x-Math.PI, 2) + Math.pow(y - Math.PI, 2)));
+        return -Math.cos(x)*Math.cos(y)*Math.exp(-Math.pow(x-Math.PI, 2) - Math.pow(y - Math.PI, 2));
     }
 
     @Override
@@ -34,6 +34,6 @@ public class EasomFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{3.14, 3.14};
+        return new double[]{Math.PI, Math.PI};
     }
 }

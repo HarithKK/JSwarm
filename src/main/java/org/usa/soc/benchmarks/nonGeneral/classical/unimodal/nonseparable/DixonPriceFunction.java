@@ -16,7 +16,7 @@ public class DixonPriceFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 20;
+        return 3;
     }
 
     @Override
