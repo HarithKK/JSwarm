@@ -29,8 +29,8 @@ public class Logger {
                 StringFormatter.format(Arrays.toString(al.getFunction().getMax()), 30) + DL+
                 StringFormatter.format(String.valueOf(al.getFunction().getNumberOfDimensions()),5) + DL+
                 StringFormatter.format(String.valueOf(duration), 10) +DL+
-                StringFormatter.format(al.getBestVariables(),80) + DL +
-                StringFormatter.toString(al.getFunction().getExpectedParameters())
+                StringFormatter.format(al.getBestVariables(),80) + DL+
+                StringFormatter.format(String.valueOf(al.getFunction().getExpectedParameters()), 25)
         );
     }
 
@@ -51,8 +51,7 @@ public class Logger {
                         StringFormatter.format(Arrays.toString(al.getFunction().getMax()), 30) + DL+
                         StringFormatter.format(String.valueOf(al.getFunction().getNumberOfDimensions()),5) + DL+
                         StringFormatter.format(String.valueOf(duration), 10) +DL+
-                        StringFormatter.format(al.getBestVariables(),80) + DL +
-                        StringFormatter.toString(al.getFunction().getExpectedParameters())
+                        StringFormatter.format(al.getBestVariables(),80) + DL
         );
     }
 }
