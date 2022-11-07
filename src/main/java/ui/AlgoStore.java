@@ -214,6 +214,21 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
+            case 15: return new org.usa.soc.also.ALSO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    10,
+                    10,
+                    2.5,
+                    1.0,
+                    10,
+                    10
+            );
         }
         return null;
     }
@@ -236,6 +251,7 @@ public class AlgoStore {
         algo.add("GWO");
         algo.add("MFA");
         algo.add("ALO");
+        algo.add("ALSO");
 
         return algo;
     }
