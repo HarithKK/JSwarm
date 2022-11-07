@@ -8,6 +8,12 @@ public class Validator {
         }
     }
 
+    public static void checkBoundaries(double val, double min, double max){
+        if(val > max || val < min){
+            throw new IllegalArgumentException("Validator: Boundaries Mismatched!");
+        }
+    }
+
     public static boolean validateBestValue(Double comparatee, Double comparator, boolean isMin){
         return (isMin && comparatee.compareTo(comparator) < 0 ) || (!isMin && comparatee.compareTo(comparator) > 0);
     }
