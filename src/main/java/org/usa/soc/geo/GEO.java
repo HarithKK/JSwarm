@@ -35,6 +35,7 @@ public class GEO extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = isLocalMinima ? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
+        this.gBest.setVector(this.gBest.fixVector(minBoundary, maxBoundary));
         this.isLocalMinima = isLocalMinima;
         this.pa0 = pa0;
         this.paT = paT;
@@ -109,6 +110,13 @@ public class GEO extends Algorithm {
             eagle.setFitnessValue(objectiveFunction.setParameters(eagle.getPosition().getPositionIndexes()).call());
             eagle.setLocalBestFitnessValue(objectiveFunction.setParameters(eagle.getLocalBestPositon().getPositionIndexes()).call());
             eagles[i] = eagle;
+        }
+
+        for(Eagle eagle: eagles){
+            double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
+            if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isLocalMinima)){
+                this.gBest.setVector(eagle.getLocalBestPositon());
+            }
         }
 
     }
