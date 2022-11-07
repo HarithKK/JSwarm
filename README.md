@@ -25,6 +25,7 @@ to solve their optimization problems.
 14. [MFA (Moth-Flame Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/mfa)
 15. [ALO (Ant Lion Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/alo)
 16. [ALSO (Artificial Lizard Search Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/also)
+16. [GEO (Golden Eagle Optimizer)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/geo)
 
 
 ## Testing Benchmark Functions
