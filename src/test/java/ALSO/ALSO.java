@@ -17,8 +17,8 @@ public class ALSO {
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
         return new org.usa.soc.also.ALSO(
                 fn,
-                25,
-                10,
+                100,
+                200,
                 fn.getNumberOfDimensions(),
                 fn.getMin(),
                 fn.getMax(),
