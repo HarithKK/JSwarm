@@ -229,6 +229,19 @@ public class AlgoStore {
                     10,
                     10
             );
+            case 16: return new org.usa.soc.geo.GEO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2,
+                    0.5,
+                    0.5,
+                    1
+            );
         }
         return null;
     }
@@ -252,6 +265,7 @@ public class AlgoStore {
         algo.add("MFA");
         algo.add("ALO");
         algo.add("ALSO");
+        algo.add("GEO");
 
         return algo;
     }
