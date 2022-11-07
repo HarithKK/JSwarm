@@ -5,7 +5,7 @@ Developed by Abdolkarim Mohammadi-Balania, Mahmoud Dehghan Nayeria, Adel Azara, 
 ```
 GEO p = new GEO(
                 <ObjectiveFunction>,
-                <Number of Lizards>,
+                <Number of Eagles>,
                 <Number of Iterations>,
                 <Number of Dimensions>,
                 <Minimum Boundary of Variables>,
