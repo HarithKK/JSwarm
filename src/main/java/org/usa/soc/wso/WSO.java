@@ -13,7 +13,7 @@ public class WSO extends Algorithm {
     private Wasp[] wasps;
     private int numberOfWasps;
 
-    private double c1, c2;
+    private double c1, c2, r, dc;
 
     public WSO(ObjectiveFunction fn,
                int numberOfIterations,
@@ -33,6 +33,9 @@ public class WSO extends Algorithm {
         this.isLocalMinima = isLocalMinima;
         this.c1 = c1;
         this.c2 = c2;
+
+        this.r = 2.0;
+        this.dc = r / (stepsCount+1);
 
         this.wasps = new Wasp[numberOfWasps];
         this.gBest = isLocalMinima? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
@@ -58,10 +61,11 @@ public class WSO extends Algorithm {
                 if(p <= p0){
                     this.updateBest(w);
                 }
-                w.setSolution(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                w.setSolution(Randoms.getRandomVector(this.getGBest(),r));
                 w.updateDiversity(objectiveFunction, isLocalMinima);
                 w.updateForce(this.c1, this.c2, this.objectiveFunction);
             }
+            r -= dc;
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
             stepCompleted(time, step);

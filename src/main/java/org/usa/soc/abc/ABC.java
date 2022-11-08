@@ -93,7 +93,7 @@ public class ABC extends Algorithm {
     private void updateGbest(FoodSource f) {
         Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        System.out.println(fpbest +"  |  "+ fgbest);
+
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
             gBest.setVector(f.getPosition());
         }

@@ -13,7 +13,7 @@ public class CS extends Algorithm {
 
     private int numberOfNests;
 
-    private double alpha, pa;
+    private double alpha, pa, r, dc;
 
     public CS(
             ObjectiveFunction<Double> objectiveFunction,
@@ -35,6 +35,8 @@ public class CS extends Algorithm {
         this.numberOfNests = numberOfNests;
         this.alpha = alpha;
         this.pa = pa;
+        this.r = 2.0;
+        this.dc = r / (stepsCount + 1);
 
         nests = new Nest[numberOfNests];
         this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
@@ -71,6 +73,7 @@ public class CS extends Algorithm {
 
                 updateGBest(nests[i]);
             }
+            r -= dc;
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
                 stepCompleted(time, step);
@@ -98,7 +101,8 @@ public class CS extends Algorithm {
                 i0 = i;
             }
         }
-        nests[i0].setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
+        //nests[i0].setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
+        nests[i0].setPosition(Randoms.getRandomVector(this.getGBest(), r));
     }
 
     @Override

@@ -96,13 +96,18 @@ public class PSO extends Algorithm implements Cloneable {
 
             // update positions
             for (Particle p : this.particles) {
-                p.updatePbest(this.objectiveFunction, this.isLocalMinima);
-                this.updateGBest(p.getPBest(), this.getGBest());
+                if(p != null)
+                {
+                    p.updatePbest(this.objectiveFunction, this.isLocalMinima);
+                    this.updateGBest(p.getPBest(), this.getGBest());
+                }
             }
 
             // update velocity factor
             for (Particle p : this.particles) {
-                p.updateVelocityAndPosition(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
+                if(p!=null){
+                    p.updateVelocityAndPosition(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
+                }
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
