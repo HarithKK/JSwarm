@@ -35,7 +35,7 @@ public class Randoms {
         for(int i=0;i<D;i++){
             v.setValue(rand(min[i], max[i]),i);
         }
-        return v;
+        return v.fixVector(min,max);;
     }
 
     public static Vector getRandomVector(int D, double[] min, double[] max, double rMin, double rMax) {
