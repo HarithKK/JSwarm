@@ -20,9 +20,7 @@ public abstract class Algorithm implements Cloneable {
     protected ObjectiveFunction<Double> objectiveFunction;
 
     protected int stepsCount;
-
     private double bestValue = 0;
-
     private double convergenceValue = Double.MAX_VALUE;
     private double gradiantDecent = Double.MAX_VALUE;
 
