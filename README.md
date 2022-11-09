@@ -27,7 +27,7 @@ to solve their optimization problems.
 16. [ALSO (Artificial Lizard Search Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/also)
 17. [GEO (Golden Eagle Optimizer)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/geo)
 18. [AVOA (African Vultures Optimization Algorith)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/avoa)
-
+19. [TCA (Tunicate Swarm Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/tsa)
 
 ## Testing Benchmark Functions
 

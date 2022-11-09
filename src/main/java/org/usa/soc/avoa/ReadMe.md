@@ -5,7 +5,7 @@ Developed by Benyamin Abdollahzadeha, Farhad Soleimanian Gharehchopogha, Seyedal
 ```
 AVOA p = new AVOA(
                 <ObjectiveFunction>,
-                <Number of Lizards>,
+                <Number of Vultures>,
                 <Number of Iterations>,
                 <Number of Dimensions>,
                 <Minimum Boundary of Variables>,
