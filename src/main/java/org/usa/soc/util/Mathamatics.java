@@ -75,4 +75,8 @@ public class Mathamatics {
         }
         return v;
     }
+
+    public static double pow(double a, double b){
+        return new org.apache.commons.math3.analysis.function.Power(a).value(b);
+    }
 }

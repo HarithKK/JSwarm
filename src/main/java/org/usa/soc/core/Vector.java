@@ -198,6 +198,14 @@ public class Vector {
         return Math.sqrt(sum);
     }
 
+    public Vector toAbs(){
+        Vector v = new Vector(numberOfDimensions);
+        for(int i=0;i<this.numberOfDimensions;i++){
+            v.setValue(Math.abs(this.getValue(i)), i);
+        }
+        return v;
+    }
+
     public double getNonDistanceMagnitude(){
         double sum = 0;
         for(int i=0;i<this.numberOfDimensions;i++){
