@@ -48,8 +48,8 @@ Testing the precision. robustness and general performance of optimization algori
 10. Lévi function
 11. Himmelblau's function
 12. Easom function
-13. ggholder function
-14. cCormick function
+13. Eggholder function
+14. Cormick function
 15. Schaffer function N. 2
 16. Schaffer function N. 4
 17. Styblinski–Tang function
