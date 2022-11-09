@@ -5,7 +5,7 @@ Developed by Benyamin Mohit Jaina, Vijander Singha, Asha Rania  [[1]](#1) in 201
 ```
 SSA p = new SSA(
                 <ObjectiveFunction>,
-                <Number of Vultures>,
+                <Number of Squirrels>,
                 <Number of Iterations>,
                 <Number of Dimensions>,
                 <Minimum Boundary of Variables>,
