@@ -259,12 +259,27 @@ public class AlgoStore {
             );
             case 18: return new org.usa.soc.tsa.TSA(
                     fn,
-                    1000,
-                    200,
+                    ac,
+                    sc,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
                     true
+            );
+            case 19: return new org.usa.soc.ssa.SSA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    0.1,
+                    1.9,
+                    1.204,
+                    5.25,
+                    0.0154,
+                    8.0
             );
         }
         return null;
@@ -292,6 +307,7 @@ public class AlgoStore {
         algo.add("GEO");
         algo.add("AVOA");
         algo.add("TSA");
+        algo.add("SSA");
 
         return algo;
     }
