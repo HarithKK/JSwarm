@@ -40,13 +40,13 @@ import static java.util.stream.Stream.generate;
 public class TestRunner {
 
     private static final int REPEATER = 5;
-    private static final int AGENT_COUNT = 2000;
-    private static final int STEPS_COUNT = 5000;
+    private static final int AGENT_COUNT = 1000;
+    private static final int STEPS_COUNT = 1000;
     private static final int ALGO_INDEX = 2;
 
     private static final int START = 0, END =8;
     private static final ObjectiveFunction OBJECTIVE_FUNCTION = new org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction();
-    private static final String RESULT_FILE = "data/";
+    private static final String RESULT_FILE = "data_1000/";
 
     public Algorithm getAlgorithm(){
         return new AlgoStore(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
@@ -146,25 +146,6 @@ public class TestRunner {
         appendToFile(r, sb.toString(), true);
 
         return sb.toString();
-
-//        List<XYChart> charts = new ArrayList<XYChart>();
-//
-//        XYChart chart = new XYChartBuilder().xAxisTitle("step").yAxisTitle("best value").width(2000).height(400).build();
-//        XYSeries series = chart.addSeries("Best Value", null, meanBestValueTrial);
-//        series.setMarker(SeriesMarkers.NONE);
-//        charts.add(chart);
-//
-//        XYChart chart1 = new XYChartBuilder().xAxisTitle("step").yAxisTitle("mean best value").width(600).height(400).build();
-//        XYSeries series1 = chart1.addSeries("Mean Best Value", null, meanMeanBestValueTrial);
-//        series1.setMarker(SeriesMarkers.NONE);
-//        charts.add(chart1);
-//
-//        XYChart chart2 = new XYChartBuilder().xAxisTitle("step").yAxisTitle("convergence value").width(600).height(400).build();
-//        XYSeries series2 = chart2.addSeries("Convergence Value", null, meanConvergence);
-//        series2.setMarker(SeriesMarkers.NONE);
-//        charts.add(chart2);
-//
-//        new SwingWrapper<XYChart>(charts).displayChartMatrix();
     }
 
     private void runC(List<ObjectiveFunction> fns, int i, String e, Path p){
@@ -246,45 +227,52 @@ public class TestRunner {
                 new SumSquares()
         );
 
-//        // start log file writer
-//
-//        CountDownLatch latch = new CountDownLatch(3);
-//
-//        new TestRunner().runT(0, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch);
-//        new TestRunner().runT(1, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch);
-//        new TestRunner().runT(2, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch);
-//        latch.await();
-//
-//        CountDownLatch latch1 = new CountDownLatch(3);
-//
-//        new TestRunner().runT(3, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch1);
-//        new TestRunner().runT(4, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch1);
-//        new TestRunner().runT(5, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch1);
-//
-//        latch.await();
-//
-//        CountDownLatch latch2 = new CountDownLatch(3);
-//
-//        new TestRunner().runT(6, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch2);
-//        new TestRunner().runT(7, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch2);
-//        new TestRunner().runT(8, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch2);
-//
-//        latch.await();
-//
-//        CountDownLatch latch3 = new CountDownLatch(3);
-//
-//        new TestRunner().runT(9, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch3);
-//        new TestRunner().runT(10, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch3);
-//        new TestRunner().runT(11, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch3);
-//
-//        latch.await();
+        // start log file writer
+
+        CountDownLatch latch = new CountDownLatch(3);
+
+        new TestRunner().runT(0, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch);
+        new TestRunner().runT(1, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch);
+        new TestRunner().runT(2, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch);
+        latch.await();
+
+        CountDownLatch latch1 = new CountDownLatch(3);
+
+        new TestRunner().runT(3, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch1);
+        new TestRunner().runT(4, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch1);
+        new TestRunner().runT(5, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch1);
+
+        latch.await();
+
+        CountDownLatch latch2 = new CountDownLatch(3);
+
+        new TestRunner().runT(6, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch2);
+        new TestRunner().runT(7, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch2);
+        new TestRunner().runT(8, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch2);
+
+        latch.await();
+
+        CountDownLatch latch3 = new CountDownLatch(3);
+
+        new TestRunner().runT(9, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch3);
+        new TestRunner().runT(10, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch3);
+        new TestRunner().runT(11, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch3);
+
+        latch.await();
+
+        CountDownLatch latch4 = new CountDownLatch(2);
+
+        new TestRunner().runT(12, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch4);
+        new TestRunner().runT(13, multimodalNonSeparableFunctionList, multimodalSeparableFunctionList, unimodalNonSeparableFunctionList, unimodalSeparableFunctionList, latch4);
+
+        latch.await();
 
         for(ls=5;ls<6;ls++){
 
             //new TestRunner().runC(multimodalNonSeparableFunctionList, ls, "Multi Modal - Non Separable", null);
             //new TestRunner().runC(multimodalSeparableFunctionList, ls, "Multi Modal - Separable", null);
             //new TestRunner().runC(unimodalNonSeparableFunctionList, ls, "Uni Modal - Non Separable", null);
-            new TestRunner().runC(unimodalSeparableFunctionList, ls, "Uni Modal - Separable", null);
+            //new TestRunner().runC(unimodalSeparableFunctionList, ls, "Uni Modal - Separable", null);
         }
     }
 
@@ -304,6 +292,8 @@ public class TestRunner {
             case 9: return algorithmStore.getGWO(fn, AGENT_COUNT, STEPS_COUNT);
             case 10: return algorithmStore.getMFA(fn, AGENT_COUNT, STEPS_COUNT);
             case 11: return algorithmStore.getALO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 12: return algorithmStore.getGEO(fn, AGENT_COUNT, STEPS_COUNT);
+            case 13: return algorithmStore.getALSO(fn, AGENT_COUNT, STEPS_COUNT);
         }
         return null;
     }

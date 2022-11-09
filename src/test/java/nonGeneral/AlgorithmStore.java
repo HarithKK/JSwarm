@@ -192,7 +192,39 @@ public class AlgorithmStore {
         );
     }
 
+    public Algorithm getALSO(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.also.ALSO(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                10,
+                10,
+                2.5,
+                1.0,
+                10,
+                10
+        );
+    }
 
+    public Algorithm getGEO(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.geo.GEO(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2,
+                0.5,
+                0.5,
+                1
+        );
+    }
 
 
 
