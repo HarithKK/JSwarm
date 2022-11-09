@@ -242,6 +242,21 @@ public class AlgoStore {
                     0.5,
                     1
             );
+            case 17: return new org.usa.soc.avoa.AVOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    0.8,
+                    0.2,
+                    0.6,
+                    0.4,
+                    0.6
+            );
         }
         return null;
     }
@@ -266,6 +281,7 @@ public class AlgoStore {
         algo.add("ALO");
         algo.add("ALSO");
         algo.add("GEO");
+        algo.add("AVOA");
 
         return algo;
     }
