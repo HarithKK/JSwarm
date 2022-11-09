@@ -281,6 +281,15 @@ public class AlgoStore {
                     0.0154,
                     8.0
             );
+            case 20: return new org.usa.soc.zoa.ZOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true
+            );
         }
         return null;
     }
@@ -308,6 +317,7 @@ public class AlgoStore {
         algo.add("AVOA");
         algo.add("TSA");
         algo.add("SSA");
+        algo.add("ZOA");
 
         return algo;
     }

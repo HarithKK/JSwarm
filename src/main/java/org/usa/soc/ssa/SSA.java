@@ -174,6 +174,11 @@ public class SSA extends Algorithm {
 
     @Override
     public void initialize() {
+
+        if(populationSize < 5){
+            throw new RuntimeException("Need sufficient squirrels (>5)");
+        }
+
         this.setInitialized(true);
 
         for(int i=0;i <populationSize; i++){
