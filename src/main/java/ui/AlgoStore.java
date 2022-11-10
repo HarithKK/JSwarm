@@ -290,6 +290,17 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
+            case 21:  return new org.usa.soc.jso.JSO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    3,
+                    0.1
+            );
         }
         return null;
     }
@@ -318,6 +329,7 @@ public class AlgoStore {
         algo.add("TSA");
         algo.add("SSA");
         algo.add("ZOA");
+        algo.add("JSO");
 
         return algo;
     }
