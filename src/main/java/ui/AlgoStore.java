@@ -5,6 +5,7 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.abc.ABC;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.ba.BA;
+import org.usa.soc.choa.Chaotics;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
 import org.usa.soc.mbo.MBO;
@@ -259,12 +260,113 @@ public class AlgoStore {
             );
             case 18: return new org.usa.soc.tsa.TSA(
                     fn,
-                    1000,
-                    200,
+                    ac,
+                    sc,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
                     true
+            );
+            case 19: return new org.usa.soc.ssa.SSA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    0.1,
+                    1.9,
+                    1.204,
+                    5.25,
+                    0.0154,
+                    8.0
+            );
+            case 20: return new org.usa.soc.zoa.ZOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true
+            );
+            case 21:  return new org.usa.soc.jso.JSO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    3,
+                    0.1
+            );
+            case 22: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.QUADRATIC
+            );
+            case 23: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.BERNOULLI
+            );
+            case 24: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.GAUSS_MOUSE
+            );
+            case 25: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.LOGISTIC
+            );
+            case 26: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.SINGER
+            );
+            case 27: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.TENT
             );
         }
         return null;
@@ -292,6 +394,14 @@ public class AlgoStore {
         algo.add("GEO");
         algo.add("AVOA");
         algo.add("TSA");
+        algo.add("SSA");
+        algo.add("ZOA");
+        algo.add("CHOA_QUADRATIC");
+        algo.add("CHOA_BERNOULLI");
+        algo.add("CHOA_GAUSS_MOUSE");
+        algo.add("CHOA_LOGISTIC");
+        algo.add("CHOA_SINGER");
+        algo.add("CHOA_TENT");
 
         return algo;
     }

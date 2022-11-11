@@ -12,6 +12,8 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
 
+import javax.swing.plaf.PanelUI;
+
 public class AlgorithmStore {
 
     public Algorithm getPSO(ObjectiveFunction fn, int ac, int sc){
@@ -226,6 +228,34 @@ public class AlgorithmStore {
         );
     }
 
+    public Algorithm getAVOA(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.avoa.AVOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                0.8,
+                0.2,
+                0.6,
+                0.4,
+                0.6
+        );
+    }
 
+    public Algorithm getTSA(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.tsa.TSA(
+                fn,
+                1000,
+                200,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true
+        );
+    }
 
 }

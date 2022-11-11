@@ -47,6 +47,11 @@ public class Validator {
             throw new IllegalArgumentException("Validator: Min Max Mismatched!");
     }
 
+    public static void checkPopulationSize(int actual, int expected) {
+        if(actual < expected)
+            throw new IllegalArgumentException("Validator: Population size is expected ["+expected+"]");
+    }
+
     public static boolean validateRangeInOneAndZero(double seekersToTracersRatio) {
         if(seekersToTracersRatio > 1 || seekersToTracersRatio <0){
             return false;
