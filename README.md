@@ -31,6 +31,7 @@ to solve their optimization problems.
 20. [SSA (Squirrel Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ssa)
 21. [ZOA (Zebra Optimization Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/zoa)
 22. [JSO (Jellyfish Search Optimizer)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/jso)
+23. [CHOA (Chimp Optimization Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/choa)
 
 ## Testing Benchmark Functions
 
