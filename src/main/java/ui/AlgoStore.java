@@ -5,6 +5,7 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.abc.ABC;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.ba.BA;
+import org.usa.soc.choa.Chaotics;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
 import org.usa.soc.mbo.MBO;
@@ -301,6 +302,72 @@ public class AlgoStore {
                     3,
                     0.1
             );
+            case 22: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.QUADRATIC
+            );
+            case 23: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.BERNOULLI
+            );
+            case 24: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.GAUSS_MOUSE
+            );
+            case 25: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.LOGISTIC
+            );
+            case 26: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.SINGER
+            );
+            case 27: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.TENT
+            );
         }
         return null;
     }
@@ -329,7 +396,12 @@ public class AlgoStore {
         algo.add("TSA");
         algo.add("SSA");
         algo.add("ZOA");
-        algo.add("JSO");
+        algo.add("CHOA_QUADRATIC");
+        algo.add("CHOA_BERNOULLI");
+        algo.add("CHOA_GAUSS_MOUSE");
+        algo.add("CHOA_LOGISTIC");
+        algo.add("CHOA_SINGER");
+        algo.add("CHOA_TENT");
 
         return algo;
     }
