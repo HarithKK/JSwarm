@@ -27,7 +27,7 @@ to solve their optimization problems.
 16. [ALSO (Artificial Lizard Search Optimization)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/also)
 17. [GEO (Golden Eagle Optimizer)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/geo)
 18. [AVOA (African Vultures Optimization Algorith)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/avoa)
-19. [TCA (Tunicate Swarm Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/tsa)
+19. [TSA (Tunicate Swarm Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/tsa)
 20. [SSA (Squirrel Search Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/ssa)
 21. [ZOA (Zebra Optimization Algorithm)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/zoa)
 22. [JSO (Jellyfish Search Optimizer)](https://github.com/kolithawarnakulasooriya/JarSwarm/tree/develop/src/main/java/org/usa/soc/jso)
