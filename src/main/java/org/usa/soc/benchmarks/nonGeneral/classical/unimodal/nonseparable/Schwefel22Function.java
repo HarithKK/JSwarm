@@ -20,7 +20,7 @@ public class Schwefel22Function extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 10;
+        return 2;
     }
 
     @Override

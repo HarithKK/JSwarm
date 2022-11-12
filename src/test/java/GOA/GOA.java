@@ -1,31 +1,32 @@
-package CHOA;
+package GOA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.choa.Chaotics;
 import utils.AssertUtil;
 import utils.Logger;
 
-public class CHOA {
+public class GOA {
 
     private static final int LIMIT = 2;
     private static final double PRECISION_VAL = 10;
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.choa.CHOA(
+        return new org.usa.soc.goa.GOA(
                 fn,
-                10,
+                100,
                 100,
                 fn.getNumberOfDimensions(),
                 fn.getMin(),
                 fn.getMax(),
                 true,
-                2.5,
-                Chaotics.type.QUADRATIC
+                1,
+                0.00004,
+                0.5,
+                1.5
         );
     }
 

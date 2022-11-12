@@ -4,6 +4,7 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.abc.ABC;
 import org.usa.soc.ba.BA;
+import org.usa.soc.choa.Chaotics;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
 import org.usa.soc.pso.PSO;
@@ -249,13 +250,143 @@ public class AlgorithmStore {
     public Algorithm getTSA(ObjectiveFunction fn, int ac, int sc){
         return new org.usa.soc.tsa.TSA(
                 fn,
-                1000,
-                200,
+                ac,
+                sc,
                 fn.getNumberOfDimensions(),
                 fn.getMin(),
                 fn.getMax(),
                 true
         );
     }
+
+    public Algorithm getSSA(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.ssa.SSA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                0.1,
+                1.9,
+                1.204,
+                5.25,
+                0.0154,
+                8.0
+        );
+    }
+
+    public Algorithm getZOA(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.zoa.ZOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true
+        );
+    }
+
+    public Algorithm getJSO(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.jso.JSO(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                3,
+                0.1
+        );
+    }
+
+    public Algorithm getCHOA1(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.choa.CHOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                Chaotics.type.QUADRATIC
+        );
+    }
+
+    public Algorithm getCHOA2(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.choa.CHOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                Chaotics.type.GAUSS_MOUSE
+        );
+    }
+
+    public Algorithm getCHOA3(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.choa.CHOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                Chaotics.type.BERNOULLI
+        );
+    }
+
+    public Algorithm getCHOA4(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.choa.CHOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                Chaotics.type.TENT
+        );
+    }
+
+    public Algorithm getCHOA5(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.choa.CHOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                Chaotics.type.LOGISTIC
+        );
+    }
+
+    public Algorithm getCHOA6(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.choa.CHOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                2.5,
+                Chaotics.type.SINGER
+        );
+    }
+
+
 
 }

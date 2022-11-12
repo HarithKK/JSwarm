@@ -368,6 +368,19 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.TENT
             );
+            case 28: return new org.usa.soc.goa.GOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    1,
+                    0.00004,
+                    0.5,
+                    1.5
+            );
         }
         return null;
     }
@@ -396,12 +409,14 @@ public class AlgoStore {
         algo.add("TSA");
         algo.add("SSA");
         algo.add("ZOA");
+        algo.add("JSO");
         algo.add("CHOA_QUADRATIC");
         algo.add("CHOA_BERNOULLI");
         algo.add("CHOA_GAUSS_MOUSE");
         algo.add("CHOA_LOGISTIC");
         algo.add("CHOA_SINGER");
         algo.add("CHOA_TENT");
+        algo.add("GOA");
 
         return algo;
     }
