@@ -387,6 +387,22 @@ public class AlgorithmStore {
         );
     }
 
+    public Algorithm getGOA(ObjectiveFunction fn, int ac, int sc){
+        return new org.usa.soc.goa.GOA(
+                fn,
+                ac,
+                sc,
+                fn.getNumberOfDimensions(),
+                fn.getMin(),
+                fn.getMax(),
+                true,
+                1,
+                0.00004,
+                0.5,
+                1.5
+        );
+    }
+
 
 
 }

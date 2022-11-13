@@ -16,7 +16,7 @@ public class Alpine1Function extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 2;
+        return 10;
     }
 
     @Override

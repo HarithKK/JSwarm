@@ -19,7 +19,7 @@ public class QuarticFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 2;
+        return 10;
     }
 
     @Override

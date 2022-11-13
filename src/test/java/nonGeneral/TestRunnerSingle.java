@@ -39,7 +39,7 @@ public class TestRunnerSingle {
     private static final int STEPS_COUNT = 1000;
     private static final int ALGO_INDEX = 2;
     private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
-    private static final String RESULT_FILE = "data_1000_10/";
+    private static final String RESULT_FILE = "data_1000_10D_10/";
 
 
     public static Algorithm getAlgorithm(int index,ObjectiveFunction fn) {
@@ -71,6 +71,7 @@ public class TestRunnerSingle {
             case 22: return algorithmStore.getCHOA4(fn, AGENT_COUNT, STEPS_COUNT);
             case 23: return algorithmStore.getCHOA5(fn, AGENT_COUNT, STEPS_COUNT);
             case 24: return algorithmStore.getCHOA6(fn, AGENT_COUNT, STEPS_COUNT);
+            case 25: return algorithmStore.getGOA(fn, AGENT_COUNT, STEPS_COUNT);
         }
         return null;
     }
@@ -201,7 +202,7 @@ public class TestRunnerSingle {
         );
 
         // start log file writer
-        for(int k =15; k<= 24;k++){
+        for(int k =25; k<= 25;k++){
             new TestRunnerSingle().runT(
                     k,
                     multimodalNonSeparableFunctionList,
