@@ -5,6 +5,7 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.AckleysFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.math.BigDecimal;
@@ -39,13 +40,12 @@ public class GOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.gBest = isLocalMinima ? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
         this.isLocalMinima = isLocalMinima;
         this.cmin = cmin;
         this.cmax = cmax;
         this.intensityOfAttraction = intensityOfAttraction;
         this.attractionLength = attractionLength;
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.grassHoppers = new GrassHopper[populationSize];
         this.vectordiff = new Vector(numberOfDimensions);
 

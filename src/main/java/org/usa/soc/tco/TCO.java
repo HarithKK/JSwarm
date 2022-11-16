@@ -4,6 +4,7 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 public class TCO extends Algorithm {
@@ -38,8 +39,7 @@ public class TCO extends Algorithm {
         this.r = r;
         this.omega = omega;
 
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.termites = new Termite[numberOfTermites];
     }
 

@@ -35,7 +35,7 @@ public class WSO extends Algorithm {
         this.c2 = c2;
 
         this.wasps = new Wasp[numberOfWasps];
-        this.gBest = isLocalMinima? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
     }
 
     @Override

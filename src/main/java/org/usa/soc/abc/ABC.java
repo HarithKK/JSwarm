@@ -31,7 +31,7 @@ public class ABC extends Algorithm {
         this.numberOfFoodSources = numberOfFoodSources;
         this.maxTrials = maxTrials;
 
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
 
         this.foodSources = new FoodSource[numberOfFoodSources];
     }
@@ -93,7 +93,6 @@ public class ABC extends Algorithm {
     private void updateGbest(FoodSource f) {
         Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        System.out.println(fpbest +"  |  "+ fgbest);
         if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
             gBest.setVector(f.getPosition());
         }

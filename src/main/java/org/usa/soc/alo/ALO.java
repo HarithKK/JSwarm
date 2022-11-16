@@ -31,9 +31,8 @@ public class ALO extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.gBest = isLocalMinima ? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
         this.isLocalMinima = isLocalMinima;
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.ants = new Ant[numberOfAnts];
         this.antLions = new Ant[numberOfAnts];
 

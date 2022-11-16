@@ -51,9 +51,9 @@ public class GSO extends Algorithm {
         this.beta = beta;
         this.nt = nt;
         this.s = s;
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.glowWorms = new GlowWorm[numberOfGlowWorms];
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
+
     }
 
     @Override

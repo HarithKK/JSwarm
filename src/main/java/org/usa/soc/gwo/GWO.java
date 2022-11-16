@@ -32,8 +32,7 @@ public class GWO extends Algorithm {
         this.isLocalMinima = isLocalMinima;
         this.numberOfWolfs = numberOfWolfs;
 
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.wolfs = new Wolf[numberOfWolfs];
 
         this.a = new Vector(numberOfDimensions);

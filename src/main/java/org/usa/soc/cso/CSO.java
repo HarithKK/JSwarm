@@ -4,6 +4,7 @@ import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 public class CSO extends Algorithm {
@@ -38,7 +39,6 @@ public class CSO extends Algorithm {
         this.stepsCount = stepsCount;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
         this.isLocalMinima = isLocalMinima;
         this.numberOfCats = numberOfCats;
         this.seekersToTracersRatio = seekersToTracersRatio;
@@ -48,6 +48,7 @@ public class CSO extends Algorithm {
         this.spc = spc;
         this.c = c;
         this.w =w;
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.cats = new Cat[numberOfCats];
     }
 

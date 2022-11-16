@@ -43,7 +43,6 @@ public class AVOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.gBest = isLocalMinima ? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
         this.isLocalMinima = isLocalMinima;
         this.omega = omega;
         this.alpha = alpha;
@@ -51,6 +50,7 @@ public class AVOA extends Algorithm {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
 
         this.vultures = new Vulture[populationSize];
     }

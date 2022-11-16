@@ -35,8 +35,7 @@ public class MFA extends Algorithm {
         this.numberOfMoths = numberOfMoths;
         this.b = b;
 
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.moths = new Moth[numberOfMoths];
         this.flames = new ArrayList<>(numberOfMoths);
     }

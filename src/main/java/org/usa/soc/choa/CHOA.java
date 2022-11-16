@@ -42,7 +42,7 @@ public class CHOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.gBest = isLocalMinima ? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.isLocalMinima = isLocalMinima;
         this.fUpper = fUpper;
         this.chaoticType = type;

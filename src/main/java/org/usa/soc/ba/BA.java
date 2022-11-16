@@ -42,8 +42,7 @@ public class BA extends Algorithm {
         this.A0 = A0;
         this.r0 = r0;
 
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.bats = new Bat[numberOfBats];
     }
     @Override

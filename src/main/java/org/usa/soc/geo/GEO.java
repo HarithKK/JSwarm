@@ -34,13 +34,13 @@ public class GEO extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.gBest = isLocalMinima ? new Vector(this.numberOfDimensions).setMaxVector() : new Vector(this.numberOfDimensions).setMinVector();
-        this.gBest.setVector(this.gBest.fixVector(minBoundary, maxBoundary));
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.isLocalMinima = isLocalMinima;
         this.pa0 = pa0;
         this.paT = paT;
         this.pc0 = pc0;
         this.pcT = pcT;
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.eagles = new Eagle[numberOfEagles];
     }
 
