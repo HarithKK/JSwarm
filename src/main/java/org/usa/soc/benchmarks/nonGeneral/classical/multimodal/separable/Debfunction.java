@@ -9,7 +9,7 @@ public class Debfunction extends ObjectiveFunction {
     @Override
     public Double call() {
         return Arrays.asList(super.getParameters()).stream().mapToDouble(d ->
-                Math.pow((Double) d * 5 * Math.PI, 6)
+                Math.sin(Math.pow((Double) d * 5 * Math.PI, 6))
         ).sum() * (-1 / getNumberOfDimensions());
     }
 
