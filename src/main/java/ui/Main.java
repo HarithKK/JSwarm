@@ -310,7 +310,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

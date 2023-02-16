@@ -12,7 +12,7 @@ public class QuarticFunction extends ObjectiveFunction {
     public Double call() {
         Double sum = 0.0;
         for(int i=0;i< getNumberOfDimensions();i++){
-            sum += (((i+1) * Math.pow((Double)super.getParameters()[i], 4)) + Randoms.rand(0,1));
+            sum += (((i+1) * Math.pow((Double)super.getParameters()[i], 4)));
         }
         return sum;
     }

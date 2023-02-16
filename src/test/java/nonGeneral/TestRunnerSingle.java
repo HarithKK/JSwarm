@@ -39,7 +39,7 @@ public class TestRunnerSingle {
     private static final int STEPS_COUNT = 1000;
     private static final int ALGO_INDEX = 2;
     private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
-    private static final String RESULT_FILE = "data_1000_10D_10/";
+    private static final String RESULT_FILE = "data_1000_1D/";
 
 
     public static Algorithm getAlgorithm(int index,ObjectiveFunction fn) {
@@ -162,47 +162,47 @@ public class TestRunnerSingle {
 
         // list of Objective Functions
         List<ObjectiveFunction> multimodalNonSeparableFunctionList = Arrays.asList(
-                new AckleysFunction(),
-                new ColvilleFunction(),
-                new CrossInTrayFunction(),
-                new GoldsteinPrice(),
-                new McCormickFunction(),
-                new ThreeHumpCamelFunction(),
-                new ZakharovFunction()
+//                new AckleysFunction(),
+//                new ColvilleFunction(),
+//                new CrossInTrayFunction(),
+//                new GoldsteinPrice(),
+//                new McCormickFunction(),
+//                new ThreeHumpCamelFunction(),
+//                new ZakharovFunction()
         );
 
         List<ObjectiveFunction> multimodalSeparableFunctionList = Arrays.asList(
-                new Alpine1Function(),
-                new BohachevskFunction(),
-                new Bukin4Function(),
-                new CsendesFunction(),
-                new Debfunction(),
-                new EasomFunction(),
-                new SphereFunction()
+//                new Alpine1Function(),
+//                new BohachevskFunction(),
+//                new Bukin4Function(),
+//                new CsendesFunction(),
+//                new Debfunction(),
+//                new EasomFunction(),
+//                new SphereFunction()
         );
 
         List<ObjectiveFunction> unimodalNonSeparableFunctionList = Arrays.asList(
-                new BealeFunction(),
-                new BoothsFunction(),
-                new DixonPriceFunction(),
-                new MatyasFunction(),
-                new SchafferFunction(),
-                new Schwefel12Function(),
-                new Schwefel22Function()
+//                new BealeFunction(),
+//                new BoothsFunction(),
+//                new DixonPriceFunction(),
+//                new MatyasFunction(),
+//                new SchafferFunction(),
+//                new Schwefel12Function(),
+//                new Schwefel22Function()
         );
 
         List<ObjectiveFunction> unimodalSeparableFunctionList = Arrays.asList(
-                new ChungReynoldsSquares(),
-                new PowellSumFunction(),
-                new QuarticFunction(),
-                new SchumerSteiglitzFunction(),
-                new StepFunction(),
-                new StepintFunction(),
-                new SumSquares()
+//                new ChungReynoldsSquares(),
+//                new PowellSumFunction(),
+                new QuarticFunction()
+//                new SchumerSteiglitzFunction(),
+//                new StepFunction(),
+//                new StepintFunction(),
+//                new SumSquares()
         );
 
         // start log file writer
-        for(int k =25; k<= 25;k++){
+        for(int k =0; k<= 25;k++){
             new TestRunnerSingle().runT(
                     k,
                     multimodalNonSeparableFunctionList,

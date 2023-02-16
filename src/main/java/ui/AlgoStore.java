@@ -12,6 +12,7 @@ import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.tco.TCO;
+import org.usa.soc.tno.TNO;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
@@ -381,6 +382,18 @@ public class AlgoStore {
                     0.5,
                     1.5
             );
+            case 29: return new TNO(
+                    fn,
+                    500,
+                    fn.getNumberOfDimensions(),
+                    50,
+                    fn.getMin(),
+                    fn.getMax(),
+                    45,
+                    0.4,
+                    0.4,
+                    true
+            );
         }
         return null;
     }
@@ -417,6 +430,7 @@ public class AlgoStore {
         algo.add("CHOA_SINGER");
         algo.add("CHOA_TENT");
         algo.add("GOA");
+        algo.add("TNO");
 
         return algo;
     }

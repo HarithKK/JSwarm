@@ -1,32 +1,37 @@
-package ALO;
+package TNO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.tco.TCO;
+import org.usa.soc.tno.TNO;
 import utils.AssertUtil;
 import utils.Logger;
 
-public class ALO {
-
+public class TestTNO {
     private static final int LIMIT = 2;
-    private static final double PRECISION_VAL = 10;
     private Algorithm algo;
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.alo.ALO(
+    private static final double PRECISION_VAL  = 10;
+
+    private Algorithm getAlgorithm(ObjectiveFunction fn){
+        return new TNO(
                 fn,
-                25,
-                600,
+                500,
                 fn.getNumberOfDimensions(),
+                100,
                 fn.getMin(),
                 fn.getMax(),
+                40,
+                0.6,
+                0.7,
                 true
         );
     }
 
-    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance) {
+    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
                 algo.getBestDoubleValue(),
                 best,
@@ -37,8 +42,7 @@ public class ALO {
                 LIMIT
         );
     }
-// 271298208
-//1005140750
+
     @Test
     public void testAckleysFunction() {
 
@@ -46,9 +50,8 @@ public class ALO {
         algo = getAlgorithm(fn);
         algo.initialize();
         algo.runOptimizer();
-        System.out.println(algo.getNanoDuration());
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -59,7 +62,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -70,7 +73,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
 
@@ -83,7 +86,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -95,7 +98,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -107,7 +110,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -119,7 +122,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -168,7 +171,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -192,7 +195,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 1);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1);
     }
 
     @Test
@@ -204,7 +207,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-//        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 100, 2);
+        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 1000, 2);
     }
 
     @Test
@@ -216,7 +219,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -240,7 +243,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test
@@ -252,7 +255,7 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
 
     @Test
@@ -264,12 +267,11 @@ public class ALO {
         algo.initialize();
         algo.runOptimizer();
 
-        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
 
     @AfterEach
-    public void afterEach() {
+    public void afterEach(){
         Logger.showFunction(algo);
     }
 }
-
