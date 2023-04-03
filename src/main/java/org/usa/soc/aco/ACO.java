@@ -71,7 +71,7 @@ public class ACO extends Algorithm {
         this.evaporationRate = 0.01;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = new Vector(this.numberOfDimensions);
-        this.gBest = isLocalMinima ? this.gBest.setMaxVector() : this.gBest.setMinVector();
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.pheromoneValue = 0.1;
         this.isLocalMinima = isLocalMinima;
         this.ants = new Ant[this.numberOfAnts];

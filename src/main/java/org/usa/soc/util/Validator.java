@@ -8,6 +8,12 @@ public class Validator {
         }
     }
 
+    public static void checkBoundaries(double val, double min, double max){
+        if(val > max || val < min){
+            throw new IllegalArgumentException("Validator: Boundaries Mismatched!");
+        }
+    }
+
     public static boolean validateBestValue(Double comparatee, Double comparator, boolean isMin){
         return (isMin && comparatee.compareTo(comparator) < 0 ) || (!isMin && comparatee.compareTo(comparator) > 0);
     }
@@ -39,6 +45,11 @@ public class Validator {
     public static void checkMinMax(Double wMax, Double wMin) {
         if(wMax < wMin)
             throw new IllegalArgumentException("Validator: Min Max Mismatched!");
+    }
+
+    public static void checkPopulationSize(int actual, int expected) {
+        if(actual < expected)
+            throw new IllegalArgumentException("Validator: Population size is expected ["+expected+"]");
     }
 
     public static boolean validateRangeInOneAndZero(double seekersToTracersRatio) {

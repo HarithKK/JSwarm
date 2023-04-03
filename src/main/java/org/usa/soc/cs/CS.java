@@ -37,7 +37,7 @@ public class CS extends Algorithm {
         this.pa = pa;
 
         nests = new Nest[numberOfNests];
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
     }
 
     @Override

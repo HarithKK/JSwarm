@@ -87,10 +87,11 @@ public class Vector {
         return this.positionIndexes[index];
     }
 
-    public void resetAllValues(Double value){
+    public Vector resetAllValues(Double value){
         for(int i = 0; i< getNumberOfDimensions(); i++){
             this.positionIndexes[i] = value;
         }
+        return this;
     }
 
     public int getNumberOfDimensions() {
@@ -196,6 +197,22 @@ public class Vector {
             sum+= Math.pow(this.positionIndexes[i],2);
         }
         return Math.sqrt(sum);
+    }
+
+    public Vector toAbs(){
+        Vector v = new Vector(numberOfDimensions);
+        for(int i=0;i<this.numberOfDimensions;i++){
+            v.setValue(Math.abs(this.getValue(i)), i);
+        }
+        return v;
+    }
+
+    public double getNonDistanceMagnitude(){
+        double sum = 0;
+        for(int i=0;i<this.numberOfDimensions;i++){
+            sum+= this.positionIndexes[i];
+        }
+        return sum;
     }
 
     public Vector fixVector(double []min, double []max){

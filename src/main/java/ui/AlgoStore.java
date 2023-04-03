@@ -5,6 +5,7 @@ import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.abc.ABC;
 import org.usa.soc.aco.ACO;
 import org.usa.soc.ba.BA;
+import org.usa.soc.choa.Chaotics;
 import org.usa.soc.cs.CS;
 import org.usa.soc.fa.FA;
 import org.usa.soc.mbo.MBO;
@@ -214,6 +215,172 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
+            case 15: return new org.usa.soc.also.ALSO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    10,
+                    10,
+                    2.5,
+                    1.0,
+                    10,
+                    10
+            );
+            case 16: return new org.usa.soc.geo.GEO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2,
+                    0.5,
+                    0.5,
+                    1
+            );
+            case 17: return new org.usa.soc.avoa.AVOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    0.8,
+                    0.2,
+                    0.6,
+                    0.4,
+                    0.6
+            );
+            case 18: return new org.usa.soc.tsa.TSA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true
+            );
+            case 19: return new org.usa.soc.ssa.SSA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    0.1,
+                    1.9,
+                    1.204,
+                    5.25,
+                    0.0154,
+                    8.0
+            );
+            case 20: return new org.usa.soc.zoa.ZOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true
+            );
+            case 21:  return new org.usa.soc.jso.JSO(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    3,
+                    0.1
+            );
+            case 22: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.QUADRATIC
+            );
+            case 23: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.BERNOULLI
+            );
+            case 24: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.GAUSS_MOUSE
+            );
+            case 25: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.LOGISTIC
+            );
+            case 26: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.SINGER
+            );
+            case 27: return new org.usa.soc.choa.CHOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    2.5,
+                    Chaotics.type.TENT
+            );
+            case 28: return new org.usa.soc.goa.GOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    1,
+                    0.00004,
+                    0.5,
+                    1.5
+            );
         }
         return null;
     }
@@ -236,7 +403,22 @@ public class AlgoStore {
         algo.add("GWO Gray Wolf Hunting");
         algo.add("MFA - Moths Find Flames");
         algo.add("ALO - Ant Lion Hunting");
-
+        algo.add("ALSO - Lizards");
+        algo.add("GEO - Golden Eagle");
+        algo.add("AVOA - African Vulture");
+        algo.add("TSA - Tunicate Swarm ");
+        algo.add("SSA - Squirrels");
+        algo.add("ZOA - Zebras");
+        algo.add("JSO - Jellifish");
+        algo.add("CHOA_QUADRATIC - Chimps");
+        algo.add("CHOA_BERNOULLI - Chimps");
+        algo.add("CHOA_GAUSS_MOUSE - Chimps");
+        algo.add("CHOA_LOGISTIC - Chimps");
+        algo.add("CHOA_SINGER - Chimps");
+        algo.add("CHOA_TENT - Chimps");
+        algo.add("GOA - Grass Hopper");
+        algo.add("TCO - Trees");
+        
         return algo;
     }
 }

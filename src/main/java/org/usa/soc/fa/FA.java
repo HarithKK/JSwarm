@@ -38,9 +38,8 @@ public class FA extends Algorithm {
         this.gama = 1 / Math.pow(characteristicLength, 2);
         this.alpha = alpha;
         this.beta0 = beta0;
-
+        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.numberOfFlies = numberOfFlies;
-        this.gBest = isLocalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
         flies = new Fly[numberOfFlies];
     }
 

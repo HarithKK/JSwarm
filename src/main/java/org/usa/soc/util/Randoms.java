@@ -8,6 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Randoms {
     static double precision = 1000D;
     public static double rand (double min, double max) {
+        if(max == min)
+            return max;
         return ThreadLocalRandom.current().nextDouble(min, max+1);
     }
 
@@ -33,7 +35,7 @@ public class Randoms {
         for(int i=0;i<D;i++){
             v.setValue(rand(min[i], max[i]),i);
         }
-        return v;
+        return v.fixVector(min,max);
     }
 
     public static Vector getRandomVector(int D, double[] min, double[] max, double rMin, double rMax) {
@@ -41,7 +43,7 @@ public class Randoms {
         for(int i=0;i<D;i++){
             v.setValue((min[i] + rand(rMin, rMax)*(max[i]-min[i])),i);
         }
-        return v;
+        return v.fixVector(min,max);
     }
 
     public static Vector getRandomVector(int D, double min, double max) {
