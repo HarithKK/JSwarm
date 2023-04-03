@@ -388,36 +388,37 @@ public class AlgoStore {
     public static List<String> generateAlgo() {
         List<String> algo = new ArrayList<>();
 
-        algo.add("PSO");
-        algo.add("ACO");
-        algo.add("CSO");
-        algo.add("GSO");
-        algo.add("MBO");
-        algo.add("MS");
-        algo.add("WSO");
-        algo.add("CS");
-        algo.add("FA");
-        algo.add("ABC");
-        algo.add("BA");
-        algo.add("TCO");
-        algo.add("GWO");
-        algo.add("MFA");
-        algo.add("ALO");
-        algo.add("ALSO");
-        algo.add("GEO");
-        algo.add("AVOA");
-        algo.add("TSA");
-        algo.add("SSA");
-        algo.add("ZOA");
-        algo.add("JSO");
-        algo.add("CHOA_QUADRATIC");
-        algo.add("CHOA_BERNOULLI");
-        algo.add("CHOA_GAUSS_MOUSE");
-        algo.add("CHOA_LOGISTIC");
-        algo.add("CHOA_SINGER");
-        algo.add("CHOA_TENT");
-        algo.add("GOA");
-
+        algo.add("PSO - Birds & Fishes");
+        algo.add("ACO - Ants as a Colony");
+        algo.add("CSO - Cats & Rats");
+        algo.add("GSO - Glow Worm Collaboration");
+        algo.add("MBO - Bees Marriage Process");
+        algo.add("MS - Monkey Search Tree Branches");
+        algo.add("WSO - Wasps as a Swarm");
+        algo.add("CS - Cuckoo Bird Search for a Nest");
+        algo.add("FA - Fireflies Swarm");
+        algo.add("ABC - Bees as a Colony");
+        algo.add("BA - Bats Navigation");
+        algo.add("TCO - Termites Hunting");
+        algo.add("GWO Gray Wolf Hunting");
+        algo.add("MFA - Moths Find Flames");
+        algo.add("ALO - Ant Lion Hunting");
+        algo.add("ALSO - Lizards");
+        algo.add("GEO - Golden Eagle");
+        algo.add("AVOA - African Vulture");
+        algo.add("TSA - Tunicate Swarm ");
+        algo.add("SSA - Squirrels");
+        algo.add("ZOA - Zebras");
+        algo.add("JSO - Jellifish");
+        algo.add("CHOA_QUADRATIC - Chimps");
+        algo.add("CHOA_BERNOULLI - Chimps");
+        algo.add("CHOA_GAUSS_MOUSE - Chimps");
+        algo.add("CHOA_LOGISTIC - Chimps");
+        algo.add("CHOA_SINGER - Chimps");
+        algo.add("CHOA_TENT - Chimps");
+        algo.add("GOA - Grass Hopper");
+        algo.add("TCO - Trees");
+        
         return algo;
     }
 }

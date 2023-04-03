@@ -49,20 +49,19 @@ public class Particle {
         c_2r_2(gbest - P_i(t))
     \end{multline*}
      */
-    public void updateVelocityAndPosition(Vector gBest, Double c1, Double c2, Double w) {
+    public Vector updateVelocity(Vector gBest, Double c1, Double c2, Double w) {
 
         double c1r1 = c1 * Randoms.rand(0,1);;
         double c2r2 = c2 * Randoms.rand(0,1);;
 
         Vector v1 = this.getVelocity().operate(Vector.OPERATOR.MULP, w);
-        Vector v2 = this.getPBest().operate(Vector.OPERATOR.SUB, this.position)
+        Vector v2 = this.getPBest().operate(Vector.OPERATOR.SUB, this.getPosition())
                 .operate(Vector.OPERATOR.MULP, c1r1);
-        Vector v3 =gBest.operate(Vector.OPERATOR.SUB, this.position)
+        Vector v3 =gBest.getClonedVector().operate(Vector.OPERATOR.SUB, this.getPosition())
                 .operate(Vector.OPERATOR.MULP, c2r2);
 
-        this.setVelocity(v1.operate(Vector.OPERATOR.ADD, v2).operate(Vector.OPERATOR.ADD, v3));
-        this.position.setVector(this.position.operate(Vector.OPERATOR.ADD, this.getVelocity()), minBoundary, maxBoundary);
-
+        this.setVelocity(v1.operate(Vector.OPERATOR.ADD, v2).operate(Vector.OPERATOR.ADD, v3).fixVector(minBoundary, maxBoundary));
+        return this.getPosition().operate(Vector.OPERATOR.ADD, this.getVelocity());
     }
 
     public Vector getVelocity() {

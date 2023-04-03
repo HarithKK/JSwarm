@@ -5,8 +5,10 @@ import org.usa.soc.core.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public abstract class Algorithm implements Cloneable {
 
@@ -217,11 +219,28 @@ public abstract class Algorithm implements Cloneable {
         sb.append(this.getMeanBestValue());
         sb.append('\n');
 
-        sb.append("Mean Best Value: ");
-        sb.append(this.getMeanBestValue());
-        sb.append('\n');
-
         return sb.toString();
+    }
+
+    public List toList(){
+        List<String> lst = new ArrayList<>();
+
+        lst.add(String.valueOf(new Date().getTime()));
+        lst.add(this.getClass().getSimpleName());
+        lst.add(this.getFunction().getClass().getSimpleName());
+        lst.add(String.valueOf(this.getBestDoubleValue()));
+        lst.add(String.valueOf(this.getFunction().getExpectedBestValue()));
+        lst.add(Arrays.toString(this.getFunction().getMin()));
+        lst.add(Arrays.toString(this.getFunction().getMax()));
+        lst.add(String.valueOf(this.getFunction().getNumberOfDimensions()));
+        lst.add(String.valueOf(this.getNanoDuration()/ 1000000));
+        lst.add(String.valueOf(this.getBestVariables()));
+        lst.add(StringFormatter.toString(this.getFunction().getExpectedParameters()));
+        lst.add(String.valueOf(this.getConvergenceValue()));
+        lst.add(String.valueOf(this.getGradiantDecent()));
+        lst.add(String.valueOf(this.getMeanBestValue()));
+
+        return lst;
     }
 
     public double getGradiantDecent() {
