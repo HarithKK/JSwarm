@@ -57,7 +57,7 @@ public class SSA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Squirrels Are Not Initialized");
         }

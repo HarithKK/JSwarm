@@ -45,6 +45,8 @@ public class MultiRunner {
             finalizeAll();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

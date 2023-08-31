@@ -55,7 +55,7 @@ public class GOA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Grass Hoppers Are Not Initialized");
         }

@@ -5,14 +5,7 @@ Settings
  */
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.XYSeries;
-import org.knowm.xchart.style.markers.SeriesMarkers;
+
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
@@ -92,7 +85,11 @@ public class TestRunner {
                     }
                 }
             });
-            algorithm.runOptimizer();
+            try {
+                algorithm.runOptimizer();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             meanBestValue += algorithm.getBestDoubleValue();
             bestValuesArray[i] = algorithm.getBestDoubleValue();
             meanExecutionTime += algorithm.getNanoDuration();

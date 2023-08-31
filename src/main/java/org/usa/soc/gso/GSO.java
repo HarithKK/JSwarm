@@ -57,7 +57,7 @@ public class GSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");

@@ -39,7 +39,7 @@ public class GWO extends Algorithm {
         this.a.resetAllValues(MAX_A);
     }
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Wolfs Are Not Initialized");
         }

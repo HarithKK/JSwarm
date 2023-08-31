@@ -77,7 +77,7 @@ public class PSO extends Algorithm implements Cloneable {
     }
 
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception {
 
         if (!this.isInitialized()) {
             throw new RuntimeException("Particles Are Not Initialized");
@@ -107,6 +107,7 @@ public class PSO extends Algorithm implements Cloneable {
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
             stepCompleted(time, step);
+
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

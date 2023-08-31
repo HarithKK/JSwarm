@@ -55,7 +55,7 @@ public class ALSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Lizards Are Not Initialized");
         }

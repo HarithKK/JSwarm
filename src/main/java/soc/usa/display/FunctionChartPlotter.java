@@ -7,12 +7,14 @@ import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.Algorithm;
+import org.usa.soc.KillOptimizerException;
 import org.usa.soc.core.Action;
 import org.usa.soc.core.EmptyAction;
 import org.usa.soc.core.Vector;
 import org.usa.soc.util.Mathamatics;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -71,10 +73,19 @@ public class FunctionChartPlotter {
         XYSeries seriesb = this.chart.addSeries("Best Search Trial", xbest, ybest);
         seriesb.setMarker(SeriesMarkers.CROSS);
         seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
-        XYSeries series1 = this.chart.addSeries("Best",
-                new double[]{a.getFunction().getExpectedParameters()[0]},
-                new double[]{a.getFunction().getExpectedParameters()[1]});
+
+        double [][]best_coords = new double[2][(int)(a.getFunction().getExpectedParameters().length/2)];
+
+        for(int x = 0; x < a.getFunction().getExpectedParameters().length; x+=2){
+            best_coords[0][x/2] = a.getFunction().getExpectedParameters()[x];
+            best_coords[1][x/2] = a.getFunction().getExpectedParameters()[x+1];
+
+            System.out.println(best_coords[0][x/2] +" : "+ best_coords[1][x/2]);
+        }
+
+        XYSeries series1 = this.chart.addSeries("Best", best_coords[0], best_coords[1]);
         series1.setMarker(SeriesMarkers.DIAMOND);
+        series1.setMarkerColor(Color.RED);
     }
 
     public XYChart getChart(){
@@ -145,7 +156,13 @@ public class FunctionChartPlotter {
                 step = step +1;
             }
         });
-        algorithm.runOptimizer(time);
+        try {
+            algorithm.runOptimizer(time);
+        } catch (Exception e) {
+            if(e instanceof KillOptimizerException){
+                System.out.println("Optimizer was killed forcefully");
+            }
+        }
         setExecute(false);
         System.out.println("");
         System.out.println("Actual: "+algorithm.getBestDoubleValue() +" , Expected: "+algorithm.getFunction().getExpectedBestValue());
@@ -162,5 +179,21 @@ public class FunctionChartPlotter {
 
     public void setExecute(boolean execute) {
         isExecute = execute;
+    }
+
+    public void pause() {
+        algorithm.pauseOptimizer();
+    }
+
+    public void resume() {
+        algorithm.resumeOptimizer();
+    }
+
+    public boolean isPaused() {
+       return algorithm.isPaused();
+    }
+
+    public void stopOptimizer() {
+        algorithm.stopOptimizer();
     }
 }

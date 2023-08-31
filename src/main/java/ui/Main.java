@@ -32,13 +32,13 @@ public class Main {
     RowPanel[] pnlDetails;
     JToolBar jToolBar;
 
-    JLabel lblFunctionComboBox, lblAlgorithmComboBox, lblInterval, lblBestValue, lblExpectedBestValue, lblBestValueExpectedBestValueSep;
+    JLabel lblFunctionComboBox, lblAlgorithmComboBox, lblInterval, lblBestValue, lblExpectedBestValue, lblBestValueExpectedBestValueSep, labelStep;
 
     JComboBox cmbFunction, cmbAlgorithm;
 
     JSpinner spnInterval;
 
-    JButton btnRun, btnShowTF;
+    JButton btnRun, btnShowTF, btnPause, btnStop;
 
     JProgressBar progressBar;
 
@@ -60,7 +60,10 @@ public class Main {
 
     Algorithm algorithm;
 
-    private void btnRunActionPerformed(ActionEvent e){
+    Thread currentRunner = null;
+
+    private void runOptimizer(){
+
         int selectedAlgorithm = cmbAlgorithm.getSelectedIndex();
         int selectedFunction = cmbFunction.getSelectedIndex();
         int selectedInterval = (Integer) spnInterval.getValue();
@@ -72,15 +75,50 @@ public class Main {
         clearValues();
         pnlDetails[0].setTextValue(String.valueOf(new Date().getTime()));
 
-        new Thread(new Runnable() {
+        currentRunner = new Thread(new Runnable() {
             @Override
             public void run() {
-                btnRun.setEnabled(false);
                 functionChartPlotter.execute();
                 btnRun.setEnabled(true);
+                btnPause.setEnabled(false);
+                btnStop.setEnabled(false);
                 setInfoData(algorithm.toList());
             }
-        }).start();
+        });
+
+        currentRunner.start();
+    }
+
+    private void btnRunActionPerformed(ActionEvent e){
+
+        btnRun.setEnabled(false);
+        btnPause.setEnabled(true);
+        btnStop.setEnabled(true);
+
+        if(currentRunner != null && functionChartPlotter.isPaused()){
+            functionChartPlotter.resume();
+        }else{
+            runOptimizer();
+        }
+    }
+
+    private void btnPauseActionPerformed(ActionEvent e){
+        if(currentRunner != null){
+            btnRun.setEnabled(true);
+            btnPause.setEnabled(false);
+            btnStop.setEnabled(false);
+            functionChartPlotter.pause();
+        }
+    }
+
+    private void btnStopActionPerformed(ActionEvent e){
+        if(currentRunner != null){
+            btnRun.setEnabled(true);
+            btnPause.setEnabled(false);
+            btnStop.setEnabled(false);
+            functionChartPlotter.stopOptimizer();
+            currentRunner=null;
+        }
     }
 
     private void setInfoData(List<String> str) {
@@ -165,6 +203,8 @@ public class Main {
         lblExpectedBestValue.setText(decimalFormat.format(algorithm.getFunction().getExpectedBestValue()));
         lblExpectedBestValue.updateUI();
         swarmDisplayChart.updateUI();
+        labelStep.setText(decimalFormat.format(algorithm.getCurrentStep()));
+        labelStep.updateUI();
         pnlCenter.updateUI();
         pnlRight.updateUI();
         frame.repaint();
@@ -226,6 +266,29 @@ public class Main {
         });
         jToolBar.add(btnRun);
 
+        btnPause = new JButton("Pause");
+        btnPause.setFont(f1);
+        btnPause.setEnabled(false);
+        btnPause.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnPauseActionPerformed(e);
+            }
+        });
+        jToolBar.add(btnPause);
+
+        btnStop = new JButton("Stop");
+        btnStop.setFont(f1);
+        btnStop.setEnabled(false);
+        btnStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnStopActionPerformed(e);
+            }
+        });
+        jToolBar.add(btnStop);
+
+
         jToolBar.addSeparator();
 
         btnShowTF = new JButton("Show TF");
@@ -249,12 +312,16 @@ public class Main {
         lblExpectedBestValue = new JLabel("0.0", JLabel.CENTER);
         lblExpectedBestValue.setForeground(Color.BLUE);
 
+        labelStep = new JLabel("0", JLabel.CENTER);
+        labelStep.setForeground(Color.BLACK);
+
         pnlProgress = new JPanel();
         pnlProgress.setLayout(new BorderLayout());
         JPanel jPanel = new JPanel();
         jPanel.add(lblBestValue);
         jPanel.add(lblBestValueExpectedBestValueSep);
         jPanel.add(lblExpectedBestValue);
+        jPanel.add(labelStep);
         pnlProgress.add(jPanel, BorderLayout.WEST);
         pnlProgress.add(progressBar, BorderLayout.CENTER);
         frame.add(pnlProgress, BorderLayout.SOUTH);

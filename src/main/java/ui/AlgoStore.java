@@ -417,7 +417,6 @@ public class AlgoStore {
         algo.add("CHOA_SINGER - Chimps");
         algo.add("CHOA_TENT - Chimps");
         algo.add("GOA - Grass Hopper");
-        algo.add("TCO - Trees");
         
         return algo;
     }

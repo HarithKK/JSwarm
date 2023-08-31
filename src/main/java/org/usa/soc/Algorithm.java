@@ -12,6 +12,7 @@ import java.util.List;
 
 public abstract class Algorithm implements Cloneable {
 
+    private boolean isPaused, isKilled;
     protected boolean isLocalMinima;
 
     protected double[] minBoundary;
@@ -22,6 +23,7 @@ public abstract class Algorithm implements Cloneable {
     protected ObjectiveFunction<Double> objectiveFunction;
 
     protected int stepsCount;
+    private long currentStep;
     private double bestValue = 0;
     private double convergenceValue = Double.MAX_VALUE;
     private double gradiantDecent = Double.MAX_VALUE;
@@ -44,6 +46,8 @@ public abstract class Algorithm implements Cloneable {
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.nanoDuration = nanoDuration;
+        this.isPaused = false;
+        this.isKilled = false;
     }
 
     protected Algorithm(){
@@ -58,11 +62,11 @@ public abstract class Algorithm implements Cloneable {
 
     private boolean isInitialized = false;
 
-    public void runOptimizer(){
+    public void runOptimizer() throws Exception{
         this.runOptimizer(0);
     };
 
-    public abstract void runOptimizer(int time);
+    public abstract void runOptimizer(int time) throws Exception;
 
     public abstract void initialize();
 
@@ -103,7 +107,9 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction =a;
     }
 
-    public void stepCompleted(int time, long step){
+    public void stepCompleted(int time, long step) throws Exception {
+
+        this.currentStep = step;
 
         double xValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
         // calculate convergence
@@ -121,6 +127,13 @@ public abstract class Algorithm implements Cloneable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        if(this.isKilled){
+            this.isKilled=false;
+            throw new KillOptimizerException("Optimizer has been forcefully stopped!");
+        }
+
+        this.checkPaused();
     }
 
     private void calculateMeanValue(long step, double xValue) {
@@ -249,5 +262,37 @@ public abstract class Algorithm implements Cloneable {
 
     public double getMeanBestValue() {
         return meanBestValue;
+    }
+
+    public void pauseOptimizer() {
+        this.isPaused = true;
+    }
+
+    public void resumeOptimizer() {
+        this.isPaused = false;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    protected void checkPaused() {
+        if(this.isPaused()){
+        while(this.isPaused()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    }
+
+    public void stopOptimizer() {
+        this.isKilled=true;
+    }
+
+    public long getCurrentStep() {
+        return currentStep;
     }
 }

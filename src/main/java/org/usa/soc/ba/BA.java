@@ -46,7 +46,7 @@ public class BA extends Algorithm {
         this.bats = new Bat[numberOfBats];
     }
     @Override
-    public void runOptimizer(int time) {
+    public void runOptimizer(int time) throws Exception {
         if(!this.isInitialized()){
             throw new RuntimeException("Bat Agents Are Not Initialized");
         }
