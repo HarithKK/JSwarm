@@ -127,6 +127,7 @@ public class Lizard {
         }else{
             qValue = tourque;
         }
+        this.tourque = Randoms.rand(0, qValue);
     }
 
     public double getBodyAngle() {

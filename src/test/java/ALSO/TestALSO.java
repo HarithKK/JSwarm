@@ -1,31 +1,34 @@
-package CHOA;
+package ALSO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.choa.Chaotics;
 import utils.AssertUtil;
 import utils.Logger;
 
-public class CHOA {
+public class TestALSO {
 
     private static final int LIMIT = 2;
     private static final double PRECISION_VAL = 10;
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.choa.CHOA(
+        return new org.usa.soc.also.ALSO(
                 fn,
-                10,
                 100,
+                200,
                 fn.getNumberOfDimensions(),
                 fn.getMin(),
                 fn.getMax(),
                 true,
+                10,
+                10,
                 2.5,
-                Chaotics.type.QUADRATIC
+                1.0,
+                10,
+                10
         );
     }
 
@@ -47,7 +50,11 @@ public class CHOA {
         ObjectiveFunction fn = new AckleysFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -58,7 +65,11 @@ public class CHOA {
         ObjectiveFunction fn = new BoothsFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -69,7 +80,11 @@ public class CHOA {
         ObjectiveFunction fn = new MatyasFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -82,7 +97,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -94,7 +113,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -106,7 +129,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -118,7 +145,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -130,7 +161,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
@@ -142,7 +177,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
@@ -154,7 +193,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 2, 2);
 
@@ -167,7 +210,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -179,7 +226,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
@@ -191,7 +242,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 1);
     }
@@ -203,7 +258,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
 //        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 100, 2);
     }
@@ -215,7 +274,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -227,7 +290,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
@@ -239,7 +306,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -251,7 +322,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
     }
@@ -263,7 +338,11 @@ public class CHOA {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
     }

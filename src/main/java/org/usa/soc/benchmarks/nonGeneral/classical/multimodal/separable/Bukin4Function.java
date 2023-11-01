@@ -37,6 +37,6 @@ public class Bukin4Function extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{-10,1};
+        return new double[]{-10,0};
     }
 }

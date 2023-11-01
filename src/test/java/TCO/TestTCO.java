@@ -44,12 +44,16 @@ public class TestTCO {
     }
 
     @Test
-    public void testAckleysFunction() {
+    public void testAckleysFunction() throws Exception {
 
         ObjectiveFunction fn = new AckleysFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -60,7 +64,11 @@ public class TestTCO {
         ObjectiveFunction fn = new BoothsFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -71,7 +79,11 @@ public class TestTCO {
         ObjectiveFunction fn = new MatyasFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -84,7 +96,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -96,7 +112,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -108,7 +128,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -120,7 +144,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -132,7 +160,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
@@ -144,7 +176,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
@@ -156,7 +192,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 2, 2);
 
@@ -169,7 +209,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -181,7 +225,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
@@ -193,7 +241,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1);
     }
@@ -205,7 +257,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 100, 2);
     }
@@ -217,7 +273,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -229,7 +289,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
@@ -241,7 +305,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -253,7 +321,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
@@ -265,7 +337,11 @@ public class TestTCO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }

@@ -37,7 +37,7 @@ public class ABC extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Food Sources Are Not Initialized");
         }
@@ -58,7 +58,7 @@ public class ABC extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted(step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }

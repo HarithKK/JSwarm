@@ -12,6 +12,8 @@ import soc.usa.display.IterationChartPlotter;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -69,7 +71,7 @@ public class Main {
         int selectedInterval = (Integer) spnInterval.getValue();
 
         algorithm = new AlgoStore(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
-        functionChartPlotter.setTime(selectedInterval);
+        functionChartPlotter.setInterval(selectedInterval);
         functionChartPlotter.setChart(algorithm);
 
         clearValues();
@@ -96,6 +98,7 @@ public class Main {
         btnStop.setEnabled(true);
 
         if(currentRunner != null && functionChartPlotter.isPaused()){
+            functionChartPlotter.setInterval((Integer) spnInterval.getValue());
             functionChartPlotter.resume();
         }else{
             runOptimizer();
@@ -247,6 +250,7 @@ public class Main {
 
         lblInterval = new JLabel("Interval :");
         lblInterval.setFont(f1);
+
         spnInterval = new JSpinner();
         spnInterval.setFont(f1);
         spnInterval.setValue(150);

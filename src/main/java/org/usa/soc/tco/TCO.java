@@ -44,7 +44,7 @@ public class TCO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Termites Are Not Initialized");
         }
@@ -88,7 +88,7 @@ public class TCO extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted(step);
             tau.setVector(tau.operate(Vector.OPERATOR.SUB, tauDecrements));
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;

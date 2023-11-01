@@ -1,4 +1,4 @@
-package GEO;
+package JSO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -8,14 +8,14 @@ import org.usa.soc.benchmarks.singleObjective.*;
 import utils.AssertUtil;
 import utils.Logger;
 
-public class GEO {
+public class TestJSO {
 
     private static final int LIMIT = 2;
     private static final double PRECISION_VAL = 10;
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.geo.GEO(
+        return new org.usa.soc.jso.JSO(
                 fn,
                 1000,
                 200,
@@ -23,10 +23,8 @@ public class GEO {
                 fn.getMin(),
                 fn.getMax(),
                 true,
-                2,
-                0.5,
-                0.5,
-                1
+                3,
+                0.1
         );
     }
 
@@ -48,7 +46,11 @@ public class GEO {
         ObjectiveFunction fn = new AckleysFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -59,7 +61,11 @@ public class GEO {
         ObjectiveFunction fn = new BoothsFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -70,7 +76,11 @@ public class GEO {
         ObjectiveFunction fn = new MatyasFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -83,7 +93,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -95,7 +109,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -107,7 +125,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -119,7 +141,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -131,7 +157,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
@@ -143,7 +173,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
     }
@@ -155,7 +189,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 2, 2);
 
@@ -168,7 +206,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -180,7 +222,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
@@ -192,7 +238,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 1);
     }
@@ -204,7 +254,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
 //        AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 100, 2);
     }
@@ -216,7 +270,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -228,7 +286,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, 1);
     }
@@ -240,7 +302,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
@@ -252,7 +318,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
     }
@@ -264,7 +334,11 @@ public class GEO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
     }

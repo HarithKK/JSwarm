@@ -50,7 +50,11 @@ public class TestPSO {
         ObjectiveFunction fn = new AckleysFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -61,7 +65,11 @@ public class TestPSO {
         ObjectiveFunction fn = new BoothsFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -72,7 +80,11 @@ public class TestPSO {
         ObjectiveFunction fn = new MatyasFunction();
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -85,7 +97,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -97,7 +113,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -109,7 +129,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -121,7 +145,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -133,7 +161,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),20);
     }
@@ -145,7 +177,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -157,7 +193,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         Assertions.assertEquals(Mathamatics.round(algo.getBestDoubleValue(), LIMIT), 0);
 
@@ -170,7 +210,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -182,7 +226,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -194,7 +242,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -206,7 +258,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -218,7 +274,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -230,7 +290,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -242,7 +306,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
@@ -254,7 +322,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),1.25);
     }
@@ -266,7 +338,11 @@ public class TestPSO {
 
         algo = getAlgorithm(fn);
         algo.initialize();
-        algo.runOptimizer();
+        try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         double p = Mathamatics.round(algo.getBestDoubleValue(),LIMIT);
         Assertions.assertEquals(-117.5,p);

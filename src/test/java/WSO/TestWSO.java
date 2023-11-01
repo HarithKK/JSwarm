@@ -62,7 +62,11 @@ public class TestWSO {
             ObjectiveFunction fn = new AckleysFunction();
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -73,7 +77,11 @@ public class TestWSO {
             ObjectiveFunction fn = new BoothsFunction();
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -84,7 +92,11 @@ public class TestWSO {
             ObjectiveFunction fn = new MatyasFunction();
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -97,7 +109,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -109,7 +125,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -121,7 +141,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -133,7 +157,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -145,7 +173,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), PRECISION_VAL, LIMIT);
         }
@@ -157,7 +189,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -169,7 +205,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(),3, 1);
 
@@ -182,7 +222,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -194,7 +238,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -206,7 +254,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -218,7 +270,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn, 2000);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             AssertUtil.evaluate(algo.getBestDoubleValue(), fn.getExpectedBestValue(), 50, LIMIT);
         }
@@ -230,7 +286,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -242,7 +302,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -254,7 +318,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
         }
@@ -266,7 +334,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),10);
         }
@@ -278,7 +350,11 @@ public class TestWSO {
 
             algo = getAlgorithm(fn);
             algo.initialize();
+            try {
             algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
             AssertUtil.evaluate(algo.getBestDoubleValue(), 117.5, 20, LIMIT);
 

@@ -32,6 +32,7 @@ public class FunctionChartPlotter {
     private EmptyAction action;
 
     private int time = 10, bestIndex;
+    private int interval = 0;
 
     private boolean isExecute = false;
 
@@ -127,6 +128,7 @@ public class FunctionChartPlotter {
         }
         setExecute(true);
         algorithm.initialize();
+        algorithm.setInterval(interval);
         int step =0;
         double fraction = algorithm.getStepsCount()/100;
         algorithm.addStepAction(new Action() {
@@ -157,7 +159,7 @@ public class FunctionChartPlotter {
             }
         });
         try {
-            algorithm.runOptimizer(time);
+            algorithm.runOptimizer();
         } catch (Exception e) {
             if(e instanceof KillOptimizerException){
                 System.out.println("Optimizer was killed forcefully");
@@ -186,6 +188,7 @@ public class FunctionChartPlotter {
     }
 
     public void resume() {
+        algorithm.setInterval(interval);
         algorithm.resumeOptimizer();
     }
 
@@ -195,5 +198,9 @@ public class FunctionChartPlotter {
 
     public void stopOptimizer() {
         algorithm.stopOptimizer();
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
 }

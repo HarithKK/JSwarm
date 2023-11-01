@@ -41,7 +41,7 @@ public class MFA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Wolfs Are Not Initialized");
@@ -94,7 +94,7 @@ public class MFA extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted( step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
 

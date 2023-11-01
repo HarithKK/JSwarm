@@ -39,7 +39,7 @@ public class MS extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Monkeys Are Not Initialized");
         }
@@ -53,7 +53,7 @@ public class MS extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            stepCompleted(time, i);
+            stepCompleted(i);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;

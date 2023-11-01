@@ -30,6 +30,8 @@ public abstract class Algorithm implements Cloneable {
 
     private double meanBestValue = 0;
 
+    private int interval = 0;
+
     public Algorithm(
             ObjectiveFunction<Double> objectiveFunction,
             int stepsCount,
@@ -48,6 +50,7 @@ public abstract class Algorithm implements Cloneable {
         this.nanoDuration = nanoDuration;
         this.isPaused = false;
         this.isKilled = false;
+        this.setInterval(0);
     }
 
     protected Algorithm(){
@@ -61,12 +64,8 @@ public abstract class Algorithm implements Cloneable {
     protected long nanoDuration;
 
     private boolean isInitialized = false;
-
-    public void runOptimizer() throws Exception{
-        this.runOptimizer(0);
-    };
-
-    public abstract void runOptimizer(int time) throws Exception;
+    
+    public abstract void runOptimizer() throws Exception;
 
     public abstract void initialize();
 
@@ -107,7 +106,7 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction =a;
     }
 
-    public void stepCompleted(int time, long step) throws Exception {
+    public void stepCompleted(long step) throws Exception {
 
         this.currentStep = step;
 
@@ -119,11 +118,11 @@ public abstract class Algorithm implements Cloneable {
 
         this.bestValue = xValue;
 
-        if(time == 0){
+        if(this.interval == 0){
             return;
         }
         try {
-            Thread.sleep(time);
+            Thread.sleep(this.interval);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -294,5 +293,13 @@ public abstract class Algorithm implements Cloneable {
 
     public long getCurrentStep() {
         return currentStep;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
 }

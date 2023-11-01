@@ -57,7 +57,7 @@ public class GSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
@@ -91,7 +91,7 @@ public class GSO extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), (int)step);
-            stepCompleted(time, (int)step);
+            stepCompleted((int)step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
