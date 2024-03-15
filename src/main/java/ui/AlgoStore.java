@@ -381,6 +381,15 @@ public class AlgoStore {
                     0.5,
                     1.5
             );
+            case 29: return new org.usa.soc.tsoa.TSOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true
+            );
         }
         return null;
     }
@@ -388,6 +397,7 @@ public class AlgoStore {
     public static List<String> generateAlgo() {
         List<String> algo = new ArrayList<>();
 
+        algo.add("TSOA - Tree Search Optimization Algorithm");
         algo.add("PSO - Birds & Fishes");
         algo.add("ACO - Ants as a Colony");
         algo.add("CSO - Cats & Rats");
