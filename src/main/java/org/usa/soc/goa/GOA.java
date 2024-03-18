@@ -27,7 +27,7 @@ public class GOA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double cmin,
             double cmax,
             double intensityOfAttraction,
@@ -40,7 +40,7 @@ public class GOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.cmin = cmin;
         this.cmax = cmax;
         this.intensityOfAttraction = intensityOfAttraction;
@@ -134,7 +134,7 @@ public class GOA extends Algorithm {
     private void updateGbest(GrassHopper grassHopper) {
         grassHopper.getTotalDistanceVector().resetAllValues(0.0);
         double fgbest = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(grassHopper.getFitnessValue(), fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(grassHopper.getFitnessValue(), fgbest, isGlobalMinima)){
             this.gBest.setVector(grassHopper.getPosition());
         }
     }

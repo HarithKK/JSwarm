@@ -32,14 +32,14 @@ public class CSO extends Algorithm {
             boolean spc,
             double c,
             double w,
-            boolean isLocalMinima) {
+            boolean isGlobalMinima) {
 
         this.numberOfDimensions = numberOfDimensions;
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfCats = numberOfCats;
         this.seekersToTracersRatio = seekersToTracersRatio;
         this.smp = smp;
@@ -111,7 +111,7 @@ public class CSO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(cat.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(cat.getPosition().getClonedVector(), this.minBoundary, this.maxBoundary);
         }
     }

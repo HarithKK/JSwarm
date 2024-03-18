@@ -17,6 +17,9 @@ public class TSOA extends Algorithm {
     private List<Tree> trees;
     private double distanceFactor =0;
 
+    private double c1, c2;
+
+
     public TSOA(
             ObjectiveFunction objectiveFunction,
             int populationSize,
@@ -24,7 +27,8 @@ public class TSOA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima
+            boolean isGlobalMinima,
+            double distanceFactor
     ){
 
         this.objectiveFunction = objectiveFunction;
@@ -34,8 +38,11 @@ public class TSOA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
-        this.distanceFactor = 5;
+        this.isGlobalMinima = isGlobalMinima;
+        this.distanceFactor = distanceFactor;
+
+        this.c1 = 10;
+        this.c2 = 10;
 
         trees = new ArrayList<>(this.populationSize);
     }
@@ -46,6 +53,8 @@ public class TSOA extends Algorithm {
             throw new RuntimeException("Trees Are Not Initialized");
         }
         this.nanoDuration = System.nanoTime();
+
+        double distanceDecrement = distanceFactor/stepsCount;
 
         for(int step = 0; step< getStepsCount(); step++){
 
@@ -68,10 +77,35 @@ public class TSOA extends Algorithm {
                 totalDistance += t.getCalculatedDistance(predicted);
             }
 
-            for(int i = this.trees.size()/2; i <this.trees.size(); i++){
+            for(int i = 0; i <this.trees.size(); i++){
                 t = trees.get(i);
-                t.setPosition(predicted.operate(Vector.OPERATOR.ADD, Randoms.getRandomVector(numberOfDimensions, 1, this.distanceFactor)));
+
+                if(Randoms.rand(0,1)<0.5){
+                    Vector v1 = predicted.operate(Vector.OPERATOR.SUB, t.getlBest())
+                                    .operate(Vector.OPERATOR.MULP, c1)
+                                    .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
+                    Vector v2 = this.gBest.getClonedVector()
+                            .operate(Vector.OPERATOR.SUB, t.getlBest())
+                            .operate(Vector.OPERATOR.MULP, c2)
+                            .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
+                    t.setPosition(
+                            t.getPosition()
+                                    .operate(Vector.OPERATOR.ADD, v1)
+                                    .operate(Vector.OPERATOR.ADD, v2)
+                                    .operate(Vector.OPERATOR.MULP, distanceFactor)
+                                    .fixVector(minBoundary, maxBoundary)
+                    );
+                }else{
+                    t.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                }
+
+                t.setFitnessValue(objectiveFunction.setParameters(t.getPosition().getPositionIndexes()).call());
                 t.updateLambda(totalLabmda, totalDistance);
+                distanceFactor *= (1-distanceDecrement);
+                if(Validator.validateBestValue(t.getFitnessValue(), t.getlBestValue(), isGlobalMinima)){
+                    t.setlBest(t.getPosition());
+                    t.setlBestValue(t.getFitnessValue());
+                }
             }
 
             if(this.stepAction != null)
@@ -89,6 +123,8 @@ public class TSOA extends Algorithm {
         for(int i=0; i<this.populationSize; i++){
             Tree tree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
             tree.setFitnessValue(objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call());
+            tree.setlBest(tree.getPosition());
+            tree.setlBestValue(tree.getFitnessValue());
             this.trees.add(tree);
         }
 
@@ -97,7 +133,7 @@ public class TSOA extends Algorithm {
     private void updateGBest(Tree tree) {
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
             this.gBest.setVector(tree.getPosition());
         }
     }

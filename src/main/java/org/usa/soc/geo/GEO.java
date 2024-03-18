@@ -22,7 +22,7 @@ public class GEO extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double pa0,
             double paT,
             double pc0,
@@ -35,7 +35,7 @@ public class GEO extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.pa0 = pa0;
         this.paT = paT;
         this.pc0 = pc0;
@@ -82,13 +82,13 @@ public class GEO extends Algorithm {
                     Vector newX =  eagle.getPosition().operate(Vector.OPERATOR.ADD, p1.operate(Vector.OPERATOR.ADD, p2));
                     eagle.setPosition(newX.fixVector(minBoundary, maxBoundary));
                     eagle.setFitnessValue(objectiveFunction.setParameters(newX.getPositionIndexes()).call());
-                    eagle.updateLocalBest(isLocalMinima);
+                    eagle.updateLocalBest(isGlobalMinima);
                 }
             }
 
             for(Eagle eagle: eagles){
                 double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-                if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isLocalMinima)){
+                if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima)){
                     this.gBest.setVector(eagle.getLocalBestPositon());
                 }
             }
@@ -114,7 +114,7 @@ public class GEO extends Algorithm {
 
         for(Eagle eagle: eagles){
             double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-            if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isLocalMinima)){
+            if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima)){
                 this.gBest.setVector(eagle.getLocalBestPositon());
             }
         }

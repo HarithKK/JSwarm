@@ -25,7 +25,7 @@ public class TSA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ){
 
         this.objectiveFunction = objectiveFunction;
@@ -35,7 +35,7 @@ public class TSA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
 
         this.tunicates = new Tunicate[populationSize];
         this.pmax = 4;
@@ -116,7 +116,7 @@ public class TSA extends Algorithm {
     private void updateGBest(Tunicate tunicate) {
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
             this.gBest.setVector(tunicate.getPosition());
         }
     }

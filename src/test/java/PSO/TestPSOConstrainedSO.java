@@ -38,7 +38,11 @@ public class TestPSOConstrainedSO {
 
         p = (PSO)getAlgorithm(fn);
         p.initialize();
-        p.runOptimizer();
+        try {
+            p.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         List<Double> arr = p.getGBest().toAbsList(LIMIT);
         Assertions.assertEquals(1.0,arr.get(0));

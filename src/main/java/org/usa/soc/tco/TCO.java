@@ -25,14 +25,14 @@ public class TCO extends Algorithm {
                double evaporationRate,
                double r,
                double omega,
-               boolean isLocalMinima){
+               boolean isGlobalMinima){
 
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfTermites = numberOfTermites;
         this.p0 = p0;
         this.eRate = evaporationRate;
@@ -98,7 +98,7 @@ public class TCO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(ti.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(ti.getPosition());
         }
     }

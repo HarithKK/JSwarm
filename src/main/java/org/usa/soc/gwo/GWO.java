@@ -3,16 +3,21 @@ package org.usa.soc.gwo;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
+import org.usa.soc.tsoa.TreeComparator;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GWO extends Algorithm {
 
     private static final Double MAX_A = 2.0;
     private int numberOfWolfs;
     private Wolf alpha, beta, delta;
-    private Wolf[] wolfs;
+    private List<Wolf> wolfs;
 
     private Vector a;
 
@@ -22,18 +27,18 @@ public class GWO extends Algorithm {
                 int numberOfWolfs,
                 double[] minBoundary,
                 double[] maxBoundary,
-                boolean isLocalMinima){
+                boolean isGlobalMinima){
 
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfWolfs = numberOfWolfs;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.wolfs = new Wolf[numberOfWolfs];
+        this.wolfs = new ArrayList<>(numberOfWolfs);
 
         this.a = new Vector(numberOfDimensions);
         this.a.resetAllValues(MAX_A);
@@ -54,9 +59,10 @@ public class GWO extends Algorithm {
                 Vector newX = X1
                         .operate(Vector.OPERATOR.ADD, X2)
                         .operate(Vector.OPERATOR.ADD, X3)
-                        .operate(Vector.OPERATOR.DIV, 3.0);
+                        .operate(Vector.OPERATOR.DIV, 3.0)
+                        .fixVector(minBoundary, maxBoundary);
                 Double fitnessValue = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
-                if(Validator.validateBestValue(fitnessValue, w.getFitnessValue(), isLocalMinima)){
+                if(Validator.validateBestValue(fitnessValue, w.getFitnessValue(), isGlobalMinima)){
                     w.setPosition(newX);
                     w.setFitnessValue(fitnessValue);
                 }
@@ -76,7 +82,7 @@ public class GWO extends Algorithm {
     private Vector getUpdatedPositionVector(Wolf w, Wolf prey, Vector C, Vector A){
         Vector D = prey.getPosition().operate(Vector.OPERATOR.MULP, C).operate(Vector.OPERATOR.SUB, w.getPosition());
         Vector AD = A.operate(Vector.OPERATOR.MULP, D);
-        return w.getPosition().operate(Vector.OPERATOR.SUB, AD);
+        return w.getPosition().operate(Vector.OPERATOR.SUB, AD).fixVector(minBoundary, maxBoundary);
     }
 
     private Vector calcA(){
@@ -103,29 +109,37 @@ public class GWO extends Algorithm {
         for(int i =0;i< numberOfWolfs; i++){
             Wolf w = new Wolf(numberOfDimensions, minBoundary, maxBoundary);
             w.setFitnessValue(this.objectiveFunction.setParameters(w.getPosition().getPositionIndexes()).call());
-            wolfs[i] = w;
+            wolfs.add(w);
         }
 
-        this.alpha = wolfs[0].getClonedWolf();
-        this.beta = wolfs[1].getClonedWolf();
-        this.delta = wolfs[2].getClonedWolf();
+        Collections.sort(wolfs, new WolfComparator());
+
+        this.alpha = wolfs.get(0).getClonedWolf();
+        this.beta = wolfs.get(1).getClonedWolf();
+        this.delta = wolfs.get(2).getClonedWolf();
 
         updateWolfHirarchy();
     }
 
     private void updateWolfHirarchy(){
 
-        findAlpha();
-        findBeta();
-        findDelta();
+//        findAlpha();
+//        findBeta();
+//        findDelta();
+
+        Collections.sort(wolfs, new WolfComparator());
+
+        this.alpha = wolfs.get(0).getClonedWolf();
+        this.beta = wolfs.get(1).getClonedWolf();
+        this.delta = wolfs.get(2).getClonedWolf();
 
         this.gBest.setVector(this.alpha.getPosition());
     }
 
     private void findAlpha(){
         for(int j= 0;j < this.numberOfWolfs; j++){
-            if(Validator.validateBestValue(wolfs[j].getFitnessValue(), alpha.getFitnessValue(), isLocalMinima)){
-                this.alpha = wolfs[j].getClonedWolf();
+            if(Validator.validateBestValue(wolfs.get(j).getFitnessValue(), alpha.getFitnessValue(), isGlobalMinima)){
+                this.alpha = wolfs.get(j).getClonedWolf();
             }
         }
     }
@@ -134,11 +148,11 @@ public class GWO extends Algorithm {
         for(int j= 0;j < this.numberOfWolfs; j++){
             double falpha = alpha.getFitnessValue();
             double fbeta = beta.getFitnessValue();
-            double f = wolfs[j].getFitnessValue();
-            if(Validator.validateBestValue(f, fbeta, isLocalMinima) &&
-                    Validator.validateBestValue(falpha, fbeta, isLocalMinima)
+            double f = wolfs.get(j).getFitnessValue();
+            if(Validator.validateBestValue(f, fbeta, isGlobalMinima) &&
+                    Validator.validateBestValue(falpha, fbeta, isGlobalMinima)
             ){
-                this.beta = wolfs[j].getClonedWolf();
+                this.beta = wolfs.get(j).getClonedWolf();
             }
         }
     }
@@ -147,11 +161,11 @@ public class GWO extends Algorithm {
         for(int j= 0;j < this.numberOfWolfs; j++){
             double fbeta = beta.getFitnessValue();
             double fdelta = delta.getFitnessValue();
-            double f = wolfs[j].getFitnessValue();
-            if(Validator.validateBestValue(f, fdelta, isLocalMinima) &&
-                    Validator.validateBestValue(fbeta, fdelta, isLocalMinima)
+            double f = wolfs.get(j).getFitnessValue();
+            if(Validator.validateBestValue(f, fdelta, isGlobalMinima) &&
+                    Validator.validateBestValue(fbeta, fdelta, isGlobalMinima)
             ){
-                this.delta = wolfs[j].getClonedWolf();
+                this.delta = wolfs.get(j).getClonedWolf();
             }
         }
     }
@@ -161,7 +175,7 @@ public class GWO extends Algorithm {
         double[][] data = new double[this.numberOfDimensions][this.numberOfWolfs];
         for(int i=0; i< this.numberOfWolfs; i++){
             for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.wolfs[i].getPosition().getValue(j),2);
+                data[j][i] = Mathamatics.round(this.wolfs.get(i).getPosition().getValue(j),2);
             }
         }
         return data;

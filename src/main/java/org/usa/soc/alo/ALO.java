@@ -23,7 +23,7 @@ public class ALO extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ) {
         this.objectiveFunction = objectiveFunction;
         this.numberOfAnts = numberOfAnts;
@@ -31,7 +31,7 @@ public class ALO extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.ants = new Ant[numberOfAnts];
         this.antLions = new Ant[numberOfAnts];
@@ -74,7 +74,7 @@ public class ALO extends Algorithm {
             }
 
             for(int i=0; i<numberOfAnts; i++){
-                if(Validator.validateBestValue(ants[i].getFitnessValue(), antLions[i].getFitnessValue(), !isLocalMinima)){
+                if(Validator.validateBestValue(ants[i].getFitnessValue(), antLions[i].getFitnessValue(), !isGlobalMinima)){
                     antLions[i] = ants[i].cloneAnt();
                 }
             }
@@ -82,7 +82,7 @@ public class ALO extends Algorithm {
             Ant elite = antLions[0];
             for(int i=0; i<numberOfAnts; i++) {
                 Ant a = antLions[i];
-                if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isLocalMinima)){
+                if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima)){
                     elite = a.cloneAnt();
                 }else{
                     antLions[i] = elite.cloneAnt();
@@ -92,7 +92,7 @@ public class ALO extends Algorithm {
             if(Validator.validateBestValue(
                     objectiveFunction.setParameters(elite.getPosition().getPositionIndexes()).call(),
                     objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call(),
-                    isLocalMinima
+                    isGlobalMinima
             )){
                 this.gBest.setVector(elite.getPosition());
             }
@@ -179,7 +179,7 @@ public class ALO extends Algorithm {
             this.maxFs = Math.max(this.maxFs, antLion.getFitnessValue());
             this.minFs = Math.min(this.minFs, antLion.getFitnessValue());
 
-            if(Validator.validateBestValue(antLion.getFitnessValue(), elite.getFitnessValue(), isLocalMinima)){
+            if(Validator.validateBestValue(antLion.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima)){
                 elite = antLion;
             }
         }
@@ -188,7 +188,7 @@ public class ALO extends Algorithm {
 
     private int getAntLionIndexFromRouletteWheel(){
         double deltaFs = maxFs - minFs;
-        double fsb = isLocalMinima ? maxFs : minFs;
+        double fsb = isGlobalMinima ? maxFs : minFs;
         double p0 = Randoms.rand(0,1);
 
         for(int i=0; i<numberOfAnts; i++){

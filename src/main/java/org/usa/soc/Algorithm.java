@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class Algorithm implements Cloneable {
 
     private boolean isPaused, isKilled;
-    protected boolean isLocalMinima;
+    protected boolean isGlobalMinima;
 
     protected double[] minBoundary;
     protected double[] maxBoundary;
@@ -39,9 +39,9 @@ public abstract class Algorithm implements Cloneable {
             double[] minBoundary,
             double[] maxBoundary,
             long nanoDuration,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ) {
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.objectiveFunction = objectiveFunction;
@@ -87,7 +87,7 @@ public abstract class Algorithm implements Cloneable {
     }
 
     public boolean isMinima() {
-        return this.isLocalMinima;
+        return this.isGlobalMinima;
     }
 
     public String getBestVariables() {
@@ -173,6 +173,9 @@ public abstract class Algorithm implements Cloneable {
         return this.bestValue;
     }
 
+    public String getName(){
+        return this.getClass().getSimpleName();
+    }
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

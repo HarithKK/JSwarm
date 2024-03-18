@@ -22,7 +22,7 @@ public class ALSO extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double totalMass,
             double totalLength,
             double c1,
@@ -37,7 +37,7 @@ public class ALSO extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.c1 = c1;
         this.c2 = c2;
         this.Ib = Ib;
@@ -88,7 +88,7 @@ public class ALSO extends Algorithm {
                 lizard.setPosition(newP);
                 lizard.setFitnessValue(objectiveFunction.setParameters(newP.getPositionIndexes()).call());
 
-                if(Validator.validateBestValue(lizard.getFitnessValue(), lizard.getLbestValue(), isLocalMinima)){
+                if(Validator.validateBestValue(lizard.getFitnessValue(), lizard.getLbestValue(), isGlobalMinima)){
                     lizard.setLbest(lizard.getPosition());
                     lizard.setLbestValue(lizard.getFitnessValue());
                 }
@@ -127,12 +127,12 @@ public class ALSO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(lizard.getLbest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(lizard.getPosition());
             this.globalBest = fpbest;
         }
 
-        if(Validator.validateBestValue(fpbest, fgbest, !isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, !isGlobalMinima)){
             this.globalWorst = fpbest;
         }
     }

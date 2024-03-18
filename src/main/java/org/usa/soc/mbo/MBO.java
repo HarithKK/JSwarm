@@ -40,7 +40,7 @@ public class MBO extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double alpha,
             double minQueenSpeed,
             double maxQueenSpeed,
@@ -55,7 +55,7 @@ public class MBO extends Algorithm {
         this.stepsCount = steps;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.alpha = alpha;
         this.minQueenSpeed = minQueenSpeed;
         this.maxQueenSpeed = maxQueenSpeed;
@@ -87,14 +87,14 @@ public class MBO extends Algorithm {
                 q.setPosition(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
                 q.setSpeed(q.getSpeed() * this.alpha);
                 q.setEnergy(q.getEnergy() - i);
-                q.updateBestValue(this.objectiveFunction, this.isLocalMinima);
+                q.updateBestValue(this.objectiveFunction, this.isGlobalMinima);
                 updateSpermatheca(q);
             }
             sortQueensList();
 
             // came to the nest generate broods
             for (Queen q: queens) {
-                Brood b = q.generateBrood(this.objectiveFunction, this.mutationProbability, this.mutationCount, this.isLocalMinima);
+                Brood b = q.generateBrood(this.objectiveFunction, this.mutationProbability, this.mutationCount, this.isGlobalMinima);
                 if(b!=null){
                     this.broodsList.add(b);
                 }
@@ -105,7 +105,7 @@ public class MBO extends Algorithm {
             while(!this.broodsList.isEmpty()){
                 Brood b = this.broodsList.get(0);
                 Queen q = this.queens.get(this.queens.size()-1);
-                if(Validator.validateBestValue(b.getFitnessValue(), q.getpBest(), isLocalMinima)){
+                if(Validator.validateBestValue(b.getFitnessValue(), q.getpBest(), isGlobalMinima)){
                     q.setpBest(b.getFitnessValue());
                     sortQueensList();
                 }
@@ -128,7 +128,7 @@ public class MBO extends Algorithm {
         Collections.sort(this.queens, new Comparator<Queen>() {
             @Override
             public int compare(Queen o1, Queen o2) {
-                if(Validator.validateBestValue(o1.getpBest(), o2.getpBest(), isLocalMinima)){
+                if(Validator.validateBestValue(o1.getpBest(), o2.getpBest(), isGlobalMinima)){
                     return -1;
                 }else{
                     return 1;
@@ -141,7 +141,7 @@ public class MBO extends Algorithm {
         Collections.sort(this.broodsList, new Comparator<Brood>() {
             @Override
             public int compare(Brood o1, Brood o2) {
-                if(Validator.validateBestValue(o1.getFitnessValue(), o2.getFitnessValue(), isLocalMinima)){
+                if(Validator.validateBestValue(o1.getFitnessValue(), o2.getFitnessValue(), isGlobalMinima)){
                     return -1;
                 }else{
                     return 1;
@@ -185,7 +185,7 @@ public class MBO extends Algorithm {
             Queen queen = new Queen(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             queen.setSpeed(Randoms.rand(this.minQueenSpeed, this.maxQueenSpeed));
             queen.setEnergy(getStepsCount());
-            queen.updateBestValue(this.objectiveFunction, this.isLocalMinima);
+            queen.updateBestValue(this.objectiveFunction, this.isGlobalMinima);
             this.queens.add(queen);
             this.updateBestQueen(queen);
         }
@@ -197,7 +197,7 @@ public class MBO extends Algorithm {
             this.bestQueen = queen;
             return;
         }
-        if(Validator.validateBestValue(queen.getpBest(), this.bestQueen.getpBest(), isLocalMinima)){
+        if(Validator.validateBestValue(queen.getpBest(), this.bestQueen.getpBest(), isGlobalMinima)){
             this.bestQueen = queen;
         }
     }
@@ -226,7 +226,7 @@ public class MBO extends Algorithm {
                 numberOfDimensions,
                 minBoundary,
                 maxBoundary,
-                isLocalMinima,
+                isGlobalMinima,
                 alpha,
                 minQueenSpeed,
                 maxQueenSpeed,

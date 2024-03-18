@@ -12,6 +12,7 @@ import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.tco.TCO;
+import org.usa.soc.tsoa.TSOA;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
@@ -388,7 +389,8 @@ public class AlgoStore {
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
-                    true
+                    true,
+                    0.7
             );
         }
         return null;

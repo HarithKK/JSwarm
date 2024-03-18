@@ -24,14 +24,14 @@ public class CS extends Algorithm {
             double[] maxBoundary,
             double alpha,
             double pa,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ){
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfNests = numberOfNests;
         this.alpha = alpha;
         this.pa = pa;
@@ -61,7 +61,7 @@ public class CS extends Algorithm {
                 Double fj = this.objectiveFunction.setParameters(this.nests[j].getPosition().getPositionIndexes()).call();
                 Double fi = this.objectiveFunction.setParameters(this.nests[i].getPosition().getPositionIndexes()).call();
 
-                if(Validator.validateBestValue(fi, fj, isLocalMinima)){
+                if(Validator.validateBestValue(fi, fj, isGlobalMinima)){
                     this.nests[j].setPosition(cuckooPosition);
                 }
 
@@ -82,7 +82,7 @@ public class CS extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(nest.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(nest.getPosition());
         }
     }
@@ -94,7 +94,7 @@ public class CS extends Algorithm {
             Double fi = this.objectiveFunction.setParameters(nests[i0].getPosition().getPositionIndexes()).call();
             Double fj = this.objectiveFunction.setParameters(nests[i].getPosition().getPositionIndexes()).call();
 
-            if(Validator.validateBestValue(fi, fj, isLocalMinima)){
+            if(Validator.validateBestValue(fi, fj, isGlobalMinima)){
                 i0 = i;
             }
         }

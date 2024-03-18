@@ -6,6 +6,9 @@ import org.usa.soc.util.Randoms;
 public class Tree {
     private Vector position;
 
+    private Vector lBest;
+
+    private double lBestValue;
     private double fitnessValue;
     private double lambda = 0;
     private double distance = 0;
@@ -42,5 +45,21 @@ public class Tree {
 
     public void updateLambda(double totalLabmda, double totalDistance) {
         this.lambda = this.distance/(totalLabmda * totalDistance);
+    }
+
+    public Vector getlBest() {
+        return lBest;
+    }
+
+    public void setlBest(Vector lBest) {
+        this.lBest = lBest;
+    }
+
+    public double getlBestValue() {
+        return lBestValue;
+    }
+
+    public void setlBestValue(double lBestValue) {
+        this.lBestValue = lBestValue;
     }
 }

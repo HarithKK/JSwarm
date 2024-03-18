@@ -33,7 +33,7 @@ public class GSO extends Algorithm {
                double rs,
                double beta,
                double s,
-               boolean isLocalMinima){
+               boolean isGlobalMinima){
 
         this.numberOfDimensions = numberOfDimensions;
         this.objectiveFunction = objectiveFunction;
@@ -41,7 +41,7 @@ public class GSO extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.gBest = new Vector(numberOfDimensions).setMaxVector();
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfGlowWorms = numberOfGlowWorms;
         this.l0 = initiallLuciferinContent;
         this.ldc = luciferinDecayConstant;
@@ -119,7 +119,7 @@ public class GSO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(ithWarm.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(ithWarm.getPosition());
         }
     }
