@@ -45,7 +45,7 @@ public class MFA extends Algorithm {
     public void runOptimizer() throws Exception {
 
         if(!this.isInitialized()){
-            throw new RuntimeException("Wolfs Are Not Initialized");
+            throw new RuntimeException("Moths Are Not Initialized");
         }
 
         this.nanoDuration = System.nanoTime();
