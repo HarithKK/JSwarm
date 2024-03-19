@@ -30,7 +30,8 @@ public class TSOA extends Algorithm {
             double[] minBoundary,
             double[] maxBoundary,
             boolean isGlobalMinima,
-            double distanceFactor
+            double distanceFactor,
+            int seedsCount
     ){
 
         this.objectiveFunction = objectiveFunction;
@@ -42,6 +43,7 @@ public class TSOA extends Algorithm {
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.isGlobalMinima = isGlobalMinima;
         this.distanceFactor = distanceFactor;
+        this.seedsCount = seedsCount;
 
         this.c1 = 10;
         this.c2 = 10;
@@ -51,7 +53,6 @@ public class TSOA extends Algorithm {
 
     @Override
     public void runOptimizer() throws Exception {
-        System.out.println(this.objectiveFunction.getClass().getSimpleName());
         if(!this.isInitialized()){
             throw new RuntimeException("Trees Are Not Initialized");
         }
@@ -63,25 +64,24 @@ public class TSOA extends Algorithm {
         int totalSeedsCount = deligator*seedsCount;
 
         for(int step = 0; step< getStepsCount(); step++){
-            System.out.println(step);
             Vector predicted = new Vector(this.numberOfDimensions);
-            Tree t = null;
 
             for(int i =0; i <this.trees.size(); i++){
-                t = trees.get(i);
+                Tree t = trees.get(i);
                 predicted = predicted.operate(Vector.OPERATOR.ADD, t.getPosition().operate(Vector.OPERATOR.MULP, t.getLambda()));
             }
 
             double totalLabmda = 0;
             double totalDistance = 0;
             for(int i =0; i <this.trees.size(); i++){
-                t = trees.get(i);
+                Tree t = trees.get(i);
                 totalLabmda += t.getLambda();
                 totalDistance += t.getCalculatedDistance(predicted);
             }
 
             for(int i = 0; i < deligator; i++){
-                t = trees.get(i);
+                Tree t = trees.get(i);
+                t.updateLambda(totalLabmda, totalDistance);
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
                     if(Randoms.rand(0,1) < 0.5){
@@ -110,9 +110,10 @@ public class TSOA extends Algorithm {
                     }
                     newTree.setlBest(newTree.getPosition());
                     newTree.setlBestValue(newTree.getFitnessValue());
+                    newTree.setLambda(t.getLambda());
                     this.trees.add(newTree);
                 }
-                t.updateLambda(totalLabmda, totalDistance);
+
                 distanceFactor *= (1-distanceDecrement);
             }
 

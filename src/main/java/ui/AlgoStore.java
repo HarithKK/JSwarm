@@ -390,7 +390,8 @@ public class AlgoStore {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    0.5
+                    0.7,
+                    2
             );
         }
         return null;

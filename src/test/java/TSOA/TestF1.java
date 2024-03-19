@@ -147,13 +147,6 @@ public class TestF1 {
     public void testGWO() {
         try {
             Algorithm algo = new AlgoStore(12, new Function1(n)).getAlgorithm(steps, p);
-
-            algo.addStepAction(new Action() {
-                @Override
-                public void performAction(Vector best, Double bestValue, int step) {
-                    System.out.println(bestValue);
-                }
-            });
             algo.initialize();
             algo.runOptimizer();
             System.out.println(algo.getName() + "  : " +algo.getBestDoubleValue());

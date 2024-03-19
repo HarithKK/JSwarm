@@ -24,7 +24,8 @@ public class TestTSOA {
                 fn.getMin(),
                 fn.getMax(),
                 true,
-                df
+                df,
+                2
         );
     }
 

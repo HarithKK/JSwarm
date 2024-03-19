@@ -15,7 +15,7 @@ public class Tree {
 
     public Tree(int numberOfDimensions,double[] minBoundary, double[] maxBoundary) {
         this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0,1);
-        this.lambda = 1;
+        this.setLambda(1);
     }
 
     public Vector getPosition() {
@@ -44,7 +44,7 @@ public class Tree {
     }
 
     public void updateLambda(double totalLabmda, double totalDistance) {
-        this.lambda = this.distance/(totalLabmda * totalDistance);
+        this.setLambda(this.distance/(totalLabmda * totalDistance));
     }
 
     public Vector getlBest() {
@@ -61,5 +61,11 @@ public class Tree {
 
     public void setlBestValue(double lBestValue) {
         this.lBestValue = lBestValue;
+    }
+
+    public void setLambda(double lambda) {
+        if(!Double.isNaN(lambda)){
+            this.lambda = lambda;
+        }
     }
 }
