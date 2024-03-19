@@ -3,6 +3,7 @@ package org.usa.soc.tsoa;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.core.Vector;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -19,6 +20,7 @@ public class TSOA extends Algorithm {
 
     private double c1, c2;
 
+    private int seedsCount = 2;
 
     public TSOA(
             ObjectiveFunction objectiveFunction,
@@ -44,11 +46,12 @@ public class TSOA extends Algorithm {
         this.c1 = 10;
         this.c2 = 10;
 
-        trees = new ArrayList<>(this.populationSize);
+        trees = new ArrayList<>();
     }
 
     @Override
     public void runOptimizer() throws Exception {
+        System.out.println(this.objectiveFunction.getClass().getSimpleName());
         if(!this.isInitialized()){
             throw new RuntimeException("Trees Are Not Initialized");
         }
@@ -56,11 +59,11 @@ public class TSOA extends Algorithm {
 
         double distanceDecrement = distanceFactor/stepsCount;
 
+        int deligator = (int)(trees.size()/2);
+        int totalSeedsCount = deligator*seedsCount;
+
         for(int step = 0; step< getStepsCount(); step++){
-
-            Collections.sort(trees, new TreeComparator());
-            updateGBest(trees.get(0));
-
+            System.out.println(step);
             Vector predicted = new Vector(this.numberOfDimensions);
             Tree t = null;
 
@@ -77,35 +80,47 @@ public class TSOA extends Algorithm {
                 totalDistance += t.getCalculatedDistance(predicted);
             }
 
-            for(int i = 0; i <this.trees.size(); i++){
+            for(int i = 0; i < deligator; i++){
                 t = trees.get(i);
+                for(int j =0; j< seedsCount; j++){
+                    Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
+                    if(Randoms.rand(0,1) < 0.5){
+                        Vector v1 = predicted.operate(Vector.OPERATOR.SUB, t.getlBest())
+                                .operate(Vector.OPERATOR.MULP, c1)
+                                .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
+                        Vector v2 = this.gBest.getClonedVector()
+                                .operate(Vector.OPERATOR.SUB, t.getlBest())
+                                .operate(Vector.OPERATOR.MULP, c2)
+                                .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
+                        newTree.setPosition(
+                                t.getPosition()
+                                        .operate(Vector.OPERATOR.ADD, v1)
+                                        .operate(Vector.OPERATOR.ADD, v2)
+                                        .operate(Vector.OPERATOR.MULP, distanceFactor)
+                                        .fixVector(minBoundary, maxBoundary)
+                        );
+                    }else{
+                        newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                    }
 
-                if(Randoms.rand(0,1)<0.5){
-                    Vector v1 = predicted.operate(Vector.OPERATOR.SUB, t.getlBest())
-                                    .operate(Vector.OPERATOR.MULP, c1)
-                                    .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
-                    Vector v2 = this.gBest.getClonedVector()
-                            .operate(Vector.OPERATOR.SUB, t.getlBest())
-                            .operate(Vector.OPERATOR.MULP, c2)
-                            .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
-                    t.setPosition(
-                            t.getPosition()
-                                    .operate(Vector.OPERATOR.ADD, v1)
-                                    .operate(Vector.OPERATOR.ADD, v2)
-                                    .operate(Vector.OPERATOR.MULP, distanceFactor)
-                                    .fixVector(minBoundary, maxBoundary)
-                    );
-                }else{
-                    t.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                    newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                    if(Validator.validateBestValue(newTree.getFitnessValue(), t.getlBestValue(), isGlobalMinima)){
+                        t.setlBest(newTree.getPosition());
+                        t.setlBestValue(newTree.getFitnessValue());
+                    }
+                    newTree.setlBest(newTree.getPosition());
+                    newTree.setlBestValue(newTree.getFitnessValue());
+                    this.trees.add(newTree);
                 }
-
-                t.setFitnessValue(objectiveFunction.setParameters(t.getPosition().getPositionIndexes()).call());
                 t.updateLambda(totalLabmda, totalDistance);
                 distanceFactor *= (1-distanceDecrement);
-                if(Validator.validateBestValue(t.getFitnessValue(), t.getlBestValue(), isGlobalMinima)){
-                    t.setlBest(t.getPosition());
-                    t.setlBestValue(t.getFitnessValue());
-                }
+            }
+
+            Collections.sort(trees, new TreeComparator());
+            updateGBest(trees.get(0));
+
+            for(int i = 0; i < totalSeedsCount; i++){
+                trees.remove(trees.size()-1);
             }
 
             if(this.stepAction != null)
@@ -128,6 +143,8 @@ public class TSOA extends Algorithm {
             this.trees.add(tree);
         }
 
+        Collections.sort(trees, new TreeComparator());
+        updateGBest(trees.get(0));
     }
 
     private void updateGBest(Tree tree) {
@@ -140,6 +157,12 @@ public class TSOA extends Algorithm {
 
     @Override
     public double[][] getDataPoints() {
-        return new double[0][];
+        double[][] data = new double[this.numberOfDimensions][this.populationSize];
+        for(int i=0; i< this.populationSize; i++){
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(this.trees.get(i).getPosition().getValue(j),2);
+            }
+        }
+        return data;
     }
 }

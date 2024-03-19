@@ -390,7 +390,7 @@ public class AlgoStore {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    0.7
+                    0.5
             );
         }
         return null;
@@ -399,7 +399,6 @@ public class AlgoStore {
     public static List<String> generateAlgo() {
         List<String> algo = new ArrayList<>();
 
-        algo.add("TSOA - Tree Search Optimization Algorithm");
         algo.add("PSO - Birds & Fishes");
         algo.add("ACO - Ants as a Colony");
         algo.add("CSO - Cats & Rats");
@@ -429,6 +428,7 @@ public class AlgoStore {
         algo.add("CHOA_SINGER - Chimps");
         algo.add("CHOA_TENT - Chimps");
         algo.add("GOA - Grass Hopper");
+        algo.add("TSOA - Tree Search Optimization Algorithm");
         
         return algo;
     }

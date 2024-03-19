@@ -35,13 +35,14 @@ public class MFA extends Algorithm {
         this.numberOfMoths = numberOfMoths;
         this.b = b;
 
-        this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
+        this.gBest = isGlobalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
+
         this.moths = new Moth[numberOfMoths];
         this.flames = new ArrayList<>(numberOfMoths);
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void runOptimizer() throws Exception {
 
         if(!this.isInitialized()){
             throw new RuntimeException("Wolfs Are Not Initialized");
@@ -94,7 +95,7 @@ public class MFA extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted( step);
+            stepCompleted(step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
 
