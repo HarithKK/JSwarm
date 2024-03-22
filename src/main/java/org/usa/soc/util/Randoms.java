@@ -13,6 +13,12 @@ public class Randoms {
         return ThreadLocalRandom.current().nextDouble(min, max+1);
     }
 
+    public static double randLBmax (double min, double max) {
+        if(max == min)
+            return max;
+        return ThreadLocalRandom.current().nextDouble(min, max);
+    }
+
     public static double randAny (double f1, double f2) {
 
         if(Double.isNaN(f1) || Double.isNaN(f2)){

@@ -123,7 +123,6 @@ public class TSOA extends Algorithm {
             for(int i = 0; i < totalSeedsCount; i++){
                 trees.remove(trees.size()-1);
             }
-
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
             stepCompleted(step);

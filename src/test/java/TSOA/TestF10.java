@@ -1,17 +1,13 @@
 package TSOA;
 
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
+import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
+import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import ui.AlgoStore;
 import utils.Utils;
 
@@ -29,21 +25,22 @@ import static utils.Utils.calcStd;
  *  ABC
  *  CSO
  */
-
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestF1 {
+public class TestF10 {
 
     int n = 100;
+    //
     int p = 30;
     int steps = 1000;
 
-    String filepath = "data/result_f1.csv";
+    String filepath = "data/result_f10.csv";
 
-    static String testName = "F1";
+    String testName = "F10";
 
     public ObjectiveFunction getFunction(){
-        return new Function1(n);
+        return new Function10(n);
     }
+
 
     List<Double> tsoa = new ArrayList<>();
     List<Double> ssa = new ArrayList<>();
@@ -70,7 +67,7 @@ public class TestF1 {
                         + avoa.stream().mapToDouble(d -> (Double)d).average().getAsDouble() + ","
                         + tsa.stream().mapToDouble(d -> (Double)d).average().getAsDouble() + ","
                         + gwo.stream().mapToDouble(d -> (Double)d).average().getAsDouble() + "\n"
-                );
+        );
         Utils.writeToFile("data/result_std.csv",
                 testName + ","
                         + calcStd(tsoa) + ","
@@ -99,7 +96,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testSSA() {
         try {
             Algorithm algo = new AlgoStore(19, getFunction()).getAlgorithm(steps, p);
@@ -112,7 +109,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testMFA() {
         try {
             Algorithm algo = new AlgoStore(13, getFunction()).getAlgorithm(steps, p);
@@ -125,7 +122,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testCSO() {
         try {
             Algorithm algo = new AlgoStore(2, getFunction()).getAlgorithm(steps, p);
@@ -138,7 +135,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testPSO() {
         try {
             Algorithm algo = new AlgoStore(0, getFunction()).getAlgorithm(steps, p);
@@ -151,7 +148,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testALSO() {
         try {
             Algorithm algo = new AlgoStore(15, getFunction()).getAlgorithm(steps, p);
@@ -164,7 +161,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testBA() {
         try {
             Algorithm algo = new AlgoStore(10, getFunction()).getAlgorithm(steps, p);
@@ -178,7 +175,7 @@ public class TestF1 {
     }
 
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testAVOA() {
         try {
             Algorithm algo = new AlgoStore(17, getFunction()).getAlgorithm(steps, p);
@@ -191,7 +188,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testTSA() {
         try {
             Algorithm algo = new AlgoStore(18, getFunction()).getAlgorithm(steps, p);
@@ -204,7 +201,7 @@ public class TestF1 {
         }
     }
 
-     @RepeatedTest(10)
+    @RepeatedTest(10)
     public void testGWO() {
         try {
             Algorithm algo = new AlgoStore(12, getFunction()).getAlgorithm(steps, p);

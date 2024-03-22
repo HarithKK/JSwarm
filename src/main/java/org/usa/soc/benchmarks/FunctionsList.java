@@ -1,6 +1,7 @@
 package org.usa.soc.benchmarks;
 
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.PowellSumFunction;
@@ -31,7 +32,8 @@ public class FunctionsList {
                 new StyblinskiTangFunction(),
                 new ThreeHumpCamelFunction(),
                 new ChungReynoldsSquares(),
-                new SumSquares()
+                new SumSquares(),
+                new Function8(2)
         };
     }
 }
