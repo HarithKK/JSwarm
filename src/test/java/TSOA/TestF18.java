@@ -1,12 +1,15 @@
 package TSOA;
 
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.TestInstance;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
+import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
 import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function6;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function7;
 import ui.AlgoStore;
 import utils.Utils;
 
@@ -25,7 +28,7 @@ import static utils.Utils.calcStd;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestF7 {
+public class TestF18 {
     int n = 100;
     int p = 30;
     int steps = 1000;
@@ -35,7 +38,7 @@ public class TestF7 {
     String testName;
 
     public ObjectiveFunction getFunction(){
-        return new Function7(n);
+        return new Function18(n);
     }
 
     List<Double> tsoa = new ArrayList<>();

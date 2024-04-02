@@ -10,6 +10,10 @@ public class Commons {
         return d;
     }
 
+    public static double computeWeight(double lambda, double sigma){
+        return Math.exp(-sigma) * (Math.pow(1 + Math.exp(-lambda), -1));
+    }
+
     public static int rouletteWheelSelection(double[] probabilityArray){
         double totalSum = Arrays.stream(probabilityArray).sum();
         double rand = Randoms.rand(0, totalSum);

@@ -21,6 +21,8 @@ public class TSOA extends Algorithm {
     private double c1, c2;
 
     private int seedsCount = 2;
+    private double delegator_split = 0.3;
+    private double p = -1;
 
     public TSOA(
             ObjectiveFunction objectiveFunction,
@@ -60,7 +62,7 @@ public class TSOA extends Algorithm {
 
         double distanceDecrement = distanceFactor/stepsCount;
 
-        int deligator = (int)(trees.size()/2);
+        int deligator = (int)(trees.size() * delegator_split);
         int totalSeedsCount = deligator*seedsCount;
 
         for(int step = 0; step< getStepsCount(); step++){
@@ -76,12 +78,12 @@ public class TSOA extends Algorithm {
             for(int i =0; i <this.trees.size(); i++){
                 Tree t = trees.get(i);
                 totalLabmda += t.getLambda();
-                totalDistance += t.getCalculatedDistance(predicted);
+                totalDistance += Math.pow(t.getCalculatedDistance(predicted), -p);
             }
 
             for(int i = 0; i < deligator; i++){
                 Tree t = trees.get(i);
-                t.updateLambda(totalLabmda, totalDistance);
+                t.updateLambda(p, totalLabmda, totalDistance);
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
                     if(Randoms.rand(0,1) < 0.5){
@@ -92,11 +94,11 @@ public class TSOA extends Algorithm {
                                 .operate(Vector.OPERATOR.SUB, t.getlBest())
                                 .operate(Vector.OPERATOR.MULP, c2)
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
+                        Vector vx = v1.operate(Vector.OPERATOR.ADD, v2)
+                                        .operate(Vector.OPERATOR.MULP, distanceFactor);
                         newTree.setPosition(
                                 t.getPosition()
-                                        .operate(Vector.OPERATOR.ADD, v1)
-                                        .operate(Vector.OPERATOR.ADD, v2)
-                                        .operate(Vector.OPERATOR.MULP, distanceFactor)
+                                        .operate(Vector.OPERATOR.ADD, vx)
                                         .fixVector(minBoundary, maxBoundary)
                         );
                     }else{

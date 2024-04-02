@@ -1,12 +1,14 @@
 package TSOA;
 
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.TestInstance;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function6;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function7;
+import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function22;
+import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function23;
 import ui.AlgoStore;
 import utils.Utils;
 
@@ -25,8 +27,7 @@ import static utils.Utils.calcStd;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestF7 {
-    int n = 100;
+public class TestF23 {
     int p = 30;
     int steps = 1000;
 
@@ -35,7 +36,7 @@ public class TestF7 {
     String testName;
 
     public ObjectiveFunction getFunction(){
-        return new Function7(n);
+        return new Function23();
     }
 
     List<Double> tsoa = new ArrayList<>();
@@ -111,7 +112,6 @@ public class TestF7 {
         this.filepath = "data/result_"+ this.getClass().getSimpleName()+".csv";
         this.testName = this.getClass().getSimpleName();
     }
-
     @RepeatedTest(10)
     public void testTSOA() {
         try {

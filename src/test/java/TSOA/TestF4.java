@@ -1,12 +1,10 @@
 package TSOA;
 
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.usa.soc.Algorithm;
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
 import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function4;
 import ui.AlgoStore;
 import utils.Utils;
@@ -32,14 +30,13 @@ public class TestF4 {
     int p = 30;
     int steps = 1000;
 
-    String filepath = "data/result_f4.csv";
+    String filepath;
 
-    String testName = "F4";
+    String testName;
 
     public ObjectiveFunction getFunction(){
         return new Function4(n);
     }
-
 
     List<Double> tsoa = new ArrayList<>();
     List<Double> ssa = new ArrayList<>();
@@ -54,6 +51,7 @@ public class TestF4 {
 
     @AfterAll
     public void printToFile(){
+
         Utils.writeToFile("data/result_mean.csv",
                 testName + ","
                         + tsoa.stream().mapToDouble(d -> (Double)d).average().getAsDouble() + ","
@@ -80,6 +78,38 @@ public class TestF4 {
                         + calcStd(tsa) + ","
                         + calcStd(gwo) + "\n"
         );
+        Utils.writeToFile("data/result_min.csv",
+                testName + ","
+                        + tsoa.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + ssa.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + mfa.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + cso.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + pso.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + also.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + ba.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + avoa.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + tsa.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + ","
+                        + gwo.stream().mapToDouble(d -> (Double)d).min().getAsDouble() + "\n"
+        );
+        Utils.writeToFile("data/result_max.csv",
+                testName + ","
+                        + tsoa.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + ssa.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + mfa.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + cso.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + pso.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + also.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + ba.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + avoa.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + tsa.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + ","
+                        + gwo.stream().mapToDouble(d -> (Double)d).max().getAsDouble() + "\n"
+        );
+    }
+
+    @BeforeAll
+    public void setPath(){
+        this.filepath = "data/result_"+ this.getClass().getSimpleName()+".csv";
+        this.testName = this.getClass().getSimpleName();
     }
 
     @RepeatedTest(10)

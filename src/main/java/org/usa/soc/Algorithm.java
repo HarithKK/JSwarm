@@ -18,6 +18,8 @@ public abstract class Algorithm implements Cloneable {
     protected double[] minBoundary;
     protected double[] maxBoundary;
 
+    private List<Double> history = new ArrayList<>();
+
     protected Action stepAction;
 
     protected ObjectiveFunction<Double> objectiveFunction;
@@ -116,6 +118,7 @@ public abstract class Algorithm implements Cloneable {
         calculateConvergenceValue(step, xValue);
         calculateGradiantDecent(step, xValue);
 
+        getHistory().add(xValue);
         this.bestValue = xValue;
 
         if(this.interval == 0){
@@ -304,5 +307,9 @@ public abstract class Algorithm implements Cloneable {
 
     public void setInterval(int interval) {
         this.interval = interval;
+    }
+
+    public List<Double> getHistory() {
+        return history;
     }
 }

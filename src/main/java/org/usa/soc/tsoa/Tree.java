@@ -43,8 +43,9 @@ public class Tree {
         return this.distance;
     }
 
-    public void updateLambda(double totalLabmda, double totalDistance) {
-        this.setLambda(this.distance/(totalLabmda * totalDistance));
+    public void updateLambda(double p, double totalLabmda, double totalDistance) {
+        this.setLambda(Math.pow(this.distance, -p) / ((totalDistance)* totalLabmda));
+        //this.setLambda(this.distance/(totalLabmda * totalDistance));
     }
 
     public Vector getlBest() {

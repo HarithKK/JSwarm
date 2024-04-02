@@ -45,7 +45,7 @@ public class TestTSOA {
     public void testFunction1Function() {
 
         ObjectiveFunction fn = new Function1(100);
-        algo = getAlgorithm(fn, 500, 1000, 0.7);
+        algo = getAlgorithm(fn, 30, 1000, 0.7);
         algo.addStepAction(new Action() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {

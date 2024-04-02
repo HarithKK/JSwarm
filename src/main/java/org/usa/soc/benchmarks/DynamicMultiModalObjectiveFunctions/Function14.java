@@ -6,10 +6,10 @@ import org.usa.soc.util.Commons;
 
 import java.util.Arrays;
 
-public class Function12 extends DynamicObjectiveFunction {
+public class Function14 extends DynamicObjectiveFunction {
 
-    public Function12(int n){
-        super(n, -50, 50, -30, 0);
+    public Function14(int n){
+        super(n, -100, 100, -100,-39.17);
     }
 
     private double Y(int i){
@@ -29,17 +29,7 @@ public class Function12 extends DynamicObjectiveFunction {
     @Override
     public Double call() {
 
-        double y1 = 10*Math.sin(Math.PI * Y(0));
-        double y2 = 0;
-
-        for(int i=0; i<getNumberOfDimensions()-1; i++){
-            y2 += Math.pow(Y(i)-1,2) * (1 + 10*Math.pow(Math.sin(Math.PI*Y(i+1)),2));
-        }
-
-        double y3 = Math.pow(Y(getNumberOfDimensions()-1)-1,2);
-        double y4 = Arrays.stream(super.getParameters()).mapToDouble(d-> U((double)d, 10, 100, 4)).sum();
-
-        return (Math.PI * (y1 + y2+ y3) / getNumberOfDimensions()) + y4;
+       return 0.5 * Arrays.stream(super.getParameters()).mapToDouble(d->Math.pow((double)d,4)- 16*Math.pow((double)d,2) + (5*(double)d)).sum();
     }
 
 }

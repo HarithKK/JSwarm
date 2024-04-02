@@ -1,20 +1,17 @@
 package org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions;
 
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.DynamicObjectiveFunction;
 import org.usa.soc.util.Commons;
 
-public class Function2 extends ObjectiveFunction {
-    private int numberOfDimensions = 100;
-    private double[] min;
-    private double[] max;
-
-    private double[] expected;
+public class Function2 extends DynamicObjectiveFunction {
 
     public  Function2(int n){
-        this.numberOfDimensions = n;
-        min = Commons.fill(-10, n);
-        max = Commons.fill(10, n);
-        expected = Commons.fill(-3, n);
+       super(n, -10, 10, 3, 0);
+    }
+
+    public  Function2(int n, double p, double q){
+        super(n, p, q, -30, 0);
     }
 
     @Override
@@ -27,30 +24,5 @@ public class Function2 extends ObjectiveFunction {
             dot *= data;
         }
         return sum + dot;
-    }
-
-    @Override
-    public int getNumberOfDimensions() {
-        return numberOfDimensions;
-    }
-
-    @Override
-    public double[] getMin() {
-        return min;
-    }
-
-    @Override
-    public double[] getMax() {
-        return max;
-    }
-
-    @Override
-    public double getExpectedBestValue() {
-        return 0;
-    }
-
-    @Override
-    public double[] getExpectedParameters() {
-        return expected;
     }
 }

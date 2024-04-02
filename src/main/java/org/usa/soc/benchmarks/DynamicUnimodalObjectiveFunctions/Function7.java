@@ -1,23 +1,20 @@
 package org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions;
 
 import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.benchmarks.DynamicObjectiveFunction;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.Randoms;
 
 import java.util.Arrays;
 
-public class Function7 extends ObjectiveFunction {
-    private int numberOfDimensions = 100;
-    private double[] min;
-    private double[] max;
-
-    private double[] expected;
+public class Function7 extends DynamicObjectiveFunction {
 
     public Function7(int n){
-        this.numberOfDimensions = n;
-        min = Commons.fill(-1.28, n);
-        max = Commons.fill(1.28, n);
-        expected = Commons.fill(-0.25, n);
+        super(n, -1.28, 1.28, -0.25, 0);
+    }
+
+    public  Function7(int n, double p, double q){
+        super(n, p, q, -30, 0);
     }
 
     @Override
@@ -28,30 +25,5 @@ public class Function7 extends ObjectiveFunction {
             sum += i* Math.pow(data,4) + Randoms.randLBmax(0, 1);
         }
         return sum;
-    }
-
-    @Override
-    public int getNumberOfDimensions() {
-        return numberOfDimensions;
-    }
-
-    @Override
-    public double[] getMin() {
-        return min;
-    }
-
-    @Override
-    public double[] getMax() {
-        return max;
-    }
-
-    @Override
-    public double getExpectedBestValue() {
-        return 0;
-    }
-
-    @Override
-    public double[] getExpectedParameters() {
-        return expected;
     }
 }
