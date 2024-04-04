@@ -75,10 +75,10 @@ public class Queen {
         return new Brood(fValue);
 
     }
-    public void updateBestValue(ObjectiveFunction fn, boolean isLocalMinima){
+    public void updateBestValue(ObjectiveFunction fn, boolean isGlobalMinima){
         double sb = fn.setParameters(this.position.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(sb, this.getpBest(), isLocalMinima)){
+        if(Validator.validateBestValue(sb, this.getpBest(), isGlobalMinima)){
             this.setpBest(sb);
             this.setBestPosition(this.position.getClonedVector());
         }

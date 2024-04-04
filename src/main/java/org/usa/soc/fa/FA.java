@@ -26,14 +26,14 @@ public class FA extends Algorithm {
               double characteristicLength,
               double alpha,
               double beta0,
-              boolean isLocalMinima){
+              boolean isGlobalMinima){
 
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.characteristicLength = characteristicLength;
         this.gama = 1 / Math.pow(characteristicLength, 2);
         this.alpha = alpha;
@@ -44,7 +44,7 @@ public class FA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Nests Are Not Initialized");
@@ -89,7 +89,7 @@ public class FA extends Algorithm {
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted(step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -98,7 +98,7 @@ public class FA extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(fi.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(fi.getPosition());
         }
     }

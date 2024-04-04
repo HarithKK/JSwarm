@@ -12,6 +12,7 @@ import org.usa.soc.mbo.MBO;
 import org.usa.soc.ms.MS;
 import org.usa.soc.pso.PSO;
 import org.usa.soc.tco.TCO;
+import org.usa.soc.tsoa.TSOA;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.wso.WSO;
@@ -223,8 +224,7 @@ public class AlgoStore {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    10,
-                    10,
+                    10, 210,
                     2.5,
                     1.0,
                     10,
@@ -381,6 +381,17 @@ public class AlgoStore {
                     0.5,
                     1.5
             );
+            case 29: return new org.usa.soc.tsoa.TSOA(
+                    fn,
+                    ac,
+                    sc,
+                    fn.getNumberOfDimensions(),
+                    fn.getMin(),
+                    fn.getMax(),
+                    true,
+                    0.7,
+                    10
+            );
         }
         return null;
     }
@@ -417,6 +428,7 @@ public class AlgoStore {
         algo.add("CHOA_SINGER - Chimps");
         algo.add("CHOA_TENT - Chimps");
         algo.add("GOA - Grass Hopper");
+        algo.add("TSOA - Tree Search Optimization Algorithm");
         
         return algo;
     }

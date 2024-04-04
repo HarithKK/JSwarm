@@ -20,14 +20,14 @@ public class ABC extends Algorithm {
               double[] minBoundary,
               double[] maxBoundary,
               int maxTrials,
-              boolean isLocalMinima){
+              boolean isGlobalMinima){
 
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfFoodSources = numberOfFoodSources;
         this.maxTrials = maxTrials;
 
@@ -37,7 +37,7 @@ public class ABC extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Food Sources Are Not Initialized");
         }
@@ -58,7 +58,7 @@ public class ABC extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted(step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -93,7 +93,7 @@ public class ABC extends Algorithm {
     private void updateGbest(FoodSource f) {
         Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             gBest.setVector(f.getPosition());
         }
     }
@@ -104,7 +104,7 @@ public class ABC extends Algorithm {
         Vector v = currentBee.calculateNextBestPosition(neighbourBeeOccupied);
         Double fm = currentBee.calculateFitness(objectiveFunction, v);
         double pfm = currentBee.calculateFitness(objectiveFunction, currentBee.getPosition());
-        if(!Validator.validateBestValue(fm,pfm,this.isLocalMinima)){
+        if(!Validator.validateBestValue(fm,pfm,this.isGlobalMinima)){
             currentBee.setPosition(v);
             currentBee.setFm(fm);
             currentBee.setCounter(currentBee.getFm() + 1);

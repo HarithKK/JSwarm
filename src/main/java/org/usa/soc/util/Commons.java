@@ -6,10 +6,12 @@ import java.util.Arrays;
 public class Commons {
     public static double[] fill(double value, int size){
         double d[] = new double[size];
-        for (int i=0;i< size;i++) {
-            d[i] = value;
-        }
+        Arrays.fill(d, value);
         return d;
+    }
+
+    public static double computeWeight(double lambda, double sigma){
+        return Math.exp(-sigma) * (Math.pow(1 + Math.exp(-lambda), -1));
     }
 
     public static int rouletteWheelSelection(double[] probabilityArray){

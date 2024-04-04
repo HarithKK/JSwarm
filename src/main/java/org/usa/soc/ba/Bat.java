@@ -73,7 +73,7 @@ public class Bat {
         this.position.setVector(this.position.operate(Vector.OPERATOR.ADD, this.velocity), minBoundary, maxBoundary);
     }
 
-    public void updatePBest(ObjectiveFunction objectiveFunction, boolean isLocalMinima, Vector newSolution) {
+    public void updatePBest(ObjectiveFunction objectiveFunction, boolean isGlobalMinima, Vector newSolution) {
 
         if(Randoms.rand(0, r0) < r){
             return;
@@ -82,7 +82,7 @@ public class Bat {
         Double f1 = objectiveFunction.setParameters(newSolution.getPositionIndexes()).call();
         Double f2 = objectiveFunction.setParameters(getBest().getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(f1, f2, isLocalMinima)){
+        if(Validator.validateBestValue(f1, f2, isGlobalMinima)){
             this.best.setVector(newSolution);
         }
     }

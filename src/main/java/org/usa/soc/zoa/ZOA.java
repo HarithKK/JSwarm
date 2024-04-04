@@ -28,7 +28,7 @@ public class ZOA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ) {
 
         this.objectiveFunction = objectiveFunction;
@@ -37,13 +37,14 @@ public class ZOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.zebras = new Zebra[populationSize];
+        this.pioneerZebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Squirrels Are Not Initialized");
         }
@@ -59,20 +60,20 @@ public class ZOA extends Algorithm {
                             .operate(Vector.OPERATOR.SUB, zebra.getPosition().operate(Vector.OPERATOR.MULP, (double)I))
                             .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1))
                             .operate(Vector.OPERATOR.ADD, zebra.getPosition());
-                    zebra.updatePosition(objectiveFunction, newX, isLocalMinima);
+                    zebra.updatePosition(objectiveFunction, newX, isGlobalMinima);
 
                     // phase 2
                     if(Randoms.rand(0,1) <= 0.5){
                         double c = 0.01*(2*Randoms.rand(0,1) -1)*(1 - (step+1)/stepsCount);
                         Vector S1 = zebra.getPosition().operate(Vector.OPERATOR.MULP, (1+c));
-                        zebra.updatePosition(objectiveFunction, S1, isLocalMinima);
+                        zebra.updatePosition(objectiveFunction, S1, isGlobalMinima);
                         attackedZebra = zebra;
                     }else{
                         Vector S2 = attackedZebra.getPosition()
                                 .operate(Vector.OPERATOR.SUB, zebra.getPosition().operate(Vector.OPERATOR.MULP, (double)I))
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1))
                                 .operate(Vector.OPERATOR.ADD, zebra.getPosition());
-                        zebra.updatePosition(objectiveFunction, S2, isLocalMinima);
+                        zebra.updatePosition(objectiveFunction, S2, isGlobalMinima);
                     }
 
                 }
@@ -82,7 +83,7 @@ public class ZOA extends Algorithm {
                 }
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(time, step);
+                stepCompleted(step);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -109,7 +110,7 @@ public class ZOA extends Algorithm {
 
     private void updateGbest(Zebra zebra) {
         double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(zebra.getFitnessValue(), fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(zebra.getFitnessValue(), fgbest, isGlobalMinima)){
             gBest.setVector(zebra.getPosition());
             pioneerZebra = zebra;
         }

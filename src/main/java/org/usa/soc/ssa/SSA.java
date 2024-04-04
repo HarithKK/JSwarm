@@ -29,7 +29,7 @@ public class SSA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double Pdp,
             double Gc,
             double airDensity,
@@ -45,7 +45,7 @@ public class SSA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
 
         this.Pdp = Pdp;
         this.Gc = Gc;
@@ -57,7 +57,7 @@ public class SSA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Squirrels Are Not Initialized");
         }
@@ -138,16 +138,16 @@ public class SSA extends Algorithm {
                     }
                 }
 
-                Collections.sort(squirrels, new SquirrelComparator(isLocalMinima));
+                Collections.sort(squirrels, new SquirrelComparator(isGlobalMinima));
 
                 double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
-                if(Validator.validateBestValue(squirrels.get(hSquirrel).getFitnessValue(), fgbest, isLocalMinima)){
+                if(Validator.validateBestValue(squirrels.get(hSquirrel).getFitnessValue(), fgbest, isGlobalMinima)){
                     gBest.setVector(squirrels.get(hSquirrel).getPosition());
                 }
 
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(time, step);
+                stepCompleted(step);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -188,7 +188,7 @@ public class SSA extends Algorithm {
             squirrels.add(squirrel);
         }
 
-        Collections.sort(squirrels, new SquirrelComparator(isLocalMinima));
+        Collections.sort(squirrels, new SquirrelComparator(isGlobalMinima));
     }
 
     private Vector getLevyVector() {

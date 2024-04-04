@@ -48,8 +48,8 @@ public class Eagle {
         this.localBestFitnessValue = localBestFitnessValue;
     }
 
-    public void updateLocalBest(boolean isLocalMinima) {
-        if(Validator.validateBestValue(fitnessValue, localBestFitnessValue, isLocalMinima)){
+    public void updateLocalBest(boolean isGlobalMinima) {
+        if(Validator.validateBestValue(fitnessValue, localBestFitnessValue, isGlobalMinima)){
             this.setLocalBestPositon(this.getPosition());
             this.setLocalBestFitnessValue(this.fitnessValue);
         }

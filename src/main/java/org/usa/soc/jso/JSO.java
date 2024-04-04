@@ -29,7 +29,7 @@ public class JSO extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double beta,
             double gamma
     ) {
@@ -41,7 +41,7 @@ public class JSO extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.beta = beta;
         this.gamma = gamma;
 
@@ -49,7 +49,7 @@ public class JSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Jellyfishes Are Not Initialized");
         }
@@ -91,7 +91,7 @@ public class JSO extends Algorithm {
 
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(time, step);
+                stepCompleted(step);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -142,7 +142,7 @@ public class JSO extends Algorithm {
 
     private void updateGbest(Jellyfish jellyfish){
         double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(jellyfish.getFitnessValue(), fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(jellyfish.getFitnessValue(), fgbest, isGlobalMinima)){
             this.gBest.setVector(jellyfish.getPosition());
         }
     }

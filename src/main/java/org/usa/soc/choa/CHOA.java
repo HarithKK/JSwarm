@@ -31,7 +31,7 @@ public class CHOA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double fUpper,
             Chaotics.type type
     ) {
@@ -43,7 +43,7 @@ public class CHOA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.fUpper = fUpper;
         this.chaoticType = type;
 
@@ -51,7 +51,7 @@ public class CHOA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Chimps Are Not Initialized");
         }
@@ -60,7 +60,7 @@ public class CHOA extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                Collections.sort(chimps, new ChimpComparator(isLocalMinima));
+                Collections.sort(chimps, new ChimpComparator(isGlobalMinima));
                 f = fUpper*(1 - ((step+1)/ stepsCount));
                 attacker = chimps.get(populationSize-1);
                 attacker.updateFMAC(f, chaoticType);
@@ -109,7 +109,7 @@ public class CHOA extends Algorithm {
 
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(time, step);
+                stepCompleted(step);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -135,7 +135,7 @@ public class CHOA extends Algorithm {
 
     private void updateGBest(Chimp chimp) {
         double fgbest = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(chimp.getFitnessValue(), fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(chimp.getFitnessValue(), fgbest, isGlobalMinima)){
             this.gBest.setVector(chimp.getPosition());
         }
     }

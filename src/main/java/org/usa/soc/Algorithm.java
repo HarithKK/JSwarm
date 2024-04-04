@@ -13,10 +13,12 @@ import java.util.List;
 public abstract class Algorithm implements Cloneable {
 
     private boolean isPaused, isKilled;
-    protected boolean isLocalMinima;
+    protected boolean isGlobalMinima;
 
     protected double[] minBoundary;
     protected double[] maxBoundary;
+
+    private List<Double> history = new ArrayList<>();
 
     protected Action stepAction;
 
@@ -30,6 +32,8 @@ public abstract class Algorithm implements Cloneable {
 
     private double meanBestValue = 0;
 
+    private int interval = 0;
+
     public Algorithm(
             ObjectiveFunction<Double> objectiveFunction,
             int stepsCount,
@@ -37,9 +41,9 @@ public abstract class Algorithm implements Cloneable {
             double[] minBoundary,
             double[] maxBoundary,
             long nanoDuration,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ) {
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.objectiveFunction = objectiveFunction;
@@ -48,6 +52,7 @@ public abstract class Algorithm implements Cloneable {
         this.nanoDuration = nanoDuration;
         this.isPaused = false;
         this.isKilled = false;
+        this.setInterval(0);
     }
 
     protected Algorithm(){
@@ -61,12 +66,8 @@ public abstract class Algorithm implements Cloneable {
     protected long nanoDuration;
 
     private boolean isInitialized = false;
-
-    public void runOptimizer() throws Exception{
-        this.runOptimizer(0);
-    };
-
-    public abstract void runOptimizer(int time) throws Exception;
+    
+    public abstract void runOptimizer() throws Exception;
 
     public abstract void initialize();
 
@@ -88,7 +89,7 @@ public abstract class Algorithm implements Cloneable {
     }
 
     public boolean isMinima() {
-        return this.isLocalMinima;
+        return this.isGlobalMinima;
     }
 
     public String getBestVariables() {
@@ -107,7 +108,7 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction =a;
     }
 
-    public void stepCompleted(int time, long step) throws Exception {
+    public void stepCompleted(long step) throws Exception {
 
         this.currentStep = step;
 
@@ -117,13 +118,14 @@ public abstract class Algorithm implements Cloneable {
         calculateConvergenceValue(step, xValue);
         calculateGradiantDecent(step, xValue);
 
+        getHistory().add(xValue);
         this.bestValue = xValue;
 
-        if(time == 0){
+        if(this.interval == 0){
             return;
         }
         try {
-            Thread.sleep(time);
+            Thread.sleep(this.interval);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -174,6 +176,9 @@ public abstract class Algorithm implements Cloneable {
         return this.bestValue;
     }
 
+    public String getName(){
+        return this.getClass().getSimpleName();
+    }
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -294,5 +299,17 @@ public abstract class Algorithm implements Cloneable {
 
     public long getCurrentStep() {
         return currentStep;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public List<Double> getHistory() {
+        return history;
     }
 }

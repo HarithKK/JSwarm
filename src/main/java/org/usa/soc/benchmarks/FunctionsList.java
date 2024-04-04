@@ -1,9 +1,10 @@
 package org.usa.soc.benchmarks;
 
 import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
-import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
-import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.SumSquares;
+import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
+import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
+import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
+import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function20;
 import org.usa.soc.benchmarks.singleObjective.*;
 
 public class FunctionsList {
@@ -29,6 +30,12 @@ public class FunctionsList {
                 new SphereFunction(),
                 new StyblinskiTangFunction(),
                 new ThreeHumpCamelFunction(),
+                new ChungReynoldsSquares(),
+                new SumSquares(),
+                new Function16(2),
+                new Function17(2),
+                new Function18(2),
+                new Function20(2)
         };
     }
 }

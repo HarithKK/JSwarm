@@ -34,7 +34,7 @@ public class ACO extends Algorithm {
             double alpha,
             double evaporationRate,
             double pheromoneValue,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ){
         this.objectiveFunction = objectiveFunction;
         this.numberOfAnts = numberOfAnts;
@@ -47,7 +47,7 @@ public class ACO extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = new Vector(this.numberOfDimensions);
         this.pheromoneValue = pheromoneValue;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.ants = new Ant[this.numberOfAnts];
     }
 
@@ -59,7 +59,7 @@ public class ACO extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima
+            boolean isGlobalMinima
     ){
         this.objectiveFunction = objectiveFunction;
         this.numberOfAnts = numberOfAnts;
@@ -73,7 +73,7 @@ public class ACO extends Algorithm {
         this.gBest = new Vector(this.numberOfDimensions);
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.pheromoneValue = 0.1;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.ants = new Ant[this.numberOfAnts];
     }
 
@@ -82,7 +82,7 @@ public class ACO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
         }
@@ -98,7 +98,7 @@ public class ACO extends Algorithm {
 
                 for(Ant a: this.ants){
                     a.setPosition(getPositionVector(a, dx));
-                    a.updatePBest(this.objectiveFunction, this.isLocalMinima);
+                    a.updatePBest(this.objectiveFunction, this.isGlobalMinima);
 
                     // update pheromones
                     this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
@@ -106,7 +106,7 @@ public class ACO extends Algorithm {
                 }
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-                stepCompleted(time, step);
+                stepCompleted(step);
             }
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -117,7 +117,7 @@ public class ACO extends Algorithm {
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
 
-        boolean sign = !Validator.validateBestValue(fpbest, fgbest, isLocalMinima);
+        boolean sign = !Validator.validateBestValue(fpbest, fgbest, isGlobalMinima);
 
         return a.getPosition().operate(sign ? Vector.OPERATOR.ADD : Vector.OPERATOR.SUB, v);
     }
@@ -139,7 +139,7 @@ public class ACO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(a.getPbest());
         }
     }
@@ -157,7 +157,7 @@ public class ACO extends Algorithm {
                 alpha,
                 evaporationRate,
                 pheromoneValue,
-                isLocalMinima);
+                isGlobalMinima);
     }
 
     @Override

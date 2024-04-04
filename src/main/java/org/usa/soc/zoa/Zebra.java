@@ -29,12 +29,12 @@ public class Zebra {
         this.fitnessValue = fitnessValue;
     }
 
-    public void updatePosition(ObjectiveFunction objectiveFunction, Vector newX, boolean isLocalMinima) {
+    public void updatePosition(ObjectiveFunction objectiveFunction, Vector newX, boolean isGlobalMinima) {
         double fitnessValueNewX = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
         if(Validator.validateBestValue(
                 fitnessValueNewX,
                 this.getFitnessValue(),
-                isLocalMinima)
+                isGlobalMinima)
         ){
             this.setPosition(newX);
             this.setFitnessValue(fitnessValueNewX);

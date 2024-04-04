@@ -30,10 +30,10 @@ public class Ant {
         return pbest;
     }
 
-    public void updatePBest(ObjectiveFunction<Double> fn, boolean isLocalMinima) {
+    public void updatePBest(ObjectiveFunction<Double> fn, boolean isGlobalMinima) {
         double pBestVal =fn.setParameters(this.pbest.getPositionIndexes()).call();
         double stepBestVal = fn.setParameters(this.position.getPositionIndexes()).call();
-        if(Validator.validateBestValue(stepBestVal, pBestVal, isLocalMinima)){
+        if(Validator.validateBestValue(stepBestVal, pBestVal, isGlobalMinima)){
             this.pbest.setVector(this.position, this.minBoundary, this.maxBoundary);
         }
     }

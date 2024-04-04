@@ -23,14 +23,14 @@ public class WSO extends Algorithm {
                double[] maxBoundary,
                double c1,
                double c2,
-               boolean isLocalMinima) {
+               boolean isGlobalMinima) {
         this.objectiveFunction = fn;
         this.stepsCount = numberOfIterations;
         this.numberOfWasps = numberOfWasps;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.c1 = c1;
         this.c2 = c2;
 
@@ -39,7 +39,7 @@ public class WSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Wasps Are Not Initialized");
         }
@@ -59,12 +59,12 @@ public class WSO extends Algorithm {
                     this.updateBest(w);
                 }
                 w.setSolution(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
-                w.updateDiversity(objectiveFunction, isLocalMinima);
+                w.updateDiversity(objectiveFunction, isGlobalMinima);
                 w.updateForce(this.c1, this.c2, this.objectiveFunction);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted(step);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -90,7 +90,7 @@ public class WSO extends Algorithm {
                 this.maxBoundary,
                 this.numberOfDimensions);
         wasp.setSolution(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
-        wasp.updateDiversity(objectiveFunction, isLocalMinima);
+        wasp.updateDiversity(objectiveFunction, isGlobalMinima);
         wasp.updateForce(this.c1, this.c2, this.objectiveFunction);
         this.updateBest(wasp);
         return wasp;
@@ -100,7 +100,7 @@ public class WSO extends Algorithm {
         Double fgbest = objectiveFunction.setParameters(this.getGBest().getClonedVector().getPositionIndexes()).call();
         Double fpbest = objectiveFunction.setParameters(w.getBestSolution().getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(w.getBestSolution().getClonedVector(), minBoundary, maxBoundary);
         }
     }
@@ -115,7 +115,7 @@ public class WSO extends Algorithm {
                 maxBoundary,
                 c1,
                 c2,
-                isLocalMinima);
+                isGlobalMinima);
     }
 
     @Override

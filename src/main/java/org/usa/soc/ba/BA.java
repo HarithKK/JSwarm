@@ -27,13 +27,13 @@ public class BA extends Algorithm {
               double gamma,
               double A0,
               double r0,
-              boolean isLocalMinima){
+              boolean isGlobalMinima){
         this.objectiveFunction = objectiveFunction;
         this.stepsCount = stepsCount;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.numberOfBats = numberOfBats;
         this.fMin = fMin;
         this.fMax = fMax;
@@ -46,7 +46,7 @@ public class BA extends Algorithm {
         this.bats = new Bat[numberOfBats];
     }
     @Override
-    public void runOptimizer(int time) throws Exception {
+    public void runOptimizer() throws Exception {
         if(!this.isInitialized()){
             throw new RuntimeException("Bat Agents Are Not Initialized");
         }
@@ -59,7 +59,7 @@ public class BA extends Algorithm {
                 Vector newSolution = b.generateNewSolution(Aavg);
 
                 if(Randoms.rand(0, (alpha * A0)) < b.getA()){
-                    b.updatePBest(objectiveFunction, isLocalMinima, newSolution);
+                    b.updatePBest(objectiveFunction, isGlobalMinima, newSolution);
                 }
                 b.updatePulseRates();
                 b.updateLoudness();
@@ -73,7 +73,7 @@ public class BA extends Algorithm {
 
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(time, step);
+            stepCompleted(step);
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
@@ -109,7 +109,7 @@ public class BA extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(b.getBest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.gBest.setVector(b.getBest());
         }
     }

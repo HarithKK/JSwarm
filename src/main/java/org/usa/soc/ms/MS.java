@@ -23,14 +23,14 @@ public class MS extends Algorithm {
             double[] minBoundary,
             double[] maxBoundary,
             double c1,
-            boolean isLocalMinima) {
+            boolean isGlobalMinima) {
         this.objectiveFunction = fn;
         this.stepsCount = numberOfIterations;
         this.numberOfMonkeys = numberOfMonkeys;
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.maxHeightOfTheTree = maxHeightOfTheTree;
         this.c1 = c1;
 
@@ -39,7 +39,7 @@ public class MS extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Monkeys Are Not Initialized");
         }
@@ -48,12 +48,12 @@ public class MS extends Algorithm {
 
         for (int i = 0; i < this.getStepsCount(); i++) {
             for (Monky m : this.monkeys) {
-                m.climbTree(this.c1,this.isLocalMinima, this.gBest);
+                m.climbTree(this.c1,this.isGlobalMinima, this.gBest);
                 updateGBest(m);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            stepCompleted(time, i);
+            stepCompleted(i);
         }
 
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
@@ -85,7 +85,7 @@ public class MS extends Algorithm {
 
         Double fpbest = this.objectiveFunction.setParameters(m.getBestRoot().getClonedVector().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
             this.gBest.setVector(m.getBestRoot(), this.minBoundary, this.maxBoundary);
         }
     }
@@ -100,7 +100,7 @@ public class MS extends Algorithm {
                 minBoundary,
                 maxBoundary,
                 c1,
-                isLocalMinima
+                isGlobalMinima
         );
     }
 

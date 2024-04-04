@@ -25,4 +25,5 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Yang, XS. (2010). A New Metaheuristic Bat-Inspired Algorithm. In: González, J.R., Pelta, D.A., Cruz, C., Terrazas, G., Krasnogor, N. (eds) Nature Inspired Cooperative Strategies for Optimization (NICSO 2010). Studies in Computational Intelligence, vol 284. Springer, Berlin, Heidelberg. https://doi.org/10.1007/978-3-642-12538-6_6
+<a id="1">[1]</a> Yang, XS. (2010). A New Metaheuristic Bat-Inspired Algorithm. In: González, J.R., Pelta, D.A., Cruz, C., Terrazas, G., Krasnogor, N. (eds) Nature Inspired Cooperative Strategies for Optimization (NICSO 2010). Studies in Computational Intelligence, vol 284. Springer, Berlin, Heidelberg. https:
+//doi.org/10.1007/978-3-642-12538-6_6

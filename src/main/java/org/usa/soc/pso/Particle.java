@@ -33,11 +33,11 @@ public class Particle {
         this.position = position;
     }
 
-    public void updatePbest(ObjectiveFunction<Double> objectiveFunction, boolean isLocalMinima) {
+    public void updatePbest(ObjectiveFunction<Double> objectiveFunction, boolean isGlobalMinima) {
         ObjectiveFunction fn = objectiveFunction.setParameters(this.getPBest().getPositionIndexes());
         double pBestVal =fn.call();
         double stepBestVal = objectiveFunction.setParameters(this.position.getPositionIndexes()).call();
-        if(Validator.validateBestValue(stepBestVal, pBestVal, isLocalMinima)){
+        if(Validator.validateBestValue(stepBestVal, pBestVal, isGlobalMinima)){
             this.pBest.setVector(this.position.getClonedVector(), this.minBoundary, this.maxBoundary);
         }
     }

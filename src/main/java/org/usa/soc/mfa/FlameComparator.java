@@ -13,3 +13,4 @@ public class FlameComparator implements Comparator<Flame> {
         return -1;
     }
 }
+

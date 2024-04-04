@@ -25,7 +25,7 @@ public class Monky {
         return bestRoot.getClonedVector();
     }
 
-    public void climbTree(double c1, boolean isLocalMinima, Vector bestRoot) {
+    public void climbTree(double c1, boolean isGlobalMinima, Vector bestRoot) {
 
         Vector position = this.bestRoot.getClonedVector();
         for(int i=0; i< this.maxHeightOfTheTree;i++){
@@ -37,11 +37,11 @@ public class Monky {
             double vr1 = this.fn.setParameters(r1.getPositionIndexes()).call();
             double vr2 = this.fn.setParameters(r2.getPositionIndexes()).call();
 
-            if(Validator.validateBestValue(vr1, vr, isLocalMinima)){
+            if(Validator.validateBestValue(vr1, vr, isGlobalMinima)){
                 position.setVector(position.operate(Vector.OPERATOR.SUB,r1), minBoundary, maxBoundary);
             }
 
-            if(Validator.validateBestValue(vr2, vr, isLocalMinima)){
+            if(Validator.validateBestValue(vr2, vr, isGlobalMinima)){
                 position.setVector(position.operate(Vector.OPERATOR.SUB,r2), minBoundary, maxBoundary);
             }
         }

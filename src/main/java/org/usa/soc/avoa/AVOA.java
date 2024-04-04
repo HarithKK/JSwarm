@@ -28,7 +28,7 @@ public class AVOA extends Algorithm {
             int numberOfDimensions,
             double[] minBoundary,
             double[] maxBoundary,
-            boolean isLocalMinima,
+            boolean isGlobalMinima,
             double omega,
             double alpha,
             double beta,
@@ -43,7 +43,7 @@ public class AVOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isLocalMinima = isLocalMinima;
+        this.isGlobalMinima = isGlobalMinima;
         this.omega = omega;
         this.alpha = alpha;
         this.beta = beta;
@@ -56,7 +56,7 @@ public class AVOA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer(int time) throws Exception{
+    public void runOptimizer() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Vultures Are Not Initialized");
         }
@@ -134,7 +134,7 @@ public class AVOA extends Algorithm {
                         Double fpbest = this.objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call();
 
                         vulture.setLbest(vulture.getPosition());
-                        if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
+                        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
                             //  vulture.setLbest(vulture.getPosition());
                         }
                     }
@@ -146,7 +146,7 @@ public class AVOA extends Algorithm {
 
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(time, step);
+                stepCompleted(step);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -157,7 +157,7 @@ public class AVOA extends Algorithm {
     private void updateGBest(Vulture vulture) {
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(vulture.getLbest().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isLocalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
             this.gBest.setVector(vulture.getLbest());
         }
     }

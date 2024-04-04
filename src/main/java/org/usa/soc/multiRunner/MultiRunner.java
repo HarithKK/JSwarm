@@ -39,7 +39,11 @@ public class MultiRunner {
             for(int i = 0; i < this.numberOfRunners; i++){
                 Algorithm algo = this.algorithm.clone();
                 algo.initialize();
-                algo.runOptimizer();
+                try {
+            algo.runOptimizer();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
                 this.completedAlgos.add(algo);
             }
             finalizeAll();

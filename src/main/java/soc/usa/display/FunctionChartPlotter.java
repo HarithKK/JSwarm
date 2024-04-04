@@ -32,6 +32,7 @@ public class FunctionChartPlotter {
     private EmptyAction action;
 
     private int time = 10, bestIndex;
+    private int interval = 0;
 
     private boolean isExecute = false;
 
@@ -127,6 +128,7 @@ public class FunctionChartPlotter {
         }
         setExecute(true);
         algorithm.initialize();
+        algorithm.setInterval(interval);
         int step =0;
         double fraction = algorithm.getStepsCount()/100;
         algorithm.addStepAction(new Action() {
@@ -149,7 +151,7 @@ public class FunctionChartPlotter {
                 chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
 
                 if((step % fraction) == 0){
-                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
+                    System.out.print("\r ["+ bestValue +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
                 }
                 if(action != null)
                     action.performAction(step, step/fraction, bestValue);
@@ -157,7 +159,7 @@ public class FunctionChartPlotter {
             }
         });
         try {
-            algorithm.runOptimizer(time);
+            algorithm.runOptimizer();
         } catch (Exception e) {
             if(e instanceof KillOptimizerException){
                 System.out.println("Optimizer was killed forcefully");
@@ -186,6 +188,7 @@ public class FunctionChartPlotter {
     }
 
     public void resume() {
+        algorithm.setInterval(interval);
         algorithm.resumeOptimizer();
     }
 
@@ -195,5 +198,9 @@ public class FunctionChartPlotter {
 
     public void stopOptimizer() {
         algorithm.stopOptimizer();
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
     }
 }

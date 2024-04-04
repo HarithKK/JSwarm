@@ -31,12 +31,12 @@ public class Wasp {
         this.solution.setVector(v, minBoundary, maxBoundary);
     }
 
-    public void updateDiversity(ObjectiveFunction fn, boolean isLocalMinima) {
+    public void updateDiversity(ObjectiveFunction fn, boolean isGlobalMinima) {
 
         Double fgbest = fn.setParameters(this.getBestSolution().getPositionIndexes()).call();
         Double fpbest = fn.setParameters(this.getSolution().getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isLocalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
             this.bestSolution.setVector(this.getSolution(), minBoundary, maxBoundary);
             this.diversitySolution = Mathamatics.calculateHammingDistance(fpbest.doubleValue(), fgbest.doubleValue());
         }
