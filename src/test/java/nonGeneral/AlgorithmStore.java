@@ -1,12 +1,14 @@
 package nonGeneral;
 
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.cs.CS;
-import org.usa.soc.fa.FA;
-import org.usa.soc.pso.PSO;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.algo.cs.CS;
+import org.usa.soc.si.algo.fa.FA;
+import org.usa.soc.si.algo.pso.PSO;
+import org.usa.soc.si.algo.cso.CSO;
+import org.usa.soc.si.algo.gso.GSO;
 import org.usa.soc.util.Mathamatics;
-import org.usa.soc.wso.WSO;
+import org.usa.soc.si.algo.wso.WSO;
 
 public class AlgorithmStore {
 
@@ -25,7 +27,7 @@ public class AlgorithmStore {
     }
 
     public Algorithm getCSO(ObjectiveFunction fn, int ac, int sc){
-        return new org.usa.soc.cso.CSO(
+        return new CSO(
                 fn,
                 fn.getNumberOfDimensions(),
                 sc,
@@ -45,7 +47,7 @@ public class AlgorithmStore {
 
     public Algorithm getGSO(ObjectiveFunction fn, int ac, int sc){
         double sr = Mathamatics.getMaximumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
-        return new org.usa.soc.gso.GSO(
+        return new GSO(
                 fn,
                 fn.getNumberOfDimensions(),
                 sc,

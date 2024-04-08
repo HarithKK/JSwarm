@@ -1,12 +1,12 @@
 package TSOA;
 
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import org.usa.soc.benchmarks.singleObjective.AckleysFunction;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.algo.tsoa.TSOA;
 import utils.AssertUtil;
 
 public class TestTSOA {
@@ -16,7 +16,7 @@ public class TestTSOA {
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn, int p, int s, double df) {
-        return new org.usa.soc.tsoa.TSOA(
+        return new TSOA(
                 fn,
                 p,
                 s,
@@ -46,7 +46,7 @@ public class TestTSOA {
 
         ObjectiveFunction fn = new Function1(100);
         algo = getAlgorithm(fn, 30, 1000, 0.7);
-        algo.addStepAction(new Action() {
+        algo.addStepAction(new StepAction() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
                 System.out.println(bestValue + " | "+ step);

@@ -1,24 +1,22 @@
 package TSOA;
 
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
-import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function22;
-import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function24;
-import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function25;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
-import org.usa.soc.tsoa.TSOA;
-import org.usa.soc.util.Commons;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
+import org.usa.soc.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
+import org.usa.soc.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
+import org.usa.soc.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
+import org.usa.soc.si.benchmarks.FixMultiModalObjectiveFunctions.Function22;
+import org.usa.soc.si.benchmarks.FixMultiModalObjectiveFunctions.Function24;
+import org.usa.soc.si.benchmarks.FixMultiModalObjectiveFunctions.Function25;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.algo.tsoa.TSOA;
 import utils.Utils;
 
 public class TestConvergence {
@@ -26,7 +24,7 @@ public class TestConvergence {
     private void TestFunction(ObjectiveFunction f, int p) throws Exception {
         TSOA t = new TSOA(f, p, 1000, f.getNumberOfDimensions(), f.getMin(), f.getMax(),true, 0.7, 2);
         t.initialize();
-        t.addStepAction(new Action() {
+        t.addStepAction(new StepAction() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
                 StringBuilder sb = new StringBuilder();

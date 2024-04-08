@@ -2,8 +2,7 @@ package org.usa.soc.util;
 
 import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.util.Precision;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ds.Vector;
 
 public class Mathamatics {
     public static Double absRound(Double value, int r){

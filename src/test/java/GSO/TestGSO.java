@@ -2,9 +2,10 @@ package GSO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.si.benchmarks.singleObjective.*;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.algo.gso.GSO;
 import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;
@@ -17,7 +18,7 @@ public class TestGSO {
 
     private Algorithm getAlgorithm(ObjectiveFunction fn){
         double sr = Mathamatics.getMinimumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
-        return new org.usa.soc.gso.GSO(
+        return new GSO(
                 fn,
                 fn.getNumberOfDimensions(),
                 1000,

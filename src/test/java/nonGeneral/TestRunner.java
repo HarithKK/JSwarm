@@ -6,22 +6,21 @@ Settings
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
-import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.separable.*;
-import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
-import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.*;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.unimodal.separable.*;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
-import ui.AlgoStore;
+import progs.AlgoStore;
 
 import java.awt.*;
 import java.nio.file.Files;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -30,8 +29,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Stream.generate;
@@ -44,7 +41,7 @@ public class TestRunner {
     private static final int ALGO_INDEX = 2;
 
     private static final int RIP_DIS = 10;
-    private static final ObjectiveFunction OBJECTIVE_FUNCTION = new org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction();
+    private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
 
     public Algorithm getAlgorithm(){
         return new AlgoStore(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
@@ -71,7 +68,7 @@ public class TestRunner {
             algorithm = getAlgorithm(fn);
             algorithm.initialize();
             System.out.println();
-            algorithm.addStepAction(new Action() {
+            algorithm.addStepAction(new StepAction() {
                 @Override
                 public void performAction(Vector best, Double bestValue, int step) {
 

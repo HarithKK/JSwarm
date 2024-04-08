@@ -1,10 +1,9 @@
 package TSOA;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class TestExecutor {
         for(int i=0; i<testCount; i++){
             algorithm.initialize();
             System.out.println();
-            algorithm.addStepAction(new Action() {
+            algorithm.addStepAction(new StepAction() {
                 @Override
                 public void performAction(Vector best, Double bestValue, int step) {
 
@@ -186,7 +185,7 @@ public class TestExecutor {
 
     public void runTestOnce(Algorithm algo) throws Exception {
 
-        algo.addStepAction(new Action() {
+        algo.addStepAction(new StepAction() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
                 if(step >1) {

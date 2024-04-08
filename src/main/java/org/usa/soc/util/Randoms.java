@@ -1,6 +1,6 @@
 package org.usa.soc.util;
 
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ds.Vector;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
