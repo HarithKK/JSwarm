@@ -1,7 +1,5 @@
-package org.usa.soc;
+package org.usa.soc.core;
 
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 

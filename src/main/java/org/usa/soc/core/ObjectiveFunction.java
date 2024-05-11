@@ -1,4 +1,4 @@
-package org.usa.soc;
+package org.usa.soc.core;
 
 import net.ericaro.surfaceplotter.Mapper;
 import org.usa.soc.surfacePlotter.FunctionToMapper;
