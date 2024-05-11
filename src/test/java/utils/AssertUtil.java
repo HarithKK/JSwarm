@@ -1,9 +1,7 @@
 package utils;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
-import org.usa.soc.core.Vector;
-import org.usa.soc.pso.PSO;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 
 public class AssertUtil {

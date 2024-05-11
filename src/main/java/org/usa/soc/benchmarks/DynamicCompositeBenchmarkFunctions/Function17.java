@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
 import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
 import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;

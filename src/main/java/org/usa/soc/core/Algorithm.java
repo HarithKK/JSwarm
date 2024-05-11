@@ -1,5 +1,8 @@
 package org.usa.soc.core;
 
+import org.usa.soc.KillOptimizerException;
+import org.usa.soc.core.action.Action;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 

@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
 public abstract class DynamicObjectiveFunction extends ObjectiveFunction {

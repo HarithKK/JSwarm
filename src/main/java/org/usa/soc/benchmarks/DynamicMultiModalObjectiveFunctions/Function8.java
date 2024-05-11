@@ -1,9 +1,6 @@
 package org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions;
 
-import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.DynamicObjectiveFunction;
-import org.usa.soc.util.Commons;
-import org.usa.soc.util.Randoms;
 
 import java.util.Arrays;
 

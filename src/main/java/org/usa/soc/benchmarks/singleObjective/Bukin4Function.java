@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.singleObjective;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 
 /*
 f(x,y)=100{\sqrt {\left|y-0.01x^{2}\right|}}+0.01\left|x+10\right|.\quad

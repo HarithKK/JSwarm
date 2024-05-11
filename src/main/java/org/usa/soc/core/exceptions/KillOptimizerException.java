@@ -1,4 +1,4 @@
-package org.usa.soc.core;
+package org.usa.soc.core.exceptions;
 
 public class KillOptimizerException extends Exception{
     public KillOptimizerException(String errorMessage) {

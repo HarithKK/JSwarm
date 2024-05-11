@@ -1,21 +1,34 @@
 package ui;
 
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.abc.ABC;
-import org.usa.soc.aco.ACO;
-import org.usa.soc.ba.BA;
-import org.usa.soc.choa.Chaotics;
-import org.usa.soc.cs.CS;
-import org.usa.soc.fa.FA;
-import org.usa.soc.mbo.MBO;
-import org.usa.soc.ms.MS;
-import org.usa.soc.pso.PSO;
-import org.usa.soc.tco.TCO;
-import org.usa.soc.tsoa.TSOA;
-import org.usa.soc.util.Mathamatics;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.si.abc.ABC;
+import org.usa.soc.si.aco.ACO;
+import org.usa.soc.si.ba.BA;
+import org.usa.soc.si.choa.CHOA;
+import org.usa.soc.si.choa.Chaotics;
+import org.usa.soc.si.cs.CS;
+import org.usa.soc.si.fa.FA;
+import org.usa.soc.si.geo.GEO;
+import org.usa.soc.si.gwo.GWO;
+import org.usa.soc.si.jso.JSO;
+import org.usa.soc.si.mbo.MBO;
+import org.usa.soc.si.ms.MS;
+import org.usa.soc.si.pso.PSO;
+import org.usa.soc.si.alo.ALO;
+import org.usa.soc.si.also.ALSO;
+import org.usa.soc.si.avoa.AVOA;
+import org.usa.soc.si.cso.CSO;
+import org.usa.soc.si.goa.GOA;
+import org.usa.soc.si.gso.GSO;
+import org.usa.soc.si.mfa.MFA;
+import org.usa.soc.si.ssa.SSA;
+import org.usa.soc.si.tsa.TSA;
+import org.usa.soc.si.tsoa.TSOA;
+import org.usa.soc.si.tco.TCO;
+import org.usa.soc.si.zoa.ZOA;
 import org.usa.soc.util.Randoms;
-import org.usa.soc.wso.WSO;
+import org.usa.soc.si.wso.WSO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +67,7 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
-            case 2: return new org.usa.soc.cso.CSO(
+            case 2: return new CSO(
                     fn,
                     fn.getNumberOfDimensions(),
                     sc,
@@ -71,7 +84,7 @@ public class AlgoStore {
                     true
             );
             case 3: {
-                return new org.usa.soc.gso.GSO(
+                return new GSO(
                         fn,
                         fn.getNumberOfDimensions(),
                         sc,
@@ -189,7 +202,7 @@ public class AlgoStore {
                     1.49,
                     true
             );
-            case 12: return new org.usa.soc.gwo.GWO(
+            case 12: return new GWO(
                     fn,
                     sc,
                     fn.getNumberOfDimensions(),
@@ -198,7 +211,7 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
-            case 13: return new org.usa.soc.mfa.MFA(
+            case 13: return new MFA(
                     fn,
                     sc,
                     fn.getNumberOfDimensions(),
@@ -207,7 +220,7 @@ public class AlgoStore {
                     fn.getMax(),
                     1.0
             );
-            case 14: return new org.usa.soc.alo.ALO(
+            case 14: return new ALO(
                     fn,
                     ac,
                     sc,
@@ -216,7 +229,7 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
-            case 15: return new org.usa.soc.also.ALSO(
+            case 15: return new ALSO(
                     fn,
                     ac,
                     sc,
@@ -230,7 +243,7 @@ public class AlgoStore {
                     10,
                     10
             );
-            case 16: return new org.usa.soc.geo.GEO(
+            case 16: return new GEO(
                     fn,
                     ac,
                     sc,
@@ -243,7 +256,7 @@ public class AlgoStore {
                     0.5,
                     1
             );
-            case 17: return new org.usa.soc.avoa.AVOA(
+            case 17: return new AVOA(
                     fn,
                     ac,
                     sc,
@@ -258,7 +271,7 @@ public class AlgoStore {
                     0.4,
                     0.6
             );
-            case 18: return new org.usa.soc.tsa.TSA(
+            case 18: return new TSA(
                     fn,
                     ac,
                     sc,
@@ -267,7 +280,7 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
-            case 19: return new org.usa.soc.ssa.SSA(
+            case 19: return new SSA(
                     fn,
                     ac,
                     sc,
@@ -282,7 +295,7 @@ public class AlgoStore {
                     0.0154,
                     8.0
             );
-            case 20: return new org.usa.soc.zoa.ZOA(
+            case 20: return new ZOA(
                     fn,
                     ac,
                     sc,
@@ -291,7 +304,7 @@ public class AlgoStore {
                     fn.getMax(),
                     true
             );
-            case 21:  return new org.usa.soc.jso.JSO(
+            case 21:  return new JSO(
                     fn,
                     ac,
                     sc,
@@ -302,7 +315,7 @@ public class AlgoStore {
                     3,
                     0.1
             );
-            case 22: return new org.usa.soc.choa.CHOA(
+            case 22: return new CHOA(
                     fn,
                     ac,
                     sc,
@@ -313,7 +326,7 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.QUADRATIC
             );
-            case 23: return new org.usa.soc.choa.CHOA(
+            case 23: return new CHOA(
                     fn,
                     ac,
                     sc,
@@ -324,7 +337,7 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.BERNOULLI
             );
-            case 24: return new org.usa.soc.choa.CHOA(
+            case 24: return new CHOA(
                     fn,
                     ac,
                     sc,
@@ -335,7 +348,7 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.GAUSS_MOUSE
             );
-            case 25: return new org.usa.soc.choa.CHOA(
+            case 25: return new CHOA(
                     fn,
                     ac,
                     sc,
@@ -346,7 +359,7 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.LOGISTIC
             );
-            case 26: return new org.usa.soc.choa.CHOA(
+            case 26: return new CHOA(
                     fn,
                     ac,
                     sc,
@@ -357,7 +370,7 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.SINGER
             );
-            case 27: return new org.usa.soc.choa.CHOA(
+            case 27: return new CHOA(
                     fn,
                     ac,
                     sc,
@@ -368,7 +381,7 @@ public class AlgoStore {
                     2.5,
                     Chaotics.type.TENT
             );
-            case 28: return new org.usa.soc.goa.GOA(
+            case 28: return new GOA(
                     fn,
                     ac,
                     sc,
@@ -381,7 +394,7 @@ public class AlgoStore {
                     0.5,
                     1.5
             );
-            case 29: return new org.usa.soc.tsoa.TSOA(
+            case 29: return new TSOA(
                     fn,
                     ac,
                     sc,

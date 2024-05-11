@@ -1,8 +1,6 @@
 package org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions;
 
-import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.DynamicObjectiveFunction;
-import org.usa.soc.util.Commons;
 
 public class Function2 extends DynamicObjectiveFunction {
 

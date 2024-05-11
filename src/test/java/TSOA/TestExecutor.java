@@ -1,10 +1,9 @@
 package TSOA;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.action.Action;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 
 import java.io.IOException;

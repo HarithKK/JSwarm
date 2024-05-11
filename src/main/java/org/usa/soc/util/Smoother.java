@@ -1,6 +1,6 @@
 package org.usa.soc.util;
 
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ds.Vector;
 
 public class Smoother {
     public static Vector smooth(Vector input, Double magnitude){

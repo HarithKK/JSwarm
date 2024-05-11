@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.singleObjective;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 
 public class SchafferFunction extends ObjectiveFunction {
     @Override

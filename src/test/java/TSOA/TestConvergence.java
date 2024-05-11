@@ -1,8 +1,7 @@
 package TSOA;
 
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
 import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
 import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
@@ -15,10 +14,9 @@ import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
 import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function22;
 import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function24;
 import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function25;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
-import org.usa.soc.tsoa.TSOA;
-import org.usa.soc.util.Commons;
+import org.usa.soc.core.action.Action;
+import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.tsoa.TSOA;
 import utils.Utils;
 
 public class TestConvergence {

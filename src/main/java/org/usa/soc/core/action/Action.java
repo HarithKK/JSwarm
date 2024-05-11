@@ -1,4 +1,6 @@
-package org.usa.soc.core;
+package org.usa.soc.core.action;
+
+import org.usa.soc.core.ds.Vector;
 
 public abstract class Action {
     public abstract void performAction(Vector best, Double bestValue, int step);

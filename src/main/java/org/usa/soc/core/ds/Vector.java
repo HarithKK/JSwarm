@@ -1,4 +1,4 @@
-package org.usa.soc.core;
+package org.usa.soc.core.ds;
 
 /*
 This is the position vector

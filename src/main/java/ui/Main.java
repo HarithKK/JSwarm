@@ -183,7 +183,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(cmbFunction.getSelectedIndex());
+        new soc.usa.display.FunctionDisplay(cmbFunction.getSelectedIndex());
     }
 
     private void fncActionPerformed(double... values){

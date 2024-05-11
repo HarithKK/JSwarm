@@ -1,7 +1,6 @@
 package org.usa.soc.benchmarks.singleObjective;
 
-import org.apache.commons.math3.stat.descriptive.summary.Sum;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 
 import java.util.Arrays;
 

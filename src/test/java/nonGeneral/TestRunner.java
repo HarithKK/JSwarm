@@ -6,14 +6,14 @@ Settings
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.separable.*;
 import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
 import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.*;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.action.Action;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import ui.AlgoStore;
 
@@ -21,7 +21,6 @@ import java.awt.*;
 import java.nio.file.Files;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -30,8 +29,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Stream.generate;

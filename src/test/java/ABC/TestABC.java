@@ -2,9 +2,9 @@ package ABC;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.abc.ABC;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.si.abc.ABC;
 import org.usa.soc.benchmarks.singleObjective.*;
 import utils.AssertUtil;
 import utils.Logger;

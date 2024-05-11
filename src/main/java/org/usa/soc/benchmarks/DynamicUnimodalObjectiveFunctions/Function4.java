@@ -1,10 +1,7 @@
 package org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions;
 
-import org.usa.soc.ObjectiveFunction;
 import org.usa.soc.benchmarks.DynamicObjectiveFunction;
-import org.usa.soc.util.Commons;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Function4 extends DynamicObjectiveFunction {

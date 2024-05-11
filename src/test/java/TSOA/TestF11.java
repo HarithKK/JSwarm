@@ -5,11 +5,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInstance;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function11;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
 import ui.AlgoStore;
 import utils.Utils;
 

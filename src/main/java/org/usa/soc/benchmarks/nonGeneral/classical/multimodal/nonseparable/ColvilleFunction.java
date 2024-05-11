@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
 public class ColvilleFunction extends ObjectiveFunction {

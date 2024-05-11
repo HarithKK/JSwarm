@@ -6,19 +6,17 @@ import org.knowm.xchart.*;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import org.usa.soc.Algorithm;
-import org.usa.soc.KillOptimizerException;
-import org.usa.soc.core.Action;
-import org.usa.soc.core.EmptyAction;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.exceptions.KillOptimizerException;
+import org.usa.soc.core.action.Action;
+import org.usa.soc.core.action.EmptyAction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.stream.DoubleStream;
 
 public class FunctionChartPlotter {
 

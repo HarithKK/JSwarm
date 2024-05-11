@@ -2,9 +2,9 @@ package BA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.ba.BA;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.si.ba.BA;
 import org.usa.soc.benchmarks.singleObjective.*;
 import org.usa.soc.util.Randoms;
 import utils.AssertUtil;

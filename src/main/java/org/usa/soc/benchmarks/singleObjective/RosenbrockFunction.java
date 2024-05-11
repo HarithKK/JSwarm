@@ -1,8 +1,6 @@
 package org.usa.soc.benchmarks.singleObjective;
 
-import org.usa.soc.ObjectiveFunction;
-
-import java.util.Arrays;
+import org.usa.soc.core.ObjectiveFunction;
 
 public class RosenbrockFunction extends ObjectiveFunction {
     @Override

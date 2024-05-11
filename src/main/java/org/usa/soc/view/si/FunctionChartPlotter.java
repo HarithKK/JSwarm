@@ -11,6 +11,7 @@ import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.core.action.Action;
 import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.util.Mathamatics;
 
 import javax.swing.*;
 import java.awt.*;

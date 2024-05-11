@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 
 public class SchafferFunction extends ObjectiveFunction {
     @Override

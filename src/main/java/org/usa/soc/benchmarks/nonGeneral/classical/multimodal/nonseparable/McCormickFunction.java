@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 
 /*
 f(x,y)=\sin \left(x+y\right)+\left(x-y\right)^{2}-1.5x+2.5y+1

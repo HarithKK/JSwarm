@@ -2,10 +2,10 @@ package TCO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.tco.TCO;
+import org.usa.soc.si.tco.TCO;
 import utils.AssertUtil;
 import utils.Logger;
 
