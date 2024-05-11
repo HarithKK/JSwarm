@@ -1,9 +1,7 @@
-package org.usa.soc.gwo;
+package org.usa.soc.si.gwo;
 
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
-import org.usa.soc.util.Validator;
 
 public class Wolf {
 

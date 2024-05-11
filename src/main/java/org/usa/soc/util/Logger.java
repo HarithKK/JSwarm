@@ -1,5 +1,10 @@
 package org.usa.soc.util;
 
+import java.util.Date;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Stream.generate;
+
 public class Logger {
 
     private static Logger instance;
@@ -19,5 +24,17 @@ public class Logger {
         if(isLoggerOn){
             System.out.println(message);
         }
+    }
+
+    public void printTrail(double value, double percentage){
+        System.out.print("\r ["+ value +"] ["+percentage+"%] "  + generate(() -> "#").limit((long)(percentage)).collect(joining()));
+    }
+
+    public void info(String message){
+        System.out.println("[Info - "+ new Date().toString() + "]: " + message);
+    }
+
+    public void error(String message){
+        System.out.println("[Error - "+ new Date().toString() + "]: " + message);
     }
 }

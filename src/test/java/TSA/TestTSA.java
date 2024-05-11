@@ -2,9 +2,10 @@ package TSA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.si.tsa.TSA;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -15,7 +16,7 @@ public class TestTSA {
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.tsa.TSA(
+        return new TSA(
                 fn,
                 100,
                 1000,

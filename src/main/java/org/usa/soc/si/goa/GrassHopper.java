@@ -1,6 +1,6 @@
-package org.usa.soc.goa;
+package org.usa.soc.si.goa;
 
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
 public class GrassHopper {

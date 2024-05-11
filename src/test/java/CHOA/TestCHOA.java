@@ -2,10 +2,11 @@ package CHOA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.choa.Chaotics;
+import org.usa.soc.si.choa.CHOA;
+import org.usa.soc.si.choa.Chaotics;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -16,7 +17,7 @@ public class TestCHOA {
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.choa.CHOA(
+        return new CHOA(
                 fn,
                 10,
                 100,

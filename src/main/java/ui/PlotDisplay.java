@@ -1,9 +1,10 @@
 package ui;
 
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.runners.FunctionDisplay;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.FunctionsList;
-import soc.usa.display.FunctionChartPlotter;
+import org.usa.soc.view.si.FunctionChartPlotter;
 
 import java.util.List;
 import java.util.Scanner;
@@ -38,7 +39,7 @@ public class PlotDisplay {
         System.out.println("Selected Function Is "+ fns[f].getClass().getSimpleName());
         Algorithm ad = new AlgoStore(a, fns[f]).getAlgorithm(100, 100);
 
-        new org.usa.soc.surfacePlotter.FunctionDisplay(f);
+        new FunctionDisplay(f);
 
         fp = new FunctionChartPlotter("Algorithm Viewer", 600, 600);
         if(a==7){

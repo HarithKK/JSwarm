@@ -1,7 +1,7 @@
-package org.usa.soc.gso;
+package org.usa.soc.si.gso;
 
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
 public class GlowWorm {

@@ -1,6 +1,6 @@
 package org.usa.soc.benchmarks.singleObjective;
 
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
 public class SumSquares extends ObjectiveFunction {

@@ -2,23 +2,20 @@ package ui;
 
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.runners.FunctionDisplay;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.FunctionsList;
-import org.usa.soc.core.EmptyAction;
-import soc.usa.display.FunctionChartPlotter;
-import soc.usa.display.IterationChartPlotter;
+import org.usa.soc.core.action.EmptyAction;
+import org.usa.soc.view.si.FunctionChartPlotter;
+import org.usa.soc.view.si.IterationChartPlotter;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +37,7 @@ public class Main {
 
     JSpinner spnInterval;
 
-    JButton btnRun, btnShowTF, btnPause, btnStop;
+    JButton btnRun, btnShowTF, btnPause, btnStop, btnRepeate;
 
     JProgressBar progressBar;
 
@@ -62,29 +59,53 @@ public class Main {
 
     Algorithm algorithm;
 
+    public static boolean isRepeat = false;
+
     Thread currentRunner = null;
 
     private void runOptimizer(){
 
-        int selectedAlgorithm = cmbAlgorithm.getSelectedIndex();
-        int selectedFunction = cmbFunction.getSelectedIndex();
-        int selectedInterval = (Integer) spnInterval.getValue();
 
-        algorithm = new AlgoStore(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
-        functionChartPlotter.setInterval(selectedInterval);
-        functionChartPlotter.setChart(algorithm);
-
-        clearValues();
-        pnlDetails[0].setTextValue(String.valueOf(new Date().getTime()));
 
         currentRunner = new Thread(new Runnable() {
             @Override
             public void run() {
-                functionChartPlotter.execute();
-                btnRun.setEnabled(true);
-                btnPause.setEnabled(false);
-                btnStop.setEnabled(false);
-                setInfoData(algorithm.toList());
+
+                btnRun.setEnabled(false);
+                btnPause.setEnabled(!isRepeat);
+                btnStop.setEnabled(true);
+                btnRepeate.setEnabled(false);
+
+                do{
+                    int selectedAlgorithm = cmbAlgorithm.getSelectedIndex();
+                    int selectedFunction = cmbFunction.getSelectedIndex();
+                    int selectedInterval = (Integer) spnInterval.getValue();
+
+                    algorithm = new AlgoStore(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
+                    functionChartPlotter.setInterval(selectedInterval);
+                    functionChartPlotter.setChart(algorithm);
+
+                    clearValues();
+                    pnlDetails[0].setTextValue(String.valueOf(new Date().getTime()));
+
+                    functionChartPlotter.execute();
+                    setInfoData(algorithm.toList());
+
+                    if(!isRepeat){
+                        btnRun.setEnabled(true);
+                        btnPause.setEnabled(false);
+                        btnStop.setEnabled(false);
+                        btnRepeate.setEnabled(true);
+                    }else{
+                        selectedFunction++;
+                        if(selectedFunction == cmbFunction.getItemCount()){
+                            cmbFunction.setSelectedIndex(0);
+                        }else{
+                            cmbFunction.setSelectedIndex(selectedFunction);
+                        }
+
+                    }
+                }while(isRepeat);
             }
         });
 
@@ -96,6 +117,7 @@ public class Main {
         btnRun.setEnabled(false);
         btnPause.setEnabled(true);
         btnStop.setEnabled(true);
+        btnRepeate.setEnabled(false);
 
         if(currentRunner != null && functionChartPlotter.isPaused()){
             functionChartPlotter.setInterval((Integer) spnInterval.getValue());
@@ -110,8 +132,20 @@ public class Main {
             btnRun.setEnabled(true);
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
+            btnRepeate.setEnabled(false);
+            isRepeat = false;
             functionChartPlotter.pause();
         }
+    }
+
+    private void btnRepeatActionPerformed(ActionEvent e){
+        btnRun.setEnabled(false);
+        btnPause.setEnabled(false);
+        btnStop.setEnabled(true);
+        btnRepeate.setEnabled(false);
+
+        isRepeat = true;
+        runOptimizer();
     }
 
     private void btnStopActionPerformed(ActionEvent e){
@@ -119,7 +153,9 @@ public class Main {
             btnRun.setEnabled(true);
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
+            btnRepeate.setEnabled(true);
             functionChartPlotter.stopOptimizer();
+            isRepeat = false;
             currentRunner=null;
         }
     }
@@ -147,7 +183,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new org.usa.soc.surfacePlotter.FunctionDisplay(cmbFunction.getSelectedIndex());
+        new FunctionDisplay(cmbFunction.getSelectedIndex());
     }
 
     private void fncActionPerformed(double... values){
@@ -291,6 +327,17 @@ public class Main {
             }
         });
         jToolBar.add(btnStop);
+
+        btnRepeate = new JButton("Repeat");
+        btnRepeate.setFont(f1);
+        btnRepeate.setEnabled(true);
+        btnRepeate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnRepeatActionPerformed(e);
+            }
+        });
+        jToolBar.add(btnRepeate);
 
 
         jToolBar.addSeparator();

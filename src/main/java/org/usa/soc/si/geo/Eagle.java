@@ -1,6 +1,6 @@
-package org.usa.soc.geo;
+package org.usa.soc.si.geo;
 
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 

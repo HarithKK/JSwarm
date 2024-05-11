@@ -2,9 +2,10 @@ package ALSO;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.si.also.ALSO;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -15,7 +16,7 @@ public class TestALSO {
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.also.ALSO(
+        return new ALSO(
                 fn,
                 100,
                 200,

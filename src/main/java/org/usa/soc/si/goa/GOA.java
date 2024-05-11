@@ -1,9 +1,8 @@
-package org.usa.soc.goa;
+package org.usa.soc.si.goa;
 
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.benchmarks.singleObjective.AckleysFunction;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;

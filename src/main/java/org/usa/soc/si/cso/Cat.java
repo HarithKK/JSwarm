@@ -1,7 +1,7 @@
-package org.usa.soc.cso;
+package org.usa.soc.si.cso;
 
-import org.usa.soc.ObjectiveFunction;
-import org.usa.soc.core.Vector;
+import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 

@@ -2,9 +2,10 @@ package MFA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.si.mfa.MFA;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -16,7 +17,7 @@ public class TestMFA {
     private static final double PRECISION_VAL  = 10;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn){
-        return new org.usa.soc.mfa.MFA(
+        return new MFA(
                 fn,
                 500,
                 fn.getNumberOfDimensions(),

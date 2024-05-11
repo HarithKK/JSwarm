@@ -2,9 +2,10 @@ package GOA;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.Algorithm;
-import org.usa.soc.ObjectiveFunction;
+import org.usa.soc.core.Algorithm;
+import org.usa.soc.core.ObjectiveFunction;
 import org.usa.soc.benchmarks.singleObjective.*;
+import org.usa.soc.si.goa.GOA;
 import utils.AssertUtil;
 import utils.Logger;
 
@@ -15,7 +16,7 @@ public class TestGOA {
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.goa.GOA(
+        return new GOA(
                 fn,
                 100,
                 100,
