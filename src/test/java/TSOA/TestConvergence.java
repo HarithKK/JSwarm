@@ -14,7 +14,7 @@ import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
 import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function22;
 import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function24;
 import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function25;
-import org.usa.soc.core.action.Action;
+import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.tsoa.TSOA;
 import utils.Utils;
@@ -24,7 +24,7 @@ public class TestConvergence {
     private void TestFunction(ObjectiveFunction f, int p) throws Exception {
         TSOA t = new TSOA(f, p, 1000, f.getNumberOfDimensions(), f.getMin(), f.getMax(),true, 0.7, 2);
         t.initialize();
-        t.addStepAction(new Action() {
+        t.addStepAction(new StepAction() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
                 StringBuilder sb = new StringBuilder();

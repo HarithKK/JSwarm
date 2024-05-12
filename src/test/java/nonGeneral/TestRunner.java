@@ -12,7 +12,7 @@ import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
 import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.separable.*;
 import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
 import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.*;
-import org.usa.soc.core.action.Action;
+import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import ui.AlgoStore;
@@ -68,7 +68,7 @@ public class TestRunner {
             algorithm = getAlgorithm(fn);
             algorithm.initialize();
             System.out.println();
-            algorithm.addStepAction(new Action() {
+            algorithm.addStepAction(new StepAction() {
                 @Override
                 public void performAction(Vector best, Double bestValue, int step) {
 

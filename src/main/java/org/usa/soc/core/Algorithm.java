@@ -1,7 +1,8 @@
 package org.usa.soc.core;
 
 import org.usa.soc.KillOptimizerException;
-import org.usa.soc.core.action.Action;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.SeriesData;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
@@ -21,7 +22,7 @@ public abstract class Algorithm implements Cloneable {
 
     private List<Double> history = new ArrayList<>();
 
-    protected Action stepAction;
+    protected StepAction stepAction;
 
     protected ObjectiveFunction<Double> objectiveFunction;
 
@@ -105,7 +106,7 @@ public abstract class Algorithm implements Cloneable {
     public Algorithm clone() throws CloneNotSupportedException{
         return null;
     }
-    public void addStepAction(Action a){
+    public void addStepAction(StepAction a){
         this.stepAction =a;
     }
 
@@ -312,5 +313,9 @@ public abstract class Algorithm implements Cloneable {
 
     public List<Double> getHistory() {
         return history;
+    }
+
+    public List<SeriesData> getSeriesData() {
+        return null;
     }
 }

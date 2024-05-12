@@ -8,7 +8,7 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.core.Algorithm;
 import org.usa.soc.core.exceptions.KillOptimizerException;
-import org.usa.soc.core.action.Action;
+import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -129,7 +129,7 @@ public class FunctionChartPlotter {
         algorithm.setInterval(interval);
         int step =0;
         double fraction = algorithm.getStepsCount()/100;
-        algorithm.addStepAction(new Action() {
+        algorithm.addStepAction(new StepAction() {
             @Override
             public void performAction(Vector best, Double bestValue, int step) {
 

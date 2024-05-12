@@ -64,9 +64,6 @@ public class Main {
     Thread currentRunner = null;
 
     private void runOptimizer(){
-
-
-
         currentRunner = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -227,6 +224,8 @@ public class Main {
         pnlRight.add(new XChartPanel(pltGradiantDecent.getChart()));
 
         functionChartPlotter.setAction(new EmptyAction() {
+
+
             @Override
             public void performAction(int step, double... values) {
                 stepCount = step;
