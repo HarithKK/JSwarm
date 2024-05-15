@@ -29,7 +29,6 @@ public class AgentGroup extends SeriesData {
         for(int i=0 ;i< agents.size(); i++){
             Agent agent = agents.get(i);
             agent.step();
-            agent.checkMargins(m);
         }
     }
 

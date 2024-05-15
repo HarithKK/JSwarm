@@ -3,11 +3,10 @@ package org.usa.soc.multiagent;
 import org.knowm.xchart.style.markers.Marker;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
-import org.usa.soc.core.ds.Markers;
-import org.usa.soc.core.ds.SeriesData;
 import org.usa.soc.core.exceptions.KillOptimizerException;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 
@@ -114,39 +113,29 @@ public abstract class Algorithm{
         this.checkPaused();
     }
 
-    protected void addAgent(String key, Agent agent){
-        if(this.agents.containsKey(key)){
-            this.agents.get(key).getAgents().add(agent);
-        }else{
-            addAgents(key, agent, 1);
-        }
-    }
-
-    protected void addAgents(String key, Agent agent, int count){
+    protected AgentGroup addAgents(String key, Class<?> agent, int count) throws Exception{
         AgentGroup agentGroup = new AgentGroup(key);
         agentGroup.setAgents(createAgents(count, agent));
         this.agents.put(key, agentGroup);
+        return agentGroup;
     }
 
-    protected void addAgents(String key, Agent agent, int count, Marker marker){
-        AgentGroup agentGroup = new AgentGroup(key);
-        agentGroup.setMarker(marker);
-        agentGroup.setAgents(createAgents(count, agent));
-        this.agents.put(key, agentGroup);
-    }
 
-    protected void addAgents(String key, Agent agent, int count, Marker marker, Color color){
+    protected AgentGroup addAgents(String key, Class<?> agent, int count, Marker marker, Color color) throws Exception{
         AgentGroup agentGroup = new AgentGroup(key);
         agentGroup.setMarker(marker);
         agentGroup.setMarkerColor(color);
         agentGroup.setAgents(createAgents(count, agent));
         this.agents.put(key, agentGroup);
+        return agentGroup;
     }
 
-    private List<Agent> createAgents(int count, Agent agent){
+    private List<Agent> createAgents(int count, Class<?> agent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         List<Agent> list = new ArrayList<>();
         for(int i=0; i<count;i++){
-            list.add(agent.clone());
+            Agent inst = (Agent) agent.getDeclaredConstructor().newInstance();
+            inst.initPosition(margins, list);
+            list.add(inst);
         }
         return list;
     }

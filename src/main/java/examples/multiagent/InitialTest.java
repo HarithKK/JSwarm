@@ -22,8 +22,13 @@ public class InitialTest {
         Algorithm algorithm = new Algorithm(1000) {
             @Override
             public void initialize() {
-                this.addAgents("a", new TestAgent(), 10);
-                this.addAgents("b", new TestAgent(), 100, Markers.CROSS, Color.RED);
+                try {
+                    this.addAgents("a", TestAgent.class, 10);
+                    this.addAgents("b",  TestAgent.class, 100, Markers.CROSS, Color.RED);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
             }
 
             @Override
@@ -32,6 +37,6 @@ public class InitialTest {
             }
         };
 
-        Executor.executePlain2D("Initial Execution",algorithm, 700, 700, new Margins(0, 15, 0, 15));
+        Executor.getInstance().executePlain2D("Initial Execution",algorithm, 700, 700, new Margins(0, 15, 0, 15));
     }
 }

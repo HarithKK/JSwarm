@@ -40,6 +40,7 @@ public class ChartView extends JFrame {
 
         setTitle(title);
         setSize(w, h);
+        algorithm.setMargins(m);
 
         decimalFormat = new DecimalFormat("#.#######");
 
