@@ -6,16 +6,16 @@ Settings
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import org.usa.soc.core.Algorithm;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
-import org.usa.soc.benchmarks.nonGeneral.classical.multimodal.separable.*;
-import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
-import org.usa.soc.benchmarks.nonGeneral.classical.unimodal.separable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
+import org.usa.soc.si.benchmarks.nonGeneral.classical.unimodal.separable.*;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
-import ui.AlgoStore;
+import progs.AlgoStore;
 
 import java.awt.*;
 import java.nio.file.Files;
@@ -41,7 +41,7 @@ public class TestRunner {
     private static final int ALGO_INDEX = 2;
 
     private static final int RIP_DIS = 10;
-    private static final ObjectiveFunction OBJECTIVE_FUNCTION = new org.usa.soc.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction();
+    private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
 
     public Algorithm getAlgorithm(){
         return new AlgoStore(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);

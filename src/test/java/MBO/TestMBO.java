@@ -1,10 +1,10 @@
 package MBO;
 
 import org.junit.jupiter.api.*;
-import org.usa.soc.core.Algorithm;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.benchmarks.singleObjective.*;
-import org.usa.soc.si.mbo.MBO;
+import org.usa.soc.si.benchmarks.singleObjective.*;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.algo.mbo.MBO;
 import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInstance;
-import org.usa.soc.core.Algorithm;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
-import ui.AlgoStore;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
+import progs.AlgoStore;
 import utils.Utils;
 
 import java.util.ArrayList;

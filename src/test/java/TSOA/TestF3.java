@@ -2,10 +2,10 @@ package TSOA;
 
 
 import org.junit.jupiter.api.*;
-import org.usa.soc.core.Algorithm;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
-import ui.AlgoStore;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
+import progs.AlgoStore;
 import utils.Utils;
 
 import java.util.ArrayList;

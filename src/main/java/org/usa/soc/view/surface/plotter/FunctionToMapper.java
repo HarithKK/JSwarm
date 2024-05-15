@@ -1,7 +1,7 @@
 package org.usa.soc.view.surface.plotter;
 
 import net.ericaro.surfaceplotter.Mapper;
-import org.usa.soc.core.ObjectiveFunction;
+import org.usa.soc.si.ObjectiveFunction;
 
 public class FunctionToMapper implements Mapper {
 

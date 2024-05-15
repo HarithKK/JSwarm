@@ -1,6 +1,5 @@
 package utils;
 
-import org.usa.soc.core.Algorithm;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.StringFormatter;
 
@@ -11,7 +10,7 @@ public class Logger {
     private static final String DL  = " \t ";
     static DecimalFormat df = new DecimalFormat("#");
 
-    public static void showFunction(Algorithm al){
+    public static void showFunction(org.usa.soc.si.Algorithm al){
         if(al == null){
             return;
         }

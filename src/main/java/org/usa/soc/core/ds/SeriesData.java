@@ -1,35 +1,34 @@
 package org.usa.soc.core.ds;
 
 import org.knowm.xchart.style.markers.*;
-import org.knowm.xchart.style.markers.Rectangle;
 
 import java.awt.*;
 
 public class SeriesData {
-
-    public  interface Markers {
-        Marker NONE = new None();
-        Marker CIRCLE = new Circle();
-        Marker DIAMOND = new Diamond();
-        Marker SQUARE = new Square();
-        Marker TRIANGLE_DOWN = new TriangleDown();
-        Marker TRIANGLE_UP = new TriangleUp();
-        Marker CROSS = new Cross();
-        Marker PLUS = new Plus();
-        Marker TRAPEZOID = new Trapezoid();
-        Marker OVAL = new Oval();
-        Marker RECTANGLE = new Rectangle();
-    }
     public String name;
-    public double x[], y[];
-    public Marker marker;
-    public Color markerColor;
+    private Marker marker;
+    private Color markerColor;
 
     public SeriesData(String name){
         this.name = name;
-        this.marker = Markers.CIRCLE;
-        this.markerColor = Color.blue;
+        this.setMarker(Markers.CIRCLE);
+        this.setMarkerColor(Color.blue);
     }
 
 
+    public Marker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(Marker marker) {
+        this.marker = marker;
+    }
+
+    public Color getMarkerColor() {
+        return markerColor;
+    }
+
+    public void setMarkerColor(Color markerColor) {
+        this.markerColor = markerColor;
+    }
 }

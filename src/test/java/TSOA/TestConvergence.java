@@ -1,22 +1,22 @@
 package TSOA;
 
 import org.junit.jupiter.api.Test;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
-import org.usa.soc.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
-import org.usa.soc.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
-import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function22;
-import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function24;
-import org.usa.soc.benchmarks.FixMultiModalObjectiveFunctions.Function25;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
+import org.usa.soc.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
+import org.usa.soc.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
+import org.usa.soc.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
+import org.usa.soc.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
+import org.usa.soc.si.benchmarks.FixMultiModalObjectiveFunctions.Function22;
+import org.usa.soc.si.benchmarks.FixMultiModalObjectiveFunctions.Function24;
+import org.usa.soc.si.benchmarks.FixMultiModalObjectiveFunctions.Function25;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.si.tsoa.TSOA;
+import org.usa.soc.si.algo.tsoa.TSOA;
 import utils.Utils;
 
 public class TestConvergence {

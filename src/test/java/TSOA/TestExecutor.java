@@ -1,7 +1,7 @@
 package TSOA;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.usa.soc.core.Algorithm;
+import org.usa.soc.si.Algorithm;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;

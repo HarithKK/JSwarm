@@ -1,12 +1,12 @@
 package TSOA;
 
 import org.junit.jupiter.api.Test;
-import org.usa.soc.core.Algorithm;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.si.tsoa.TSOA;
+import org.usa.soc.si.algo.tsoa.TSOA;
 import utils.AssertUtil;
 
 public class TestTSOA {

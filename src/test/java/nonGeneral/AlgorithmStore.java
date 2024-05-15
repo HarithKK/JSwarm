@@ -1,14 +1,14 @@
 package nonGeneral;
 
-import org.usa.soc.core.Algorithm;
-import org.usa.soc.core.ObjectiveFunction;
-import org.usa.soc.si.cs.CS;
-import org.usa.soc.si.fa.FA;
-import org.usa.soc.si.pso.PSO;
-import org.usa.soc.si.cso.CSO;
-import org.usa.soc.si.gso.GSO;
+import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.si.algo.cs.CS;
+import org.usa.soc.si.algo.fa.FA;
+import org.usa.soc.si.algo.pso.PSO;
+import org.usa.soc.si.algo.cso.CSO;
+import org.usa.soc.si.algo.gso.GSO;
 import org.usa.soc.util.Mathamatics;
-import org.usa.soc.si.wso.WSO;
+import org.usa.soc.si.algo.wso.WSO;
 
 public class AlgorithmStore {
 
