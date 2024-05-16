@@ -9,6 +9,6 @@ public class Follower extends Agent {
     Vector velocity = new Vector(2);
     @Override
     public void step() {
-        //updatePosition(getPosition().operate(Vector.OPERATOR.ADD, velocity));
+        updatePosition(getPosition().operate(Vector.OPERATOR.ADD, velocity));
     }
 }

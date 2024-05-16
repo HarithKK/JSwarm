@@ -8,16 +8,16 @@ public class Leader extends Agent {
 
     @Override
     public void step() {
-        if(this.getX() > this.getXMax() - 5){
+        if(this.getX() > this.getMargines().xMax - 5){
             this.xDirection = -1;
-        }else if(this.getX() < this.getXMin() + 5){
+        }else if(this.getX() < this.getMargines().xMin + 5){
             this.xDirection = 1;
         }
 
-        if(this.getY() > this.getYMax() - 5){
+        if(this.getY() > this.getMargines().yMax - 5){
             yDirection = -1;
             mag += Randoms.rand(-2,2);
-        }else if(this.getY() < this.getYMin() + 5){
+        }else if(this.getY() < this.getMargines().yMin + 5){
             yDirection = 1;
             mag += Randoms.rand(-2,2);
         }

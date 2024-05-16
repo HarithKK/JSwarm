@@ -36,12 +36,12 @@ public class PlainView2D {
 
     public PlainView2D(String title, int w, int h, Algorithm algorithm){
         this.initComponents(title, w, h);
-        this.initAlgorithm(algorithm, algorithm.getMargins().xMin, algorithm.getMargins().yMin, algorithm.getMargins().xMax, algorithm.getMargins().yMax);
+        this.initAlgorithm(algorithm, algorithm.getMargins());
     }
 
     public PlainView2D(String title, int w, int h, Algorithm algorithm, Margins m){
         this.initComponents(title, w, h);
-        this.initAlgorithm(algorithm, m.xMin, m.yMin, m.xMax, m.yMax);
+        this.initAlgorithm(algorithm, m);
     }
 
     private void initComponents(String title, int w, int h){
@@ -56,14 +56,16 @@ public class PlainView2D {
         this.getChart().getStyler().setMarkerSize(8);
     }
 
-    private void initAlgorithm(Algorithm algorithm, Double xMin, Double yMin, Double xMax, Double yMax){
+    private void initAlgorithm(Algorithm algorithm, Margins m){
         this.setAlgo(algorithm);
 
-        getChart().getStyler().setXAxisMin(xMin);
-        getChart().getStyler().setYAxisMin(yMin);
+        if(m != null){
+            getChart().getStyler().setXAxisMin(m.xMin);
+            getChart().getStyler().setYAxisMin(m.yMin);
 
-        getChart().getStyler().setXAxisMax(xMax);
-        getChart().getStyler().setYAxisMax(yMax);
+            getChart().getStyler().setXAxisMax(m.xMax);
+            getChart().getStyler().setYAxisMax(m.yMax);
+        }
     }
 
     public void execute() throws Exception{

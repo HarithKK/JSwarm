@@ -10,11 +10,15 @@ public abstract class Agent implements Cloneable{
 
     private Vector position;
 
-    private double[] xm, ym;
+    private double[] xm = new double[]{0,1}, ym=new double[]{0,1};
+    private Margins margines;
 
     public void initPosition(Margins m, List<Agent> list){
-        this.xm = new double[]{m.xMin, m.xMax};
-        this.ym = new double[]{m.yMin, m.yMax};
+        if(m != null){
+            this.xm = new double[]{m.xMin, m.xMax};
+            this.ym = new double[]{m.yMin, m.yMax};
+            setMargines(m);
+        }
         this.setPosition(Randoms.getRandomVector(2, xm, ym));
     }
 
@@ -28,10 +32,6 @@ public abstract class Agent implements Cloneable{
     }
 
     public abstract void step();
-
-    public void checkMargins() {
-        this.getPosition().setVector(this.getPosition().fixVector(this.xm, this.ym));
-    }
 
     public double getX() {
         return this.getPosition().getValue(0);
@@ -48,11 +48,6 @@ public abstract class Agent implements Cloneable{
     public void setY(double y) {
         this.getPosition().setValue(y, 1);
     }
-
-    public double getXMin(){ return this.xm[0]; }
-    public double getXMax(){ return this.xm[1]; }
-    public double getYMin(){ return this.ym[0]; }
-    public double getYMax(){ return this.ym[1]; }
 
     @Override
     public Agent clone() {
@@ -76,5 +71,18 @@ public abstract class Agent implements Cloneable{
 
     public void setPosition(Vector position) {
         this.position = position;
+    }
+
+    public Margins getMargines() {
+        return margines;
+    }
+
+    public void setMargines(Margins margines) {
+        this.margines = margines;
+    }
+
+    @Override
+    public String toString(){
+        return "[x]="+getX() + ", [y]="+getY();
     }
 }

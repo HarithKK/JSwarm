@@ -43,13 +43,23 @@ public class LFClassicDynamics {
 
             @Override
             public void run() {
-                for(Agent ai : group.getAgents()){
-                    ((Follower)ai).velocity.setVector(al.getPosition().operate(Vector.OPERATOR.SUB, ai.getPosition()));
+                for(int i=0; i< group.getAgentsCount(); i++){
+                    Vector v = new Vector(2);
+                    Vector v2 = al.getPosition().operate(Vector.OPERATOR.SUB, group.getAgents().get(i).getPosition());
+                    for(int j=0; j< group.getAgentsCount(); j++){
+                        if(i!=j){
+                            Vector vx = group.getAgents().get(i).getPosition().operate(
+                                    Vector.OPERATOR.SUB, group.getAgents().get(j).getPosition());
+                            v.setVector(v.operate(Vector.OPERATOR.ADD, vx));
+                        }
+                    }
+
+                    ((Follower)group.getAgents().get(i)).velocity.setVector(v.operate(Vector.OPERATOR.ADD, v2).operate(Vector.OPERATOR.MULP, -1.0));
 
                 }
             }
         };
 
-        Executor.getInstance().executePlain2D("Initial Execution",algorithm, 700, 700, new Margins(-300, 300, -300, 300));
+        Executor.getInstance().executePlain2D("Initial Execution",algorithm, 700, 700, new Margins(0, 1000, 0, 1000));
     }
 }
