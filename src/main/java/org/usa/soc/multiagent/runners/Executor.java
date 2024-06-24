@@ -23,7 +23,9 @@ public class Executor {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+
                 chartView = new ChartView(title, algorithm, w, h, m);
+                chartView.setInterval(50);
             }
         });
     }

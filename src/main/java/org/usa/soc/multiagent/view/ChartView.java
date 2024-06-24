@@ -10,9 +10,13 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.util.Logger;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
 
 public class ChartView extends JFrame {
@@ -26,7 +30,7 @@ public class ChartView extends JFrame {
     JLabel labelStep;
 
     JPanel pnlProgress, pnlCenter;
-
+    JSlider sldInterval;
     PlainView2D view2D;
 
     XChartPanel<Chart<?, ?>> chartPanel;
@@ -62,6 +66,10 @@ public class ChartView extends JFrame {
                 updateUI();
             }
         });
+    }
+
+    public void setInterval(int delay){
+        this.view2D.setInterval(delay);
     }
 
     private void updateUI() {
@@ -201,6 +209,19 @@ public class ChartView extends JFrame {
             }
         });
         //jToolBar.add(btnRepeat);
+
+
+        jToolBar.add(new JToolBar.Separator());
+        JLabel label1 = new JLabel("Interval: ", JLabel.CENTER);
+        jToolBar.add(label1);
+        sldInterval = new JSlider(10,3000, 100);
+        sldInterval.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                setInterval(sldInterval.getValue());
+            }
+        });
+        jToolBar.add(sldInterval);
 
         progressBar = new JProgressBar();
         progressBar.setValue(progressValue);

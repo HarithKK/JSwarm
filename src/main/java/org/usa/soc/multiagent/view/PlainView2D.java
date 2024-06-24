@@ -135,6 +135,7 @@ public class PlainView2D {
 
     public void setInterval(int interval) {
         this.interval = interval;
+        this.getAlgo().setInterval(this.interval);
     }
 
     public Action getAction() {
