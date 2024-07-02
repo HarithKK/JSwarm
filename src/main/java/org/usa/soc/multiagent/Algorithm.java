@@ -54,7 +54,7 @@ public abstract class Algorithm{
             throw new RuntimeException("Initialize Failed");
         }
 
-        if(getAgents().isEmpty()){
+        if(agents.isEmpty()){
             throw new RuntimeException("No Agents Registered");
         }
 
@@ -62,8 +62,8 @@ public abstract class Algorithm{
         for(long step = 0; step< maxSteps; step++){
             run();
 
-            for(String key: this.getAgents().keySet()){
-                for(Agent agent: this.getAgents().get(key).getAgents()){
+            for(String key: this.agents.keySet()){
+                for(Agent agent: this.agents.get(key).getAgents()){
                     agent.step();
                 }
             }
@@ -81,7 +81,7 @@ public abstract class Algorithm{
             throw new RuntimeException("Initialize Failed");
         }
 
-        if(getAgents().isEmpty()){
+        if(agents.isEmpty()){
             throw new RuntimeException("No Agents Registered");
         }
 
@@ -89,8 +89,8 @@ public abstract class Algorithm{
         for(;;){
             run();
 
-            for(String key: this.getAgents().keySet()){
-                for(Agent agent: this.getAgents().get(key).getAgents()){
+            for(String key: this.agents.keySet()){
+                for(Agent agent: this.agents.get(key).getAgents()){
                     agent.step();
                 }
             }
@@ -125,7 +125,7 @@ public abstract class Algorithm{
     protected AgentGroup addAgents(String key, Class<?> agent, int count) throws Exception{
         AgentGroup agentGroup = new AgentGroup(key);
         agentGroup.setAgents(createAgents(count, agent));
-        this.getAgents().put(key, agentGroup);
+        this.agents.put(key, agentGroup);
         return agentGroup;
     }
 
@@ -135,7 +135,7 @@ public abstract class Algorithm{
         agentGroup.setMarker(marker);
         agentGroup.setMarkerColor(color);
         agentGroup.setAgents(createAgents(count, agent));
-        this.getAgents().put(key, agentGroup);
+        this.agents.put(key, agentGroup);
         return agentGroup;
     }
 
