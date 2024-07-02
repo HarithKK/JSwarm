@@ -4,6 +4,7 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.SeriesData;
 import org.usa.soc.core.ds.SeriesDataObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AgentGroup extends SeriesData {
@@ -14,6 +15,9 @@ public class AgentGroup extends SeriesData {
     }
 
     public void addAgent(Agent agent){
+        if(agents == null){
+            this.agents = new ArrayList<>();
+        }
         this.agents.add(agent);
     }
 

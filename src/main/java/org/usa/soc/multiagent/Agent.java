@@ -13,13 +13,23 @@ public abstract class Agent implements Cloneable{
     private double[] xm = new double[]{0,1}, ym=new double[]{0,1};
     private Margins margines;
 
-    public void initPosition(Margins m, List<Agent> list){
+    public void initPosition(Margins m){
         if(m != null){
-            this.xm = new double[]{m.xMin, m.xMax};
-            this.ym = new double[]{m.yMin, m.yMax};
+            this.xm = new double[]{m.xMin, m.yMin};
+            this.ym = new double[]{m.xMax, m.yMax};
             setMargines(m);
         }
         this.setPosition(Randoms.getRandomVector(2, xm, ym));
+    }
+
+    public void initPosition(Margins m, double x, double y){
+        if(m != null){
+            this.xm = new double[]{m.xMin, m.yMin};
+            this.ym = new double[]{m.xMax, m.yMax};
+            setMargines(m);
+        }
+        this.setPosition(Randoms.getRandomVector(2, xm, ym));
+        this.updatePosition(x, y);
     }
 
     public void updatePosition(double x, double y){

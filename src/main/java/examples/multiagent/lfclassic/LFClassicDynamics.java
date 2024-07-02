@@ -21,7 +21,7 @@ public class LFClassicDynamics {
             public void initialize() {
                 try {
                     this.addAgents("leader", Leader.class, 1);
-                    al = (Leader) this.agents.get("leader").getAgents().get(0);
+                    al = (Leader) this.getAgents().get("leader").getAgents().get(0);
                     al.setPosition(Randoms.getRandomVector(2, new double[]{-100, 100}, new double[]{100, 100}));
 
                     group = this.addAgents("follower", Follower.class, 10, Markers.CIRCLE, Color.RED);

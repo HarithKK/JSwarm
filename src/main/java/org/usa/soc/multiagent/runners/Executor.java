@@ -10,6 +10,8 @@ public class Executor {
     private static Executor instance;
     private ChartView chartView;
 
+    private static Algorithm iAlgorithm;
+
     public static Executor getInstance(){
         if(instance == null){
             instance = new Executor();
@@ -19,11 +21,15 @@ public class Executor {
 
     private Executor(){}
 
+    public static Algorithm getAlgorithm() {
+        return iAlgorithm;
+    }
+
     public void executePlain2D(String title, Algorithm algorithm, int w, int h, Margins m){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-
+                iAlgorithm = algorithm;
                 chartView = new ChartView(title, algorithm, w, h, m);
                 chartView.setInterval(50);
             }
