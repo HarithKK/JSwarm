@@ -172,7 +172,7 @@ public abstract class Algorithm{
         return currentStep;
     }
 
-    public Map<String, AgentGroup> getSeriesData() { return getAgents(); }
+    public Map<String, AgentGroup> getSeriesData() { return agents; }
 
     public boolean isPaused() {
         return isPaused.isSet();
