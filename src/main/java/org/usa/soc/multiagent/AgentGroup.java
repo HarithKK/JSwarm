@@ -11,13 +11,12 @@ public class AgentGroup extends SeriesData {
     private List<Agent> agents;
 
     public AgentGroup(String name){
+
         super(name);
+        this.agents = new ArrayList<>();
     }
 
     public void addAgent(Agent agent){
-        if(agents == null){
-            this.agents = new ArrayList<>();
-        }
         this.agents.add(agent);
     }
 
@@ -45,6 +44,10 @@ public class AgentGroup extends SeriesData {
             obj.addXY(i, agent.getX(), agent.getY());
         }
         return obj;
+    }
+
+    public void removeAgent(Agent agent){
+        this.agents.remove(agent);
     }
 
 }

@@ -2,7 +2,6 @@ package org.usa.soc.multiagent.view;
 
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
-import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.action.Action;
@@ -15,9 +14,9 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChartView extends JFrame {
 
@@ -243,4 +242,9 @@ public class ChartView extends JFrame {
         this.setVisible(true);
     }
 
+    public void setCustomActions(List<JButton> customActions) {
+        for(JButton btn: customActions){
+            this.jToolBar.add(btn);
+        }
+    }
 }

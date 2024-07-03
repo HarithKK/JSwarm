@@ -4,6 +4,7 @@ import org.knowm.xchart.style.markers.Marker;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.exceptions.KillOptimizerException;
+import org.usa.soc.util.Logger;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -90,8 +91,12 @@ public abstract class Algorithm{
             run();
 
             for(String key: this.agents.keySet()){
-                for(Agent agent: this.agents.get(key).getAgents()){
-                    agent.step();
+                try{
+                    for (Agent agent : this.agents.get(key).getAgents()) {
+                        agent.step();
+                    }
+                }catch (Exception e){
+                    Logger.getInstance().error(e.getMessage());
                 }
             }
 

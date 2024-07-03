@@ -105,7 +105,17 @@ public class PlainView2D {
         for(String key: data.keySet()){
             AgentGroup agentGroup = data.get(key);
             SeriesDataObject obj = agentGroup.getLocations();
-            chart.updateXYSeries(agentGroup.name, obj.getX(), obj.getY(), null);
+            if(obj.getX().length != 0) {
+                try{
+                    chart.updateXYSeries(agentGroup.name, obj.getX(), obj.getY(), null);
+                }catch (IllegalArgumentException exp){
+                    if(exp.getMessage().endsWith("not found!!!")){
+                        XYSeries series = this.chart.addSeries(agentGroup.name, obj.getX(), obj.getY());
+                        series.setMarker(agentGroup.getMarker());
+                        series.setMarkerColor(agentGroup.getMarkerColor());
+                    }
+                }
+            }
         }
     }
 
@@ -123,9 +133,11 @@ public class PlainView2D {
         for(String key: data.keySet()){
             AgentGroup agentGroup = data.get(key);
             SeriesDataObject obj = agentGroup.getLocations();
-            XYSeries series = this.chart.addSeries(agentGroup.name, obj.getX(), obj.getY());
-            series.setMarker(agentGroup.getMarker());
-            series.setMarkerColor(agentGroup.getMarkerColor());
+            if(obj.getX().length !=0) {
+                XYSeries series = this.chart.addSeries(agentGroup.name, obj.getX(), obj.getY());
+                series.setMarker(agentGroup.getMarker());
+                series.setMarkerColor(agentGroup.getMarkerColor());
+            }
         }
     }
 

@@ -84,6 +84,23 @@ public class Vector {
         this.positionIndexes[index] = value;
     }
 
+    public  void updateValue(Double value, int index){
+        if(index >= this.getNumberOfDimensions()){
+            throw new ArrayIndexOutOfBoundsException("Index should be less than "+ this.getNumberOfDimensions());
+        }
+
+        this.positionIndexes[index] = this.positionIndexes[index] + value;
+    }
+
+    public  void updateVector(Vector v){
+        if(v.numberOfDimensions != this.getNumberOfDimensions()){
+            throw new ArrayIndexOutOfBoundsException("Index should be less than "+ this.getNumberOfDimensions());
+        }
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = this.positionIndexes[i] + v.positionIndexes[i];
+        }
+    }
+
     public Double getValue(int index){
         return this.positionIndexes[index];
     }
