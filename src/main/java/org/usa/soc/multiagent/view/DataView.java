@@ -1,26 +1,30 @@
 package org.usa.soc.multiagent.view;
 
+import org.knowm.xchart.XYSeries;
+import org.usa.soc.multiagent.runners.Executor;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 public class DataView extends JFrame{
-
-    ProgressiveChart chart;
 
     JPanel panel;
 
     int s =0;
 
-    public DataView(int x){
-        setTitle("Data View");
-        this.setSize(300, 500);
-        this.setLocation(x+20, 0);
+    public DataView(String title){
+        setTitle(title);
+        this.setSize(700, 1000);
         initialize();
     }
 
-    public void addData(double v){
-        chart.addData(s++, v);
-        chart.updateUI();
+    public void addData(String chartName, String seriesName, double value){
+        if(!Executor.getInstance().getChartHashMap().containsKey(chartName))
+            return;
+        ProgressiveChart chart = Executor.getInstance().getChartHashMap().get(chartName);
+        chart.addData(seriesName, value);
+
         panel.updateUI();
         this.revalidate();
         this.repaint();
@@ -29,11 +33,15 @@ public class DataView extends JFrame{
     private void initialize() {
         panel = new JPanel();
 
-        chart = new ProgressiveChart(300, 200, "T1", "s1", "it", 0);
-        chart.setMaxLength(100);
-        panel.add(chart.getPanel());
+        for(ProgressiveChart chart : Executor.getInstance().getChartHashMap().values()){
+            panel.add(chart.getPanel());
+        }
 
         this.add(panel);
+    }
+
+    public void setVisible(int loc){
+        this.setLocation(loc + 20, 0);
         this.setVisible(true);
     }
 }

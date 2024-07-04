@@ -4,68 +4,85 @@ import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProgressiveChart {
 
     private XYChart chart;
 
-    private List<Double> yData;
-    private XYSeries series;
-
     private DecimalFormat decimalFormat;
 
     private XChartPanel panel;
 
-    private double initValue;
-
     private int maxLength = -1;
 
-    public ProgressiveChart(int width, int height, String title, String seriesName, String xAxisName, double initValue){
+    private int step;
+
+    Map<String, ChartSeries> chartSeriesMap = new HashMap<>();
+
+    public ProgressiveChart(int width, int height, String chartName, String yAxisName, String xAxisName){
         this.chart = new XYChartBuilder()
                 .width(width)
                 .height(height)
-                .title(title)
+                .title(chartName)
                 .xAxisTitle(xAxisName)
-                .yAxisTitle(seriesName).build();
+                .yAxisTitle(yAxisName).build();
         getChart().getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         getChart().getStyler().setChartTitleVisible(false);
         getChart().getStyler().setLegendVisible(false);
-        getChart().getStyler().setMarkerSize(3);
+        getChart().getStyler().setMarkerSize(2);
 
         decimalFormat = new DecimalFormat("#.##");
-        initValue = initValue;
-
-        yData = new ArrayList<>();
 
         this.clearChart();
-
-        series = getChart().addSeries(seriesName, null, yData);
     }
 
-    public void setMaxLength(int length){
+    public ProgressiveChart setLegend(boolean isVisible){
+        getChart().getStyler().setLegendVisible(isVisible);
+        return this;
+    }
+
+    public ProgressiveChart subscribe(ChartSeries chartSeries){
+        chartSeries.yData.add(chartSeries.initValue);
+        chartSeries.xData.add(0);
+        chartSeries.series = getChart().addSeries(chartSeries.seriesName, null, chartSeries.yData);
+        chartSeries.initialize();
+        chartSeriesMap.put(chartSeries.seriesName, chartSeries);
+        return this;
+    }
+
+    public ProgressiveChart setMaxLength(int length){
         this.maxLength = length;
+        return this;
     }
 
-    public void addData(int step, double data){
-        if(this.yData.size() == 1 && this.yData.get(0) == initValue){
-            this.yData.remove(0);
-            this.yData.add(Double.valueOf(decimalFormat.format(data)));
+    public void addData(String seriesName, double data){
+        if(!chartSeriesMap.containsKey(seriesName))
+            return;
+        ChartSeries ch = chartSeriesMap.get(seriesName);
+        if(ch.yData.size() == 1 && ch.yData.get(0) == ch.initValue){
+            ch.yData.remove(0);
+            ch.xData.remove(0);
+            ch.xData.add(step);
+            ch.yData.add(Double.valueOf(decimalFormat.format(data)));
             return;
         }
-        this.yData.add(Double.valueOf(decimalFormat.format(data)));
-        if(maxLength > 0 && this.yData.size() == maxLength){
-            this.yData.remove(0);
+        ch.xData.add(step++);
+        ch.yData.add(Double.valueOf(decimalFormat.format(data)));
+        if(maxLength > 0 && ch.yData.size() == maxLength){
+            ch.yData.remove(0);
+            ch.xData.remove(0);
         }
-        this.getChart().updateXYSeries(series.getName(), null, yData, null);
+        this.getChart().updateXYSeries(ch.seriesName, ch.xData, ch.yData, null);
     }
 
     public void clearChart(){
-        this.yData.clear();
-        this.yData.add(initValue);
+        for(ChartSeries ch: chartSeriesMap.values()){
+            ch.yData.clear();
+            ch.yData.add(ch.initValue);
+        }
     }
 
     public XYChart getChart() {

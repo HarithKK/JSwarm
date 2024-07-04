@@ -1,10 +1,14 @@
 package examples.multiagent.drone_network_heatbeat;
 
+import org.usa.soc.core.ds.ChartType;
 import org.usa.soc.core.ds.Margins;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.runners.Executor;
+import org.usa.soc.multiagent.view.ChartSeries;
+import org.usa.soc.multiagent.view.ProgressiveChart;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -100,6 +104,7 @@ public class HeatBeat {
 
             }
         };
+
         Executor.getInstance().AddCustomActions("+V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,6 +125,18 @@ public class HeatBeat {
                 algorithm.getAgents("Drones").removeAgent(a);
             }
         }, true);
+
+        Executor.getInstance().registerChart(
+                new ProgressiveChart(300, 250, "K", "","steps")
+                        .subscribe(new ChartSeries("KValues", 0.0))
+                        .subscribe(new ChartSeries("IValues", 0.0).setColor(Color.RED))
+                        .setMaxLength(100)
+        );
+        Executor.getInstance().registerChart(
+                new ProgressiveChart(300, 250, "K1", "","steps")
+                        .subscribe(new ChartSeries("KValues", 0.0).setColor(Color.GREEN).setMarker(Markers.CROSS).setStyle(ChartType.Area))
+                        .setMaxLength(100)
+        );
         Executor.getInstance().executePlain2D("Heartbeat Algorithm",algorithm, 700, 700, new Margins(0, 200, 0, 1000));
     }
 }

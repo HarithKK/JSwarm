@@ -68,7 +68,9 @@ public class DroneAgent extends Agent {
         }
 
         long t = System.currentTimeMillis();
-        Executor.getInstance().getDataView().addData(K1);
+        Executor.getInstance().updateData("K", "KValues", K1);
+        Executor.getInstance().updateData("K", "IValues", -K1);
+        Executor.getInstance().updateData("K1", "KValues", -K1);
         if(t - lastTime > 500){
             double dOmega = (omega - lastOmega)/500;
 

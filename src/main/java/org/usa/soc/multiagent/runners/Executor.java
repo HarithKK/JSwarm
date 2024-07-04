@@ -4,20 +4,21 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.view.ChartView;
 import org.usa.soc.multiagent.view.DataView;
-import progs.Main;
+import org.usa.soc.multiagent.view.ProgressiveChart;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Executor {
 
     private static Executor instance;
     private ChartView chartView;
-
     private DataView dataView;
+
+    private HashMap<String, ProgressiveChart> chartHashMap = new HashMap<>();
 
     private static Algorithm iAlgorithm;
 
@@ -43,6 +44,16 @@ public class Executor {
         customActions.add(btn);
     }
 
+    public void registerChart(ProgressiveChart chart){
+        chartHashMap.put(chart.getChart().getTitle(), chart);
+    }
+
+    public void updateData(String chartName, String seriesName, double value){
+        if(!chartHashMap.containsKey(chartName))
+            return;
+        dataView.addData(chartName, seriesName, value);
+    }
+
     public void executePlain2D(String title, Algorithm algorithm, int w, int h, Margins m){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -52,12 +63,17 @@ public class Executor {
                 chartView.setCustomActions(customActions);
                 chartView.setInterval(50);
 
-                dataView = new DataView(w);
+                dataView = new DataView("Data View");
+                dataView.setVisible(w);
             }
         });
     }
 
     public DataView getDataView() {
         return dataView;
+    }
+
+    public HashMap<String, ProgressiveChart> getChartHashMap() {
+        return chartHashMap;
     }
 }
