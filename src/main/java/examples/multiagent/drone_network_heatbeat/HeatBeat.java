@@ -1,5 +1,6 @@
 package examples.multiagent.drone_network_heatbeat;
 
+import org.knowm.xchart.XYSeries;
 import org.usa.soc.core.ds.ChartType;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Markers;
@@ -23,11 +24,14 @@ public class HeatBeat {
     public static final int DISCONNECTED_KEY = 3;
 
     public static AgentGroup agentGroup = new AgentGroup("Drones");
+    public static AgentGroup cAgentGroup = new AgentGroup("Crashed Agents");
     public static AgentGroup dAgentGroup = new AgentGroup("Disconnected Agents");
 
     public static void main(String[] args) {
 
-        dAgentGroup.setMarkerColor(Color.RED);
+        dAgentGroup.setMarkerColor(Color.cyan);
+        cAgentGroup.setMarkerColor(Color.RED);
+        cAgentGroup.setMarker(Markers.CROSS);
         Algorithm algorithm = new Algorithm() {
 
             @Override
@@ -92,6 +96,7 @@ public class HeatBeat {
                     }
                     this.agents.put(agentGroup.name, agentGroup);
                     this.agents.put(dAgentGroup.name, dAgentGroup);
+                    this.agents.put(cAgentGroup.name, cAgentGroup);
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -123,20 +128,31 @@ public class HeatBeat {
             public void actionPerformed(ActionEvent e) {
                 DroneAgent a = dronesMap.remove(DISCONNECTED_KEY);
                 algorithm.getAgents("Drones").removeAgent(a);
+                a.velocityStar.resetAllValues(0.0);
+                a.velocity.resetAllValues(0.0);
+                cAgentGroup.getAgents().add(a);
             }
         }, true);
 
+        XYSeries.XYSeriesRenderStyle linestyle = ChartType.Line;
+        XYSeries.XYSeriesRenderStyle linestyle1 = ChartType.Line;
+        int maxLength = 50;
+
+        for(int i=0; i< 12;i++){
+            Executor.getInstance().registerChart(
+                    new ProgressiveChart(200, 130, String.valueOf(i), "","Drone "+i)
+                            .subscribe(new ChartSeries("dOmega", 0.0).setColor(Color.BLUE).setStyle(linestyle))
+                            .subscribe(new ChartSeries("dUOmega", 0.0).setColor(Color.GREEN).setStyle(linestyle1))
+                            .setMaxLength(maxLength)
+            );
+        }
+
         Executor.getInstance().registerChart(
-                new ProgressiveChart(300, 250, "K", "","steps")
-                        .subscribe(new ChartSeries("KValues", 0.0))
-                        .subscribe(new ChartSeries("IValues", 0.0).setColor(Color.RED))
-                        .setMaxLength(100)
+                new ProgressiveChart(200, 130, "Constants", "","step ")
+                        .subscribe(new ChartSeries("K1", 0.0).setColor(Color.BLUE).setStyle(ChartType.Scatter))
+                        .setMaxLength(maxLength)
         );
-        Executor.getInstance().registerChart(
-                new ProgressiveChart(300, 250, "K1", "","steps")
-                        .subscribe(new ChartSeries("KValues", 0.0).setColor(Color.GREEN).setMarker(Markers.CROSS).setStyle(ChartType.Area))
-                        .setMaxLength(100)
-        );
+
         Executor.getInstance().executePlain2D("Heartbeat Algorithm",algorithm, 700, 700, new Margins(0, 200, 0, 1000));
     }
 }
