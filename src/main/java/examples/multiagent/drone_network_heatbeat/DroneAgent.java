@@ -19,18 +19,13 @@ public class DroneAgent extends Agent {
 
     private long lastTime = 0;
 
-    double K1 = -0.0001;
+    double K1 = -1;
 
     public DroneAgent(int i, Margins m, double x, double y, int layer, E edge){
         this.index = i;
         this.layer = layer;
         this.edge = edge;
         this.initPosition(m, x, y);
-    }
-
-    public double setOmega(double value){
-        this.omega = value;
-        return this.omega;
     }
 
     @Override
@@ -53,8 +48,7 @@ public class DroneAgent extends Agent {
                     vStar.setVector(HeatBeat.dronesMap.get(i).velocity.getClonedVector());
                 }
             }
-            this.velocity.setVector(vStar.operate(Vector.OPERATOR.ADD,vU.operate(Vector.OPERATOR.MULP, -K1)));
-            K1 = -K1;
+            this.velocity.setVector(vStar.operate(Vector.OPERATOR.ADD,vU.operate(Vector.OPERATOR.MULP, generateK1())));
         }
         this.updatePosition(this.getPosition().operate(Vector.OPERATOR.ADD, this.velocity));
 
@@ -74,8 +68,10 @@ public class DroneAgent extends Agent {
         }
 
         long t = System.currentTimeMillis();
+        Executor.getInstance().getDataView().addData(K1);
         if(t - lastTime > 500){
             double dOmega = (omega - lastOmega)/500;
+
             if(dOmega != 0){
                 lastOmega = omega;
                 if(dOmega < 0){
@@ -89,5 +85,13 @@ public class DroneAgent extends Agent {
                 }
             }
         }
+    }
+
+    private Double generateK1() {
+        if(K1 > 2){
+            K1 = 0;
+        }
+        K1 += 1;
+        return Math.sin(K1 * Math.PI);
     }
 }

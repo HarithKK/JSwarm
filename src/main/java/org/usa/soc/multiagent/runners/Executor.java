@@ -3,6 +3,7 @@ package org.usa.soc.multiagent.runners;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.view.ChartView;
+import org.usa.soc.multiagent.view.DataView;
 import progs.Main;
 
 import javax.swing.*;
@@ -15,6 +16,8 @@ public class Executor {
 
     private static Executor instance;
     private ChartView chartView;
+
+    private DataView dataView;
 
     private static Algorithm iAlgorithm;
 
@@ -48,8 +51,13 @@ public class Executor {
                 chartView = new ChartView(title, algorithm, w, h, m);
                 chartView.setCustomActions(customActions);
                 chartView.setInterval(50);
+
+                dataView = new DataView(w);
             }
         });
     }
 
+    public DataView getDataView() {
+        return dataView;
+    }
 }

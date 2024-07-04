@@ -16,7 +16,7 @@ public class HeatBeat {
     public static final double OmegaLeader = 10.0;
     public static final double alpha = 0.7;
 
-    public static final int DISCONNECTED_KEY = 5;
+    public static final int DISCONNECTED_KEY = 3;
 
     public static AgentGroup agentGroup = new AgentGroup("Drones");
     public static AgentGroup dAgentGroup = new AgentGroup("Disconnected Agents");
@@ -103,13 +103,13 @@ public class HeatBeat {
         Executor.getInstance().AddCustomActions("+V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dronesMap.get(0).velocityStar.updateValue(0.5, 1);
+                dronesMap.get(0).velocityStar.updateValue(0.5, 0);
             }
         }, true);
         Executor.getInstance().AddCustomActions("-V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dronesMap.get(0).velocityStar.updateValue(-0.5, 1);
+                dronesMap.get(0).velocityStar.updateValue(-0.5, 0);
             }
         }, true);
 
