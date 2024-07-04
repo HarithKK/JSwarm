@@ -68,11 +68,12 @@ public class Vector {
         this.positionIndexes = positionIndexes;
     }
 
-    public void setValues(double []values){
+    public Vector setValues(double []values){
         int count = Math.min(values.length, this.getNumberOfDimensions());
         for(int i=0; i< count; i++){
             this.positionIndexes[i] = values[i];
         }
+        return this;
     }
 
     public  void setValue(Double value, int index){
@@ -81,6 +82,23 @@ public class Vector {
         }
 
         this.positionIndexes[index] = value;
+    }
+
+    public  void updateValue(Double value, int index){
+        if(index >= this.getNumberOfDimensions()){
+            throw new ArrayIndexOutOfBoundsException("Index should be less than "+ this.getNumberOfDimensions());
+        }
+
+        this.positionIndexes[index] = this.positionIndexes[index] + value;
+    }
+
+    public  void updateVector(Vector v){
+        if(v.numberOfDimensions != this.getNumberOfDimensions()){
+            throw new ArrayIndexOutOfBoundsException("Index should be less than "+ this.getNumberOfDimensions());
+        }
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = this.positionIndexes[i] + v.positionIndexes[i];
+        }
     }
 
     public Double getValue(int index){
@@ -220,5 +238,20 @@ public class Vector {
             this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);
         }
         return this;
+    }
+
+    public boolean isEqual(Vector v){
+        if(v.numberOfDimensions != this.numberOfDimensions){
+            return false;
+        }
+
+        for(int i=0;i<this.numberOfDimensions;i++){
+            if(this.positionIndexes[i] != v.positionIndexes[i]){
+                return false;
+            }else {
+                continue;
+            }
+        }
+        return true;
     }
 }

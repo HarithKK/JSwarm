@@ -4,13 +4,16 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.SeriesData;
 import org.usa.soc.core.ds.SeriesDataObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AgentGroup extends SeriesData {
     private List<Agent> agents;
 
     public AgentGroup(String name){
+
         super(name);
+        this.agents = new ArrayList<>();
     }
 
     public void addAgent(Agent agent){
@@ -41,6 +44,10 @@ public class AgentGroup extends SeriesData {
             obj.addXY(i, agent.getX(), agent.getY());
         }
         return obj;
+    }
+
+    public void removeAgent(Agent agent){
+        this.agents.remove(agent);
     }
 
 }

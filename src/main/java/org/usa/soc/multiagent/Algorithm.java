@@ -4,6 +4,7 @@ import org.knowm.xchart.style.markers.Marker;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.exceptions.KillOptimizerException;
+import org.usa.soc.util.Logger;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -13,6 +14,7 @@ import java.util.List;
 public abstract class Algorithm{
 
     private Flag isPaused = new Flag(), isKilled=new Flag(), initialized=new Flag();
+
     protected Map<String, AgentGroup> agents = new HashMap<>();
 
     private int interval;
@@ -25,6 +27,14 @@ public abstract class Algorithm{
 
     public Algorithm(int interval){
         this.setInterval(interval);
+
+        this.isPaused.unset();
+        this.isKilled.unset();
+        this.initialized.unset();
+    }
+
+    public Algorithm(){
+        this.setInterval(0);
 
         this.isPaused.unset();
         this.isKilled.unset();
@@ -81,8 +91,12 @@ public abstract class Algorithm{
             run();
 
             for(String key: this.agents.keySet()){
-                for(Agent agent: this.agents.get(key).getAgents()){
-                    agent.step();
+                try{
+                    for (Agent agent : this.agents.get(key).getAgents()) {
+                        agent.step();
+                    }
+                }catch (Exception e){
+                    Logger.getInstance().error(e.getMessage());
                 }
             }
 
@@ -134,7 +148,7 @@ public abstract class Algorithm{
         List<Agent> list = new ArrayList<>();
         for(int i=0; i<count;i++){
             Agent inst = (Agent) agent.getDeclaredConstructor().newInstance();
-            inst.initPosition(margins, list);
+            inst.initPosition(margins);
             list.add(inst);
         }
         return list;
@@ -194,4 +208,8 @@ public abstract class Algorithm{
     }
 
     public String getName(){ return this.getClass().getSimpleName(); }
+
+    public AgentGroup getAgents(String key) {
+        return agents.get(key);
+    }
 }

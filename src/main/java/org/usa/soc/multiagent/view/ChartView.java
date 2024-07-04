@@ -2,7 +2,6 @@ package org.usa.soc.multiagent.view;
 
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
-import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.action.Action;
@@ -10,10 +9,14 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.util.Logger;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChartView extends JFrame {
 
@@ -26,7 +29,7 @@ public class ChartView extends JFrame {
     JLabel labelStep;
 
     JPanel pnlProgress, pnlCenter;
-
+    JSlider sldInterval;
     PlainView2D view2D;
 
     XChartPanel<Chart<?, ?>> chartPanel;
@@ -62,6 +65,10 @@ public class ChartView extends JFrame {
                 updateUI();
             }
         });
+    }
+
+    public void setInterval(int delay){
+        this.view2D.setInterval(delay);
     }
 
     private void updateUI() {
@@ -202,6 +209,19 @@ public class ChartView extends JFrame {
         });
         //jToolBar.add(btnRepeat);
 
+
+        jToolBar.add(new JToolBar.Separator());
+        JLabel label1 = new JLabel("Interval: ", JLabel.CENTER);
+        jToolBar.add(label1);
+        sldInterval = new JSlider(10,3000, 100);
+        sldInterval.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                setInterval(sldInterval.getValue());
+            }
+        });
+        jToolBar.add(sldInterval);
+
         progressBar = new JProgressBar();
         progressBar.setValue(progressValue);
         progressBar.setMinimum(0);
@@ -222,4 +242,9 @@ public class ChartView extends JFrame {
         this.setVisible(true);
     }
 
+    public void setCustomActions(List<JButton> customActions) {
+        for(JButton btn: customActions){
+            this.jToolBar.add(btn);
+        }
+    }
 }
