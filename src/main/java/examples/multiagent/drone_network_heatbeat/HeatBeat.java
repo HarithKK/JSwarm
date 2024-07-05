@@ -21,7 +21,7 @@ public class HeatBeat {
     public static final double OmegaLeader = 10.0;
     public static final double alpha = 0.7;
 
-    public static final int DISCONNECTED_KEY = 3;
+    public static final int DISCONNECTED_KEY = 2;
 
     public static AgentGroup agentGroup = new AgentGroup("Drones");
     public static AgentGroup cAgentGroup = new AgentGroup("Crashed Agents");
@@ -29,7 +29,7 @@ public class HeatBeat {
 
     public static void main(String[] args) {
 
-        dAgentGroup.setMarkerColor(Color.cyan);
+        dAgentGroup.setMarkerColor(Color.GREEN);
         cAgentGroup.setMarkerColor(Color.RED);
         cAgentGroup.setMarker(Markers.CROSS);
         Algorithm algorithm = new Algorithm() {
@@ -113,13 +113,13 @@ public class HeatBeat {
         Executor.getInstance().AddCustomActions("+V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dronesMap.get(0).velocityStar.updateValue(0.5, 0);
+                dronesMap.get(0).velocityStar.updateValue(1.0, 1);
             }
         }, true);
         Executor.getInstance().AddCustomActions("-V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dronesMap.get(0).velocityStar.updateValue(-0.5, 0);
+                dronesMap.get(0).velocityStar.updateValue(-1.0, 1);
             }
         }, true);
 
