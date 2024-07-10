@@ -63,8 +63,10 @@ public class Executor {
                 chartView.setCustomActions(customActions);
                 chartView.setInterval(50);
 
-                dataView = new DataView("Data View");
-                dataView.setVisible(w);
+                if(!getChartHashMap().isEmpty()){
+                    dataView = new DataView("Data View");
+                    dataView.setVisible(w);
+                }
             }
         });
     }

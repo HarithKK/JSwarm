@@ -17,23 +17,12 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 public class HeatBeat {
-    public static HashMap<Integer, DroneAgent> dronesMap = new HashMap<>();
-    public static final double OmegaLeader = 10.0;
-    public static final double alpha = 0.7;
-
-    public static int K = 30;
-
-    public static final int DISCONNECTED_KEY = 1;
-
-    public static AgentGroup agentGroup = new AgentGroup("Drones");
-    public static AgentGroup cAgentGroup = new AgentGroup("Crashed Agents");
-    public static AgentGroup dAgentGroup = new AgentGroup("Disconnected Agents");
 
     public static void main(String[] args) {
 
-        dAgentGroup.setMarkerColor(Color.GREEN);
-        cAgentGroup.setMarkerColor(Color.RED);
-        cAgentGroup.setMarker(Markers.CROSS);
+        Controller.dAgentGroup.setMarkerColor(Color.GREEN);
+        Controller.cAgentGroup.setMarkerColor(Color.RED);
+        Controller.cAgentGroup.setMarker(Markers.CROSS);
 
         Algorithm algorithm = new Algorithm() {
 
@@ -45,16 +34,16 @@ public class HeatBeat {
                 double ix = 100.0;
                 double iy = 10.0;
 
-                dronesMap = NetworkGenerator.generateStatic(getMargins(), ix, iy);
+                Controller.dronesMap = NetworkGenerator.generateStatic(getMargins(), ix, iy);
                 //dronesMap = new NetworkGenerator(ix, iy, 15, 50, getMargins()).getDroneMap();
 
                 try {
-                    for(Integer i : dronesMap.keySet()){
-                        agentGroup.addAgent(dronesMap.get(i));
+                    for(Integer i : Controller.dronesMap.keySet()){
+                        Controller.agentGroup.addAgent(Controller.dronesMap.get(i));
                     }
-                    this.agents.put(agentGroup.name, agentGroup);
-                    this.agents.put(dAgentGroup.name, dAgentGroup);
-                    this.agents.put(cAgentGroup.name, cAgentGroup);
+                    this.agents.put(Controller.agentGroup.name, Controller.agentGroup);
+                    this.agents.put(Controller.dAgentGroup.name, Controller.dAgentGroup);
+                    this.agents.put(Controller.cAgentGroup.name, Controller.cAgentGroup);
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -71,13 +60,13 @@ public class HeatBeat {
         Executor.getInstance().AddCustomActions("+V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dronesMap.get(0).velocityStar.updateValue(1.0, 1);
+                Controller.dronesMap.get(0).velocityStar.updateValue(1.0, 1);
             }
         }, true);
         Executor.getInstance().AddCustomActions("-V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dronesMap.get(0).velocityStar.updateValue(-1.0, 1);
+                Controller.dronesMap.get(0).velocityStar.updateValue(-1.0, 1);
             }
         }, true);
 
@@ -86,9 +75,9 @@ public class HeatBeat {
             public void actionPerformed(ActionEvent e) {
                 // We can remove the drone from network for our implementation, bu not for Qian et al.
                 // Thus we introduced a variable isDisconnected for that.
-                DroneAgent a = dronesMap.remove(DISCONNECTED_KEY);
+                DroneAgent a = Controller.dronesMap.remove(Controller.DISCONNECTED_KEY);
                 algorithm.getAgents("Drones").removeAgent(a);
-                cAgentGroup.getAgents().add(a);
+                Controller.cAgentGroup.getAgents().add(a);
 
             }
         }, true);

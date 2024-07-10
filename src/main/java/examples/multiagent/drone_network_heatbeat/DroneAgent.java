@@ -24,6 +24,8 @@ public class DroneAgent extends Agent {
     double Theta = 0.5;
     double K1 = 0;
 
+    public boolean isDisconnected = false;
+
     public DroneAgent(int i, Margins m, double x, double y, int layer, E edge){
         this.index = i;
         this.layer = layer;
@@ -43,11 +45,11 @@ public class DroneAgent extends Agent {
 
         double uOmega =0;
         for(int i=0; i< this.edge.B.length; i++){
-            if(!HeatBeat.dronesMap.containsKey(i)){
+            if(!Controller.dronesMap.containsKey(i)){
                 continue;
             }
             if(this.edge.A[i] != 0){
-                uOmega += this.edge.B[i]*(this.omega - HeatBeat.dronesMap.get(i).omega);
+                uOmega += this.edge.B[i]*(this.omega - Controller.dronesMap.get(i).omega);
             }
         }
         uOmega *= -1;
@@ -65,17 +67,17 @@ public class DroneAgent extends Agent {
                 this.velocity.resetAllValues(0.0);
                 try{
                     System.out.println(index+" "+K1 +" "+dUOmega);
-                    Executor.getAlgorithm().getAgents(HeatBeat.agentGroup.name).removeAgent(this);
+                    Executor.getAlgorithm().getAgents(Controller.agentGroup.name).removeAgent(this);
                 }catch (Exception e){
 
                 }
-                Executor.getAlgorithm().getAgents(HeatBeat.dAgentGroup.name).addAgent(this);
+                Executor.getAlgorithm().getAgents(Controller.dAgentGroup.name).addAgent(this);
             }
         }
     }
     @Override
     public void step() {
-        if(HeatBeat.cAgentGroup.getAgents().contains(this)){
+        if(Controller.cAgentGroup.getAgents().contains(this) || isDisconnected){
             return;
         }
 
@@ -86,15 +88,15 @@ public class DroneAgent extends Agent {
             Vector vU = new Vector(2);
 
             for(int i = 0; i< this.edge.B.length; i++){
-                if(!HeatBeat.dronesMap.containsKey(i)){
+                if(!Controller.dronesMap.containsKey(i) || Controller.dronesMap.get(i).isDisconnected){
                     continue;
                 }
                 vU.updateVector(this.getPosition().getClonedVector()
-                        .operate(Vector.OPERATOR.SUB, HeatBeat.dronesMap.get(i).getPosition().getClonedVector()
+                        .operate(Vector.OPERATOR.SUB, Controller.dronesMap.get(i).getPosition().getClonedVector()
                                 .operate(Vector.OPERATOR.MULP, (double)this.edge.B[i])
                                 .operate(Vector.OPERATOR.MULP, (double)this.edge.A[i])));
                 if(this.edge.B[i] < 0){
-                    vStar.setVector(HeatBeat.dronesMap.get(i).velocity.getClonedVector());
+                    vStar.setVector(Controller.dronesMap.get(i).velocity.getClonedVector());
                 }
             }
             K1 = generateK1();
@@ -104,15 +106,15 @@ public class DroneAgent extends Agent {
 
         // Omega calculation
         if(this.layer == 0){
-            this.omega = HeatBeat.OmegaLeader;
+            this.omega = Controller.OmegaLeader;
         }else{
             double l = 0;
             for(int i = 0; i< this.edge.B.length; i++){
-                if(!HeatBeat.dronesMap.containsKey(i)){
+                if(!Controller.dronesMap.containsKey(i) || Controller.dronesMap.get(i).isDisconnected){
                     continue;
                 }
                 if(this.edge.A[i] != 0){
-                    l = Math.max(HeatBeat.dronesMap.get(i).omega * HeatBeat.alpha, l);
+                    l = Math.max(Controller.dronesMap.get(i).omega * Controller.alpha, l);
                 }
             }
             this.omega = l;
