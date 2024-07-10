@@ -146,6 +146,14 @@ public class Vector {
         return Smoother.smooth(tempV, this.maxMagnitude);
     }
 
+    public double innerProduct(Vector v) {
+        double ipValue = 0;
+        for(int i=0; i< this.numberOfDimensions; i++){
+            ipValue += this.getValue(i) * v.getValue(i);
+        }
+        return ipValue;
+    }
+
     public String toString(){
         return StringFormatter.toString(this.positionIndexes);
     }

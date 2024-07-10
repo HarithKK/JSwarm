@@ -4,14 +4,14 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
 import org.usa.soc.multiagent.runners.Executor;
-
+import java.util.LinkedList;
 public class DroneAgent extends Agent {
     int index;
     int layer = 0;
 
     E edge;
 
-    public Vector velocityStar = new Vector(2).setValues(new double[]{0, 2});
+    public Vector velocityStar = new Vector(2).setValues(new double[]{0, 4});
     Vector velocity = new Vector(2).setValues(new double[]{0,0});
 
     private double omega = 0;
@@ -20,7 +20,7 @@ public class DroneAgent extends Agent {
 
     private long lastTime = 0;
 
-    double T = 0.5;
+    double Theta = 0.5;
     double K1 = 0;
 
     public DroneAgent(int i, Margins m, double x, double y, int layer, E edge){
@@ -30,11 +30,54 @@ public class DroneAgent extends Agent {
         this.initPosition(m, x, y);
     }
 
+    void setA(int index, int value){
+        this.edge.A[index] = value;
+    }
+
+    void setB(int index, int value){
+        this.edge.B[index] = value;
+    }
+
+    void identifyDisconnectedDrones(){
+
+        double uOmega =0;
+        for(int i=0; i< this.edge.B.length; i++){
+            if(!HeatBeat.dronesMap.containsKey(i)){
+                continue;
+            }
+            if(this.edge.A[i] != 0){
+                uOmega += this.edge.B[i]*(this.omega - HeatBeat.dronesMap.get(i).omega);
+            }
+        }
+        uOmega *= -1;
+
+        double dOmega = (omega - lastOmega)/500;
+        double dUOmega = (uOmega - lastUOmega)/500;
+        Executor.getInstance().updateData(String.valueOf(index), "dOmega", dOmega * 100);
+        Executor.getInstance().updateData(String.valueOf(index), "dUOmega", dUOmega * 100);
+        Executor.getInstance().updateData("Constants", "K1", Theta);
+
+        if(dUOmega != 0){
+            lastOmega = omega;
+            lastUOmega = uOmega;
+            if(dOmega < 0 && dUOmega != 0){
+                this.velocity.resetAllValues(0.0);
+                try{
+                    System.out.println(index+" "+K1 +" "+dUOmega);
+                    Executor.getAlgorithm().getAgents(HeatBeat.agentGroup.name).removeAgent(this);
+                }catch (Exception e){
+
+                }
+                Executor.getAlgorithm().getAgents(HeatBeat.dAgentGroup.name).addAgent(this);
+            }
+        }
+    }
     @Override
     public void step() {
         if(HeatBeat.cAgentGroup.getAgents().contains(this)){
             return;
         }
+
         if(this.layer == 0){
             velocity.setVector(velocityStar);
         }else{
@@ -58,6 +101,7 @@ public class DroneAgent extends Agent {
         }
         this.updatePosition(this.getPosition().operate(Vector.OPERATOR.ADD, this.velocity));
 
+        // Omega calculation
         if(this.layer == 0){
             this.omega = HeatBeat.OmegaLeader;
         }else{
@@ -75,47 +119,19 @@ public class DroneAgent extends Agent {
 
         long t = System.currentTimeMillis();
 
-        if(t - lastTime > 500){
+        if(t - lastTime > 50){
+            lastTime = t;
 
-            double uOmega =0;
-            for(int i=0; i< this.edge.B.length; i++){
-                if(!HeatBeat.dronesMap.containsKey(i)){
-                    continue;
-                }
-                if(this.edge.A[i] != 0){
-                    uOmega += this.edge.B[i]*(this.omega - HeatBeat.dronesMap.get(i).omega);
-                }
-            }
-            uOmega *= -1;
-
-            double dOmega = (omega - lastOmega)/500;
-            double dUOmega = (uOmega - lastUOmega)/500;
-            Executor.getInstance().updateData(String.valueOf(index), "dOmega", dOmega * 100);
-            Executor.getInstance().updateData(String.valueOf(index), "dUOmega", dUOmega * 100);
-            Executor.getInstance().updateData("Constants", "K1", T);
-
-            if(dUOmega != 0){
-                lastOmega = omega;
-                lastUOmega = uOmega;
-                if(dOmega < 0 && dUOmega != 0){
-                    this.velocity.resetAllValues(0.0);
-                    try{
-                        System.out.println(index+" "+K1 +" "+dUOmega);
-                        Executor.getAlgorithm().getAgents(HeatBeat.agentGroup.name).removeAgent(this);
-                    }catch (Exception e){
-
-                    }
-                    Executor.getAlgorithm().getAgents(HeatBeat.dAgentGroup.name).addAgent(this);
-                }
-            }
+            identifyDisconnectedDrones();
         }
+
     }
 
     private Double generateK1() {
-        if(T > 2){
-            T = 0.5;
+        if(Theta > 2){
+            Theta = 0.5;
         }
-        T += 1;
-        return 0.0001 * Math.sin(T * Math.PI);
+        Theta += 1;
+        return -0.0004 * Math.sin(Theta * Math.PI);
     }
 }
