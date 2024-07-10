@@ -1,5 +1,7 @@
-package examples.multiagent.drone_network_heatbeat;
+package examples.multiagent.common;
 
+import examples.multiagent.drone_network_heatbeat.DroneAgent;
+import examples.multiagent.common.E;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;

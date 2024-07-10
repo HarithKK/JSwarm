@@ -1,10 +1,10 @@
-package examples.multiagent.drone_network_heatbeat;
+package examples.multiagent.common;
 
 import java.util.Arrays;
 
-class E {
-    int[] A;
-    int[] B;
+public class E {
+    public int[] A;
+    public int[] B;
 
     public E(int[] A, int[] B) {
         this.A = A;

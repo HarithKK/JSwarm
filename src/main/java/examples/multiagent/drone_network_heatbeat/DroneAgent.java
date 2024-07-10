@@ -1,18 +1,19 @@
 package examples.multiagent.drone_network_heatbeat;
 
+import examples.multiagent.common.E;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
 import org.usa.soc.multiagent.runners.Executor;
-import java.util.LinkedList;
-public class DroneAgent extends Agent {
-    int index;
-    int layer = 0;
 
-    E edge;
+public class DroneAgent extends Agent {
+    public int index;
+    public int layer = 0;
+
+    public E edge;
 
     public Vector velocityStar = new Vector(2).setValues(new double[]{0, 4});
-    Vector velocity = new Vector(2).setValues(new double[]{0,0});
+    public Vector velocity = new Vector(2).setValues(new double[]{0,0});
 
     private double omega = 0;
     private double lastOmega = 0;
@@ -30,11 +31,11 @@ public class DroneAgent extends Agent {
         this.initPosition(m, x, y);
     }
 
-    void setA(int index, int value){
+    public void setA(int index, int value){
         this.edge.A[index] = value;
     }
 
-    void setB(int index, int value){
+    public void setB(int index, int value){
         this.edge.B[index] = value;
     }
 

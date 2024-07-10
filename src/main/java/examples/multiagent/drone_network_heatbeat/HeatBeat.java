@@ -1,22 +1,19 @@
 package examples.multiagent.drone_network_heatbeat;
 
+import examples.multiagent.common.NetworkGenerator;
 import org.knowm.xchart.XYSeries;
 import org.usa.soc.core.ds.ChartType;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Markers;
-import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.multiagent.view.ChartSeries;
 import org.usa.soc.multiagent.view.ProgressiveChart;
-import org.usa.soc.util.Mathamatics;
-import org.usa.soc.util.Randoms;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class HeatBeat {
