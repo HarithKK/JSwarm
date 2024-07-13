@@ -6,13 +6,18 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
 import org.usa.soc.multiagent.runners.Executor;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
 public class DroneAgent extends Agent {
     public int index;
     public int layer = 0;
 
     public E edge;
 
-    public Vector velocityStar = new Vector(2).setValues(new double[]{0, 4});
+    public Vector velocityStar = new Vector(2).setValues(new double[]{0, 1});
     public Vector velocity = new Vector(2).setValues(new double[]{0,0});
 
     private double omega = 0;
@@ -69,7 +74,6 @@ public class DroneAgent extends Agent {
                     System.out.println(index+" "+K1 +" "+dUOmega);
                     Executor.getAlgorithm().getAgents(Controller.agentGroup.name).removeAgent(this);
                 }catch (Exception e){
-
                 }
                 Executor.getAlgorithm().getAgents(Controller.dAgentGroup.name).addAgent(this);
             }

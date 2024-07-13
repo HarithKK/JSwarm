@@ -96,7 +96,7 @@ public abstract class Algorithm{
                         agent.step();
                     }
                 }catch (Exception e){
-                    Logger.getInstance().error(e.getMessage());
+                    Logger.getInstance().error("Algorithm Error " +e.getMessage());
                 }
             }
 
@@ -212,4 +212,6 @@ public abstract class Algorithm{
     public AgentGroup getAgents(String key) {
         return agents.get(key);
     }
+
+    public Map getAgentsMap(){ return agents; };
 }
