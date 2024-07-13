@@ -21,6 +21,8 @@ public class DroneAgent extends Agent {
     public Vector velocity = new Vector(2).setValues(new double[]{0,0});
 
     private double omega = 0;
+
+    private double uOmega = 0;
     private double lastOmega = 0;
     private double lastUOmega = 0;
 
@@ -48,7 +50,7 @@ public class DroneAgent extends Agent {
 
     void identifyDisconnectedDrones(){
 
-        double uOmega =0;
+        uOmega =0;
         for(int i=0; i< this.edge.B.length; i++){
             if(!Controller.dronesMap.containsKey(i)){
                 continue;
@@ -61,13 +63,14 @@ public class DroneAgent extends Agent {
 
         double dOmega = (omega - lastOmega)/500;
         double dUOmega = (uOmega - lastUOmega)/500;
+        lastOmega = omega;
+        lastUOmega = uOmega;
         Executor.getInstance().updateData(String.valueOf(index), "dOmega", dOmega * 100);
         Executor.getInstance().updateData(String.valueOf(index), "dUOmega", dUOmega * 100);
         Executor.getInstance().updateData("Constants", "K1", Theta);
 
         if(dUOmega != 0){
-            lastOmega = omega;
-            lastUOmega = uOmega;
+
             if(dOmega < 0 && dUOmega != 0){
                 this.velocity.resetAllValues(0.0);
                 try{

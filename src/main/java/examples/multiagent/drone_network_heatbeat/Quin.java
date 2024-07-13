@@ -191,6 +191,15 @@ public class Quin {
                         .setLegend(true)
         );
 
+        for(int i=0; i< 11;i++){
+            Executor.getInstance().registerChart(
+                    new ProgressiveChart(200, 130, String.valueOf(i), "","Drone "+i)
+                            .subscribe(new ChartSeries("dOmega", 0.0).setColor(Color.BLUE))
+                            .subscribe(new ChartSeries("dUOmega", 0.0).setColor(Color.GREEN))
+                            .setMaxLength(50)
+            );
+        }
+
         Executor.getInstance().AddCustomActions("V", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

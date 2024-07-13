@@ -19,7 +19,7 @@ public class Serializer {
         sb.append("\"step\":"+ (step++) + ",");
         sb.append("\"dronesMap\":" + JsonWriter.objectToJson(Controller.dronesMap) + ",");
         sb.append("\"agents\":" + JsonWriter.objectToJson(algorithm.getAgentsMap()) + ",");
-        sb.append("\"pKtlMap\":" + JsonWriter.objectToJson(Controller.pKtlMap) + ",");
+        sb.append("\"pKtlMap\":" + JsonWriter.objectToJson(Controller.pKtlMap));
         sb.append("},");
 
         return this;
