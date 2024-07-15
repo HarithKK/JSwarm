@@ -10,7 +10,7 @@ public class Controller {
     public static final double OmegaLeader = 10.0;
     public static final double alpha = 0.7;
 
-    public static int K = 10;
+    public static int K = 30;
 
     public static final int DISCONNECTED_KEY = 1;
 

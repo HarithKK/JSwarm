@@ -2,6 +2,7 @@ package examples.multiagent.drone_network_heatbeat;
 
 import examples.multiagent.common.NetworkGenerator;
 import org.usa.soc.core.ds.Margins;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
 import org.usa.soc.multiagent.AgentGroup;
@@ -64,6 +65,8 @@ public class Quin {
     public static void main(String[] args) {
 
         Controller.dAgentGroup.setMarkerColor(Color.GREEN);
+        Controller.cAgentGroup.setMarker(Markers.CROSS);
+        Controller.cAgentGroup.setMarkerColor(Color.RED);
         Serializer serializer = new Serializer(PrintToFile.getInstance().build("data/"+ new Date().getTime()+".json"));
 
         Algorithm algorithm = new Algorithm() {
@@ -80,6 +83,7 @@ public class Quin {
                     }
                     this.agents.put(Controller.agentGroup.name,Controller.agentGroup);
                     this.agents.put(Controller.dAgentGroup.name, Controller.dAgentGroup);
+                    this.agents.put(Controller.cAgentGroup.name, Controller.cAgentGroup);
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -114,49 +118,53 @@ public class Quin {
                     Controller.incrementor = 0;
                     Controller.pKtlMap.values().stream().forEach(i -> i.clear());
 
-                    for(int i=0; i< Controller.stateSamplesMap.size(); i++){
-                        for(int j=0; j< Controller.stateSamplesMap.size(); j++){
+                    try{
+                        for(int i=0; i< Controller.stateSamplesMap.size(); i++){
+                            for(int j=0; j< Controller.stateSamplesMap.size(); j++){
 
-                            if(true || Controller.dronesMap.get(i).edge.A[j] == 1 ) {
+                                if(true || Controller.dronesMap.get(i).edge.A[j] == 1 ) {
 
-                                DoubleStateMap upperSum = new DoubleStateMap();
-                                DoubleStateMap lowerSum = new DoubleStateMap();
+                                    DoubleStateMap upperSum = new DoubleStateMap();
+                                    DoubleStateMap lowerSum = new DoubleStateMap();
 
-                                for (int k = 1; k < Controller.K; k++) {
-                                    StateMap vk = calculateDtl(i, j, k);
-                                    StateMap vk1 = calculateDtl(i, j, k - 1);
+                                    for (int k = 1; k < Controller.K; k++) {
+                                        StateMap vk = calculateDtl(i, j, k);
+                                        StateMap vk1 = calculateDtl(i, j, k - 1);
 
-                                    upperSum.update(calculateInnerProduct(vk, vk1));
-                                    lowerSum.update(calculateInnerProduct(vk1, vk1));
+                                        upperSum.update(calculateInnerProduct(vk, vk1));
+                                        lowerSum.update(calculateInnerProduct(vk1, vk1));
+                                    }
+
+                                    if (!Controller.pKtlMap.containsKey(i)) {
+                                        Controller.pKtlMap.put(i, new ArrayList<>());
+                                    }
+                                    Controller.pKtlMap.get(i).add(new DoubleStateMap(
+                                            j,
+                                            upperSum.position / lowerSum.position,
+                                            upperSum.velocity / lowerSum.velocity
+                                    ));
                                 }
-
-                                if (!Controller.pKtlMap.containsKey(i)) {
-                                    Controller.pKtlMap.put(i, new ArrayList<>());
-                                }
-                                Controller.pKtlMap.get(i).add(new DoubleStateMap(
-                                        j,
-                                        upperSum.position / lowerSum.position,
-                                        upperSum.velocity / lowerSum.velocity
-                                ));
                             }
                         }
-                    }
 
-                    for(List<DoubleStateMap> l: Controller.pKtlMap.values()){
-                        for(DoubleStateMap m: l){
-                            m.position = Mathamatics.round(Math.abs(m.position -1), 3);
-                            m.velocity = Mathamatics.round(Math.abs(m.velocity -1), 3);
+                        for(List<DoubleStateMap> l: Controller.pKtlMap.values()){
+                            for(DoubleStateMap m: l){
+                                m.position = Mathamatics.round(Math.abs(m.position -1), 3);
+                                m.velocity = Mathamatics.round(Math.abs(m.velocity -1), 3);
+                            }
                         }
+
+                        Executor.getInstance().updateData("Pklt-v", "0-1", Controller.pKtlMap.get(0).get(1).velocity);
+                        Executor.getInstance().updateData("Pklt-p", "0-1", Controller.pKtlMap.get(0).get(1).position);
+
+                        Executor.getInstance().updateData("Pklt-v", "1-2", Controller.pKtlMap.get(1).get(2).velocity);
+                        Executor.getInstance().updateData("Pklt-p", "1-2", Controller.pKtlMap.get(1).get(2).position);
+
+                        Executor.getInstance().updateData("Pklt-v", "6-7", Controller.pKtlMap.get(6).get(7).velocity);
+                        Executor.getInstance().updateData("Pklt-p", "6-7", Controller.pKtlMap.get(6).get(7).position);
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-
-                    Executor.getInstance().updateData("Pklt-v", "0-1", Controller.pKtlMap.get(0).get(1).velocity);
-                    Executor.getInstance().updateData("Pklt-p", "0-1", Controller.pKtlMap.get(0).get(1).position);
-
-                    Executor.getInstance().updateData("Pklt-v", "1-2", Controller.pKtlMap.get(1).get(2).velocity);
-                    Executor.getInstance().updateData("Pklt-p", "1-2", Controller.pKtlMap.get(1).get(2).position);
-
-                    Executor.getInstance().updateData("Pklt-v", "6-7", Controller.pKtlMap.get(6).get(7).velocity);
-                    Executor.getInstance().updateData("Pklt-p", "6-7", Controller.pKtlMap.get(6).get(7).position);
                     Controller.stateSamplesMap.values().stream().forEach(i -> i.clear());
                 }
 
@@ -213,13 +221,13 @@ public class Quin {
             }
         }, true);
 
-        Executor.getInstance().AddCustomActions("DC", new ActionListener() {
+        Executor.getInstance().AddCustomActions("Disconnect", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // We can remove the drone from network for our implementation, bu not for Qian et al.
                 // Thus we introduced a variable isDisconnected for that.
-                DroneAgent a = Controller.dronesMap.get(Controller.DISCONNECTED_KEY);
 
+                DroneAgent a = Controller.dronesMap.get(Controller.DISCONNECTED_KEY);
                 // remove 0-1 link
                 for(int i =0; i<a.edge.A.length; i++){
                     if(a.edge.A[i] == 1){
@@ -230,6 +238,19 @@ public class Quin {
                         Controller.dAgentGroup.addAgent(a);
                     }
                 }
+            }
+        }, true);
+
+        Executor.getInstance().AddCustomActions("Crash", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // We can remove the drone from network for our implementation, bu not for Qian et al.
+                // Thus we introduced a variable isDisconnected for that.
+
+                DroneAgent a = Controller.dronesMap.remove(Controller.DISCONNECTED_KEY);
+                algorithm.getAgents("Drones").removeAgent(a);
+                Controller.cAgentGroup.getAgents().add(a);
+                algorithm.getAgents("Crashed Agents").addAgent(a);
             }
         }, true);
 
