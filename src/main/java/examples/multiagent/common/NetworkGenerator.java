@@ -207,6 +207,62 @@ public class NetworkGenerator {
         return dronesMap;
     }
 
+    public static HashMap<Integer, DroneAgent> generateStaticlayers4(Margins m, double ix, double iy){
+        HashMap<Integer, DroneAgent> dronesMap = new HashMap<>();
+
+        dronesMap.put(
+                0,
+                new DroneAgent(0, m, ix, iy, 0, new E(new int[]{0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, new int[]{0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0}))
+        );
+        dronesMap.put(
+                1,
+                new DroneAgent(1, m, ix-10, iy-30, 1, new E(new int[]{1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}, new int[]{-1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0}))
+        );
+        dronesMap.put(
+                2,
+                new DroneAgent(2, m, ix+10, iy-30, 1, new E(new int[]{1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0}, new int[]{-1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0}))
+        );
+        dronesMap.put(
+                3,
+                new DroneAgent(3, m, ix-20, iy-70, 2, new E(new int[]{0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0}, new int[]{0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0}))
+        );
+        dronesMap.put(
+                4,
+                new DroneAgent(4, m, ix-10, iy-70, 2, new E(new int[]{0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0}, new int[]{0, -1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0}))
+        );
+        dronesMap.put(
+                5,
+                new DroneAgent(5, m, ix+10, iy-70, 2, new E(new int[]{0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0}, new int[]{0, 0, -1, 0, 0, 0, 0, 0, 0, 1, 0, 0}))
+        );
+        dronesMap.put(
+                6,
+                new DroneAgent(6, m, ix+20, iy-70, 2, new E(new int[]{0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0}, new int[]{0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 1, 0}))
+        );
+        dronesMap.put(
+                7,
+                new DroneAgent(7, m, ix-30, iy-110, 3, new E(new int[]{0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1}, new int[]{0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 1}))
+        );
+        dronesMap.put(
+                8,
+                new DroneAgent(8, m, ix-20, iy-110, 3, new E(new int[]{0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0}, new int[]{0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0}))
+        );
+        dronesMap.put(
+                9,
+                new DroneAgent(9, m, ix+20, iy-110, 3, new E(new int[]{0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0}, new int[]{0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0}))
+
+        );
+        dronesMap.put(
+                10,
+                new DroneAgent(10, m, ix+30, iy-110, 3, new E(new int[]{0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0}, new int[]{0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0}))
+        );
+        dronesMap.put(
+                11,
+                new DroneAgent(11, m, ix-40, iy-150, 4, new E(new int[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0}, new int[]{0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0}))
+        );
+
+        return dronesMap;
+    }
+
 //    public static void main(String[] args) {
 //        NetworkGenerator g = new NetworkGenerator(0, 0, 10, 20, new Margins(0,0,100,100));
 //        g.getDroneMap();

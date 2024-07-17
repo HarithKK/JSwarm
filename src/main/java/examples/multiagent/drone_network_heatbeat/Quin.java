@@ -75,7 +75,7 @@ public class Quin {
                 double ix = 100.0;
                 double iy = 10.0;
 
-                Controller.dronesMap = NetworkGenerator.generateStatic(getMargins(), ix, iy);
+                Controller.dronesMap = NetworkGenerator.generateStaticlayers4(getMargins(), ix, iy);
 
                 try {
                     for(Integer i : Controller.dronesMap.keySet()){
@@ -147,12 +147,12 @@ public class Quin {
                             }
                         }
 
-                        for(List<DoubleStateMap> l: Controller.pKtlMap.values()){
-                            for(DoubleStateMap m: l){
-                                m.position = Mathamatics.round(Math.abs(m.position -1), 3);
-                                m.velocity = Mathamatics.round(Math.abs(m.velocity -1), 3);
-                            }
-                        }
+//                        for(List<DoubleStateMap> l: Controller.pKtlMap.values()){
+//                            for(DoubleStateMap m: l){
+//                                m.position = Mathamatics.round(Math.abs(m.position -1), 3);
+//                                m.velocity = Mathamatics.round(Math.abs(m.velocity -1), 3);
+//                            }
+//                        }
 
                         Executor.getInstance().updateData("Pklt-v", "0-1", Controller.pKtlMap.get(0).get(1).velocity);
                         Executor.getInstance().updateData("Pklt-p", "0-1", Controller.pKtlMap.get(0).get(1).position);
@@ -183,23 +183,23 @@ public class Quin {
             }
         };
 
-        Executor.getInstance().registerChart(
-                new ProgressiveChart(400, 250, "Pklt-v", "Pklt-v","kTau")
-                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
-                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
-                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
-                        .setLegend(true)
-        );
+//        Executor.getInstance().registerChart(
+//                new ProgressiveChart(400, 250, "Pklt-v", "Pklt-v","kTau")
+//                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
+//                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
+//                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
+//                        .setLegend(true)
+//        );
+//
+//        Executor.getInstance().registerChart(
+//                new ProgressiveChart(400, 250, "Pklt-p", "Pklt-p","kTau")
+//                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
+//                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
+//                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
+//                        .setLegend(true)
+//        );
 
-        Executor.getInstance().registerChart(
-                new ProgressiveChart(400, 250, "Pklt-p", "Pklt-p","kTau")
-                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
-                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
-                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
-                        .setLegend(true)
-        );
-
-        for(int i=0; i< 11;i++){
+        for(int i=0; i< 12;i++){
             Executor.getInstance().registerChart(
                     new ProgressiveChart(200, 130, String.valueOf(i), "","Drone "+i)
                             .subscribe(new ChartSeries("dOmega", 0.0).setColor(Color.BLUE))

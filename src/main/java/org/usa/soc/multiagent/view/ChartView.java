@@ -73,7 +73,7 @@ public class ChartView extends JFrame {
 
     private void updateUI() {
         progressBar.setValue(progressValue);
-        labelStep.setText(progressValue + "%");
+        labelStep.setText(String.valueOf(this.view2D.getAlgo().getCurrentStep()));
         labelStep.updateUI();
         pnlCenter.updateUI();
     }
@@ -233,6 +233,7 @@ public class ChartView extends JFrame {
         pnlProgress = new JPanel();
         pnlProgress.setLayout(new BorderLayout());
         pnlProgress.add(progressBar, BorderLayout.CENTER);
+        pnlProgress.add(labelStep, BorderLayout.WEST);
         add(pnlProgress, BorderLayout.SOUTH);
 
         pnlCenter = new JPanel();
