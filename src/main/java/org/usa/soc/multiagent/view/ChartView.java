@@ -243,8 +243,8 @@ public class ChartView extends JFrame {
         this.setVisible(true);
     }
 
-    public void setCustomActions(List<JButton> customActions) {
-        for(JButton btn: customActions){
+    public void setCustomActions(List<Component> customActions) {
+        for(Component btn: customActions){
             this.jToolBar.add(btn);
         }
     }

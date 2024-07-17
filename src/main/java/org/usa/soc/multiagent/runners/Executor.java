@@ -7,6 +7,7 @@ import org.usa.soc.multiagent.view.DataView;
 import org.usa.soc.multiagent.view.ProgressiveChart;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,13 +36,24 @@ public class Executor {
         return iAlgorithm;
     }
 
-    List<JButton> customActions = new ArrayList<>();
+    List<Component> customActions = new ArrayList<>();
 
     public void AddCustomActions(String title, ActionListener listener, boolean enabled){
         JButton btn = new JButton(title);
         btn.addActionListener(listener);
         btn.setEnabled(enabled);
         customActions.add(btn);
+    }
+
+    public void AddCustomCheckBox(String title, ActionListener listener, boolean enabled){
+        JCheckBox chk = new JCheckBox();
+        JLabel label = new JLabel(title);
+        chk.addActionListener(listener);
+        chk.setEnabled(true);
+        JPanel panel = new JPanel();
+        panel.add(label);
+        panel.add(chk);
+        customActions.add(panel);
     }
 
     public void registerChart(ProgressiveChart chart){

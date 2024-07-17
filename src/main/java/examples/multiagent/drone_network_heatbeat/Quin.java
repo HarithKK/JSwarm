@@ -62,11 +62,13 @@ class DoubleStateMap{
 public class Quin {
 
 
+
     public static void main(String[] args) {
 
         Controller.dAgentGroup.setMarkerColor(Color.GREEN);
         Controller.cAgentGroup.setMarker(Markers.CROSS);
         Controller.cAgentGroup.setMarkerColor(Color.RED);
+
         Serializer serializer = new Serializer(PrintToFile.getInstance().build("data/"+ new Date().getTime()+".json"));
 
         Algorithm algorithm = new Algorithm() {
@@ -168,7 +170,8 @@ public class Quin {
                     Controller.stateSamplesMap.values().stream().forEach(i -> i.clear());
                 }
 
-                serializer.build(this).save();
+                if(Controller.logging)
+                    serializer.build(this).save();
             }
 
             private DoubleStateMap calculateInnerProduct(StateMap vk, StateMap vk1) {
@@ -208,16 +211,23 @@ public class Quin {
             );
         }
 
-        Executor.getInstance().AddCustomActions("V", new ActionListener() {
+//        Executor.getInstance().AddCustomActions("V", new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                for(Integer index: Controller.pKtlMap.keySet()){
+//                    System.out.print(index + " [");
+//                    for(DoubleStateMap map: Controller.pKtlMap.get(index)) {
+//                        System.out.print("("+map.index+": "+ Mathamatics.round(map.position,4) +","+Mathamatics.round(map.velocity,4)+") ");
+//                    }
+//                    System.out.println(" ]");
+//                }
+//            }
+//        }, true);
+
+        Executor.getInstance().AddCustomCheckBox("Log", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(Integer index: Controller.pKtlMap.keySet()){
-                    System.out.print(index + " [");
-                    for(DoubleStateMap map: Controller.pKtlMap.get(index)) {
-                        System.out.print("("+map.index+": "+ Mathamatics.round(map.position,4) +","+Mathamatics.round(map.velocity,4)+") ");
-                    }
-                    System.out.println(" ]");
-                }
+                Controller.logging = !Controller.logging;
             }
         }, true);
 

@@ -12,6 +12,8 @@ public class Controller {
 
     public static int K = 15;
 
+    public static boolean logging = false;
+
     public static final int DISCONNECTED_KEY = 1;
 
     public static AgentGroup agentGroup = new AgentGroup("Drones");
