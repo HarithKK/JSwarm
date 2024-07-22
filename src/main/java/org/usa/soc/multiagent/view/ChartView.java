@@ -23,10 +23,10 @@ public class ChartView extends JFrame {
     DecimalFormat decimalFormat;
 
     JToolBar jToolBar;
-    JButton btnRun, btnPause, btnStop, btnRepeat;
+    JButton btnRun, btnPause, btnStop;
     JProgressBar progressBar;
 
-    JLabel labelStep;
+    JLabel labelStep, lblInterval;
 
     JPanel pnlProgress, pnlCenter;
     JSlider sldInterval;
@@ -86,7 +86,6 @@ public class ChartView extends JFrame {
                 btnRun.setEnabled(false);
                 btnPause.setEnabled(!isRepeat.isSet());
                 btnStop.setEnabled(true);
-                btnRepeat.setEnabled(false);
 
                 clearValues();
                 try{
@@ -111,7 +110,6 @@ public class ChartView extends JFrame {
         btnRun.setEnabled(false);
         btnPause.setEnabled(true);
         btnStop.setEnabled(true);
-        btnRepeat.setEnabled(false);
 
         if(currentRunner != null && view2D.getAlgo().isPaused()){
             view2D.getAlgo().resumeOptimizer();
@@ -125,19 +123,9 @@ public class ChartView extends JFrame {
             btnRun.setEnabled(true);
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
-            btnRepeat.setEnabled(false);
             isRepeat.unset();
             view2D.pauseExecution();
         }
-    }
-
-    private void btnRepeatActionPerformed(ActionEvent e){
-        btnRun.setEnabled(false);
-        btnPause.setEnabled(false);
-        btnStop.setEnabled(true);
-        btnRepeat.setEnabled(false);
-        isRepeat.set();
-        runOptimizer();
     }
 
     private void btnStopActionPerformed(ActionEvent e){
@@ -145,7 +133,6 @@ public class ChartView extends JFrame {
             btnRun.setEnabled(true);
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
-            btnRepeat.setEnabled(true);
             view2D.getAlgo().stopOptimizer();
             view2D.stopExecution();
             isRepeat.unset();
@@ -198,25 +185,14 @@ public class ChartView extends JFrame {
         });
         jToolBar.add(btnStop);
 
-        btnRepeat = new JButton("Repeat");
-        btnRepeat.setFont(f1);
-        btnRepeat.setEnabled(true);
-        btnRepeat.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                btnRepeatActionPerformed(e);
-            }
-        });
-        //jToolBar.add(btnRepeat);
-
-
         jToolBar.add(new JToolBar.Separator());
-        JLabel label1 = new JLabel("Interval: ", JLabel.CENTER);
-        jToolBar.add(label1);
+        lblInterval = new JLabel("Interval: 100", JLabel.CENTER);
+        jToolBar.add(lblInterval);
         sldInterval = new JSlider(10,3000, 100);
         sldInterval.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
+                lblInterval.setText("Interval: "+sldInterval.getValue());
                 setInterval(sldInterval.getValue());
             }
         });
@@ -227,13 +203,15 @@ public class ChartView extends JFrame {
         progressBar.setMinimum(0);
         progressBar.setMaximum(100);
 
+        JLabel labelStepTitle = new JLabel("Step: ", JLabel.LEFT);
+        labelStepTitle.setForeground(Color.BLACK);
+
         labelStep = new JLabel("0", JLabel.CENTER);
         labelStep.setForeground(Color.BLACK);
 
         pnlProgress = new JPanel();
-        pnlProgress.setLayout(new BorderLayout());
-        pnlProgress.add(progressBar, BorderLayout.CENTER);
-        pnlProgress.add(labelStep, BorderLayout.WEST);
+        pnlProgress.add(labelStepTitle);
+        pnlProgress.add(labelStep);
         add(pnlProgress, BorderLayout.SOUTH);
 
         pnlCenter = new JPanel();
