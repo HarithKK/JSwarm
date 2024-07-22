@@ -7,11 +7,11 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 public class ALSO extends Algorithm {
 
     private int numberOfLizards =0;
-
-    private Lizard[] lizards;
 
     double totalMass, totalLength, globalBest, globalWorst, lb, lt, mb, mt, c1, c2, Ib, It;
 
@@ -37,13 +37,13 @@ public class ALSO extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.c1 = c1;
         this.c2 = c2;
         this.Ib = Ib;
         this.It = It;
 
-        this.lizards = new Lizard[numberOfLizards];
+        this.agents = new ArrayList<>(numberOfLizards);
         this.totalMass = totalMass;
         this.totalLength = totalLength;
         this.globalWorst = this.globalBest =0.0;
@@ -64,7 +64,7 @@ public class ALSO extends Algorithm {
 
         for (int step = 0; step < stepsCount; step++) {
 
-            for(Lizard lizard: lizards){
+            for(Lizard lizard: (Lizard[]) agents.toArray()){
                 lizard.generateNewTorque(globalBest, globalWorst);
 
                 lizard.calculateValues(totalMass, totalLength);
@@ -88,13 +88,13 @@ public class ALSO extends Algorithm {
                 lizard.setPosition(newP);
                 lizard.setFitnessValue(objectiveFunction.setParameters(newP.getPositionIndexes()).call());
 
-                if(Validator.validateBestValue(lizard.getFitnessValue(), lizard.getLbestValue(), isGlobalMinima)){
+                if(Validator.validateBestValue(lizard.getFitnessValue(), lizard.getLbestValue(), isGlobalMinima.isSet())){
                     lizard.setLbest(lizard.getPosition());
                     lizard.setLbestValue(lizard.getFitnessValue());
                 }
             }
 
-            for(Lizard lizard: lizards){
+            for(Lizard lizard: (Lizard[]) agents.toArray()){
                 updateGBest(lizard);
             }
 
@@ -115,10 +115,10 @@ public class ALSO extends Algorithm {
             lizard.setFitnessValue(objectiveFunction.setParameters(lizard.getPosition().getPositionIndexes()).call());
             lizard.setLbest(lizard.getPosition());
             lizard.setLbestValue(lizard.getFitnessValue());
-            this.lizards[i] = lizard;
+            this.agents.set(i, lizard);
         }
 
-        for(Lizard lizard: lizards){
+        for(Lizard lizard:  (Lizard[]) agents.toArray()){
             updateGBest(lizard);
         }
     }
@@ -127,12 +127,12 @@ public class ALSO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(lizard.getLbest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(lizard.getPosition());
             this.globalBest = fpbest;
         }
 
-        if(Validator.validateBestValue(fpbest, fgbest, !isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, !isGlobalMinima.isSet())){
             this.globalWorst = fpbest;
         }
     }
@@ -142,7 +142,7 @@ public class ALSO extends Algorithm {
         double[][] data = new double[this.numberOfDimensions][this.numberOfLizards*2];
         for(int i=0; i< this.numberOfLizards; i++){
             for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.lizards[i].getPosition().getValue(j),2);
+                data[j][i] = Mathamatics.round(this.agents.get(i).position.getValue(j),2);
             }
         }
         return data;

@@ -1,12 +1,12 @@
 package examples.si.algo.also;
 
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.Agent;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class Lizard {
+public class Lizard extends Agent {
 
-    private Vector position;
     private double bodyAngle, directiveBodyAngle;
     private double tailAngle, directiveTailAngle;
     private double fitnessValue;
@@ -15,7 +15,6 @@ public class Lizard {
     private double lbestValue;
     private double It;
     private double Ib;
-    private double[] minBoundary, maxBoundary;
     double lb, lt, mb, mt;
     double a,b,c,d,e,f,g;
 

@@ -1,11 +1,15 @@
 package examples.si.algo.tsa;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TSA extends Algorithm {
     private int populationSize;
@@ -33,7 +37,7 @@ public class TSA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
 
         this.tunicates = new Tunicate[populationSize];
         this.pmax = 4;
@@ -114,19 +118,14 @@ public class TSA extends Algorithm {
     private void updateGBest(Tunicate tunicate) {
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(tunicate.getPosition());
         }
     }
 
     @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.tunicates[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
+    public List<Agent> getAgents() {
+        return Arrays.asList(tunicates);
     }
+
 }

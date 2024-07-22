@@ -6,9 +6,10 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 public class CSO extends Algorithm {
 
-    private Cat[] cats;
     private int numberOfCats;
 
     private double seekersToTracersRatio;
@@ -38,7 +39,7 @@ public class CSO extends Algorithm {
         this.stepsCount = stepsCount;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.numberOfCats = numberOfCats;
         this.seekersToTracersRatio = seekersToTracersRatio;
         this.smp = smp;
@@ -48,7 +49,7 @@ public class CSO extends Algorithm {
         this.c = c;
         this.w =w;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.cats = new Cat[numberOfCats];
+        this.agents = new ArrayList<>(numberOfCats);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class CSO extends Algorithm {
 
         for(int i = 0; i< this.getStepsCount(); i++){
 
-            for (Cat cat: this.cats) {
+            for (Cat cat: (Cat[]) this.agents.toArray()) {
                 if(cat.isSeeker()){
                     cat.seek(objectiveFunction, isMinima());
                 }else{
@@ -94,13 +95,13 @@ public class CSO extends Algorithm {
 
         int i = 0;
         while(i< seekersCount){
-            this.cats[i] = new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.SEEKER, this.smp, this.cdc, this.srd, this.spc);
-            this.updateBestCat(this.cats[i]);
+            this.agents.set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.SEEKER, this.smp, this.cdc, this.srd, this.spc));
+            this.updateBestCat((Cat) this.agents.get(i));
             i++;
         }
         while(i< this.numberOfCats){
-            this.cats[i] = new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.TRACER, this.smp, this.cdc, this.srd, this.spc);
-            this.updateBestCat(this.cats[i]);
+            this.agents.set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.TRACER, this.smp, this.cdc, this.srd, this.spc));
+            this.updateBestCat((Cat) this.agents.get(i));
             i++;
         }
     }
@@ -110,19 +111,8 @@ public class CSO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(cat.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(cat.getPosition().getClonedVector(), this.minBoundary, this.maxBoundary);
         }
     }
-
-    @Override
-    public double[][] getDataPoints(){
-        double[][] data = new double[this.numberOfDimensions][this.numberOfCats];
-        for(int i=0; i< this.numberOfCats; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.cats[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
-    };
 }

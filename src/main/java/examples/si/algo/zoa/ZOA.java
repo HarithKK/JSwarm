@@ -7,11 +7,12 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 public class ZOA extends Algorithm {
 
     private int populationSize;
 
-    private Zebra[] zebras;
     private Zebra pioneerZebra, attackedZebra;
 
     public ZOA(
@@ -30,9 +31,9 @@ public class ZOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.zebras = new Zebra[populationSize];
+        this.agents = new ArrayList<>(populationSize);
         this.pioneerZebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
     }
 
@@ -46,32 +47,32 @@ public class ZOA extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                for(Zebra zebra: zebras){
+                for(Zebra zebra: (Zebra[]) agents.toArray()){
                     // phase 1
                     long I = Math.round(1 + Randoms.rand(0,1));
                     Vector newX = pioneerZebra.getPosition()
                             .operate(Vector.OPERATOR.SUB, zebra.getPosition().operate(Vector.OPERATOR.MULP, (double)I))
                             .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1))
                             .operate(Vector.OPERATOR.ADD, zebra.getPosition());
-                    zebra.updatePosition(objectiveFunction, newX, isGlobalMinima);
+                    zebra.updatePosition(objectiveFunction, newX, isGlobalMinima.isSet());
 
                     // phase 2
                     if(Randoms.rand(0,1) <= 0.5){
                         double c = 0.01*(2*Randoms.rand(0,1) -1)*(1 - (step+1)/stepsCount);
                         Vector S1 = zebra.getPosition().operate(Vector.OPERATOR.MULP, (1+c));
-                        zebra.updatePosition(objectiveFunction, S1, isGlobalMinima);
+                        zebra.updatePosition(objectiveFunction, S1, isGlobalMinima.isSet());
                         attackedZebra = zebra;
                     }else{
                         Vector S2 = attackedZebra.getPosition()
                                 .operate(Vector.OPERATOR.SUB, zebra.getPosition().operate(Vector.OPERATOR.MULP, (double)I))
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1))
                                 .operate(Vector.OPERATOR.ADD, zebra.getPosition());
-                        zebra.updatePosition(objectiveFunction, S2, isGlobalMinima);
+                        zebra.updatePosition(objectiveFunction, S2, isGlobalMinima.isSet());
                     }
 
                 }
 
-                for(Zebra zebra: zebras){
+                for(Zebra zebra: (Zebra[]) agents.toArray()){
                     updateGbest(zebra);
                 }
                 if(this.stepAction != null)
@@ -91,33 +92,21 @@ public class ZOA extends Algorithm {
         for(int i=0; i<populationSize; i++){
             Zebra zebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
             zebra.setFitnessValue(objectiveFunction.setParameters(zebra.getPosition().getPositionIndexes()).call());
-            zebras[i] = zebra;
+            agents.set(i,zebra);
         }
 
-        for(Zebra zebra: zebras){
+        for(Zebra zebra: (Zebra[]) agents.toArray()){
             updateGbest(zebra);
         }
 
-        attackedZebra = zebras[Randoms.rand(populationSize-1)];
+        attackedZebra = (Zebra) agents.get(Randoms.rand(populationSize-1));
     }
 
     private void updateGbest(Zebra zebra) {
         double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(zebra.getFitnessValue(), fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(zebra.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             gBest.setVector(zebra.getPosition());
             pioneerZebra = zebra;
         }
-    }
-
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize*2];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.zebras[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

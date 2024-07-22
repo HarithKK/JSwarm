@@ -1,16 +1,14 @@
 package examples.si.algo.wso;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Validator;
 
-public class Wasp {
+public class Wasp extends Agent {
 
-    private double[] minBoundary, maxBoundary;
     private Vector solution;
-
-    private int numberOfDimensions;
 
     private Vector bestSolution;
 

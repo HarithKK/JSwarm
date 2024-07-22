@@ -1,16 +1,14 @@
 package examples.si.algo.cso;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class Cat {
+public class Cat extends Agent {
 
-    private double[] minBoundary, maxBoundary;
-
-    private int numberOfDimensions;
-    private Vector position, velocity;
+    private Vector velocity;
 
     private Mode mode;
 

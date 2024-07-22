@@ -1,5 +1,6 @@
 package examples.si.algo.alo;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -7,13 +8,18 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ALO extends Algorithm {
 
     private int numberOfAnts;
 
-    private Ant ants[], antLions[];
+    private List<Ant> ants, antLions;
     private double minFs, maxFs;
 
     public ALO(
@@ -31,10 +37,10 @@ public class ALO extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.ants = new Ant[numberOfAnts];
-        this.antLions = new Ant[numberOfAnts];
+        this.ants = new ArrayList<>(numberOfAnts);
+        this.antLions = new ArrayList<>(numberOfAnts);
 
         this.minFs = Double.MIN_VALUE;
         this.maxFs = Double.MAX_VALUE;
@@ -64,7 +70,7 @@ public class ALO extends Algorithm {
                     }
                 }
 
-                Vector RA = getNewPosition(minValuesVector, maxValuesVector, antLions[selectedAntLionIndex].getPosition(), I, step);
+                Vector RA = getNewPosition(minValuesVector, maxValuesVector, antLions.get(selectedAntLionIndex).getPosition(), I, step);
                 Vector RE = getNewPosition(minValuesVector, maxValuesVector, gBest, I, step);
                 Vector R = RA.operate(Vector.OPERATOR.ADD, RE).operate(Vector.OPERATOR.DIV, 2.0).fixVector(minBoundary, maxBoundary);
 
@@ -74,25 +80,25 @@ public class ALO extends Algorithm {
             }
 
             for(int i=0; i<numberOfAnts; i++){
-                if(Validator.validateBestValue(ants[i].getFitnessValue(), antLions[i].getFitnessValue(), !isGlobalMinima)){
-                    antLions[i] = ants[i].cloneAnt();
+                if(Validator.validateBestValue(ants.get(i).getFitnessValue(), antLions.get(i).getFitnessValue(), !isGlobalMinima.isSet())){
+                    antLions.set(i, ants.get(i).cloneAnt());
                 }
             }
 
-            Ant elite = antLions[0];
+            Ant elite = antLions.get(0);
             for(int i=0; i<numberOfAnts; i++) {
-                Ant a = antLions[i];
-                if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima)){
+                Ant a = antLions.get(i);
+                if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima.isSet())){
                     elite = a.cloneAnt();
                 }else{
-                    antLions[i] = elite.cloneAnt();
+                    antLions.set(i, elite.cloneAnt());
                 }
             }
 
             if(Validator.validateBestValue(
                     objectiveFunction.setParameters(elite.getPosition().getPositionIndexes()).call(),
                     objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call(),
-                    isGlobalMinima
+                    isGlobalMinima.isSet()
             )){
                 this.gBest.setVector(elite.getPosition());
             }
@@ -168,18 +174,18 @@ public class ALO extends Algorithm {
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant ant = new Ant(numberOfDimensions, minBoundary, maxBoundary);
             ant.setFitnessValue(objectiveFunction.setParameters(ant.getPosition().getPositionIndexes()).call());
-            ants[i] = ant;
+            ants.set(i, ant);
         }
 
         Ant elite = new Ant(numberOfDimensions, minBoundary, maxBoundary);
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant antLion = new Ant(numberOfDimensions, minBoundary, maxBoundary);
             antLion.setFitnessValue(objectiveFunction.setParameters(antLion.getPosition().getPositionIndexes()).call());
-            antLions[i] = antLion;
+            antLions.set(i, antLion);
             this.maxFs = Math.max(this.maxFs, antLion.getFitnessValue());
             this.minFs = Math.min(this.minFs, antLion.getFitnessValue());
 
-            if(Validator.validateBestValue(antLion.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima)){
+            if(Validator.validateBestValue(antLion.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima.isSet())){
                 elite = antLion;
             }
         }
@@ -188,11 +194,11 @@ public class ALO extends Algorithm {
 
     private int getAntLionIndexFromRouletteWheel(){
         double deltaFs = maxFs - minFs;
-        double fsb = isGlobalMinima ? maxFs : minFs;
+        double fsb = isGlobalMinima.isSet() ? maxFs : minFs;
         double p0 = Randoms.rand(0,1);
 
         for(int i=0; i<numberOfAnts; i++){
-            double p = Math.abs(antLions[i].getFitnessValue() - fsb) / deltaFs;
+            double p = Math.abs(antLions.get(i).getFitnessValue() - fsb) / deltaFs;
             if(p > p0){
                 return i;
             }
@@ -201,16 +207,7 @@ public class ALO extends Algorithm {
     }
 
     @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfAnts*2];
-        for(int i=0; i< this.numberOfAnts; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.ants[i].getPosition().getValue(j),2);
-            }
-            for(int j =0; j< numberOfDimensions; j++){
-                data[j][i+numberOfAnts] = Mathamatics.round(this.antLions[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
+    public List<Agent> getAgents() {
+        return Stream.of(this.ants, this.antLions).flatMap(Collection::stream).collect(Collectors.toList());
     }
 }

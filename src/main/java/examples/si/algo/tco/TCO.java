@@ -1,11 +1,15 @@
 package examples.si.algo.tco;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TCO extends Algorithm {
 
@@ -32,7 +36,7 @@ public class TCO extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.numberOfTermites = numberOfTermites;
         this.p0 = p0;
         this.eRate = evaporationRate;
@@ -98,7 +102,7 @@ public class TCO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(ti.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(ti.getPosition());
         }
     }
@@ -129,13 +133,7 @@ public class TCO extends Algorithm {
     }
 
     @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfTermites];
-        for(int i=0; i< this.numberOfTermites; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.termites[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
+    public List<Agent> getAgents() {
+        return Arrays.asList(termites);
     }
 }

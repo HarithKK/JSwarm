@@ -7,11 +7,11 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 public class JSO extends Algorithm {
 
     private int populationSize;
-
-    private Jellyfish[] jellyfishSwarm;
 
     private double beta, gamma;
 
@@ -34,11 +34,11 @@ public class JSO extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.beta = beta;
         this.gamma = gamma;
 
-        this.jellyfishSwarm = new Jellyfish[populationSize];
+        this.agents = new ArrayList<>(populationSize);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class JSO extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                for(Jellyfish jellyfish: jellyfishSwarm){
+                for(Jellyfish jellyfish: (Jellyfish[]) agents.toArray()){
 
                     double ct = Math.abs((1 - ((step+1)/stepsCount)) * (2*Randoms.rand(0,1)-1));
                     Vector mu = getMeanLocation();
@@ -93,9 +93,9 @@ public class JSO extends Algorithm {
     }
 
     private Jellyfish getRandomJellyfish(Jellyfish jellyfish) {
-        Jellyfish f = jellyfishSwarm[Randoms.rand(populationSize-1)];
+        Jellyfish f = (Jellyfish) agents.get(Randoms.rand(populationSize-1));
         if(f == jellyfish){
-            return jellyfishSwarm[Randoms.rand(populationSize-1)];
+            return (Jellyfish) agents.get(Randoms.rand(populationSize-1));
         }else{
             return f;
         }
@@ -110,7 +110,7 @@ public class JSO extends Algorithm {
 
     private Vector getMeanLocation() {
         Vector sum = new Vector(numberOfDimensions).resetAllValues(0.0);
-        for(Jellyfish jellyfish: jellyfishSwarm){
+        for(Jellyfish jellyfish: (Jellyfish[]) agents.toArray()){
             sum.operate(Vector.OPERATOR.ADD, jellyfish.getPosition());
         }
         return sum.operate(Vector.OPERATOR.DIV, (double)populationSize);
@@ -125,29 +125,18 @@ public class JSO extends Algorithm {
             Jellyfish jellyfish = new Jellyfish(numberOfDimensions, minBoundary, maxBoundary);
             jellyfish.setFitnessValue(objectiveFunction.setParameters(jellyfish.getPosition().getPositionIndexes()).call());
 
-            jellyfishSwarm[i] = jellyfish;
+            agents.set(i,jellyfish);
         }
 
-        for(Jellyfish jellyfish: jellyfishSwarm){
+        for(Jellyfish jellyfish: (Jellyfish[]) agents.toArray()){
             updateGbest(jellyfish);
         }
     }
 
     private void updateGbest(Jellyfish jellyfish){
         double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(jellyfish.getFitnessValue(), fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(jellyfish.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(jellyfish.getPosition());
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize*2];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.jellyfishSwarm[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

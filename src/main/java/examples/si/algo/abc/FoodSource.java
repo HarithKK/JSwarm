@@ -1,14 +1,11 @@
 package examples.si.algo.abc;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
-public class FoodSource {
-    private Vector position;
-    double[] minBoundary;
-    double[] maxBoundary;
-    int numberOfDimensions;
+public class FoodSource extends Agent {
 
     private double fm;
     private double counter;

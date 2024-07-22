@@ -1,17 +1,15 @@
 package org.usa.soc.si;
 
+import examples.si.algo.avoa.Vulture;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.core.ds.SeriesData;
+import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public abstract class Algorithm implements Cloneable {
 
@@ -28,7 +26,7 @@ public abstract class Algorithm implements Cloneable {
     protected Vector gBest;
     protected List<Agent> agents = new ArrayList<>();
     private List<Double> history = new ArrayList<>();
-    private long currentStep, nanoDuration;
+    protected long currentStep, nanoDuration;
     private double bestValue = 0,
             convergenceValue = Double.MAX_VALUE,
             gradiantDecent = Double.MAX_VALUE,
@@ -129,6 +127,21 @@ public abstract class Algorithm implements Cloneable {
         sb.append('\n');
 
         return sb.toString();
+    }
+
+    public double[][] getDataPoints() {
+        double[][] data = new double[this.numberOfDimensions][this.agents.size()];
+        for(int i=0; i< this.agents.size(); i++){
+            Vector c = this.agents.get(i).position;
+            for(int j=0; j< numberOfDimensions; j++){
+                data[j][i] = Mathamatics.round(c.getValue(j),2);
+            }
+        }
+        return data;
+    }
+
+    public List<Agent> getAgents(){
+        return this.agents;
     }
 
     public List toList() {
@@ -312,5 +325,9 @@ public abstract class Algorithm implements Cloneable {
                 }
             }
         }
+    }
+
+    public void sort(){
+        Collections.sort(agents, new AgentComparator());
     }
 }

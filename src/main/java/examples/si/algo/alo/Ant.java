@@ -1,14 +1,10 @@
 package examples.si.algo.alo;
 
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.Agent;
 import org.usa.soc.util.Randoms;
 
-public class Ant {
-
-    private double[] minBoundary;
-    private double[] maxBoundary;
-
-    private Vector position;
+public class Ant extends Agent {
 
     private double fitnessValue;
 

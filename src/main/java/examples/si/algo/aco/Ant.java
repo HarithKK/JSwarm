@@ -1,15 +1,13 @@
 package examples.si.algo.aco;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class Ant {
-    private Vector position;
+public class Ant extends Agent {
     private Vector pbest;
-
-    private double[] minBoundary, maxBoundary;
 
     public Ant(int numberOfDimensions, double[] minBoundary, double[] maxBoundary) {
         this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);

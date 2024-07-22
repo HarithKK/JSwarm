@@ -8,12 +8,11 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class GOA extends Algorithm {
 
     private int populationSize;
-
-    private GrassHopper[] grassHoppers;
 
     private double cmin, cmax, intensityOfAttraction, attractionLength;
 
@@ -39,13 +38,13 @@ public class GOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.cmin = cmin;
         this.cmax = cmax;
         this.intensityOfAttraction = intensityOfAttraction;
         this.attractionLength = attractionLength;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.grassHoppers = new GrassHopper[populationSize];
+        this.agents = new ArrayList<>(populationSize);
         this.vectordiff = new Vector(numberOfDimensions);
 
         for(int i=0; i< numberOfDimensions;i++){
@@ -73,11 +72,11 @@ public class GOA extends Algorithm {
 
                 for(int i=0 ;i< populationSize; i++){
                     for(int j=i+1; j< populationSize; j++){
-                        double distance = this.grassHoppers[i].getPosition().getDistance(this.grassHoppers[j].getPosition());
+                        double distance = this.agents.get(i).getPosition().getDistance(this.agents.get(j).getPosition());
                         double unitMultiplier= 2 + BigDecimal.valueOf(distance).remainder(BigDecimal.valueOf(2)).doubleValue();
 
-                        Vector unitVector = this.grassHoppers[j].getPosition()
-                                .operate(Vector.OPERATOR.SUB, this.grassHoppers[i].getPosition())
+                        Vector unitVector = this.agents.get(j).getPosition()
+                                .operate(Vector.OPERATOR.SUB, this.agents.get(i).getPosition())
                                 .operate(Vector.OPERATOR.DIV, distance + 1E-14);
 
                         double s = calculateS(unitMultiplier);
@@ -85,20 +84,20 @@ public class GOA extends Algorithm {
                         Vector distanceVector = dc.operate(Vector.OPERATOR.MULP, s)
                                 .operate(Vector.OPERATOR.MULP, unitVector);
 
-                        this.grassHoppers[i].addTotalDistance(distanceVector);
-                        this.grassHoppers[j].addTotalDistance(distanceVector);
+                        ((GrassHopper)this.agents.get(i)).addTotalDistance(distanceVector);
+                        ((GrassHopper)this.agents.get(j)).addTotalDistance(distanceVector);
                     }
 
-                    Vector newX = grassHoppers[i].getTotalDistanceVector()
+                    Vector newX = ((GrassHopper)this.agents.get(i)).getTotalDistanceVector()
                             .operate(Vector.OPERATOR.MULP, c)
                             .operate(Vector.OPERATOR.ADD, this.gBest.getClonedVector())
                             .fixVector(minBoundary, maxBoundary);
                     double fitnessValue = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
-                    grassHoppers[i].setPosition(newX);
-                    grassHoppers[i].setFitnessValue(fitnessValue);
+                    this.agents.get(i).setPosition(newX);
+                    this.agents.get(i).setFitnessValue(fitnessValue);
                 }
 
-                for(GrassHopper g: grassHoppers)
+                for(GrassHopper g: (GrassHopper[]) agents.toArray())
                     updateGbest(g);
 
                 if(this.stepAction != null)
@@ -124,7 +123,7 @@ public class GOA extends Algorithm {
             GrassHopper grassHopper = new GrassHopper(numberOfDimensions, minBoundary, maxBoundary);
             grassHopper.setFitnessValue(objectiveFunction.setParameters(grassHopper.getPosition().getPositionIndexes()).call());
 
-            grassHoppers[i] = grassHopper;
+            agents.set(i,grassHopper);
 
             updateGbest(grassHopper);
         }
@@ -133,19 +132,8 @@ public class GOA extends Algorithm {
     private void updateGbest(GrassHopper grassHopper) {
         grassHopper.getTotalDistanceVector().resetAllValues(0.0);
         double fgbest = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(grassHopper.getFitnessValue(), fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(grassHopper.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(grassHopper.getPosition());
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize*2];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.grassHoppers[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

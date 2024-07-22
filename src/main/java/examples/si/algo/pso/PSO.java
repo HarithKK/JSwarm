@@ -1,11 +1,15 @@
 package examples.si.algo.pso;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class PSO extends Algorithm implements Cloneable {
 
@@ -43,7 +47,7 @@ public class PSO extends Algorithm implements Cloneable {
 
         this.particles = new Particle[particleCount];
         this.gBest = new Vector(numberOfDimensions);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.getGBest().resetAllValues(isGlobalMinima ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
     }
 
@@ -72,7 +76,7 @@ public class PSO extends Algorithm implements Cloneable {
         this.maxBoundary = maxBoundary;
         this.particles = new Particle[particleCount];
         this.gBest = new Vector(numberOfDimensions);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.getGBest().resetAllValues(isGlobalMinima ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
     }
 
@@ -89,7 +93,7 @@ public class PSO extends Algorithm implements Cloneable {
         for (int step = 1; step <= this.getStepsCount(); step++) {
             // update positions
             for (Particle p : this.particles) {
-                p.updatePbest(this.objectiveFunction, this.isGlobalMinima);
+                p.updatePbest(this.objectiveFunction, this.isGlobalMinima.isSet());
                 this.updateGBest(p.getPBest(), this.getGBest());
             }
 
@@ -99,7 +103,7 @@ public class PSO extends Algorithm implements Cloneable {
                 if(Validator.validateBestValue(
                         objectiveFunction.setParameters(v.getPositionIndexes()).call(),
                         objectiveFunction.setParameters(p.getPosition().getPositionIndexes()).call(),
-                        isGlobalMinima
+                        isGlobalMinima.isSet()
                 )){
                  p.setPosition(v);
                 }
@@ -184,7 +188,7 @@ public class PSO extends Algorithm implements Cloneable {
         Double fpbest = tfn.call();
         Double fgbest = this.objectiveFunction.setParameters(gBestPosition.getPositionIndexes()).call();
 
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(getRandomPosition(pBestPosition.getClonedVector()), minBoundary, maxBoundary);
         }
     }
@@ -200,17 +204,11 @@ public class PSO extends Algorithm implements Cloneable {
                 wMin,
                 minBoundary,
                 maxBoundary,
-                isGlobalMinima);
+                isGlobalMinima.isSet());
     }
 
     @Override
-    public double[][] getDataPoints(){
-        double[][] data = new double[this.numberOfDimensions][this.particleCount];
-        for(int i=0; i< this.particleCount; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.particles[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
-    };
+    public List<Agent> getAgents() {
+        return Arrays.asList(particles);
+    }
 }

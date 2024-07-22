@@ -1,16 +1,14 @@
 package examples.si.algo.avoa;
 
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.Agent;
 import org.usa.soc.util.Randoms;
 
-public class Vulture {
+public class Vulture extends Agent {
 
-    private Vector position;
     private Vector lbest;
 
     private double fitnessValue;
-
-    private double[] minBoundary, maxBoundary;
 
     public Vulture(int numberOfDimensions,double[] minBoundary, double[] maxBoundary) {
         this.minBoundary = minBoundary;

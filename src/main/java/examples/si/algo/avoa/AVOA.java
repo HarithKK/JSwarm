@@ -1,5 +1,6 @@
 package examples.si.algo.avoa;
 
+import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -8,6 +9,7 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +17,6 @@ import java.util.List;
 public class AVOA extends Algorithm {
 
     private int populationSize;
-
-    private Vulture[] vultures;
 
     private double alpha, beta, omega, p1, p2, p3;
 
@@ -42,7 +42,7 @@ public class AVOA extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.omega = omega;
         this.alpha = alpha;
         this.beta = beta;
@@ -51,7 +51,7 @@ public class AVOA extends Algorithm {
         this.p3 = p3;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
 
-        this.vultures = new Vulture[populationSize];
+        this.agents = new ArrayList<>(populationSize);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AVOA extends Algorithm {
                 Vulture[] firstBestVultures = findBestVultures();
                 double F = calculateF(step+1);
 
-                for (Vulture vulture: vultures) {
+                for (Vulture vulture: (Vulture[]) agents.toArray()) {
                     Vulture randomVulture = randomSelectVulture(firstBestVultures[0], firstBestVultures[1]);
                     if(vulture != randomVulture){
                         Vector newPosition = null;
@@ -133,13 +133,13 @@ public class AVOA extends Algorithm {
                         Double fpbest = this.objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call();
 
                         vulture.setLbest(vulture.getPosition());
-                        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
+                        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
                             //  vulture.setLbest(vulture.getPosition());
                         }
                     }
                 }
 
-                for(Vulture vulture: vultures){
+                for(Vulture vulture: (Vulture[]) agents.toArray()){
                     updateGBest(vulture);
                 }
 
@@ -156,7 +156,7 @@ public class AVOA extends Algorithm {
     private void updateGBest(Vulture vulture) {
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(vulture.getLbest().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(vulture.getLbest());
         }
     }
@@ -168,9 +168,8 @@ public class AVOA extends Algorithm {
 
     private Vulture[] findBestVultures(){
 
-
-        List<Vulture> sortedVultures = Arrays.asList(vultures);
-        Collections.sort(sortedVultures, new VultureComparator());
+        List<Vulture> sortedVultures = Arrays.asList((Vulture[]) agents.toArray());
+        sort();
 
         return new Vulture[]{sortedVultures.get(0), sortedVultures.get(1)};
     }
@@ -195,18 +194,7 @@ public class AVOA extends Algorithm {
         for(int i=0; i<populationSize;i++){
             Vulture vulture = new Vulture(numberOfDimensions, minBoundary, maxBoundary);
             vulture.setFitnessValue(objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call());
-            vultures[i] = vulture;
+            agents.set(i, vulture);
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize*2];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.vultures[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

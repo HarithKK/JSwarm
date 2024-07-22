@@ -7,11 +7,13 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ABC extends Algorithm {
 
     private int numberOfFoodSources, maxTrials;
 
-    private FoodSource[] foodSources;
 
     public ABC(ObjectiveFunction<Double> objectiveFunction,
               int stepsCount,
@@ -27,13 +29,13 @@ public class ABC extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.numberOfFoodSources = numberOfFoodSources;
         this.maxTrials = maxTrials;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
 
-        this.foodSources = new FoodSource[numberOfFoodSources];
+        this.agents = new ArrayList<>(numberOfFoodSources);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ABC extends Algorithm {
             runOnlookerBeePhase(totalFM);
             runScoutBeePhase();
 
-            for(FoodSource f: foodSources){
+            for(FoodSource f: (FoodSource[]) this.agents.toArray()){
                 updateGbest(f);
             }
 
@@ -64,7 +66,7 @@ public class ABC extends Algorithm {
     }
 
     private void runScoutBeePhase() {
-        for (FoodSource f: foodSources) {
+        for(FoodSource f: (FoodSource[]) this.agents.toArray()){
             if(f.getTrials() >= maxTrials){
                 f.reInitiate();
                 f.setFm(f.calculateFitness(objectiveFunction, f.getPosition()));
@@ -76,13 +78,13 @@ public class ABC extends Algorithm {
     private void runOnlookerBeePhase(double totalFM) {
         double b =0;
         for (int i=0; i<numberOfFoodSources ;i++) {
-            FoodSource cb = foodSources[i];
+            FoodSource cb = (FoodSource) agents.get(i);
             b += (Randoms.rand(0,1) * cb.calculateProbabilities(totalFM));
 
             for(int j=0; j<numberOfFoodSources ;j++){
                 if(j==i)
                     continue;
-                if(b < foodSources[j].getProbability()){
+                if(b < ((FoodSource) agents.get(j)).getProbability()){
                     runEmployeeBeePhase(j);
                     break;
                 }
@@ -93,18 +95,18 @@ public class ABC extends Algorithm {
     private void updateGbest(FoodSource f) {
         Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             gBest.setVector(f.getPosition());
         }
     }
 
     private double runEmployeeBeePhase(int i) {
-        FoodSource currentBee = foodSources[i];
-        FoodSource neighbourBeeOccupied = foodSources[getRandomFoodSource(i)];
+        FoodSource currentBee = (FoodSource) agents.get(i);
+        FoodSource neighbourBeeOccupied = (FoodSource) agents.get(getRandomFoodSource(i));
         Vector v = currentBee.calculateNextBestPosition(neighbourBeeOccupied);
         Double fm = currentBee.calculateFitness(objectiveFunction, v);
         double pfm = currentBee.calculateFitness(objectiveFunction, currentBee.getPosition());
-        if(!Validator.validateBestValue(fm,pfm,this.isGlobalMinima)){
+        if(!Validator.validateBestValue(fm,pfm,this.isGlobalMinima.isSet())){
             currentBee.setPosition(v);
             currentBee.setFm(fm);
             currentBee.setCounter(currentBee.getFm() + 1);
@@ -134,18 +136,7 @@ public class ABC extends Algorithm {
             f.setFm(f.calculateFitness(objectiveFunction, f.getPosition()));
             f.setCounter(0);
             updateGbest(f);
-            this.foodSources[i] = f;
+            this.agents.set(i, f);
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfFoodSources];
-        for(int i=0; i< this.numberOfFoodSources; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.foodSources[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

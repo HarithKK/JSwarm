@@ -1,19 +1,16 @@
 package examples.si.algo.ba;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class Bat {
+public class Bat extends Agent {
 
-    private Vector position;
     private Vector best;
     private Vector velocity;
     private Vector f;
-    private double[] minBoundary;
-    private double[] maxBoundary;
-    private int numberOfDimensions;
 
     private double alpha;
     private double a;

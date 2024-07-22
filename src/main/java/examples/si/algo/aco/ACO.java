@@ -7,13 +7,13 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 /*
 Toksari, M. Duran. "Ant colony optimization for finding the global minimum." Applied Mathematics and computation 176.1 (2006): 308-316.
  */
 
 public class ACO extends Algorithm {
-
-    private Ant[] ants;
     private int numberOfAnts;
     private int numberOfProcessIterations;
 
@@ -47,8 +47,8 @@ public class ACO extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = new Vector(this.numberOfDimensions);
         this.pheromoneValue = pheromoneValue;
-        this.isGlobalMinima = isGlobalMinima;
-        this.ants = new Ant[this.numberOfAnts];
+        this.isGlobalMinima.setValue(isGlobalMinima);
+        this.agents = new ArrayList<>(numberOfAnts);
     }
 
     public ACO(
@@ -73,8 +73,8 @@ public class ACO extends Algorithm {
         this.gBest = new Vector(this.numberOfDimensions);
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.pheromoneValue = 0.1;
-        this.isGlobalMinima = isGlobalMinima;
-        this.ants = new Ant[this.numberOfAnts];
+        this.isGlobalMinima.setValue(isGlobalMinima);
+        this.agents = new ArrayList<>(numberOfAnts);
     }
 
     private double calculateAlpha() {
@@ -96,9 +96,9 @@ public class ACO extends Algorithm {
                 // generate dx
                 Vector dx = Randoms.getRandomVector(this.numberOfDimensions, -(this.alpha), this.alpha);
 
-                for(Ant a: this.ants){
+                for(Ant a: (Ant[]) this.agents.toArray()){
                     a.setPosition(getPositionVector(a, dx));
-                    a.updatePBest(this.objectiveFunction, this.isGlobalMinima);
+                    a.updatePBest(this.objectiveFunction, this.isGlobalMinima.isSet());
 
                     // update pheromones
                     this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
@@ -117,7 +117,7 @@ public class ACO extends Algorithm {
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
 
-        boolean sign = !Validator.validateBestValue(fpbest, fgbest, isGlobalMinima);
+        boolean sign = !Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet());
 
         return a.getPosition().operate(sign ? Vector.OPERATOR.ADD : Vector.OPERATOR.SUB, v);
     }
@@ -129,7 +129,7 @@ public class ACO extends Algorithm {
 
         for(int i=0;i<this.numberOfAnts; i++){
             Ant ant = new Ant(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
-            this.ants[i] = ant;
+            this.agents.set(i, ant);
             this.updateBest(ant);
         }
     }
@@ -139,7 +139,7 @@ public class ACO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(a.getPbest());
         }
     }
@@ -157,18 +157,6 @@ public class ACO extends Algorithm {
                 alpha,
                 evaporationRate,
                 pheromoneValue,
-                isGlobalMinima);
+                isGlobalMinima.isSet());
     }
-
-    @Override
-    public double[][] getDataPoints(){
-        double[][] data = new double[this.numberOfDimensions][this.numberOfAnts];
-        for(int i=0; i< this.numberOfAnts; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.ants[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
-    };
-
 }

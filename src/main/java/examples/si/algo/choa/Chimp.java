@@ -1,12 +1,10 @@
 package examples.si.algo.choa;
 
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.Agent;
 import org.usa.soc.util.Randoms;
 
-public class Chimp {
-
-    private Vector position;
-    private double fitnessValue;
+public class Chimp extends Agent {
     private double m;
     private double a;
     private double da;
@@ -14,7 +12,6 @@ public class Chimp {
     private double db;
     private double dd;
     private Vector c;
-    private int numberOfDimensions;
 
     public Chimp(int numberOfDimensions,double[] minBoundary, double[] maxBoundary) {
         this.numberOfDimensions = numberOfDimensions;

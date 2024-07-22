@@ -1,15 +1,15 @@
 package examples.si.algo.ms;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class Monky {
+public class Monky extends Agent {
 
     private Vector bestRoot;
-    private double[] minBoundary, maxBoundary;
-    private int numberOfDimensions, maxHeightOfTheTree;
+    private int maxHeightOfTheTree;
 
     private ObjectiveFunction fn;
     public Monky(double[] maxBoundary, double[] minBoundary, int numberOfDimensions, int maxHeightOfTheTree, ObjectiveFunction fn) {

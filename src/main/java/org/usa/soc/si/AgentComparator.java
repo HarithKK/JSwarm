@@ -1,10 +1,10 @@
-package examples.si.algo.avoa;
+package org.usa.soc.si;
 
 import java.util.Comparator;
 
-public class VultureComparator implements Comparator<Vulture> {
+public class AgentComparator implements Comparator<Agent> {
     @Override
-    public int compare(Vulture o1, Vulture o2) {
+    public int compare(Agent o1, Agent o2) {
         if(o1.getFitnessValue() > o2.getFitnessValue())
             return 1;
         else if (o1.getFitnessValue() == o2.getFitnessValue()) {

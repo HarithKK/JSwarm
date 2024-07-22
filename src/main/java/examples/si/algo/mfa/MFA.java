@@ -1,5 +1,6 @@
 package examples.si.algo.mfa;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -35,7 +36,7 @@ public class MFA extends Algorithm {
         this.numberOfMoths = numberOfMoths;
         this.b = b;
 
-        this.gBest = isGlobalMinima ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
+        this.gBest = isGlobalMinima.isSet() ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
 
         this.moths = new ArrayList<Moth>(numberOfMoths);
         this.flames = new ArrayList<Flame>(numberOfMoths);
@@ -102,6 +103,11 @@ public class MFA extends Algorithm {
             moth.setFitnessValue(objectiveFunction.setParameters(moth.getPosition().getPositionIndexes()).call());
             moths.add(moth);
         }
+    }
+
+    @Override
+    public List<Agent> getAgents() {
+        return new ArrayList<>(){{addAll(flames);}};
     }
 
     @Override

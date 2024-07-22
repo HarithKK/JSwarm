@@ -1,5 +1,6 @@
 package examples.si.algo.gwo;
 
+import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -16,7 +17,6 @@ public class GWO extends Algorithm {
     private static final Double MAX_A = 2.0;
     private int numberOfWolfs;
     private Wolf alpha, beta, delta;
-    private List<Wolf> wolfs;
 
     private Vector a;
 
@@ -33,11 +33,11 @@ public class GWO extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.numberOfWolfs = numberOfWolfs;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.wolfs = new ArrayList<>(numberOfWolfs);
+        this.agents = new ArrayList<>(numberOfWolfs);
 
         this.a = new Vector(numberOfDimensions);
         this.a.resetAllValues(MAX_A);
@@ -50,7 +50,7 @@ public class GWO extends Algorithm {
         this.nanoDuration = System.nanoTime();
         for(int step = 0; step< stepsCount; step++){
             double aDecrement = 2*(1.0 - (step/ stepsCount));
-            for(Wolf w: wolfs){
+            for(Wolf w: (Wolf[]) agents.toArray()){
                 Vector X1 = getUpdatedPositionVector(w, alpha, calcA(), calcC());
                 Vector X2 = getUpdatedPositionVector(w, beta,  calcA(), calcC());
                 Vector X3 = getUpdatedPositionVector(w, delta,  calcA(), calcC());
@@ -61,7 +61,7 @@ public class GWO extends Algorithm {
                         .operate(Vector.OPERATOR.DIV, 3.0)
                         .fixVector(minBoundary, maxBoundary);
                 Double fitnessValue = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
-                if(Validator.validateBestValue(fitnessValue, w.getFitnessValue(), isGlobalMinima)){
+                if(Validator.validateBestValue(fitnessValue, w.getFitnessValue(), isGlobalMinima.isSet())){
                     w.setPosition(newX);
                     w.setFitnessValue(fitnessValue);
                 }
@@ -108,14 +108,14 @@ public class GWO extends Algorithm {
         for(int i =0;i< numberOfWolfs; i++){
             Wolf w = new Wolf(numberOfDimensions, minBoundary, maxBoundary);
             w.setFitnessValue(this.objectiveFunction.setParameters(w.getPosition().getPositionIndexes()).call());
-            wolfs.add(w);
+            agents.add(w);
         }
 
-        Collections.sort(wolfs, new WolfComparator());
+        sort();
 
-        this.alpha = wolfs.get(0).getClonedWolf();
-        this.beta = wolfs.get(1).getClonedWolf();
-        this.delta = wolfs.get(2).getClonedWolf();
+        this.alpha = ((Wolf) agents.get(0)).getClonedWolf();
+        this.beta = ((Wolf) agents.get(1)).getClonedWolf();
+        this.delta = ((Wolf) agents.get(2)).getClonedWolf();
 
         updateWolfHirarchy();
     }
@@ -126,19 +126,19 @@ public class GWO extends Algorithm {
 //        findBeta();
 //        findDelta();
 
-        Collections.sort(wolfs, new WolfComparator());
+        sort();
 
-        this.alpha = wolfs.get(0).getClonedWolf();
-        this.beta = wolfs.get(1).getClonedWolf();
-        this.delta = wolfs.get(2).getClonedWolf();
+        this.alpha = ((Wolf) agents.get(0)).getClonedWolf();
+        this.beta = ((Wolf) agents.get(1)).getClonedWolf();
+        this.delta = ((Wolf) agents.get(2)).getClonedWolf();
 
         this.gBest.setVector(this.alpha.getPosition());
     }
 
     private void findAlpha(){
         for(int j= 0;j < this.numberOfWolfs; j++){
-            if(Validator.validateBestValue(wolfs.get(j).getFitnessValue(), alpha.getFitnessValue(), isGlobalMinima)){
-                this.alpha = wolfs.get(j).getClonedWolf();
+            if(Validator.validateBestValue(agents.get(j).getFitnessValue(), alpha.getFitnessValue(), isGlobalMinima.isSet())){
+                this.alpha = ((Wolf) agents.get(j)).getClonedWolf();
             }
         }
     }
@@ -147,11 +147,11 @@ public class GWO extends Algorithm {
         for(int j= 0;j < this.numberOfWolfs; j++){
             double falpha = alpha.getFitnessValue();
             double fbeta = beta.getFitnessValue();
-            double f = wolfs.get(j).getFitnessValue();
-            if(Validator.validateBestValue(f, fbeta, isGlobalMinima) &&
-                    Validator.validateBestValue(falpha, fbeta, isGlobalMinima)
+            double f = agents.get(j).getFitnessValue();
+            if(Validator.validateBestValue(f, fbeta, isGlobalMinima.isSet()) &&
+                    Validator.validateBestValue(falpha, fbeta, isGlobalMinima.isSet())
             ){
-                this.beta = wolfs.get(j).getClonedWolf();
+                this.beta = ((Wolf) agents.get(j)).getClonedWolf();
             }
         }
     }
@@ -160,23 +160,12 @@ public class GWO extends Algorithm {
         for(int j= 0;j < this.numberOfWolfs; j++){
             double fbeta = beta.getFitnessValue();
             double fdelta = delta.getFitnessValue();
-            double f = wolfs.get(j).getFitnessValue();
-            if(Validator.validateBestValue(f, fdelta, isGlobalMinima) &&
-                    Validator.validateBestValue(fbeta, fdelta, isGlobalMinima)
+            double f = ((Wolf) agents.get(j)).getFitnessValue();
+            if(Validator.validateBestValue(f, fdelta, isGlobalMinima.isSet()) &&
+                    Validator.validateBestValue(fbeta, fdelta, isGlobalMinima.isSet())
             ){
-                this.delta = wolfs.get(j).getClonedWolf();
+                this.delta = ((Wolf) agents.get(j)).getClonedWolf();
             }
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfWolfs];
-        for(int i=0; i< this.numberOfWolfs; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.wolfs.get(i).getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

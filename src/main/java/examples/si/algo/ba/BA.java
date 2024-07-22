@@ -7,11 +7,11 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 public class BA extends Algorithm {
 
     private int numberOfBats;
-
-    private Bat[] bats;
 
     private double fMin, fMax, alpha, A0, r0, gamma, Aavg;
 
@@ -33,7 +33,7 @@ public class BA extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.numberOfBats = numberOfBats;
         this.fMin = fMin;
         this.fMax = fMax;
@@ -43,7 +43,7 @@ public class BA extends Algorithm {
         this.r0 = r0;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.bats = new Bat[numberOfBats];
+        this.agents = new ArrayList<>(numberOfBats);
     }
     @Override
     public void runOptimizer() throws Exception {
@@ -54,12 +54,12 @@ public class BA extends Algorithm {
         for(int step = 0; step< getStepsCount(); step++){
 
             double at =0;
-            for(Bat b : bats){
+            for(Bat b : (Bat[]) agents.toArray()){
                 b.updatePosition(this.gBest);
                 Vector newSolution = b.generateNewSolution(Aavg);
 
                 if(Randoms.rand(0, (alpha * A0)) < b.getA()){
-                    b.updatePBest(objectiveFunction, isGlobalMinima, newSolution);
+                    b.updatePBest(objectiveFunction, isGlobalMinima.isSet(), newSolution);
                 }
                 b.updatePulseRates();
                 b.updateLoudness();
@@ -67,7 +67,7 @@ public class BA extends Algorithm {
             }
             Aavg = at /(double)numberOfBats;
 
-            for(Bat b: bats){
+            for(Bat b: (Bat[]) agents.toArray()){
                 updateGBest(b);
             }
 
@@ -98,7 +98,7 @@ public class BA extends Algorithm {
             b.updatePulseRates();
             b.updateLoudness();
             at+=b.getA();
-            this.bats[i] = b;
+            this.agents.set(i, b);
 
             updateGBest(b);
         }
@@ -109,19 +109,8 @@ public class BA extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(b.getBest().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(b.getBest());
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfBats];
-        for(int i=0; i< this.numberOfBats; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.bats[i].getBest().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

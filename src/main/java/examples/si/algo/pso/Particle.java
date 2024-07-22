@@ -1,17 +1,16 @@
 package examples.si.algo.pso;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-public class Particle {
+public class Particle extends Agent {
 
-    private Vector position;
     private Vector velocity;
 
     private Vector pBest;
-    private double[] minBoundary, maxBoundary;
 
     public Particle(double[] minBoundary, double[] maxBoundary, int numberOfDimensions) {
         this.minBoundary = minBoundary;
@@ -23,14 +22,6 @@ public class Particle {
 
         pBest = this.getPosition().getClonedVector();
 
-    }
-
-    public Vector getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector position) {
-        this.position = position;
     }
 
     public void updatePbest(ObjectiveFunction<Double> objectiveFunction, boolean isGlobalMinima) {

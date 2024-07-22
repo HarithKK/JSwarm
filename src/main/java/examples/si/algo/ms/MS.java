@@ -1,10 +1,15 @@
 package examples.si.algo.ms;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MS extends Algorithm {
 
@@ -30,7 +35,7 @@ public class MS extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.maxHeightOfTheTree = maxHeightOfTheTree;
         this.c1 = c1;
 
@@ -48,7 +53,7 @@ public class MS extends Algorithm {
 
         for (int i = 0; i < this.getStepsCount(); i++) {
             for (Monky m : this.monkeys) {
-                m.climbTree(this.c1,this.isGlobalMinima, this.gBest);
+                m.climbTree(this.c1,this.isGlobalMinima.isSet(), this.gBest);
                 updateGBest(m);
             }
             if(this.stepAction != null)
@@ -85,7 +90,7 @@ public class MS extends Algorithm {
 
         Double fpbest = this.objectiveFunction.setParameters(m.getBestRoot().getClonedVector().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(m.getBestRoot(), this.minBoundary, this.maxBoundary);
         }
     }
@@ -100,18 +105,12 @@ public class MS extends Algorithm {
                 minBoundary,
                 maxBoundary,
                 c1,
-                isGlobalMinima
+                isGlobalMinima.isSet()
         );
     }
 
     @Override
-    public double[][] getDataPoints(){
-        double[][] data = new double[this.numberOfDimensions][this.numberOfMonkeys];
-        for(int i=0; i< this.numberOfMonkeys; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.monkeys[i].getBestRoot().getValue(j),2);
-            }
-        }
-        return data;
-    };
+    public List<Agent> getAgents() {
+        return Arrays.asList(monkeys);
+    }
 }

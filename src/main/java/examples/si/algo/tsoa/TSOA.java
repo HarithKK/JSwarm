@@ -15,7 +15,6 @@ public class TSOA extends Algorithm {
 
     private int populationSize;
 
-    private List<Tree> trees;
     private double distanceFactor =0;
 
     private double c1, c2;
@@ -43,14 +42,14 @@ public class TSOA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.distanceFactor = distanceFactor;
         this.seedsCount = seedsCount;
 
         this.c1 = 10;
         this.c2 = 10;
 
-        trees = new ArrayList<>();
+        agents = new ArrayList<>();
     }
 
     @Override
@@ -62,27 +61,27 @@ public class TSOA extends Algorithm {
 
         double distanceDecrement = distanceFactor/stepsCount;
 
-        int deligator = (int)(trees.size() * delegator_split);
+        int deligator = (int)(agents.size() * delegator_split);
         int totalSeedsCount = deligator*seedsCount;
 
         for(int step = 0; step< getStepsCount(); step++){
             Vector predicted = new Vector(this.numberOfDimensions);
 
-            for(int i =0; i <this.trees.size(); i++){
-                Tree t = trees.get(i);
+            for(int i =0; i <this.agents.size(); i++){
+                Tree t = (Tree) agents.get(i);
                 predicted = predicted.operate(Vector.OPERATOR.ADD, t.getPosition().operate(Vector.OPERATOR.MULP, t.getLambda()));
             }
 
             double totalLabmda = 0;
             double totalDistance = 0;
-            for(int i =0; i <this.trees.size(); i++){
-                Tree t = trees.get(i);
+            for(int i =0; i <this.agents.size(); i++){
+                Tree t = (Tree) agents.get(i);
                 totalLabmda += t.getLambda();
                 totalDistance += Math.pow(t.getCalculatedDistance(predicted), -p);
             }
 
             for(int i = 0; i < deligator; i++){
-                Tree t = trees.get(i);
+                Tree t = (Tree) agents.get(i);
                 t.updateLambda(p, totalLabmda, totalDistance);
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
@@ -106,24 +105,24 @@ public class TSOA extends Algorithm {
                     }
 
                     newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
-                    if(Validator.validateBestValue(newTree.getFitnessValue(), t.getlBestValue(), isGlobalMinima)){
+                    if(Validator.validateBestValue(newTree.getFitnessValue(), t.getlBestValue(), isGlobalMinima.isSet())){
                         t.setlBest(newTree.getPosition());
                         t.setlBestValue(newTree.getFitnessValue());
                     }
                     newTree.setlBest(newTree.getPosition());
                     newTree.setlBestValue(newTree.getFitnessValue());
                     newTree.setLambda(t.getLambda());
-                    this.trees.add(newTree);
+                    this.agents.add(newTree);
                 }
 
                 distanceFactor *= (1-distanceDecrement);
             }
 
-            Collections.sort(trees, new TreeComparator());
-            updateGBest(trees.get(0));
+            sort();
+            updateGBest((Tree) agents.get(0));
 
             for(int i = 0; i < totalSeedsCount; i++){
-                trees.remove(trees.size()-1);
+                agents.remove(agents.size()-1);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
@@ -142,17 +141,17 @@ public class TSOA extends Algorithm {
             tree.setFitnessValue(objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call());
             tree.setlBest(tree.getPosition());
             tree.setlBestValue(tree.getFitnessValue());
-            this.trees.add(tree);
+            this.agents.add(tree);
         }
 
-        Collections.sort(trees, new TreeComparator());
-        updateGBest(trees.get(0));
+        sort();
+        updateGBest((Tree) agents.get(0));
     }
 
     private void updateGBest(Tree tree) {
         Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
         Double fpbest = this.objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)) {
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(tree.getPosition());
         }
     }
@@ -162,7 +161,7 @@ public class TSOA extends Algorithm {
         double[][] data = new double[this.numberOfDimensions][this.populationSize];
         for(int i=0; i< this.populationSize; i++){
             for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.trees.get(i).getPosition().getValue(j),2);
+                data[j][i] = Mathamatics.round(this.agents.get(i).getPosition().getValue(j),2);
             }
         }
         return data;

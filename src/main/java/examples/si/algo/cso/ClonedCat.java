@@ -1,10 +1,10 @@
 package examples.si.algo.cso;
 
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.Agent;
 import org.usa.soc.util.Randoms;
 
-public class ClonedCat {
-    private Vector position;
+public class ClonedCat extends Agent {
     private double fsValue;
 
     void randomUpdatePosition(int n, int D, double srd){
@@ -15,15 +15,6 @@ public class ClonedCat {
             position.setValue(v, index);
         }
     }
-
-    public Vector getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector position) {
-        this.position = position;
-    }
-
     public double getFsValue() {
         return fsValue;
     }

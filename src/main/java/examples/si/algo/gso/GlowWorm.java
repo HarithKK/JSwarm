@@ -1,16 +1,15 @@
 package examples.si.algo.gso;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
-public class GlowWorm {
+public class GlowWorm extends Agent {
 
-    private Vector position;
     private double l;
     private double r;
     private int numberOfDimensions;
-    private double[] minBoundary, maxBoundary;
 
     public GlowWorm(double l, double r, int numberOfDimensions, double[] minBoundary, double[] maxBoundary) {
         this.l = l;
@@ -33,16 +32,8 @@ public class GlowWorm {
         return l;
     }
 
-    public Vector getPosition() {
-        return position.getClonedVector();
-    }
-
     public double getR() {
         return r;
-    }
-
-    public void setPosition(Vector v) {
-        this.position.setVector(v, minBoundary, maxBoundary);
     }
 
     public void setR(double r) {

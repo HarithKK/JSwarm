@@ -1,6 +1,8 @@
 package examples.si.algo.mbo;
 
-public class Sperm {
+import org.usa.soc.si.Agent;
+
+public class Sperm extends Agent {
     private int spermCount;
     private Drone owner;
 

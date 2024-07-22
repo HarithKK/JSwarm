@@ -1,5 +1,6 @@
 package examples.si.algo.choa;
 
+import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -14,8 +15,6 @@ import java.util.List;
 public class CHOA extends Algorithm {
 
     private int populationSize;
-
-    private List<Chimp> chimps;
 
     Chimp attacker, chaser, barrier, divider;
 
@@ -42,11 +41,11 @@ public class CHOA extends Algorithm {
         this.maxBoundary = maxBoundary;
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.fUpper = fUpper;
         this.chaoticType = type;
 
-        this.chimps = new ArrayList<>(populationSize);
+        this.agents = new ArrayList<>(populationSize);
     }
 
     @Override
@@ -59,23 +58,23 @@ public class CHOA extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                Collections.sort(chimps, new ChimpComparator(isGlobalMinima));
+                Collections.sort(agents, new AgentComparator());
                 f = fUpper*(1 - ((step+1)/ stepsCount));
-                attacker = chimps.get(populationSize-1);
+                attacker = (Chimp) agents.get(populationSize-1);
                 attacker.updateFMAC(f, chaoticType);
-                chaser = chimps.get(populationSize-2);
+                chaser = (Chimp) agents.get(populationSize-2);
                 chaser.updateFMAC(f, chaoticType);
-                barrier = chimps.get(populationSize-3);
+                barrier = (Chimp) agents.get(populationSize-3);
                 barrier.updateFMAC(f, chaoticType);
-                divider = chimps.get(populationSize-4);
+                divider = (Chimp) agents.get(populationSize-4);
                 divider.updateFMAC(f, chaoticType);
 
-                for(Chimp chimp: chimps){
+                for(Chimp chimp: (Chimp[]) agents.toArray()){
                     chimp.updateFMAC(f, chaoticType);
                     chimp.updateDValues(attacker, chaser, barrier, divider);
                 }
 
-                for(Chimp chimp: chimps){
+                for(Chimp chimp: (Chimp[]) agents.toArray()){
                     Vector newX;
                     double u = Randoms.rand(0,1);
                     if(u < 0.5){
@@ -102,7 +101,7 @@ public class CHOA extends Algorithm {
                     chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
                 }
 
-                for(Chimp chimp: chimps){
+                for(Chimp chimp: (Chimp[]) agents.toArray()){
                     updateGBest(chimp);
                 }
 
@@ -125,7 +124,7 @@ public class CHOA extends Algorithm {
         for(int i=0;i <populationSize; i++){
             Chimp chimp = new Chimp(numberOfDimensions, minBoundary, maxBoundary);
             chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
-            chimps.add(chimp);
+            agents.add(chimp);
 
             updateGBest(chimp);
         }
@@ -134,19 +133,8 @@ public class CHOA extends Algorithm {
 
     private void updateGBest(Chimp chimp) {
         double fgbest = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(chimp.getFitnessValue(), fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(chimp.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(chimp.getPosition());
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize*2];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.chimps.get(i).getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

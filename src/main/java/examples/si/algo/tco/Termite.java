@@ -1,15 +1,12 @@
 package examples.si.algo.tco;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
-public class Termite {
+public class Termite extends Agent {
 
-    private Vector position;
-    double[] minBoundary;
-    double[] maxBoundary;
-    int numberOfDimensions;
     private double pValue;
 
     public Termite(double[] minBoundary, double[] maxBoundary, int numberOfDimensions, double pValue) {
@@ -24,10 +21,6 @@ public class Termite {
     public void updatePheramoneValue(double eRate, ObjectiveFunction<Double> objectiveFunction) {
         double d = objectiveFunction.setParameters(this.getPosition().getPositionIndexes()).call();
         this.pValue = ((1 - eRate) * this.getpValue()) + 1 / (d + 1);
-    }
-
-    public Vector getPosition() {
-        return position.getClonedVector();
     }
 
     public void updatePositionByRandomWalk(Vector v) {

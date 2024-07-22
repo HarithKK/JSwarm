@@ -1,13 +1,10 @@
 package examples.si.algo.mbo;
 
-public class Brood {
-    private Double fitnessValue;
+import org.usa.soc.si.Agent;
+
+public class Brood extends Agent {
 
     public Brood(Double fitnessValue) {
         this.fitnessValue = fitnessValue;
-    }
-
-    public Double getFitnessValue() {
-        return fitnessValue;
     }
 }

@@ -1,5 +1,6 @@
 package examples.si.algo.wso;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Mathamatics;
@@ -7,6 +8,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class WSO extends Algorithm {
     private Wasp[] wasps;
@@ -29,7 +31,7 @@ public class WSO extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.c1 = c1;
         this.c2 = c2;
 
@@ -58,7 +60,7 @@ public class WSO extends Algorithm {
                     this.updateBest(w);
                 }
                 w.setSolution(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
-                w.updateDiversity(objectiveFunction, isGlobalMinima);
+                w.updateDiversity(objectiveFunction, isGlobalMinima.isSet());
                 w.updateForce(this.c1, this.c2, this.objectiveFunction);
             }
             if(this.stepAction != null)
@@ -89,7 +91,7 @@ public class WSO extends Algorithm {
                 this.maxBoundary,
                 this.numberOfDimensions);
         wasp.setSolution(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
-        wasp.updateDiversity(objectiveFunction, isGlobalMinima);
+        wasp.updateDiversity(objectiveFunction, isGlobalMinima.isSet());
         wasp.updateForce(this.c1, this.c2, this.objectiveFunction);
         this.updateBest(wasp);
         return wasp;
@@ -99,7 +101,7 @@ public class WSO extends Algorithm {
         Double fgbest = objectiveFunction.setParameters(this.getGBest().getClonedVector().getPositionIndexes()).call();
         Double fpbest = objectiveFunction.setParameters(w.getBestSolution().getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(w.getBestSolution().getClonedVector(), minBoundary, maxBoundary);
         }
     }
@@ -114,17 +116,11 @@ public class WSO extends Algorithm {
                 maxBoundary,
                 c1,
                 c2,
-                isGlobalMinima);
+                isGlobalMinima.isSet());
     }
 
     @Override
-    public double[][] getDataPoints(){
-        double[][] data = new double[this.numberOfDimensions][this.numberOfWasps];
-        for(int i=0; i< this.numberOfWasps; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.wasps[i].getSolution().getValue(j),2);
-            }
-        }
-        return data;
-    };
+    public List<Agent> getAgents() {
+        return Arrays.asList(wasps);
+    }
 }

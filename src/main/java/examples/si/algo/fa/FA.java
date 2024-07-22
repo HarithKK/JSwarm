@@ -7,11 +7,11 @@ import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
+
 public class FA extends Algorithm {
 
     private int numberOfFlies;
-
-    private Fly[] flies;
 
     private double gama, alpha, beta0, characteristicLength;
 
@@ -33,14 +33,14 @@ public class FA extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.characteristicLength = characteristicLength;
         this.gama = 1 / Math.pow(characteristicLength, 2);
         this.alpha = alpha;
         this.beta0 = beta0;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.numberOfFlies = numberOfFlies;
-        flies = new Fly[numberOfFlies];
+        agents = new ArrayList<>(numberOfFlies);
     }
 
     @Override
@@ -53,14 +53,14 @@ public class FA extends Algorithm {
         for(int step = 0; step< getStepsCount(); step++){
             for(int i=0; i< numberOfFlies; i++){
 
-                Fly fi = flies[i];
+                Fly fi = (Fly) agents.get(i);
 
                 for(int j=0; j< numberOfFlies; j++){
                     if(i==j){
                         continue;
                     }
 
-                    Fly fj = flies[j];
+                    Fly fj =(Fly) agents.get(j);
 
                     if(fj.getIntensity() < fi.getIntensity()){
 
@@ -98,7 +98,7 @@ public class FA extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(fi.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(fi.getPosition());
         }
     }
@@ -119,19 +119,7 @@ public class FA extends Algorithm {
             Fly d = new Fly(minBoundary, maxBoundary, numberOfDimensions);
             d.setIntensity(objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call());
             updateGBest(d);
-            this.flies[i] = d;
+            this.agents.set(i, d);
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-
-        double[][] data = new double[this.numberOfDimensions][this.numberOfFlies];
-        for(int i=0; i< this.numberOfFlies; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.flies[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

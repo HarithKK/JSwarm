@@ -1,5 +1,6 @@
 package examples.si.algo.mbo;
 
+import org.usa.soc.si.Agent;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.GeneticFunctions;
 import org.usa.soc.core.ds.Vector;
@@ -9,9 +10,8 @@ import org.usa.soc.util.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Queen {
+public class Queen extends Agent {
 
-    private Vector position;
     private Vector bestPosition;
     private double speed;
 
@@ -21,22 +21,12 @@ public class Queen {
 
     private List<Sperm> spermatheca;
 
-    private double[] minBoundary, maxBoundary;
     public Queen(int numberOfDimensions, double[] minBoundary, double[] maxBoundary) {
         this.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
         this.maxBoundary = maxBoundary;
         this.minBoundary = minBoundary;
         this.setpBest(Double.POSITIVE_INFINITY);
         this.spermatheca = new ArrayList<>();
-    }
-
-    public Vector getPosition() {
-        return position.getClonedVector();
-    }
-
-
-    public void setPosition(Vector position) {
-        this.position = position;
     }
 
     public double getSpeed() {

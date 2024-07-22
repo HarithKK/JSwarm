@@ -14,8 +14,6 @@ public class GSO extends Algorithm {
 
     private int numberOfGlowWorms;
 
-    private GlowWorm[] glowWorms;
-
     private double l0, r0, ldc, lac, nt, beta, rs, s;
 
     public GSO(
@@ -41,7 +39,7 @@ public class GSO extends Algorithm {
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
         this.gBest = new Vector(numberOfDimensions).setMaxVector();
-        this.isGlobalMinima = isGlobalMinima;
+        this.isGlobalMinima.setValue(isGlobalMinima);
         this.numberOfGlowWorms = numberOfGlowWorms;
         this.l0 = initiallLuciferinContent;
         this.ldc = luciferinDecayConstant;
@@ -52,7 +50,7 @@ public class GSO extends Algorithm {
         this.nt = nt;
         this.s = s;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.glowWorms = new GlowWorm[numberOfGlowWorms];
+        this.agents = new ArrayList<>(numberOfGlowWorms);
 
     }
 
@@ -68,7 +66,7 @@ public class GSO extends Algorithm {
             // movement phase
             for(int i=0; i< numberOfGlowWorms; i++){
 
-                GlowWorm ithWarm = this.glowWorms[i];
+                GlowWorm ithWarm = (GlowWorm) this.agents.get(i);
 
                 List<GlowWorm> nWarms = getNeighbourWarms(i);
                 GlowWorm jthWarm = getJthGlowWorm(nWarms,ithWarm);
@@ -85,7 +83,7 @@ public class GSO extends Algorithm {
                 ithWarm.setR(calculateNewR(ithWarm, nWarms.size()));
             }
             // update luciferin
-            for(GlowWorm worm: this.glowWorms){
+            for(GlowWorm worm: (GlowWorm[]) this.agents.toArray()){
                 worm.updateLuciferin(ldc, lac, objectiveFunction);
                 this.updateGBest(worm);
             }
@@ -119,7 +117,7 @@ public class GSO extends Algorithm {
         Double fpbest = this.objectiveFunction.setParameters(ithWarm.getPosition().getPositionIndexes()).call();
         Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
 
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima)){
+        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(ithWarm.getPosition());
         }
     }
@@ -131,14 +129,14 @@ public class GSO extends Algorithm {
 
     private List<GlowWorm> getNeighbourWarms(int i) {
 
-        GlowWorm ithWarm = glowWorms[i];
+        GlowWorm ithWarm = (GlowWorm) agents.get(i);
         List<GlowWorm> w = new ArrayList<>();
 
         for(int j=0; j< numberOfGlowWorms; j++){
             if(i==j){
                 continue;
             }
-            GlowWorm jthWarm = glowWorms[j];
+            GlowWorm jthWarm = (GlowWorm) agents.get(j);
             double distance = ithWarm.getPosition().getDistance(jthWarm.getPosition());
             if(ithWarm.getL() < jthWarm.getL() && distance <  ithWarm.getR()){
                 w.add(jthWarm);
@@ -156,18 +154,8 @@ public class GSO extends Algorithm {
         for(int i=0; i< numberOfGlowWorms; i++){
             GlowWorm g = new GlowWorm(this.l0, this.r0, this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             this.updateGBest(g);
-            this.glowWorms[i] = g;
+            this.agents.set(i, g);
         }
     }
 
-    @Override
-    public double[][] getDataPoints(){
-        double[][] data = new double[this.numberOfDimensions][this.numberOfGlowWorms];
-        for(int i=0; i< this.numberOfGlowWorms; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.glowWorms[i].getPosition().getValue(j),2);
-            }
-        }
-        return data;
-    };
 }
