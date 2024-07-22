@@ -56,9 +56,9 @@ public class NetworkGenerator {
             dronesMap.put(a.index, a);
         }
 
-        reArrangeSystem(20.0, 50.0);
+      //  reArrangeSystem(20.0, 50.0);
 
-        printAll(this.dronesMap);
+       // printAll(this.dronesMap);
     }
 
     private void reArrangeSystem(double xd, double yd) {

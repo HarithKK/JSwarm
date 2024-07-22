@@ -46,6 +46,12 @@ class DoubleStateMap{
         velocity = v;
     }
 
+    public DoubleStateMap toAbs(){
+        this.position = Math.abs(position);
+        this.velocity = Math.abs(velocity);
+        return this;
+    }
+
     public DoubleStateMap(){}
     public void update(DoubleStateMap m){
         velocity += m.velocity;
@@ -61,8 +67,6 @@ class DoubleStateMap{
 
 public class Quin {
 
-
-
     public static void main(String[] args) {
 
         Controller.dAgentGroup.setMarkerColor(Color.GREEN);
@@ -77,8 +81,9 @@ public class Quin {
                 double ix = 100.0;
                 double iy = 10.0;
 
-                Controller.dronesMap = NetworkGenerator.generateStaticlayers4(getMargins(), ix, iy);
-
+                Controller.dronesMap = NetworkGenerator.generateStatic(getMargins(), ix, iy);
+                //Controller.dronesMap = new NetworkGenerator(ix, iy,50, 10, getMargins()).getDroneMap();
+                //Controller.dronesMap = NetworkGenerator.generateStaticlayers4(getMargins(), ix, iy);
                 try {
                     for(Integer i : Controller.dronesMap.keySet()){
                         Controller.agentGroup.addAgent(Controller.dronesMap.get(i));
@@ -124,11 +129,10 @@ public class Quin {
                         for(int i=0; i< Controller.stateSamplesMap.size(); i++){
                             for(int j=0; j< Controller.stateSamplesMap.size(); j++){
 
-                                if(true || Controller.dronesMap.get(i).edge.A[j] == 1 ) {
+                                DoubleStateMap upperSum = new DoubleStateMap();
+                                DoubleStateMap lowerSum = new DoubleStateMap();
 
-                                    DoubleStateMap upperSum = new DoubleStateMap();
-                                    DoubleStateMap lowerSum = new DoubleStateMap();
-
+                                if(Controller.dronesMap.containsKey(i) && Controller.dronesMap.containsKey(j)) {
                                     for (int k = 1; k < Controller.K; k++) {
                                         StateMap vk = calculateDtl(i, j, k);
                                         StateMap vk1 = calculateDtl(i, j, k - 1);
@@ -136,16 +140,21 @@ public class Quin {
                                         upperSum.update(calculateInnerProduct(vk, vk1));
                                         lowerSum.update(calculateInnerProduct(vk1, vk1));
                                     }
-
-                                    if (!Controller.pKtlMap.containsKey(i)) {
-                                        Controller.pKtlMap.put(i, new ArrayList<>());
-                                    }
-                                    Controller.pKtlMap.get(i).add(new DoubleStateMap(
-                                            j,
-                                            upperSum.position / lowerSum.position,
-                                            upperSum.velocity / lowerSum.velocity
-                                    ));
+                                }else{
+                                    upperSum.velocity = 1;
+                                    upperSum.position = 1;
+                                    lowerSum.velocity = 1;
+                                    lowerSum.position = 1;
                                 }
+
+                                if (!Controller.pKtlMap.containsKey(i)) {
+                                    Controller.pKtlMap.put(i, new ArrayList<>());
+                                }
+                                Controller.pKtlMap.get(i).add(new DoubleStateMap(
+                                        j,
+                                        upperSum.position / lowerSum.position,
+                                        upperSum.velocity / lowerSum.velocity
+                                ));
                             }
                         }
 
@@ -175,7 +184,7 @@ public class Quin {
             }
 
             private DoubleStateMap calculateInnerProduct(StateMap vk, StateMap vk1) {
-                return new DoubleStateMap(vk.position.innerProduct(vk1.position), vk.velocity.innerProduct(vk1.velocity));
+                return new DoubleStateMap(vk.position.innerProduct(vk1.position), vk.velocity.innerProduct(vk1.velocity)).toAbs();
             }
 
             public void updateStateList(DroneAgent agent) {
@@ -186,21 +195,22 @@ public class Quin {
             }
         };
 
-//        Executor.getInstance().registerChart(
-//                new ProgressiveChart(400, 250, "Pklt-v", "Pklt-v","kTau")
-//                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
-//                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
-//                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
-//                        .setLegend(true)
-//        );
-//
-//        Executor.getInstance().registerChart(
-//                new ProgressiveChart(400, 250, "Pklt-p", "Pklt-p","kTau")
-//                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
-//                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
-//                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
-//                        .setLegend(true)
-//        );
+        Executor.getInstance().registerChart(
+                new ProgressiveChart(200, 130, "Pklt-v", "Pklt-v","kTau")
+                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
+                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
+                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
+                        .setLegend(true)
+
+        );
+
+        Executor.getInstance().registerChart(
+                new ProgressiveChart(200, 130, "Pklt-p", "Pklt-p","kTau")
+                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
+                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
+                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
+                        .setLegend(true)
+        );
 
         for(int i=0; i< 12;i++){
             Executor.getInstance().registerChart(
@@ -211,18 +221,18 @@ public class Quin {
             );
         }
 
-//        Executor.getInstance().AddCustomActions("V", new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                for(Integer index: Controller.pKtlMap.keySet()){
-//                    System.out.print(index + " [");
-//                    for(DoubleStateMap map: Controller.pKtlMap.get(index)) {
-//                        System.out.print("("+map.index+": "+ Mathamatics.round(map.position,4) +","+Mathamatics.round(map.velocity,4)+") ");
-//                    }
-//                    System.out.println(" ]");
-//                }
-//            }
-//        }, true);
+        Executor.getInstance().AddCustomActions("V", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for(Integer index: Controller.pKtlMap.keySet()){
+                    System.out.print(index + " [");
+                    for(DoubleStateMap map: Controller.pKtlMap.get(index)) {
+                        System.out.print("("+map.index+": "+ Mathamatics.round(map.position,4) +","+Mathamatics.round(map.velocity,4)+") ");
+                    }
+                    System.out.println(" ]");
+                }
+            }
+        }, true);
 
         Executor.getInstance().AddCustomCheckBox("Log", new ActionListener() {
             @Override
@@ -261,6 +271,45 @@ public class Quin {
                 algorithm.getAgents("Drones").removeAgent(a);
                 Controller.cAgentGroup.getAgents().add(a);
                 algorithm.getAgents("Crashed Agents").addAgent(a);
+            }
+        }, true);
+
+        Executor.getInstance().AddCustomActions("5-0", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // We can remove the drone from network for our implementation, bu not for Qian et al.
+                // Thus we introduced a variable isDisconnected for that.
+
+                // Agent 6
+                DroneAgent a = Controller.dronesMap.get(6);
+                a.edge.A = new int[]{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                a.edge.B = new int[]{-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+                // Agent 0
+                a = Controller.dronesMap.get(0);
+                a.edge.A = new int[]{0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0};
+                a.edge.B = new int[]{0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0};
+
+                // Agent 1
+                a = Controller.dronesMap.get(1);
+                a.edge.A = new int[]{1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0};
+                a.edge.B = new int[]{-1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0};
+
+                // Agent 2
+                a = Controller.dronesMap.get(2);
+                a.edge.A = new int[]{1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0};
+                a.edge.B = new int[]{-1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0};
+
+                // Agent 5
+                a = Controller.dronesMap.get(5);
+                a.edge.A = new int[]{0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+                a.edge.B = new int[]{0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+                // Agent 7
+                a = Controller.dronesMap.get(7);
+                a.edge.A = new int[]{0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0};
+                a.edge.B = new int[]{0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
             }
         }, true);
 
