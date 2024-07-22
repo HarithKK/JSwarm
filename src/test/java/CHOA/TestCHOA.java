@@ -1,12 +1,12 @@
 package CHOA;
 
+import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.benchmarks.singleObjective.*;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.algo.choa.CHOA;
-import org.usa.soc.si.algo.choa.Chaotics;
+import examples.si.algo.choa.CHOA;
+import examples.si.algo.choa.Chaotics;
 import utils.AssertUtil;
 import utils.Logger;
 

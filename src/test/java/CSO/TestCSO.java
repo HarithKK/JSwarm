@@ -1,11 +1,11 @@
 package CSO;
 
+import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.benchmarks.singleObjective.*;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.algo.cso.CSO;
+import examples.si.algo.cso.CSO;
 import utils.AssertUtil;
 import utils.Logger;
 

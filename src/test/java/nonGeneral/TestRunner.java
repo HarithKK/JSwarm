@@ -4,18 +4,18 @@ package nonGeneral;
 Settings
  */
 
+import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.*;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import org.usa.soc.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
-import org.usa.soc.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
-import org.usa.soc.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
-import org.usa.soc.si.benchmarks.nonGeneral.classical.unimodal.separable.*;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
-import progs.AlgoStore;
+import examples.si.AlgorithmFactory;
 
 import java.awt.*;
 import java.nio.file.Files;
@@ -44,7 +44,7 @@ public class TestRunner {
     private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
 
     public Algorithm getAlgorithm(){
-        return new AlgoStore(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
+        return new AlgorithmFactory(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
     }
 
     private  static  Algorithm algorithm = null;

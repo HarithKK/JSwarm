@@ -4,8 +4,8 @@ import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
-import org.usa.soc.si.algo.pso.PSO;
+import examples.si.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
+import examples.si.algo.pso.PSO;
 import org.usa.soc.util.Mathamatics;
 
 import java.util.List;

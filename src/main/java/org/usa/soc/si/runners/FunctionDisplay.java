@@ -1,7 +1,7 @@
 package org.usa.soc.si.runners;
 
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.FunctionsList;
+import examples.si.benchmarks.FunctionsList;
 import org.usa.soc.view.surface.plotter.FunctionToMapper;
 import org.usa.soc.view.surface.plotter.Plot;
 

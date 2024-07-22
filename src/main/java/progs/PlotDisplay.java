@@ -1,10 +1,11 @@
 package progs;
 
+import examples.si.AlgorithmFactory;
 import org.usa.soc.si.runners.FunctionDisplay;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.FunctionsList;
-import org.usa.soc.si.view.si.FunctionChartPlotter;
+import examples.si.benchmarks.FunctionsList;
+import org.usa.soc.si.view.FunctionChartPlotter;
 
 import java.util.List;
 import java.util.Scanner;
@@ -23,7 +24,7 @@ public class PlotDisplay {
 
         Scanner scanner = new Scanner(System.in);
 
-        List<String> r = AlgoStore.generateAlgo();
+        List<String> r = AlgorithmFactory.generateAlgo();
         for (int i=0;i<r.size();i++){
             System.out.println(i +": "+r.get(i));
         }
@@ -37,7 +38,7 @@ public class PlotDisplay {
         System.out.println("Function Id: ");
         int f = scanner.nextInt();
         System.out.println("Selected Function Is "+ fns[f].getClass().getSimpleName());
-        Algorithm ad = new AlgoStore(a, fns[f]).getAlgorithm(100, 100);
+        Algorithm ad = new AlgorithmFactory(a, fns[f]).getAlgorithm(100, 100);
 
         new FunctionDisplay(f);
 

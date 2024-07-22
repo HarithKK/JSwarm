@@ -1,14 +1,15 @@
 package progs;
 
+import examples.si.AlgorithmFactory;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.usa.soc.display.FunctionDisplay;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.FunctionsList;
+import examples.si.benchmarks.FunctionsList;
 import org.usa.soc.core.action.EmptyAction;
-import org.usa.soc.si.view.si.FunctionChartPlotter;
-import org.usa.soc.si.view.si.IterationChartPlotter;
+import org.usa.soc.si.view.FunctionChartPlotter;
+import org.usa.soc.si.view.IterationChartPlotter;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -77,7 +78,7 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    algorithm = new AlgoStore(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
+                    algorithm = new AlgorithmFactory(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
                     functionChartPlotter.setChart(algorithm);
 
@@ -204,7 +205,7 @@ public class Main {
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        Algorithm algorithm = new AlgoStore(0, fns[0]).getAlgorithm(100, 100);
+        Algorithm algorithm = new AlgorithmFactory(0, fns[0]).getAlgorithm(100, 100);
         functionChartPlotter.setChart(algorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -263,7 +264,7 @@ public class Main {
 
         lblAlgorithmComboBox = new JLabel("Algorithm: ");
         lblAlgorithmComboBox.setFont(f1);
-        cmbAlgorithm = new JComboBox<>(AlgoStore.generateAlgo().toArray(new String[0]));
+        cmbAlgorithm = new JComboBox<>(AlgorithmFactory.generateAlgo().toArray(new String[0]));
         cmbAlgorithm.setFont(f1);
         jToolBar.add(lblAlgorithmComboBox);
         jToolBar.add(cmbAlgorithm);

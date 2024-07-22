@@ -4,8 +4,8 @@ package TSOA;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function7;
-import progs.AlgoStore;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function7;
+import examples.si.AlgorithmFactory;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testTSOA() {
         try {
-            Algorithm algo = new AlgoStore(29, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(29, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             tsoa.add(algo.getBestDoubleValue());
@@ -126,7 +126,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testSSA() {
         try {
-            Algorithm algo = new AlgoStore(19, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(19, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             ssa.add(algo.getBestDoubleValue());
@@ -139,7 +139,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testMFA() {
         try {
-            Algorithm algo = new AlgoStore(13, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(13, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             mfa.add(algo.getBestDoubleValue());
@@ -152,7 +152,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testCSO() {
         try {
-            Algorithm algo = new AlgoStore(2, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(2, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             cso.add(algo.getBestDoubleValue());
@@ -165,7 +165,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testPSO() {
         try {
-            Algorithm algo = new AlgoStore(0, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(0, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             pso.add(algo.getBestDoubleValue());
@@ -178,7 +178,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testALSO() {
         try {
-            Algorithm algo = new AlgoStore(15, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(15, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             also.add(algo.getBestDoubleValue());
@@ -191,7 +191,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testBA() {
         try {
-            Algorithm algo = new AlgoStore(10, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(10, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             ba.add(algo.getBestDoubleValue());
@@ -205,7 +205,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testAVOA() {
         try {
-            Algorithm algo = new AlgoStore(17, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(17, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             avoa.add(algo.getBestDoubleValue());
@@ -218,7 +218,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testTSA() {
         try {
-            Algorithm algo = new AlgoStore(18, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(18, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             tsa.add(algo.getBestDoubleValue());
@@ -231,7 +231,7 @@ public class TestF7 {
     @RepeatedTest(10)
     public void testGWO() {
         try {
-            Algorithm algo = new AlgoStore(12, getFunction()).getAlgorithm(steps, p);
+            Algorithm algo = new AlgorithmFactory(12, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
             algo.runOptimizer();
             gwo.add(algo.getBestDoubleValue());

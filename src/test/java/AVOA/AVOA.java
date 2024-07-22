@@ -1,8 +1,8 @@
 package AVOA;
 
+import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.benchmarks.singleObjective.*;
 import org.usa.soc.si.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import utils.AssertUtil;
@@ -15,7 +15,7 @@ public class AVOA {
     private Algorithm algo;
 
     private Algorithm getAlgorithm(ObjectiveFunction fn) {
-        return new org.usa.soc.si.algo.avoa.AVOA(
+        return new examples.si.algo.avoa.AVOA(
                 fn,
                 1000,
                 200,
