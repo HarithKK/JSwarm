@@ -1,13 +1,13 @@
-package progs;
+package org.usa.soc.si.runners;
 
 import examples.si.AlgorithmFactory;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
-import org.usa.soc.display.FunctionDisplay;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.si.view.FunctionChartPlotter;
+import org.usa.soc.si.view.FunctionDisplay;
 import org.usa.soc.si.view.IterationChartPlotter;
 
 import javax.swing.*;
@@ -179,7 +179,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(cmbFunction.getSelectedIndex());
+        new FunctionDisplay((ObjectiveFunction) cmbFunction.getSelectedItem(), 600, 600, 0, 0, true);
     }
 
     private void fncActionPerformed(double... values){
@@ -472,7 +472,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
+    public static void executeMain(){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
