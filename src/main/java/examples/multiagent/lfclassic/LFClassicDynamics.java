@@ -27,8 +27,8 @@ public class LFClassicDynamics {
                     group = this.addAgents("follower", Follower.class, 10, Markers.CIRCLE, Color.RED);
 
                     for(int i=0;i<group.getAgentsCount();i++){
-                        group.getAgents().get(i).setX(al.getX() - Randoms.rand(5, 50));
-                        group.getAgents().get(i).setY(al.getY()+ Randoms.rand(5, 50));
+                        group.getAgents().get(i).getPosition().setValue(al.getX() - Randoms.rand(5, 50),0);
+                        group.getAgents().get(i).getPosition().setValue(al.getY() + Randoms.rand(5, 50),0);
                     }
 
                 } catch (Exception e) {
@@ -37,7 +37,7 @@ public class LFClassicDynamics {
             }
 
             @Override
-            public void run() {
+            public void step() {
                 for(int i=0; i< group.getAgentsCount(); i++){
                     Vector v = new Vector(2);
                     Vector v2 = al.getPosition().operate(Vector.OPERATOR.SUB, group.getAgents().get(i).getPosition());

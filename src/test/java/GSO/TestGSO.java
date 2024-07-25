@@ -1,11 +1,11 @@
 package GSO;
 
+import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.benchmarks.singleObjective.*;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.algo.gso.GSO;
+import examples.si.algo.gso.GSO;
 import org.usa.soc.util.Mathamatics;
 import utils.AssertUtil;
 import utils.Logger;
@@ -14,9 +14,9 @@ public class TestGSO {
     private static final int LIMIT = 2;
 
     private static final double PRECISION_VAL  = 5;
-    private Algorithm algo;
+    private SIAlgorithm algo;
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn){
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn){
         double sr = Mathamatics.getMinimumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
         return new GSO(
                 fn,
@@ -37,7 +37,7 @@ public class TestGSO {
         );
     }
 
-    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
+    public void evaluate(SIAlgorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
                 algo.getBestDoubleValue(),
                 best,
@@ -56,7 +56,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -71,7 +71,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +86,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +103,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -119,7 +119,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -135,7 +135,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -151,7 +151,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -167,7 +167,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -183,7 +183,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -199,7 +199,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -216,7 +216,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -232,7 +232,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -248,7 +248,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -264,7 +264,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -280,7 +280,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -296,7 +296,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -312,7 +312,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -328,7 +328,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -344,7 +344,7 @@ public class TestGSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

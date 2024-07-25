@@ -1,34 +1,33 @@
 package org.usa.soc.multiagent;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
 import java.util.List;
 
-public abstract class Agent implements Cloneable{
-
-    private Vector position;
-
-    private double[] xm = new double[]{0,1}, ym=new double[]{0,1};
+public abstract class Agent extends AbsAgent {
     private Margins margines;
 
     public void initPosition(Margins m){
         if(m != null){
-            this.xm = new double[]{m.xMin, m.yMin};
-            this.ym = new double[]{m.xMax, m.yMax};
+            this.minBoundary = new double[]{m.xMin, m.yMin};
+            this.maxBoundary = new double[]{m.xMax, m.yMax};
+            this.numberOfDimensions = 2;
             setMargines(m);
         }
-        this.setPosition(Randoms.getRandomVector(2, xm, ym));
+        randPosition();
     }
 
     public void initPosition(Margins m, double x, double y){
         if(m != null){
-            this.xm = new double[]{m.xMin, m.yMin};
-            this.ym = new double[]{m.xMax, m.yMax};
+            this.minBoundary = new double[]{m.xMin, m.yMin};
+            this.maxBoundary = new double[]{m.xMax, m.yMax};
             setMargines(m);
+            this.numberOfDimensions = 2;
         }
-        this.setPosition(Randoms.getRandomVector(2, xm, ym));
+        randPosition();
         this.updatePosition(x, y);
     }
 
@@ -73,14 +72,6 @@ public abstract class Agent implements Cloneable{
         this.setX(x);
         this.setY(y);
         return this;
-    }
-
-    public Vector getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector position) {
-        this.position = position;
     }
 
     public Margins getMargines() {

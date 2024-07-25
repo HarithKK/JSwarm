@@ -11,4 +11,6 @@ public class Flag {
     public void set(){this.value = true;}
     public void unset(){this.value=false;}
 
+    public void setValue(boolean value){this.value = value;}
+
 }

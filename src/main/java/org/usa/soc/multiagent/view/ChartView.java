@@ -105,6 +105,14 @@ public class ChartView extends JFrame {
         progressValue = 0;
     }
 
+    public void autoStart(){
+        btnRun.setEnabled(false);
+        btnPause.setEnabled(true);
+        btnStop.setEnabled(true);
+
+        runOptimizer();
+    }
+
     private void btnRunActionPerformed(ActionEvent e){
 
         btnRun.setEnabled(false);
@@ -146,7 +154,7 @@ public class ChartView extends JFrame {
         Font f1 = new Font("SenSerif", Font.PLAIN, 16);
         Insets insets = new Insets(5,0,5,0);
 
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setLayout(new BorderLayout());
 
         jToolBar = new JToolBar();

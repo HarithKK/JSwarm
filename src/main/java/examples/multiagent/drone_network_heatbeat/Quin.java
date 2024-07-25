@@ -109,7 +109,7 @@ public class Quin {
             }
 
             @Override
-            public void run() {
+            public void step() {
 
                 if(Controller.incrementor <= Controller.K){
                     Iterator<DroneAgent> agentsIterator = this.agents.get(Controller.agentGroup.name).getAgents().stream().map(d -> (DroneAgent)d).iterator();

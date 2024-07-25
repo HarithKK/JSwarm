@@ -1,7 +1,7 @@
 package TSOA;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -27,9 +27,9 @@ public class TestExecutor {
         this.path = createResultFile();
     }
 
-    public String runTest(Algorithm algorithm, int testCount, int populationSize, String extra){
+    public String runTest(SIAlgorithm SIAlgorithm, int testCount, int populationSize, String extra){
 
-        int steps = algorithm.getStepsCount();
+        int steps = SIAlgorithm.getStepsCount();
 
         double[] meanBestValueTrial = new double[steps];
         double[] meanMeanBestValueTrial = new double[steps];
@@ -42,12 +42,12 @@ public class TestExecutor {
         double[] bestValuesArray = new double[testCount];
         String filename = "data/"+System.currentTimeMillis() + ".csv";
         Path p = createFile(filename);
-        appendToFile(p, algorithm.getClass().getSimpleName() + ","+ algorithm.getFunction().getClass().getSimpleName());
+        appendToFile(p, SIAlgorithm.getClass().getSimpleName() + ","+ SIAlgorithm.getFunction().getClass().getSimpleName());
 
         for(int i=0; i<testCount; i++){
-            algorithm.initialize();
+            SIAlgorithm.initialize();
             System.out.println();
-            algorithm.addStepAction(new StepAction() {
+            SIAlgorithm.addStepAction(new StepAction() {
                 @Override
                 public void performAction(Vector best, Double bestValue, int step) {
 
@@ -56,19 +56,19 @@ public class TestExecutor {
                     }
                     if(step >1) {
                         meanBestValueTrial[step-2] += bestValue;
-                        meanConvergence[step - 2] += algorithm.getConvergenceValue();
-                        meanMeanBestValueTrial[step - 2] += algorithm.getMeanBestValue();
+                        meanConvergence[step - 2] += SIAlgorithm.getConvergenceValue();
+                        meanMeanBestValueTrial[step - 2] += SIAlgorithm.getMeanBestValue();
                     }
                 }
             });
             try {
-                algorithm.runOptimizer();
+                SIAlgorithm.run();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            meanBestValue += algorithm.getBestDoubleValue();
-            bestValuesArray[i] = algorithm.getBestDoubleValue();
-            meanExecutionTime += algorithm.getNanoDuration();
+            meanBestValue += SIAlgorithm.getBestDoubleValue();
+            bestValuesArray[i] = SIAlgorithm.getBestDoubleValue();
+            meanExecutionTime += SIAlgorithm.getNanoDuration();
         }
 
         meanBestValue /= testCount;
@@ -78,7 +78,7 @@ public class TestExecutor {
         appendToFile(p, "Mean Execution Time: (ms): ,"+ TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS));
         appendToFile(p, "MBV, MMBV, MC");
 
-        for(int j=0;j< algorithm.getStepsCount();j++){
+        for(int j = 0; j< SIAlgorithm.getStepsCount(); j++){
             meanBestValueTrial[j] /= testCount;
             meanMeanBestValueTrial[j] /= testCount;
             meanConvergence[j] /= testCount;
@@ -89,12 +89,12 @@ public class TestExecutor {
         sb = new StringBuffer();
         sb.append(new Date().toString()).append(',');
         sb.append(extra).append(',');
-        sb.append(algorithm.getClass().getSimpleName()).append(',');
-        sb.append(algorithm.getFunction().getClass().getSimpleName()).append(',');
-        sb.append(algorithm.getFunction().getNumberOfDimensions()).append(',');
+        sb.append(SIAlgorithm.getClass().getSimpleName()).append(',');
+        sb.append(SIAlgorithm.getFunction().getClass().getSimpleName()).append(',');
+        sb.append(SIAlgorithm.getFunction().getNumberOfDimensions()).append(',');
         sb.append(populationSize).append(',');
-        sb.append(algorithm.getStepsCount()).append(',');
-        sb.append(algorithm.getFunction().getExpectedBestValue()).append(',');
+        sb.append(SIAlgorithm.getStepsCount()).append(',');
+        sb.append(SIAlgorithm.getFunction().getExpectedBestValue()).append(',');
         sb.append(meanBestValue).append(',');
         sb.append(std).append(',');
         sb.append(TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS)).append(',');
@@ -183,7 +183,7 @@ public class TestExecutor {
         return path;
     }
 
-    public void runTestOnce(Algorithm algo) throws Exception {
+    public void runTestOnce(SIAlgorithm algo) throws Exception {
 
         algo.addStepAction(new StepAction() {
             @Override
@@ -194,7 +194,7 @@ public class TestExecutor {
             }
         });
         algo.initialize();
-        algo.runOptimizer();
+        algo.run();
         System.out.println("Final Value "+algo.getBestDoubleValue());
     }
 }

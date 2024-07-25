@@ -2,10 +2,10 @@ package PSO;
 
 import org.junit.Ignore;
 import org.junit.jupiter.api.*;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
-import org.usa.soc.si.algo.pso.PSO;
+import examples.si.benchmarks.singleObjectiveConstrained.RosenbrockFunction;
+import examples.si.algo.pso.PSO;
 import org.usa.soc.util.Mathamatics;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class TestPSOConstrainedSO {
     private static final int LIMIT = 2;
     private PSO p;
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn){
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn){
         return new PSO(
                 fn,
                 1000,
@@ -39,7 +39,7 @@ public class TestPSOConstrainedSO {
         p = (PSO)getAlgorithm(fn);
         p.initialize();
         try {
-            p.runOptimizer();
+            p.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

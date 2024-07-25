@@ -1,6 +1,8 @@
 package org.usa.soc.multiagent;
 
+import examples.si.algo.ms.Monky;
 import org.knowm.xchart.style.markers.Marker;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.exceptions.KillOptimizerException;
@@ -10,18 +12,20 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class Algorithm{
 
-    private Flag isPaused = new Flag(), isKilled=new Flag(), initialized=new Flag();
+    protected Flag isPaused = new Flag(), isKilled=new Flag(), initialized=new Flag();
 
     protected Map<String, AgentGroup> agents = new HashMap<>();
 
-    private int interval;
-    private long currentStep;
+    protected int interval,stepsCount = -1;
+    protected long currentStep;
     private Margins margins;
 
-    private long nanoDuration;
+    protected long nanoDuration;
 
     private StepCompleted stepCompleted;
 
@@ -43,13 +47,21 @@ public abstract class Algorithm{
 
     public abstract void initialize();
 
-    public abstract void run();
+    public abstract void step() throws Exception;
+
+    public void setFirstAgents(String str,ArrayList<?> l){
+        this.agents.put(str, new AgentGroup(str));
+    }
+
+    public List<AbsAgent> getFirstAgents(){
+        return this.agents.get(agents.keySet().toArray()[0]).getAgents();
+    }
 
     public void  runInitializer(){
         initialize();
         this.initialized.set();
     }
-    public void runOptimizer(long maxSteps) throws Exception{
+    public void run(long maxSteps) throws Exception{
 
         if(!this.initialized.isSet()){
             throw new RuntimeException("Initialize Failed");
@@ -61,11 +73,12 @@ public abstract class Algorithm{
 
         this.nanoDuration = System.nanoTime();
         for(long step = 0; step< maxSteps; step++){
-            run();
+            step();
 
             for(String key: this.agents.keySet()){
-                for(Agent agent: this.agents.get(key).getAgents()){
-                    agent.step();
+                for(AbsAgent agent: this.agents.get(key).getAgents()){
+                    if(Agent.class.isInstance(agent))
+                        ((Agent)agent).step();
                 }
             }
 
@@ -76,7 +89,7 @@ public abstract class Algorithm{
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
-    public void runOptimizer() throws Exception{
+    public void run() throws Exception{
 
         if(!this.initialized.isSet()){
             throw new RuntimeException("Initialize Failed");
@@ -87,25 +100,30 @@ public abstract class Algorithm{
         }
 
         long step = 0;
+        this.nanoDuration = System.nanoTime();
         for(;;){
-            run();
+            if(stepsCount > 0 && step > stepsCount){
+                break;
+            }
+            this.step();
 
             for(String key: this.agents.keySet()){
                 try{
-                    for (Agent agent : this.agents.get(key).getAgents()) {
-                        agent.step();
+                    for (AbsAgent agent : this.agents.get(key).getAgents()) {
+                        if(Agent.class.isInstance(agent))
+                            ((Agent)agent).step();
                     }
                 }catch (Exception e){
                     Logger.getInstance().error("Algorithm Error " +e.getMessage());
                 }
             }
 
-
             if(this.stepCompleted != null)
                 this.stepCompleted.performAction(step);
             stepCompleted(step);
             step++;
         }
+        this.nanoDuration = System.nanoTime() - this.nanoDuration;
 
     }
 
@@ -144,12 +162,21 @@ public abstract class Algorithm{
         return agentGroup;
     }
 
-    private List<Agent> createAgents(int count, Class<?> agent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        List<Agent> list = new ArrayList<>();
+    protected AgentGroup addAgents(String key, Marker marker, Color color) throws Exception{
+        AgentGroup agentGroup = new AgentGroup(key);
+        agentGroup.setMarker(marker);
+        agentGroup.setMarkerColor(color);
+        agentGroup.setAgents(new ArrayList<>());
+        this.agents.put(key, agentGroup);
+        return agentGroup;
+    }
+
+    private List<AbsAgent> createAgents(int count, Class<?> agent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        List<AbsAgent> list = new ArrayList<>();
         for(int i=0; i<count;i++){
-            Agent inst = (Agent) agent.getDeclaredConstructor().newInstance();
-            inst.initPosition(margins);
-            list.add(inst);
+            var inst = agent.getDeclaredConstructor().newInstance();
+            ((Agent)inst).initPosition(margins);
+            list.add((AbsAgent)inst);
         }
         return list;
     }
@@ -176,8 +203,6 @@ public abstract class Algorithm{
     public long getCurrentStep() {
         return currentStep;
     }
-
-    public Map<String, AgentGroup> getSeriesData() { return agents; }
 
     public boolean isPaused() {
         return isPaused.isSet();
@@ -213,5 +238,18 @@ public abstract class Algorithm{
         return agents.get(key);
     }
 
-    public Map getAgentsMap(){ return agents; };
+    public List<?> getAgents() {
+        return Stream.of(agents.values()).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    public Map<String, AgentGroup> getAgentsMap(){ return agents; };
+
+    protected boolean isInitialized() {
+        return this.initialized.isSet();
+    }
+
+    protected void setInitialized(boolean v) {
+        this.initialized.setValue(v);
+    }
+
 }

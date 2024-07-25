@@ -90,4 +90,5 @@ public class Executor {
     public HashMap<String, ProgressiveChart> getChartHashMap() {
         return chartHashMap;
     }
+
 }
