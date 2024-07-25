@@ -1,6 +1,5 @@
 package org.usa.soc.si.view;
 
-import examples.si.AlgorithmFactory;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.view.plotter.FunctionToMapper;
 import org.usa.soc.si.view.plotter.Plot;
