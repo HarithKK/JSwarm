@@ -10,7 +10,7 @@ import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.*;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
@@ -43,11 +43,11 @@ public class TestRunner {
     private static final int RIP_DIS = 10;
     private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
 
-    public Algorithm getAlgorithm(){
+    public SIAlgorithm getAlgorithm(){
         return new AlgorithmFactory(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
     }
 
-    private  static  Algorithm algorithm = null;
+    private  static SIAlgorithm SIAlgorithm = null;
 
     private String RunTest(ObjectiveFunction fn, String extra){
         double[] meanBestValueTrial = new double[STEPS_COUNT];
@@ -61,14 +61,14 @@ public class TestRunner {
         double[] bestValuesArray = new double[REPEATER];
         String filename = "data/"+System.currentTimeMillis() + ".csv";
         Path p = createFile(filename);
-        algorithm = getAlgorithm(fn);
-        appendToFile(p, algorithm.getClass().getSimpleName() + ","+ algorithm.getFunction().getClass().getSimpleName());
+        SIAlgorithm = getAlgorithm(fn);
+        appendToFile(p, SIAlgorithm.getClass().getSimpleName() + ","+ SIAlgorithm.getFunction().getClass().getSimpleName());
 
         for(int i=0; i<REPEATER; i++){
-            algorithm = getAlgorithm(fn);
-            algorithm.initialize();
+            SIAlgorithm = getAlgorithm(fn);
+            SIAlgorithm.initialize();
             System.out.println();
-            algorithm.addStepAction(new StepAction() {
+            SIAlgorithm.addStepAction(new StepAction() {
                 @Override
                 public void performAction(Vector best, Double bestValue, int step) {
 
@@ -77,19 +77,19 @@ public class TestRunner {
                     }
                     if(step >1) {
                         meanBestValueTrial[step-2] += bestValue;
-                        meanConvergence[step - 2] += algorithm.getConvergenceValue();
-                        meanMeanBestValueTrial[step - 2] += algorithm.getMeanBestValue();
+                        meanConvergence[step - 2] += SIAlgorithm.getConvergenceValue();
+                        meanMeanBestValueTrial[step - 2] += SIAlgorithm.getMeanBestValue();
                     }
                 }
             });
             try {
-                algorithm.runOptimizer();
+                SIAlgorithm.run();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            meanBestValue += algorithm.getBestDoubleValue();
-            bestValuesArray[i] = algorithm.getBestDoubleValue();
-            meanExecutionTime += algorithm.getNanoDuration();
+            meanBestValue += SIAlgorithm.getBestDoubleValue();
+            bestValuesArray[i] = SIAlgorithm.getBestDoubleValue();
+            meanExecutionTime += SIAlgorithm.getNanoDuration();
         }
 
         meanBestValue /= REPEATER;
@@ -99,7 +99,7 @@ public class TestRunner {
         appendToFile(p, "Mean Execution Time: (ms): ,"+ TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS));
         appendToFile(p, "MBV, MMBV, MC");
 
-        for(int j=0;j< algorithm.getStepsCount();j++){
+        for(int j = 0; j< SIAlgorithm.getStepsCount(); j++){
             meanBestValueTrial[j] /= REPEATER;
             meanMeanBestValueTrial[j] /= REPEATER;
             meanConvergence[j] /= REPEATER;
@@ -110,12 +110,12 @@ public class TestRunner {
         StringBuffer sb = new StringBuffer();
         sb.append(new Date().toString()).append(',');
         sb.append(extra).append(',');
-        sb.append(algorithm.getClass().getSimpleName()).append(',');
-        sb.append(algorithm.getFunction().getClass().getSimpleName()).append(',');
-        sb.append(algorithm.getFunction().getNumberOfDimensions()).append(',');
+        sb.append(SIAlgorithm.getClass().getSimpleName()).append(',');
+        sb.append(SIAlgorithm.getFunction().getClass().getSimpleName()).append(',');
+        sb.append(SIAlgorithm.getFunction().getNumberOfDimensions()).append(',');
         sb.append(AGENT_COUNT).append(',');
-        sb.append(algorithm.getStepsCount()).append(',');
-        sb.append(algorithm.getFunction().getExpectedBestValue()).append(',');
+        sb.append(SIAlgorithm.getStepsCount()).append(',');
+        sb.append(SIAlgorithm.getFunction().getExpectedBestValue()).append(',');
         sb.append(meanBestValue).append(',');
         sb.append(std).append(',');
         sb.append(TimeUnit.MILLISECONDS.convert(meanExecutionTime, TimeUnit.NANOSECONDS)).append(',');
@@ -216,7 +216,7 @@ public class TestRunner {
 
     }
 
-    private static Algorithm getAlgorithm(ObjectiveFunction fn) {
+    private static SIAlgorithm getAlgorithm(ObjectiveFunction fn) {
         return new AlgorithmStore().getFA(fn, AGENT_COUNT, STEPS_COUNT);
     }
 

@@ -1,15 +1,14 @@
 package examples.si.algo.fa;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class FA extends Algorithm {
+public class FA extends SIAlgorithm {
 
     private int numberOfFlies;
 
@@ -40,11 +39,11 @@ public class FA extends Algorithm {
         this.beta0 = beta0;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.numberOfFlies = numberOfFlies;
-        agents = new ArrayList<>(numberOfFlies);
+        setFirstAgents("Flies", new ArrayList<>(numberOfFlies));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Nests Are Not Initialized");
@@ -53,14 +52,14 @@ public class FA extends Algorithm {
         for(int step = 0; step< getStepsCount(); step++){
             for(int i=0; i< numberOfFlies; i++){
 
-                Fly fi = (Fly) agents.get(i);
+                Fly fi = (Fly) getFirstAgents().get(i);
 
                 for(int j=0; j< numberOfFlies; j++){
                     if(i==j){
                         continue;
                     }
 
-                    Fly fj =(Fly) agents.get(j);
+                    Fly fj =(Fly) getFirstAgents().get(j);
 
                     if(fj.getIntensity() < fi.getIntensity()){
 
@@ -119,7 +118,7 @@ public class FA extends Algorithm {
             Fly d = new Fly(minBoundary, maxBoundary, numberOfDimensions);
             d.setIntensity(objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call());
             updateGBest(d);
-            this.agents.set(i, d);
+            getFirstAgents().set(i, d);
         }
     }
 }

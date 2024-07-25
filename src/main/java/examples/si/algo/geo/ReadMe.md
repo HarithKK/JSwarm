@@ -24,4 +24,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Mohammadi-Balani, Abdolkarim, et al. "Golden eagle optimizer: A nature-inspired metaheuristic algorithm." Computers & Industrial Engineering 152 (2021): 107050.
+<a id="1">[1]</a> Mohammadi-Balani, Abdolkarim, et al. "Golden eagle optimizer: A nature-inspired metaheuristic SIAlgorithm." Computers & Industrial Engineering 152 (2021): 107050.

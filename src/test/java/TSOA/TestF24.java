@@ -5,7 +5,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInstance;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.benchmarks.FixMultiModalObjectiveFunctions.Function24;
 import examples.si.AlgorithmFactory;
@@ -114,9 +114,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testTSOA() {
         try {
-            Algorithm algo = new AlgorithmFactory(29, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(29, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             tsoa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -127,9 +127,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testSSA() {
         try {
-            Algorithm algo = new AlgorithmFactory(19, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(19, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             ssa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," +testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -140,9 +140,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testMFA() {
         try {
-            Algorithm algo = new AlgorithmFactory(13, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(13, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             mfa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -153,9 +153,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testCSO() {
         try {
-            Algorithm algo = new AlgorithmFactory(2, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(2, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             cso.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -166,9 +166,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testPSO() {
         try {
-            Algorithm algo = new AlgorithmFactory(0, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(0, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             pso.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -179,9 +179,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testALSO() {
         try {
-            Algorithm algo = new AlgorithmFactory(15, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(15, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             also.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -192,9 +192,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testBA() {
         try {
-            Algorithm algo = new AlgorithmFactory(10, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(10, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             ba.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -206,9 +206,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testAVOA() {
         try {
-            Algorithm algo = new AlgorithmFactory(17, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(17, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             avoa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -219,9 +219,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testTSA() {
         try {
-            Algorithm algo = new AlgorithmFactory(18, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(18, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             tsa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
@@ -232,9 +232,9 @@ public class TestF24 {
     @RepeatedTest(10)
     public void testGWO() {
         try {
-            Algorithm algo = new AlgorithmFactory(12, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(12, getFunction()).getAlgorithm(steps, p);
             algo.initialize();
-            algo.runOptimizer();
+            algo.run();
             gwo.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+ algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {

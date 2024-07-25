@@ -1,10 +1,11 @@
 package examples.si.algo.mbo;
 
+import org.apache.commons.math3.analysis.function.Abs;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -17,15 +18,10 @@ import java.util.List;
 H. A. Abbass, "MBO: marriage in honey bees optimization-a Haplometrosis polygynous swarming approach," Proceedings of the 2001 Congress on Evolutionary Computation (IEEE Cat. No.01TH8546), 2001, pp. 207-214 vol. 1, doi: 10.1109/CEC.2001.934391.
  */
 
-public class MBO extends Algorithm {
+public class MBO extends SIAlgorithm {
 
     private static final int SPERM_COUNT = 1;
     private int numberOfWorkers, numberOfQueens,numberOfDrones, mutationCount;
-
-    private List<Queen> queens;
-    private Worker[] workers;
-    private Drone[] drones;
-    private List<Brood> broodsList;
 
     private Queen bestQueen;
     private Double alpha;
@@ -48,7 +44,7 @@ public class MBO extends Algorithm {
             double droneSelectionProbability,
             double mutationProbability,
             int mutationCount
-    ){
+    ) {
         this.objectiveFunction = fn;
         this.numberOfQueens = numberOfQueens;
         this.numberOfWorkers = numberOfWorkers;
@@ -65,14 +61,18 @@ public class MBO extends Algorithm {
         this.mutationProbability = mutationProbability;
         this.numberOfDrones = numberOfDrones;
 
-        this.queens = new ArrayList<>(this.numberOfQueens);
-        this.workers = new Worker[numberOfWorkers];
-        this.drones = new Drone[numberOfDrones];
-        this.broodsList = new ArrayList<>();
+        try{
+            addAgents("queens", Queen.class, numberOfQueens);
+            addAgents("workers", Worker.class, numberOfWorkers);
+            addAgents("drones", Drone.class, numberOfDrones);
+            addAgents("broods", Brood.class, 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Particles Are Not Initialized");
@@ -81,7 +81,8 @@ public class MBO extends Algorithm {
         this.nanoDuration = System.nanoTime();
 
         for(int i = 0; i< this.getStepsCount(); i++){
-            for (Queen q: queens) {
+            for (AbsAgent agent: getAgents("queens").getAgents()) {
+                Queen q = (Queen) agent;
                 if(q.getEnergy() == 0)
                     continue;
                 // update the speed, energy and position
@@ -94,27 +95,28 @@ public class MBO extends Algorithm {
             sortQueensList();
 
             // came to the nest generate broods
-            for (Queen q: queens) {
+            for (AbsAgent agent: getAgents("queens").getAgents()) {
+                Queen q = (Queen) agent;
                 Brood b = q.generateBrood(this.objectiveFunction, this.mutationProbability, this.mutationCount, this.isGlobalMinima.isSet());
                 if(b!=null){
-                    this.broodsList.add(b);
+                    getAgents("broods").addAgent(b);
                 }
             }
 
             sortBroodList();
 
-            while(!this.broodsList.isEmpty()){
-                Brood b = this.broodsList.get(0);
-                Queen q = this.queens.get(this.queens.size()-1);
+            while(!getAgents("broods").getAgents().isEmpty()){
+                Brood b = (Brood) getAgents("broods").getAgents().get(0);
+                Queen q = (Queen) getAgents("queens").getAgents().get(getAgents("queens").getAgents().size()-1);
                 if(Validator.validateBestValue(b.getFitnessValue(), q.getpBest(), isGlobalMinima.isSet())){
                     q.setpBest(b.getFitnessValue());
                     sortQueensList();
                 }
-                this.broodsList.remove(0);
+                getAgents("broods").getAgents().remove(0);
             }
 
-            for (Queen q: queens){
-                this.updateBestQueen(q);
+            for (AbsAgent q: getAgents("queens").getAgents()){
+                this.updateBestQueen((Queen) q);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
@@ -126,7 +128,7 @@ public class MBO extends Algorithm {
     }
 
     private void sortQueensList() {
-        Collections.sort(this.queens, new Comparator<Queen>() {
+        getAgents("queens").sort(new Comparator<Queen>() {
             @Override
             public int compare(Queen o1, Queen o2) {
                 if(Validator.validateBestValue(o1.getpBest(), o2.getpBest(), isGlobalMinima.isSet())){
@@ -139,7 +141,7 @@ public class MBO extends Algorithm {
     }
 
     private void sortBroodList() {
-        Collections.sort(this.broodsList, new Comparator<Brood>() {
+        getAgents("broods").sort(new Comparator<Brood>() {
             @Override
             public int compare(Brood o1, Brood o2) {
                 if(Validator.validateBestValue(o1.getFitnessValue(), o2.getFitnessValue(), isGlobalMinima.isSet())){
@@ -155,13 +157,13 @@ public class MBO extends Algorithm {
 
         Double f1 = this.objectiveFunction.setParameters(q.getPosition().getPositionIndexes()).call();
 
-        for (Drone d: this.drones) {
+        for (AbsAgent d: getAgents("drones").getAgents()) {
             Double f2 = this.objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call();
 
             double p = Math.exp(-Math.abs(f1-f2)/q.getSpeed());
 
             if(p >= this.droneSelectionProbability){
-                q.addSperm(new Sperm(SPERM_COUNT, d));
+                q.addSperm(new Sperm(SPERM_COUNT, (Drone) d));
             }
         }
 
@@ -174,12 +176,12 @@ public class MBO extends Algorithm {
 
         for(int i=0;i<this.numberOfWorkers; i++){
             Worker worker = new Worker(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
-            this.workers[i] = worker;
+            getAgents("workers").getAgents().add(worker);
         }
 
         for(int i=0;i<this.numberOfDrones; i++){
             Drone drone = new Drone(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
-            this.drones[i] = drone;
+            getAgents("drones").getAgents().add(drone);
         }
 
         for(int i=0;i<this.numberOfQueens; i++){
@@ -187,7 +189,7 @@ public class MBO extends Algorithm {
             queen.setSpeed(Randoms.rand(this.minQueenSpeed, this.maxQueenSpeed));
             queen.setEnergy(getStepsCount());
             queen.updateBestValue(this.objectiveFunction, this.isGlobalMinima.isSet());
-            this.queens.add(queen);
+            getAgents("queens").getAgents().add(queen);
             this.updateBestQueen(queen);
         }
     }
@@ -217,7 +219,7 @@ public class MBO extends Algorithm {
     public Vector getGBest() { return this.bestQueen.getBestPosition(); }
 
     @Override
-    public Algorithm clone() throws CloneNotSupportedException {
+    public SIAlgorithm clone() throws CloneNotSupportedException {
         return new MBO(
                 objectiveFunction,
                 numberOfWorkers,
@@ -236,8 +238,4 @@ public class MBO extends Algorithm {
                 mutationCount);
     }
 
-    @Override
-    public List<Agent> getAgents() {
-        return new ArrayList<>(){{addAll(queens);}};
-    }
 }

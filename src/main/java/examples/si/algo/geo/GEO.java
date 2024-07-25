@@ -1,6 +1,6 @@
 package examples.si.algo.geo;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -9,7 +9,7 @@ import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class GEO extends Algorithm {
+public class GEO extends SIAlgorithm {
 
     private int numberOfEagles;
 
@@ -41,11 +41,11 @@ public class GEO extends Algorithm {
         this.pc0 = pc0;
         this.pcT = pcT;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.agents = new ArrayList<>(numberOfEagles);
+        setFirstAgents("Eagles", new ArrayList<>(numberOfEagles));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Eagles Are Not Initialized");
         }
@@ -58,9 +58,9 @@ public class GEO extends Algorithm {
             pa = pa0 + (step/ stepsCount)*(paT - pa0);
             pc = pc0 - (step/ stepsCount)*(pcT - pc0);
 
-            for(Eagle eagle: (Eagle[]) agents.toArray()){
+            for(Eagle eagle: (Eagle[]) getFirstAgents().toArray()){
                 // Random prey location
-                Eagle prey = (Eagle) agents.get(Randoms.rand(numberOfEagles));
+                Eagle prey = (Eagle) getFirstAgents().get(Randoms.rand(numberOfEagles));
 
                 Vector attackVector = prey.getLocalBestPositon().operate(Vector.OPERATOR.SUB, eagle.getPosition());
 
@@ -86,7 +86,7 @@ public class GEO extends Algorithm {
                 }
             }
 
-            for(Eagle eagle: (Eagle[]) agents.toArray()){
+            for(Eagle eagle: (Eagle[]) getFirstAgents().toArray()){
                 double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
                 if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima.isSet())){
                     this.gBest.setVector(eagle.getLocalBestPositon());
@@ -109,28 +109,15 @@ public class GEO extends Algorithm {
             Eagle eagle = new Eagle(numberOfDimensions, minBoundary, maxBoundary);
             eagle.setFitnessValue(objectiveFunction.setParameters(eagle.getPosition().getPositionIndexes()).call());
             eagle.setLocalBestFitnessValue(objectiveFunction.setParameters(eagle.getLocalBestPositon().getPositionIndexes()).call());
-            agents.set(i, eagle);
+            getFirstAgents().set(i, eagle);
         }
 
-        for(Eagle eagle: (Eagle[]) agents.toArray()){
+        for(Eagle eagle: (Eagle[]) getFirstAgents().toArray()){
             double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
             if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima.isSet())){
                 this.gBest.setVector(eagle.getLocalBestPositon());
             }
         }
 
-    }
-
-
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfEagles*2];
-        for(int i=0; i< this.numberOfEagles; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.agents.get(i).getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

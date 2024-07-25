@@ -1,6 +1,6 @@
 package examples.si.algo.tsoa;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -8,10 +8,8 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-public class TSOA extends Algorithm {
+public class TSOA extends SIAlgorithm {
 
     private int populationSize;
 
@@ -49,11 +47,11 @@ public class TSOA extends Algorithm {
         this.c1 = 10;
         this.c2 = 10;
 
-        agents = new ArrayList<>();
+        setFirstAgents("trees", new ArrayList<>(populationSize));
     }
 
     @Override
-    public void runOptimizer() throws Exception {
+    public void step() throws Exception {
         if(!this.isInitialized()){
             throw new RuntimeException("Trees Are Not Initialized");
         }
@@ -68,20 +66,20 @@ public class TSOA extends Algorithm {
             Vector predicted = new Vector(this.numberOfDimensions);
 
             for(int i =0; i <this.agents.size(); i++){
-                Tree t = (Tree) agents.get(i);
+                Tree t = (Tree) getFirstAgents().get(i);
                 predicted = predicted.operate(Vector.OPERATOR.ADD, t.getPosition().operate(Vector.OPERATOR.MULP, t.getLambda()));
             }
 
             double totalLabmda = 0;
             double totalDistance = 0;
             for(int i =0; i <this.agents.size(); i++){
-                Tree t = (Tree) agents.get(i);
+                Tree t = (Tree) getFirstAgents().get(i);
                 totalLabmda += t.getLambda();
                 totalDistance += Math.pow(t.getCalculatedDistance(predicted), -p);
             }
 
             for(int i = 0; i < deligator; i++){
-                Tree t = (Tree) agents.get(i);
+                Tree t = (Tree) getFirstAgents().get(i);
                 t.updateLambda(p, totalLabmda, totalDistance);
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
@@ -112,14 +110,14 @@ public class TSOA extends Algorithm {
                     newTree.setlBest(newTree.getPosition());
                     newTree.setlBestValue(newTree.getFitnessValue());
                     newTree.setLambda(t.getLambda());
-                    this.agents.add(newTree);
+                    getFirstAgents().add(newTree);
                 }
 
                 distanceFactor *= (1-distanceDecrement);
             }
 
             sort();
-            updateGBest((Tree) agents.get(0));
+            updateGBest((Tree) getFirstAgents().get(0));
 
             for(int i = 0; i < totalSeedsCount; i++){
                 agents.remove(agents.size()-1);
@@ -141,11 +139,11 @@ public class TSOA extends Algorithm {
             tree.setFitnessValue(objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call());
             tree.setlBest(tree.getPosition());
             tree.setlBestValue(tree.getFitnessValue());
-            this.agents.add(tree);
+            getFirstAgents().add(tree);
         }
 
         sort();
-        updateGBest((Tree) agents.get(0));
+        updateGBest((Tree) getFirstAgents().get(0));
     }
 
     private void updateGBest(Tree tree) {
@@ -154,16 +152,5 @@ public class TSOA extends Algorithm {
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(tree.getPosition());
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.populationSize];
-        for(int i=0; i< this.populationSize; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.agents.get(i).getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

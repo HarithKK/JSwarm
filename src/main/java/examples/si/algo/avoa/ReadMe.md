@@ -26,4 +26,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Abdollahzadeh, Benyamin, Farhad Soleimanian Gharehchopogh, and Seyedali Mirjalili. "African vultures optimization algorithm: A new nature-inspired metaheuristic algorithm for global optimization problems." Computers & Industrial Engineering 158 (2021): 107408..
+<a id="1">[1]</a> Abdollahzadeh, Benyamin, Farhad Soleimanian Gharehchopogh, and Seyedali Mirjalili. "African vultures optimization SIAlgorithm: A new nature-inspired metaheuristic SIAlgorithm for global optimization problems." Computers & Industrial Engineering 158 (2021): 107408..

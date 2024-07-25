@@ -1,21 +1,20 @@
 package examples.si.algo.tco;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TCO extends Algorithm {
+public class TCO extends SIAlgorithm {
 
     private int numberOfTermites;
-
-    private Termite[] termites;
 
     private double p0, eRate, r, omega;
 
@@ -44,11 +43,12 @@ public class TCO extends Algorithm {
         this.omega = omega;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.termites = new Termite[numberOfTermites];
+        setFirstAgents("termites", new ArrayList<>(numberOfTermites));
+
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Termites Are Not Initialized");
         }
@@ -68,12 +68,12 @@ public class TCO extends Algorithm {
 
         for(int step = 0; step< getStepsCount(); step++){
 
-            for (Termite t: termites) {
-                t.updatePheramoneValue(eRate, objectiveFunction);
+            for (AbsAgent agent: getFirstAgents()) {
+                ((Termite)agent).updatePheramoneValue(eRate, objectiveFunction);
             }
 
             for(int i=0 ;i< numberOfTermites; i++){
-                Termite ti = termites[i];
+                Termite ti = (Termite) getFirstAgents().get(i);
                 Termite tb = getClosestTermite(i,ti.getPosition(), tau.getMagnitude());
 
                 if(tb == null){
@@ -113,7 +113,7 @@ public class TCO extends Algorithm {
         for(int i=0 ;i< numberOfTermites; i++){
             if(i==j)
                 continue;
-            Termite tj = termites[i];
+            Termite tj = (Termite) getFirstAgents().get(i);
             double d = position.getDistance(tj.getPosition());
             if(d < c && d < diff){
                 diff = d;
@@ -128,12 +128,7 @@ public class TCO extends Algorithm {
         setInitialized(true);
 
         for(int i=0 ;i< numberOfTermites; i++){
-            this.termites[i] = new Termite(minBoundary, maxBoundary, numberOfDimensions, p0);
+            getFirstAgents().set(i, new Termite(minBoundary, maxBoundary, numberOfDimensions, p0));
         }
-    }
-
-    @Override
-    public List<Agent> getAgents() {
-        return Arrays.asList(termites);
     }
 }

@@ -1,6 +1,6 @@
 package nonGeneral;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.cs.CS;
 import examples.si.algo.fa.FA;
@@ -12,7 +12,7 @@ import examples.si.algo.wso.WSO;
 
 public class AlgorithmStore {
 
-    public Algorithm getPSO(ObjectiveFunction fn, int ac, int sc){
+    public SIAlgorithm getPSO(ObjectiveFunction fn, int ac, int sc){
         return new PSO(
                 fn,
                 ac,
@@ -26,7 +26,7 @@ public class AlgorithmStore {
                 true);
     }
 
-    public Algorithm getCSO(ObjectiveFunction fn, int ac, int sc){
+    public SIAlgorithm getCSO(ObjectiveFunction fn, int ac, int sc){
         return new CSO(
                 fn,
                 fn.getNumberOfDimensions(),
@@ -45,7 +45,7 @@ public class AlgorithmStore {
         );
     }
 
-    public Algorithm getGSO(ObjectiveFunction fn, int ac, int sc){
+    public SIAlgorithm getGSO(ObjectiveFunction fn, int ac, int sc){
         double sr = Mathamatics.getMaximumDimensionDistance(fn.getMin(), fn.getMax(), fn.getNumberOfDimensions());
         return new GSO(
                 fn,
@@ -66,7 +66,7 @@ public class AlgorithmStore {
         );
     }
 
-    public Algorithm getWSO(ObjectiveFunction fn, int ac, int sc){
+    public SIAlgorithm getWSO(ObjectiveFunction fn, int ac, int sc){
         return new WSO(
                 fn,
                 sc,
@@ -79,7 +79,7 @@ public class AlgorithmStore {
                 true
         );
     }
-    public Algorithm getCS(ObjectiveFunction fn, int ac, int sc){
+    public SIAlgorithm getCS(ObjectiveFunction fn, int ac, int sc){
         return new CS(
                 fn,
                 sc,
@@ -92,7 +92,7 @@ public class AlgorithmStore {
                 true
         );
     }
-    public Algorithm getFA(ObjectiveFunction fn, int ac, int sc){
+    public SIAlgorithm getFA(ObjectiveFunction fn, int ac, int sc){
         return new FA(
                 fn,
                 sc,

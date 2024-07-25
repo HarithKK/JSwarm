@@ -2,9 +2,8 @@ package progs;
 
 import examples.si.AlgorithmFactory;
 import org.usa.soc.si.runners.FunctionDisplay;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.FunctionsList;
 import org.usa.soc.si.view.FunctionChartPlotter;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class PlotDisplay {
 
     private int TIME = 50;
     FunctionChartPlotter fp;
-    ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
+    ObjectiveFunction fns[] = new AlgorithmFactory.FunctionsList().getFunctionList();
 
     public PlotDisplay() {
 
@@ -38,7 +37,7 @@ public class PlotDisplay {
         System.out.println("Function Id: ");
         int f = scanner.nextInt();
         System.out.println("Selected Function Is "+ fns[f].getClass().getSimpleName());
-        Algorithm ad = new AlgorithmFactory(a, fns[f]).getAlgorithm(100, 100);
+        SIAlgorithm ad = new AlgorithmFactory(a, fns[f]).getAlgorithm(100, 100);
 
         new FunctionDisplay(f);
 

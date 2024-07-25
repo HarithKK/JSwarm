@@ -26,4 +26,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Kumar, Neetesh, Navjot Singh, and Deo Prakash Vidyarthi. "Artificial lizard search optimization (ALSO): A novel nature-inspired meta-heuristic algorithm." Soft Computing 25.8 (2021): 6179-6201.
+<a id="1">[1]</a> Kumar, Neetesh, Navjot Singh, and Deo Prakash Vidyarthi. "Artificial lizard search optimization (ALSO): A novel nature-inspired meta-heuristic SIAlgorithm." Soft Computing 25.8 (2021): 6179-6201.

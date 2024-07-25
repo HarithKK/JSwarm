@@ -32,4 +32,4 @@ There are six chaotic types.
 6. Chaotics.type.TENT
 
 ## References
-<a id="1">[1]</a> Khishe, Mohammad, and Mohammad Reza Mosavi. "Chimp optimization algorithm." Expert systems with applications 149 (2020): 113338.
+<a id="1">[1]</a> Khishe, Mohammad, and Mohammad Reza Mosavi. "Chimp optimization SIAlgorithm." Expert systems with applications 149 (2020): 113338.

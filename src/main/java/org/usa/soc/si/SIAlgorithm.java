@@ -1,38 +1,32 @@
 package org.usa.soc.si;
 
-import examples.si.algo.avoa.Vulture;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.multiagent.AgentGroup;
+import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
 import java.util.*;
 
-public abstract class Algorithm implements Cloneable {
+public abstract class SIAlgorithm extends Algorithm implements Cloneable {
 
-    // Flags
-    public Flag isPaused = new Flag();
-    public Flag isKilled = new Flag();
     public Flag isGlobalMinima = new Flag();
-    public Flag isInitialized = new Flag();
-
     protected double[] minBoundary, maxBoundary;
-    protected int stepsCount, interval = 0, numberOfDimensions;
+    protected int stepsCount, numberOfDimensions;
     protected StepAction stepAction;
     protected ObjectiveFunction<Double> objectiveFunction;
     protected Vector gBest;
-    protected List<Agent> agents = new ArrayList<>();
     private List<Double> history = new ArrayList<>();
-    protected long currentStep, nanoDuration;
     private double bestValue = 0,
             convergenceValue = Double.MAX_VALUE,
             gradiantDecent = Double.MAX_VALUE,
             meanBestValue = 0;
 
-    public Algorithm(
+    public SIAlgorithm(
             ObjectiveFunction<Double> objectiveFunction,
             int stepsCount,
             int numberOfDimensions,
@@ -53,18 +47,11 @@ public abstract class Algorithm implements Cloneable {
         this.setInterval(0);
     }
 
-    protected Algorithm() {
+    protected SIAlgorithm() {
     }
 
-    /*
-    Abstract functions
-     */
-    public abstract void runOptimizer() throws Exception;
-
-    public abstract void initialize();
-
     @Override
-    public Algorithm clone() throws CloneNotSupportedException {
+    public SIAlgorithm clone() throws CloneNotSupportedException {
         return null;
     }
 
@@ -129,21 +116,6 @@ public abstract class Algorithm implements Cloneable {
         return sb.toString();
     }
 
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.agents.size()];
-        for(int i=0; i< this.agents.size(); i++){
-            Vector c = this.agents.get(i).position;
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(c.getValue(j),2);
-            }
-        }
-        return data;
-    }
-
-    public List<Agent> getAgents(){
-        return this.agents;
-    }
-
     public List toList() {
         List<String> lst = new ArrayList<>();
 
@@ -169,7 +141,8 @@ public abstract class Algorithm implements Cloneable {
         this.stepAction = a;
     }
 
-    public void stepCompleted(long step) throws Exception {
+    @Override
+    public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
 
         this.currentStep = step;
         this.bestValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
@@ -229,13 +202,7 @@ public abstract class Algorithm implements Cloneable {
      *
      * @return
      */
-    protected boolean isInitialized() {
-        return this.isInitialized.isSet();
-    }
 
-    protected void setInitialized(boolean v) {
-        this.isInitialized.setValue(v);
-    }
 
     public boolean isMinima() {
         return this.isGlobalMinima.isSet();
@@ -247,10 +214,6 @@ public abstract class Algorithm implements Cloneable {
 
     public Double getBestDoubleValue() {
         return this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
-    }
-
-    public long getNanoDuration() {
-        return nanoDuration;
     }
 
     public String getBestVariables() {
@@ -273,10 +236,6 @@ public abstract class Algorithm implements Cloneable {
         return this.bestValue;
     }
 
-    public String getName() {
-        return this.getClass().getSimpleName();
-    }
-
     public double getGradiantDecent() {
         return gradiantDecent;
     }
@@ -285,33 +244,6 @@ public abstract class Algorithm implements Cloneable {
         return meanBestValue;
     }
 
-    public long getCurrentStep() {
-        return currentStep;
-    }
-
-    public int getInterval() {
-        return interval;
-    }
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public void pauseOptimizer() {
-        this.isPaused.set();
-    }
-
-    public void resumeOptimizer() {
-        this.isPaused.unset();
-    }
-
-    public boolean isPaused() {
-        return isPaused.isSet();
-    }
-
-    public void stopOptimizer() {
-        this.isKilled.set();
-    }
     public List<Double> getHistory() {
         return history;
     }
@@ -328,6 +260,6 @@ public abstract class Algorithm implements Cloneable {
     }
 
     public void sort(){
-        Collections.sort(agents, new AgentComparator());
+        for(AgentGroup a: agents.values()){a.sort(new AgentComparator());}
     }
 }

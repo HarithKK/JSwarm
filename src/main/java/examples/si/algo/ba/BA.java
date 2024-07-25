@@ -1,15 +1,14 @@
 package examples.si.algo.ba;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class BA extends Algorithm {
+public class BA extends SIAlgorithm {
 
     private int numberOfBats;
 
@@ -43,10 +42,10 @@ public class BA extends Algorithm {
         this.r0 = r0;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.agents = new ArrayList<>(numberOfBats);
+        setFirstAgents("Bats", new ArrayList<>(numberOfBats));
     }
     @Override
-    public void runOptimizer() throws Exception {
+    public void step() throws Exception {
         if(!this.isInitialized()){
             throw new RuntimeException("Bat Agents Are Not Initialized");
         }
@@ -54,7 +53,7 @@ public class BA extends Algorithm {
         for(int step = 0; step< getStepsCount(); step++){
 
             double at =0;
-            for(Bat b : (Bat[]) agents.toArray()){
+            for(Bat b : (Bat[]) getFirstAgents().toArray()){
                 b.updatePosition(this.gBest);
                 Vector newSolution = b.generateNewSolution(Aavg);
 
@@ -67,7 +66,7 @@ public class BA extends Algorithm {
             }
             Aavg = at /(double)numberOfBats;
 
-            for(Bat b: (Bat[]) agents.toArray()){
+            for(Bat b: (Bat[]) getFirstAgents().toArray()){
                 updateGBest(b);
             }
 
@@ -98,7 +97,7 @@ public class BA extends Algorithm {
             b.updatePulseRates();
             b.updateLoudness();
             at+=b.getA();
-            this.agents.set(i, b);
+            getFirstAgents().set(i, b);
 
             updateGBest(b);
         }

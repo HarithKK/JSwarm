@@ -1,9 +1,10 @@
 package examples.si.algo.ms;
 
+import org.apache.commons.math3.analysis.function.Abs;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -11,9 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MS extends Algorithm {
-
-    private final Monky[] monkeys;
+public class MS extends SIAlgorithm {
     private final int numberOfMonkeys;
     private final int maxHeightOfTheTree;
 
@@ -39,12 +38,12 @@ public class MS extends Algorithm {
         this.maxHeightOfTheTree = maxHeightOfTheTree;
         this.c1 = c1;
 
-        this.monkeys = new Monky[this.numberOfMonkeys];
+        setFirstAgents("Monkeys", new ArrayList<>(this.numberOfMonkeys));
         this.gBest = Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Monkeys Are Not Initialized");
         }
@@ -52,7 +51,8 @@ public class MS extends Algorithm {
         this.nanoDuration = System.nanoTime();
 
         for (int i = 0; i < this.getStepsCount(); i++) {
-            for (Monky m : this.monkeys) {
+            for (AbsAgent agent : getAgents("Monkeys").getAgents()) {
+                Monky m = (Monky)agent;
                 m.climbTree(this.c1,this.isGlobalMinima.isSet(), this.gBest);
                 updateGBest(m);
             }
@@ -81,7 +81,7 @@ public class MS extends Algorithm {
                     this.maxHeightOfTheTree,
                     this.objectiveFunction
             );
-            this.monkeys[i] = m;
+            getAgents("Monkeys").getAgents().set(i, m);
             this.updateGBest(m);
         }
     }
@@ -96,7 +96,7 @@ public class MS extends Algorithm {
     }
 
     @Override
-    public Algorithm clone() throws CloneNotSupportedException {
+    public SIAlgorithm clone() throws CloneNotSupportedException {
         return new MS(objectiveFunction,
                 getStepsCount(),
                 numberOfMonkeys,
@@ -107,10 +107,5 @@ public class MS extends Algorithm {
                 c1,
                 isGlobalMinima.isSet()
         );
-    }
-
-    @Override
-    public List<Agent> getAgents() {
-        return Arrays.asList(monkeys);
     }
 }

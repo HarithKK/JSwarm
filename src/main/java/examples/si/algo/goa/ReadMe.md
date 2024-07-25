@@ -24,4 +24,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Saremi, Shahrzad, Seyedali Mirjalili, and Andrew Lewis. "Grasshopper optimisation algorithm: theory and application." Advances in engineering software 105 (2017): 30-47.
+<a id="1">[1]</a> Saremi, Shahrzad, Seyedali Mirjalili, and Andrew Lewis. "Grasshopper optimisation SIAlgorithm: theory and application." Advances in engineering software 105 (2017): 30-47.

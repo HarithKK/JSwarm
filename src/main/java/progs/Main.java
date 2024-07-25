@@ -4,9 +4,8 @@ import examples.si.AlgorithmFactory;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.usa.soc.display.FunctionDisplay;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.FunctionsList;
 import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.si.view.FunctionChartPlotter;
 import org.usa.soc.si.view.IterationChartPlotter;
@@ -53,11 +52,11 @@ public class Main {
 
     IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
 
-    ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
+    ObjectiveFunction fns[] = new AlgorithmFactory.FunctionsList().getFunctionList();
 
     DecimalFormat decimalFormat;
 
-    Algorithm algorithm;
+    SIAlgorithm SIAlgorithm;
 
     public static boolean isRepeat = false;
 
@@ -78,15 +77,15 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    algorithm = new AlgorithmFactory(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
+                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
-                    functionChartPlotter.setChart(algorithm);
+                    functionChartPlotter.setChart(SIAlgorithm);
 
                     clearValues();
                     pnlDetails[0].setTextValue(String.valueOf(new Date().getTime()));
 
                     functionChartPlotter.execute();
-                    setInfoData(algorithm.toList());
+                    setInfoData(SIAlgorithm.toList());
 
                     if(!isRepeat){
                         btnRun.setEnabled(true);
@@ -187,15 +186,15 @@ public class Main {
         progressValue = (int)values[0];
         bestValue = values[1];
         pltBestValue.addData(stepCount, bestValue);
-        if(algorithm.getGradiantDecent() < 100000){
-            pltGradiantDecent.addData(stepCount, algorithm.getGradiantDecent());
+        if(SIAlgorithm.getGradiantDecent() < 100000){
+            pltGradiantDecent.addData(stepCount, SIAlgorithm.getGradiantDecent());
         }
-        if(algorithm.getMeanBestValue() < 100000){
-            pltMeanBest.addData(stepCount, algorithm.getMeanBestValue());
+        if(SIAlgorithm.getMeanBestValue() < 100000){
+            pltMeanBest.addData(stepCount, SIAlgorithm.getMeanBestValue());
         }
-        if(algorithm.getConvergenceValue() < 100000)
-            pltConvergence.addData(stepCount, algorithm.getConvergenceValue());
-        setInfoData(algorithm.toList());
+        if(SIAlgorithm.getConvergenceValue() < 100000)
+            pltConvergence.addData(stepCount, SIAlgorithm.getConvergenceValue());
+        setInfoData(SIAlgorithm.toList());
         updateUI();
     }
 
@@ -205,8 +204,8 @@ public class Main {
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        Algorithm algorithm = new AlgorithmFactory(0, fns[0]).getAlgorithm(100, 100);
-        functionChartPlotter.setChart(algorithm);
+        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, fns[0]).getAlgorithm(100, 100);
+        functionChartPlotter.setChart(SIAlgorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
         pnlCenter.add(swarmDisplayChart);
@@ -238,10 +237,10 @@ public class Main {
 
         progressBar.setValue(progressValue);
         lblBestValue.setText(decimalFormat.format(bestValue));
-        lblExpectedBestValue.setText(decimalFormat.format(algorithm.getFunction().getExpectedBestValue()));
+        lblExpectedBestValue.setText(decimalFormat.format(SIAlgorithm.getFunction().getExpectedBestValue()));
         lblExpectedBestValue.updateUI();
         swarmDisplayChart.updateUI();
-        labelStep.setText(decimalFormat.format(algorithm.getCurrentStep()));
+        labelStep.setText(decimalFormat.format(SIAlgorithm.getCurrentStep()));
         labelStep.updateUI();
         pnlCenter.updateUI();
         pnlRight.updateUI();

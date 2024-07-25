@@ -19,4 +19,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Mirjalili, S. (2015). Moth-flame optimization algorithm: A novel nature-inspired heuristic paradigm. Knowledge-based systems, 89, 228-249.
+<a id="1">[1]</a> Mirjalili, S. (2015). Moth-flame optimization SIAlgorithm: A novel nature-inspired heuristic paradigm. Knowledge-based systems, 89, 228-249.

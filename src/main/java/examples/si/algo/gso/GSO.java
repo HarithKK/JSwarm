@@ -1,6 +1,6 @@
 package examples.si.algo.gso;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -10,7 +10,7 @@ import org.usa.soc.util.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GSO extends Algorithm {
+public class GSO extends SIAlgorithm {
 
     private int numberOfGlowWorms;
 
@@ -50,12 +50,12 @@ public class GSO extends Algorithm {
         this.nt = nt;
         this.s = s;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.agents = new ArrayList<>(numberOfGlowWorms);
+        setFirstAgents("Worms", new ArrayList<>(numberOfGlowWorms));
 
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
@@ -66,7 +66,7 @@ public class GSO extends Algorithm {
             // movement phase
             for(int i=0; i< numberOfGlowWorms; i++){
 
-                GlowWorm ithWarm = (GlowWorm) this.agents.get(i);
+                GlowWorm ithWarm = (GlowWorm) getFirstAgents().get(i);
 
                 List<GlowWorm> nWarms = getNeighbourWarms(i);
                 GlowWorm jthWarm = getJthGlowWorm(nWarms,ithWarm);
@@ -83,7 +83,7 @@ public class GSO extends Algorithm {
                 ithWarm.setR(calculateNewR(ithWarm, nWarms.size()));
             }
             // update luciferin
-            for(GlowWorm worm: (GlowWorm[]) this.agents.toArray()){
+            for(GlowWorm worm: (GlowWorm[]) getFirstAgents().toArray()){
                 worm.updateLuciferin(ldc, lac, objectiveFunction);
                 this.updateGBest(worm);
             }
@@ -129,14 +129,14 @@ public class GSO extends Algorithm {
 
     private List<GlowWorm> getNeighbourWarms(int i) {
 
-        GlowWorm ithWarm = (GlowWorm) agents.get(i);
+        GlowWorm ithWarm = (GlowWorm) getFirstAgents().get(i);
         List<GlowWorm> w = new ArrayList<>();
 
         for(int j=0; j< numberOfGlowWorms; j++){
             if(i==j){
                 continue;
             }
-            GlowWorm jthWarm = (GlowWorm) agents.get(j);
+            GlowWorm jthWarm = (GlowWorm) getFirstAgents().get(j);
             double distance = ithWarm.getPosition().getDistance(jthWarm.getPosition());
             if(ithWarm.getL() < jthWarm.getL() && distance <  ithWarm.getR()){
                 w.add(jthWarm);
@@ -154,7 +154,7 @@ public class GSO extends Algorithm {
         for(int i=0; i< numberOfGlowWorms; i++){
             GlowWorm g = new GlowWorm(this.l0, this.r0, this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             this.updateGBest(g);
-            this.agents.set(i, g);
+            getFirstAgents().set(i, g);
         }
     }
 

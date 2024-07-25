@@ -1,18 +1,16 @@
 package examples.si.algo.choa;
 
 import org.usa.soc.si.AgentComparator;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-public class CHOA extends Algorithm {
+public class CHOA extends SIAlgorithm {
 
     private int populationSize;
 
@@ -45,11 +43,11 @@ public class CHOA extends Algorithm {
         this.fUpper = fUpper;
         this.chaoticType = type;
 
-        this.agents = new ArrayList<>(populationSize);
+        this.setFirstAgents("chimps", new ArrayList<>(populationSize));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Chimps Are Not Initialized");
         }
@@ -58,23 +56,23 @@ public class CHOA extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                Collections.sort(agents, new AgentComparator());
+                agents.get(0).sort(new AgentComparator());
                 f = fUpper*(1 - ((step+1)/ stepsCount));
-                attacker = (Chimp) agents.get(populationSize-1);
+                attacker = (Chimp) getFirstAgents().get(populationSize-1);
                 attacker.updateFMAC(f, chaoticType);
-                chaser = (Chimp) agents.get(populationSize-2);
+                chaser = (Chimp)  getFirstAgents().get(populationSize-2);
                 chaser.updateFMAC(f, chaoticType);
-                barrier = (Chimp) agents.get(populationSize-3);
+                barrier = (Chimp)  getFirstAgents().get(populationSize-3);
                 barrier.updateFMAC(f, chaoticType);
-                divider = (Chimp) agents.get(populationSize-4);
+                divider = (Chimp)  getFirstAgents().get(populationSize-4);
                 divider.updateFMAC(f, chaoticType);
 
-                for(Chimp chimp: (Chimp[]) agents.toArray()){
+                for(Chimp chimp: (Chimp[]) getFirstAgents().toArray()){
                     chimp.updateFMAC(f, chaoticType);
                     chimp.updateDValues(attacker, chaser, barrier, divider);
                 }
 
-                for(Chimp chimp: (Chimp[]) agents.toArray()){
+                for(Chimp chimp: (Chimp[]) getFirstAgents().toArray()){
                     Vector newX;
                     double u = Randoms.rand(0,1);
                     if(u < 0.5){
@@ -101,7 +99,7 @@ public class CHOA extends Algorithm {
                     chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
                 }
 
-                for(Chimp chimp: (Chimp[]) agents.toArray()){
+                for(Chimp chimp: (Chimp[]) getFirstAgents().toArray()){
                     updateGBest(chimp);
                 }
 
@@ -124,7 +122,7 @@ public class CHOA extends Algorithm {
         for(int i=0;i <populationSize; i++){
             Chimp chimp = new Chimp(numberOfDimensions, minBoundary, maxBoundary);
             chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
-            agents.add(chimp);
+            getFirstAgents().add(chimp);
 
             updateGBest(chimp);
         }

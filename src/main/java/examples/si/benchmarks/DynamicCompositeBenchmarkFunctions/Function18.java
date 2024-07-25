@@ -5,7 +5,7 @@ import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
 import org.usa.soc.util.Commons;
 
 import java.util.ArrayList;

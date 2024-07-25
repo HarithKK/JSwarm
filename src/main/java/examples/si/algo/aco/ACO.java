@@ -1,9 +1,8 @@
 package examples.si.algo.aco;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 Toksari, M. Duran. "Ant colony optimization for finding the global minimum." Applied Mathematics and computation 176.1 (2006): 308-316.
  */
 
-public class ACO extends Algorithm {
+public class ACO extends SIAlgorithm {
     private int numberOfAnts;
     private int numberOfProcessIterations;
 
@@ -48,7 +47,7 @@ public class ACO extends Algorithm {
         this.gBest = new Vector(this.numberOfDimensions);
         this.pheromoneValue = pheromoneValue;
         this.isGlobalMinima.setValue(isGlobalMinima);
-        this.agents = new ArrayList<>(numberOfAnts);
+        setFirstAgents("ants", new ArrayList<>(numberOfAnts));
     }
 
     public ACO(
@@ -74,7 +73,7 @@ public class ACO extends Algorithm {
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.pheromoneValue = 0.1;
         this.isGlobalMinima.setValue(isGlobalMinima);
-        this.agents = new ArrayList<>(numberOfAnts);
+        setFirstAgents("Ants", new ArrayList<>(numberOfAnts));
     }
 
     private double calculateAlpha() {
@@ -82,7 +81,7 @@ public class ACO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Ants Are Not Initialized");
         }
@@ -96,7 +95,7 @@ public class ACO extends Algorithm {
                 // generate dx
                 Vector dx = Randoms.getRandomVector(this.numberOfDimensions, -(this.alpha), this.alpha);
 
-                for(Ant a: (Ant[]) this.agents.toArray()){
+                for(Ant a: (Ant[]) getFirstAgents().toArray()){
                     a.setPosition(getPositionVector(a, dx));
                     a.updatePBest(this.objectiveFunction, this.isGlobalMinima.isSet());
 
@@ -129,7 +128,7 @@ public class ACO extends Algorithm {
 
         for(int i=0;i<this.numberOfAnts; i++){
             Ant ant = new Ant(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
-            this.agents.set(i, ant);
+            getFirstAgents().set(i, ant);
             this.updateBest(ant);
         }
     }
@@ -145,7 +144,7 @@ public class ACO extends Algorithm {
     }
 
     @Override
-    public Algorithm clone() throws CloneNotSupportedException {
+    public SIAlgorithm clone() throws CloneNotSupportedException {
         return new ACO(
                 objectiveFunction,
                 numberOfAnts,

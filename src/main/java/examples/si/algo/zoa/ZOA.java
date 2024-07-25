@@ -1,15 +1,14 @@
 package examples.si.algo.zoa;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class ZOA extends Algorithm {
+public class ZOA extends SIAlgorithm {
 
     private int populationSize;
 
@@ -33,12 +32,12 @@ public class ZOA extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.isGlobalMinima.setValue(isGlobalMinima);
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.agents = new ArrayList<>(populationSize);
+        setFirstAgents("zeebras", new ArrayList<>(populationSize));
         this.pioneerZebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Squirrels Are Not Initialized");
         }
@@ -47,7 +46,7 @@ public class ZOA extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                for(Zebra zebra: (Zebra[]) agents.toArray()){
+                for(Zebra zebra: (Zebra[]) getFirstAgents().toArray()){
                     // phase 1
                     long I = Math.round(1 + Randoms.rand(0,1));
                     Vector newX = pioneerZebra.getPosition()
@@ -72,7 +71,7 @@ public class ZOA extends Algorithm {
 
                 }
 
-                for(Zebra zebra: (Zebra[]) agents.toArray()){
+                for(Zebra zebra: (Zebra[]) getFirstAgents().toArray()){
                     updateGbest(zebra);
                 }
                 if(this.stepAction != null)
@@ -92,14 +91,14 @@ public class ZOA extends Algorithm {
         for(int i=0; i<populationSize; i++){
             Zebra zebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
             zebra.setFitnessValue(objectiveFunction.setParameters(zebra.getPosition().getPositionIndexes()).call());
-            agents.set(i,zebra);
+            getFirstAgents().set(i,zebra);
         }
 
-        for(Zebra zebra: (Zebra[]) agents.toArray()){
+        for(Zebra zebra: (Zebra[]) getFirstAgents().toArray()){
             updateGbest(zebra);
         }
 
-        attackedZebra = (Zebra) agents.get(Randoms.rand(populationSize-1));
+        attackedZebra = (Zebra) getFirstAgents().get(Randoms.rand(populationSize-1));
     }
 
     private void updateGbest(Zebra zebra) {

@@ -1,17 +1,17 @@
 package examples.si.algo.wso;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WSO extends Algorithm {
-    private Wasp[] wasps;
+public class WSO extends SIAlgorithm {
     private int numberOfWasps;
 
     private double c1, c2;
@@ -35,12 +35,12 @@ public class WSO extends Algorithm {
         this.c1 = c1;
         this.c2 = c2;
 
-        this.wasps = new Wasp[numberOfWasps];
+        setFirstAgents("wasps", new ArrayList<>(numberOfWasps));
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Wasps Are Not Initialized");
         }
@@ -50,10 +50,11 @@ public class WSO extends Algorithm {
         for(int step = 0; step < this.getStepsCount(); step++){
 
             // tournament
-            double totalForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).sum();
-            double minForce = Arrays.stream(this.wasps).mapToDouble(f -> f.getForce()).min().getAsDouble();
+            double totalForce = Arrays.stream(getFirstAgents().toArray()).mapToDouble(f -> ((Wasp)f).getForce()).sum();
+            double minForce = Arrays.stream(getFirstAgents().toArray()).mapToDouble(f -> ((Wasp)f).getForce()).min().getAsDouble();
 
-            for(Wasp w: this.wasps){
+            for(AbsAgent agent: getFirstAgents()){
+                Wasp w = (Wasp) agent;
                 double p0 = Randoms.randAny(minForce, totalForce);
                 double p = w.getForce() / totalForce;
                 if(p <= p0){
@@ -81,7 +82,7 @@ public class WSO extends Algorithm {
         this.setInitialized(true);
         for(int i=0; i< this.numberOfWasps;i++){
             Wasp wasp = createNewRandomWasp();
-            this.wasps[i] = wasp;
+            getFirstAgents().set(i, wasp);
         }
     }
 
@@ -107,7 +108,7 @@ public class WSO extends Algorithm {
     }
 
     @Override
-    public Algorithm clone() throws CloneNotSupportedException {
+    public SIAlgorithm clone() throws CloneNotSupportedException {
         return new WSO(objectiveFunction,
                 getStepsCount(),
                 numberOfWasps,
@@ -119,8 +120,4 @@ public class WSO extends Algorithm {
                 isGlobalMinima.isSet());
     }
 
-    @Override
-    public List<Agent> getAgents() {
-        return Arrays.asList(wasps);
-    }
 }

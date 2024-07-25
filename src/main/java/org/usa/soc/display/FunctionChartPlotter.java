@@ -6,7 +6,7 @@ import org.knowm.xchart.*;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.action.EmptyAction;
@@ -24,7 +24,7 @@ public class FunctionChartPlotter {
 
     private double xdata[], ydata[], xbest[], ybest[];
 
-    private Algorithm algorithm;
+    private SIAlgorithm SIAlgorithm;
     private JFrame frame;
 
     private EmptyAction action;
@@ -45,8 +45,8 @@ public class FunctionChartPlotter {
         chart.getStyler().setMarkerSize(8);
     }
 
-    public void setChart(Algorithm a){
-        this.algorithm = a;
+    public void setChart(SIAlgorithm a){
+        this.SIAlgorithm = a;
         double m = Math.max(a.getFunction().getMax()[0] - a.getFunction().getMin()[0], a.getFunction().getMax()[1] - a.getFunction().getMin()[1]);
         this.xdata = new double[(int)(m)+50];
         this.ydata = new double[(int)(m)+50];
@@ -125,39 +125,39 @@ public class FunctionChartPlotter {
             return;
         }
         setExecute(true);
-        algorithm.initialize();
-        algorithm.setInterval(interval);
+        SIAlgorithm.initialize();
+        SIAlgorithm.setInterval(interval);
         int step =0;
-        double fraction = algorithm.getStepsCount()/100;
-        algorithm.addStepAction(new StepAction() {
-            @Override
-            public void performAction(Vector best, Double bestValue, int step) {
-
-                double[][] d = algorithm.getDataPoints();
-                xdata = d[0];
-                ydata = d[1];
-
-                if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
-                    if(bestIndex < xbest.length-1){
-                        bestIndex++;
-                    }
-                    xbest[bestIndex] = best.getValue(0);
-                    ybest[bestIndex] = best.getValue(1);
-                }
-
-                chart.updateXYSeries("Agents", xdata, ydata, null);
-                chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
-
-                if((step % fraction) == 0){
-                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
-                }
-                if(action != null)
-                    action.performAction(step, step/fraction, bestValue);
-                step = step +1;
-            }
-        });
+        double fraction = SIAlgorithm.getStepsCount()/100;
+//        SIAlgorithm.addStepAction(new StepAction() {
+//            @Override
+//            public void performAction(Vector best, Double bestValue, int step) {
+//
+//                double[][] d = SIAlgorithm.getDataPoints();
+//                xdata = d[0];
+//                ydata = d[1];
+//
+//                if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
+//                    if(bestIndex < xbest.length-1){
+//                        bestIndex++;
+//                    }
+//                    xbest[bestIndex] = best.getValue(0);
+//                    ybest[bestIndex] = best.getValue(1);
+//                }
+//
+//                chart.updateXYSeries("Agents", xdata, ydata, null);
+//                chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
+//
+//                if((step % fraction) == 0){
+//                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
+//                }
+//                if(action != null)
+//                    action.performAction(step, step/fraction, bestValue);
+//                step = step +1;
+//            }
+//        });
         try {
-            algorithm.runOptimizer();
+            SIAlgorithm.run();
         } catch (Exception e) {
             if(e instanceof KillOptimizerException){
                 System.out.println("Optimizer was killed forcefully");
@@ -165,8 +165,8 @@ public class FunctionChartPlotter {
         }
         setExecute(false);
         System.out.println("");
-        System.out.println("Actual: "+algorithm.getBestDoubleValue() +" , Expected: "+algorithm.getFunction().getExpectedBestValue());
-        System.out.println("Actual: "+algorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(algorithm.getFunction().getExpectedParameters()));
+        System.out.println("Actual: "+ SIAlgorithm.getBestDoubleValue() +" , Expected: "+ SIAlgorithm.getFunction().getExpectedBestValue());
+        System.out.println("Actual: "+ SIAlgorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(SIAlgorithm.getFunction().getExpectedParameters()));
     }
 
     public void setTime(int time) {
@@ -182,20 +182,20 @@ public class FunctionChartPlotter {
     }
 
     public void pause() {
-        algorithm.pauseOptimizer();
+        SIAlgorithm.pauseOptimizer();
     }
 
     public void resume() {
-        algorithm.setInterval(interval);
-        algorithm.resumeOptimizer();
+        SIAlgorithm.setInterval(interval);
+        SIAlgorithm.resumeOptimizer();
     }
 
     public boolean isPaused() {
-       return algorithm.isPaused();
+       return SIAlgorithm.isPaused();
     }
 
     public void stopOptimizer() {
-        algorithm.stopOptimizer();
+        SIAlgorithm.stopOptimizer();
     }
 
     public void setInterval(int interval) {

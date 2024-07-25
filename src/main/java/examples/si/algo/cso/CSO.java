@@ -1,14 +1,13 @@
 package examples.si.algo.cso;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class CSO extends Algorithm {
+public class CSO extends SIAlgorithm {
 
     private int numberOfCats;
 
@@ -49,11 +48,11 @@ public class CSO extends Algorithm {
         this.c = c;
         this.w =w;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.agents = new ArrayList<>(numberOfCats);
+        setFirstAgents("Cats", new ArrayList<>(numberOfCats));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
 
         if(!this.isInitialized()){
             throw new RuntimeException("Cats Are Not Initialized");
@@ -62,7 +61,7 @@ public class CSO extends Algorithm {
 
         for(int i = 0; i< this.getStepsCount(); i++){
 
-            for (Cat cat: (Cat[]) this.agents.toArray()) {
+            for (Cat cat: (Cat[]) getFirstAgents().toArray()) {
                 if(cat.isSeeker()){
                     cat.seek(objectiveFunction, isMinima());
                 }else{
@@ -95,13 +94,13 @@ public class CSO extends Algorithm {
 
         int i = 0;
         while(i< seekersCount){
-            this.agents.set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.SEEKER, this.smp, this.cdc, this.srd, this.spc));
-            this.updateBestCat((Cat) this.agents.get(i));
+            getFirstAgents().set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.SEEKER, this.smp, this.cdc, this.srd, this.spc));
+            this.updateBestCat((Cat) getFirstAgents().get(i));
             i++;
         }
         while(i< this.numberOfCats){
-            this.agents.set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.TRACER, this.smp, this.cdc, this.srd, this.spc));
-            this.updateBestCat((Cat) this.agents.get(i));
+            getFirstAgents().set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.TRACER, this.smp, this.cdc, this.srd, this.spc));
+            this.updateBestCat((Cat) getFirstAgents().get(i));
             i++;
         }
     }

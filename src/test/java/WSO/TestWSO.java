@@ -3,7 +3,7 @@ package WSO;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.wso.WSO;
 import utils.AssertUtil;
@@ -14,9 +14,9 @@ public class TestWSO {
         private static final int LIMIT = 2;
 
         private static final double PRECISION_VAL  = 20;
-        private Algorithm algo;
+        private SIAlgorithm algo;
 
-        private Algorithm getAlgorithm(ObjectiveFunction fn){
+        private SIAlgorithm getAlgorithm(ObjectiveFunction fn){
             return new WSO(
                     fn,
                     1000,
@@ -30,7 +30,7 @@ public class TestWSO {
             );
         }
 
-        private Algorithm getAlgorithm(ObjectiveFunction fn, int i){
+        private SIAlgorithm getAlgorithm(ObjectiveFunction fn, int i){
             return new WSO(
                     fn,
                     i,
@@ -44,7 +44,7 @@ public class TestWSO {
             );
         }
 
-        public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
+        public void evaluate(SIAlgorithm algo, double best, double[] variables, int D, double variance){
             AssertUtil.evaluate(
                     algo.getBestDoubleValue(),
                     best,
@@ -63,7 +63,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -78,7 +78,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -93,7 +93,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -110,7 +110,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -126,7 +126,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -142,7 +142,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -158,7 +158,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -174,7 +174,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -190,7 +190,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -206,7 +206,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -223,7 +223,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -239,7 +239,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -255,7 +255,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -271,7 +271,7 @@ public class TestWSO {
             algo = getAlgorithm(fn, 2000);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -287,7 +287,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -303,7 +303,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -319,7 +319,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -335,7 +335,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -351,7 +351,7 @@ public class TestWSO {
             algo = getAlgorithm(fn);
             algo.initialize();
             try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

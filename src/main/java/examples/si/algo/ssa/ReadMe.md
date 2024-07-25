@@ -26,4 +26,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Jain, Mohit, Vijander Singh, and Asha Rani. "A novel nature-inspired algorithm for optimization: Squirrel search algorithm." Swarm and evolutionary computation 44 (2019): 148-175.
+<a id="1">[1]</a> Jain, Mohit, Vijander Singh, and Asha Rani. "A novel nature-inspired SIAlgorithm for optimization: Squirrel search SIAlgorithm." Swarm and evolutionary computation 44 (2019): 148-175.

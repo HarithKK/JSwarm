@@ -1,7 +1,9 @@
 package examples.si.algo.mfa;
 
+import org.usa.soc.core.AbsAgent;
+import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -11,10 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MFA extends Algorithm {
-
-    private List<Moth> moths;
-    private List<Flame> flames;
+public class MFA extends SIAlgorithm {
 
     private int numberOfMoths;
 
@@ -38,12 +37,16 @@ public class MFA extends Algorithm {
 
         this.gBest = isGlobalMinima.isSet() ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
 
-        this.moths = new ArrayList<Moth>(numberOfMoths);
-        this.flames = new ArrayList<Flame>(numberOfMoths);
+        try{
+            addAgents("moths", Moth.class, numberOfMoths);
+            addAgents("flames", Flame.class, numberOfMoths);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void runOptimizer() throws Exception {
+    public void step() throws Exception {
 
         if(!this.isInitialized()){
             throw new RuntimeException("Moths Are Not Initialized");
@@ -52,38 +55,40 @@ public class MFA extends Algorithm {
         this.nanoDuration = System.nanoTime();
         for(int step = 0; step< stepsCount; step++){
             if(step == 0){
-                for (Moth m: moths) {
+                for (AbsAgent agent: getAgents("moths").getAgents()) {
+                    Moth m = (Moth) agent;
                     Flame f = new Flame(m.getPosition());
                     f.setFitnessValue(m.getFitnessValue());
-                    this.flames.add(f);
+                    getAgents("flames").getAgents().add(f);
                 }
-                Collections.sort(flames, new FlameComparator());
+                getAgents("flames").sort(new FlameComparator());
             }else{
 
-                for (Moth m: moths) {
+                for (AbsAgent agent: getAgents("moths").getAgents()) {
+                    Moth m = (Moth) agent;
                     Flame f = new Flame(m.getPosition());
                     f.setFitnessValue(m.getFitnessValue());
-                    this.flames.add(f);
+                    getAgents("flames").getAgents().add(f);
                 }
-                Collections.sort(flames, new FlameComparator());
-                this.flames = this.flames.subList(0, numberOfMoths);
+                getAgents("flames").sort(new FlameComparator());
+                getAgents("flames").setAgents(getAgents("flames").getAgents().subList(0, numberOfMoths));
             }
 
-            this.gBest.setVector(flames.get(0).getPosition().getClonedVector());
+            this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition().getClonedVector());
 
             double a = -1.0 + (double)(step + 1) * (-1.0 / (double)stepsCount);
             int flameNo = (int) Math.round((numberOfMoths - 1) - (step + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
 
             for (int i=0 ; i<numberOfMoths ;i++){
-                Flame tmpFlame = i <= flameNo ? flames.get(i) : flames.get(flameNo);
-                double distance = tmpFlame.getPosition().operate(Vector.OPERATOR.SUB, moths.get(i).getPosition()).getMagnitude();
+                Flame tmpFlame = i <= flameNo ? (Flame) getAgents("flames").getAgents().get(i) : (Flame) getAgents("flames").getAgents().get(flameNo);
+                double distance = tmpFlame.getPosition().operate(Vector.OPERATOR.SUB, getAgents("moths").getAgents().get(i).getPosition()).getMagnitude();
 
                 double t = (a - 1.0) * Randoms.rand(0, 1) + 1.0;
                 double firstComponent = distance * Math.exp(this.b * t) * Math.cos(2 * Math.PI * t);
 
                 Vector position = tmpFlame.getPosition().operate(Vector.OPERATOR.ADD, firstComponent).fixVector(minBoundary, maxBoundary);
-                moths.get(i).setPosition(position);
-                moths.get(i).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
+                getAgents("moths").getAgents().get(i).setPosition(position);
+                ((Moth)getAgents("moths").getAgents().get(i)).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
             }
 
             if(this.stepAction != null)
@@ -101,23 +106,7 @@ public class MFA extends Algorithm {
         for(int i=0; i< numberOfMoths; i++){
             Moth moth = new Moth(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0 , 1).fixVector(minBoundary, maxBoundary));
             moth.setFitnessValue(objectiveFunction.setParameters(moth.getPosition().getPositionIndexes()).call());
-            moths.add(moth);
+            getAgents("moths").getAgents().add(moth);
         }
-    }
-
-    @Override
-    public List<Agent> getAgents() {
-        return new ArrayList<>(){{addAll(flames);}};
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfMoths];
-        for(int i=0; i< this.numberOfMoths; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.flames.get(i).getPosition().getValue(j),2);
-            }
-        }
-        return data;
     }
 }

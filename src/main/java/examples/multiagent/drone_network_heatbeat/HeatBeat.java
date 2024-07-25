@@ -52,7 +52,7 @@ public class HeatBeat {
             }
 
             @Override
-            public void run() {
+            public void step() {
 
             }
         };

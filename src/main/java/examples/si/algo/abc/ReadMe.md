@@ -20,4 +20,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 ```
 
 ## References
-<a id="1">[1]</a> Karaboga, Dervis, and Bahriye Akay. "A comparative study of artificial bee colony algorithm." Applied mathematics and computation 214.1 (2009): 108-132.
+<a id="1">[1]</a> Karaboga, Dervis, and Bahriye Akay. "A comparative study of artificial bee colony SIAlgorithm." Applied mathematics and computation 214.1 (2009): 108-132.

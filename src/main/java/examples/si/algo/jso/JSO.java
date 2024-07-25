@@ -1,15 +1,14 @@
 package examples.si.algo.jso;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class JSO extends Algorithm {
+public class JSO extends SIAlgorithm {
 
     private int populationSize;
 
@@ -38,11 +37,11 @@ public class JSO extends Algorithm {
         this.beta = beta;
         this.gamma = gamma;
 
-        this.agents = new ArrayList<>(populationSize);
+        setFirstAgents("Jellyfish", new ArrayList<>(populationSize));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Jellyfishes Are Not Initialized");
         }
@@ -51,7 +50,7 @@ public class JSO extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                for(Jellyfish jellyfish: (Jellyfish[]) agents.toArray()){
+                for(Jellyfish jellyfish: (Jellyfish[]) getFirstAgents().toArray()){
 
                     double ct = Math.abs((1 - ((step+1)/stepsCount)) * (2*Randoms.rand(0,1)-1));
                     Vector mu = getMeanLocation();
@@ -93,9 +92,9 @@ public class JSO extends Algorithm {
     }
 
     private Jellyfish getRandomJellyfish(Jellyfish jellyfish) {
-        Jellyfish f = (Jellyfish) agents.get(Randoms.rand(populationSize-1));
+        Jellyfish f = (Jellyfish) getFirstAgents().get(Randoms.rand(populationSize-1));
         if(f == jellyfish){
-            return (Jellyfish) agents.get(Randoms.rand(populationSize-1));
+            return (Jellyfish) getFirstAgents().get(Randoms.rand(populationSize-1));
         }else{
             return f;
         }
@@ -110,7 +109,7 @@ public class JSO extends Algorithm {
 
     private Vector getMeanLocation() {
         Vector sum = new Vector(numberOfDimensions).resetAllValues(0.0);
-        for(Jellyfish jellyfish: (Jellyfish[]) agents.toArray()){
+        for(Jellyfish jellyfish: (Jellyfish[]) getFirstAgents().toArray()){
             sum.operate(Vector.OPERATOR.ADD, jellyfish.getPosition());
         }
         return sum.operate(Vector.OPERATOR.DIV, (double)populationSize);
@@ -125,10 +124,10 @@ public class JSO extends Algorithm {
             Jellyfish jellyfish = new Jellyfish(numberOfDimensions, minBoundary, maxBoundary);
             jellyfish.setFitnessValue(objectiveFunction.setParameters(jellyfish.getPosition().getPositionIndexes()).call());
 
-            agents.set(i,jellyfish);
+            getFirstAgents().set(i,jellyfish);
         }
 
-        for(Jellyfish jellyfish: (Jellyfish[]) agents.toArray()){
+        for(Jellyfish jellyfish: (Jellyfish[]) getFirstAgents().toArray()){
             updateGbest(jellyfish);
         }
     }

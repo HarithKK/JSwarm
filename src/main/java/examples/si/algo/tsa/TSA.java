@@ -1,20 +1,19 @@
 package examples.si.algo.tsa;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TSA extends Algorithm {
+public class TSA extends SIAlgorithm {
     private int populationSize;
-
-    private Tunicate[] tunicates;
 
     private Vector A, G, F, M;
 
@@ -39,7 +38,7 @@ public class TSA extends Algorithm {
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.isGlobalMinima.setValue(isGlobalMinima);
 
-        this.tunicates = new Tunicate[populationSize];
+        setFirstAgents("tunicates", new ArrayList<>(populationSize));
         this.pmax = 4;
         this.pmin = 1;
         this.A = new Vector(numberOfDimensions);
@@ -49,7 +48,7 @@ public class TSA extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Tunicates Are Not Initialized");
         }
@@ -57,7 +56,8 @@ public class TSA extends Algorithm {
 
         for(int step = 0; step< getStepsCount(); step++){
 
-            for (Tunicate tunicate: tunicates) {
+            for (AbsAgent agent: getFirstAgents()) {
+                Tunicate tunicate = (Tunicate)agent;
                 calculateConstVectors();
                 Vector VPD = this.getGBest().getClonedVector()
                         .operate(Vector.OPERATOR.SUB, tunicate.getPosition().operate(Vector.OPERATOR.MULP, Randoms.rand(0,1)));
@@ -75,7 +75,8 @@ public class TSA extends Algorithm {
                 tunicate.setFitnessValue(objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call());
             }
 
-            for (Tunicate tunicate: tunicates){
+            for (AbsAgent agent: getFirstAgents()) {
+                Tunicate tunicate = (Tunicate)agent;
                 updateGBest(tunicate);
             }
 
@@ -109,7 +110,7 @@ public class TSA extends Algorithm {
         for(int i=0; i<populationSize; i++){
             Tunicate tunicate = new Tunicate(numberOfDimensions, minBoundary, maxBoundary);
             tunicate.setFitnessValue(objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call());
-            tunicates[i] = tunicate;
+            getFirstAgents().set(i, tunicate);
             updateGBest(tunicate);
         }
 
@@ -121,11 +122,6 @@ public class TSA extends Algorithm {
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(tunicate.getPosition());
         }
-    }
-
-    @Override
-    public List<Agent> getAgents() {
-        return Arrays.asList(tunicates);
     }
 
 }

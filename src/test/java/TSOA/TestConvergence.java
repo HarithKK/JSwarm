@@ -42,7 +42,7 @@ public class TestConvergence {
                 Utils.writeToFile("data/convergence/"+f.getClass().getSimpleName()+".csv", sb.toString());
             }
         });
-        t.runOptimizer();
+        t.run();
     }
 
     @Test

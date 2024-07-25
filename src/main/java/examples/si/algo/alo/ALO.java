@@ -1,10 +1,10 @@
 package examples.si.algo.alo;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -15,11 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ALO extends Algorithm {
+public class ALO extends SIAlgorithm {
 
     private int numberOfAnts;
-
-    private List<Ant> ants, antLions;
     private double minFs, maxFs;
 
     public ALO(
@@ -39,15 +37,20 @@ public class ALO extends Algorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.isGlobalMinima.setValue(isGlobalMinima);
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.ants = new ArrayList<>(numberOfAnts);
-        this.antLions = new ArrayList<>(numberOfAnts);
+
+        try{
+            addAgents("ants", Ant.class, numberOfAnts);
+            addAgents("antLions", Ant.class, numberOfAnts);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         this.minFs = Double.MIN_VALUE;
         this.maxFs = Double.MAX_VALUE;
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Ants Are Not Initialized");
         }
@@ -56,13 +59,13 @@ public class ALO extends Algorithm {
 
         for (int step = 0; step < stepsCount; step++) {
             double I = calculateI(step, stepsCount);
-            for (Ant a: ants) {
+            for (AbsAgent a: agents.get("ants").getAgents()) {
                 int selectedAntLionIndex = getAntLionIndexFromRouletteWheel();
 
                 Vector minValuesVector = new Vector(numberOfDimensions).setMaxVector();
                 Vector maxValuesVector = new Vector(numberOfDimensions).setMinVector();
 
-                for (Ant a1: ants){
+                for (AbsAgent a1: agents.get("ants").getAgents()){
                     for(int i=0; i< a1.getPosition().getNumberOfDimensions();i++){
                         double v = a1.getPosition().getValue(i);
                         minValuesVector.setValue(Math.min(v, minValuesVector.getValue(i)), i);
@@ -70,28 +73,30 @@ public class ALO extends Algorithm {
                     }
                 }
 
-                Vector RA = getNewPosition(minValuesVector, maxValuesVector, antLions.get(selectedAntLionIndex).getPosition(), I, step);
+                Vector RA = getNewPosition(minValuesVector, maxValuesVector, agents.get("antLions").getAgents().get(selectedAntLionIndex).getPosition(), I, step);
                 Vector RE = getNewPosition(minValuesVector, maxValuesVector, gBest, I, step);
                 Vector R = RA.operate(Vector.OPERATOR.ADD, RE).operate(Vector.OPERATOR.DIV, 2.0).fixVector(minBoundary, maxBoundary);
 
                 a.setPosition(R);
-                a.setFitnessValue(objectiveFunction.setParameters(a.getPosition().getPositionIndexes()).call());
+                ((Agent)a).setFitnessValue(objectiveFunction.setParameters(a.getPosition().getPositionIndexes()).call());
 
             }
 
             for(int i=0; i<numberOfAnts; i++){
-                if(Validator.validateBestValue(ants.get(i).getFitnessValue(), antLions.get(i).getFitnessValue(), !isGlobalMinima.isSet())){
-                    antLions.set(i, ants.get(i).cloneAnt());
+                if(Validator.validateBestValue(
+                        ((Ant)agents.get("ants").getAgents().get(i)).getFitnessValue(),
+                        ((Ant)agents.get("antLions").getAgents().get(i)).getFitnessValue(), !isGlobalMinima.isSet())){
+                        agents.get("antLions").getAgents().set(i, ((Ant)agents.get("ants").getAgents().get(i)).cloneAnt());
                 }
             }
 
-            Ant elite = antLions.get(0);
+            Ant elite = (Ant)agents.get("antLions").getAgents().get(0);
             for(int i=0; i<numberOfAnts; i++) {
-                Ant a = antLions.get(i);
+                Ant a = (Ant)agents.get("antLions").getAgents().get(i);
                 if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima.isSet())){
                     elite = a.cloneAnt();
                 }else{
-                    antLions.set(i, elite.cloneAnt());
+                    agents.get("antLions").getAgents().set(i, elite.cloneAnt());
                 }
             }
 
@@ -174,14 +179,14 @@ public class ALO extends Algorithm {
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant ant = new Ant(numberOfDimensions, minBoundary, maxBoundary);
             ant.setFitnessValue(objectiveFunction.setParameters(ant.getPosition().getPositionIndexes()).call());
-            ants.set(i, ant);
+            agents.get("antLions").getAgents().set(i, ant);
         }
 
         Ant elite = new Ant(numberOfDimensions, minBoundary, maxBoundary);
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant antLion = new Ant(numberOfDimensions, minBoundary, maxBoundary);
             antLion.setFitnessValue(objectiveFunction.setParameters(antLion.getPosition().getPositionIndexes()).call());
-            antLions.set(i, antLion);
+            agents.get("antLions").getAgents().set(i, antLion);
             this.maxFs = Math.max(this.maxFs, antLion.getFitnessValue());
             this.minFs = Math.min(this.minFs, antLion.getFitnessValue());
 
@@ -198,16 +203,11 @@ public class ALO extends Algorithm {
         double p0 = Randoms.rand(0,1);
 
         for(int i=0; i<numberOfAnts; i++){
-            double p = Math.abs(antLions.get(i).getFitnessValue() - fsb) / deltaFs;
+            double p = Math.abs(((Ant)agents.get("antLions").getAgents().get(i)).getFitnessValue() - fsb) / deltaFs;
             if(p > p0){
                 return i;
             }
         }
         return 0;
-    }
-
-    @Override
-    public List<Agent> getAgents() {
-        return Stream.of(this.ants, this.antLions).flatMap(Collection::stream).collect(Collectors.toList());
     }
 }

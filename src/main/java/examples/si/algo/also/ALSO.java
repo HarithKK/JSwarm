@@ -1,6 +1,6 @@
 package examples.si.algo.also;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
@@ -9,7 +9,7 @@ import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 
-public class ALSO extends Algorithm {
+public class ALSO extends SIAlgorithm {
 
     private int numberOfLizards =0;
 
@@ -43,7 +43,7 @@ public class ALSO extends Algorithm {
         this.Ib = Ib;
         this.It = It;
 
-        this.agents = new ArrayList<>(numberOfLizards);
+        setFirstAgents("lizards", new ArrayList<>(numberOfLizards));
         this.totalMass = totalMass;
         this.totalLength = totalLength;
         this.globalWorst = this.globalBest =0.0;
@@ -55,7 +55,7 @@ public class ALSO extends Algorithm {
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if (!this.isInitialized()) {
             throw new RuntimeException("Lizards Are Not Initialized");
         }
@@ -64,7 +64,7 @@ public class ALSO extends Algorithm {
 
         for (int step = 0; step < stepsCount; step++) {
 
-            for(Lizard lizard: (Lizard[]) agents.toArray()){
+            for(Lizard lizard: (Lizard[]) getFirstAgents().toArray()){
                 lizard.generateNewTorque(globalBest, globalWorst);
 
                 lizard.calculateValues(totalMass, totalLength);
@@ -94,7 +94,7 @@ public class ALSO extends Algorithm {
                 }
             }
 
-            for(Lizard lizard: (Lizard[]) agents.toArray()){
+            for(Lizard lizard: (Lizard[]) getFirstAgents().toArray()){
                 updateGBest(lizard);
             }
 
@@ -115,10 +115,10 @@ public class ALSO extends Algorithm {
             lizard.setFitnessValue(objectiveFunction.setParameters(lizard.getPosition().getPositionIndexes()).call());
             lizard.setLbest(lizard.getPosition());
             lizard.setLbestValue(lizard.getFitnessValue());
-            this.agents.set(i, lizard);
+            getFirstAgents().set(i, lizard);
         }
 
-        for(Lizard lizard:  (Lizard[]) agents.toArray()){
+        for(Lizard lizard:  (Lizard[]) getFirstAgents().toArray()){
             updateGBest(lizard);
         }
     }
@@ -135,16 +135,5 @@ public class ALSO extends Algorithm {
         if(Validator.validateBestValue(fpbest, fgbest, !isGlobalMinima.isSet())){
             this.globalWorst = fpbest;
         }
-    }
-
-    @Override
-    public double[][] getDataPoints() {
-        double[][] data = new double[this.numberOfDimensions][this.numberOfLizards*2];
-        for(int i=0; i< this.numberOfLizards; i++){
-            for(int j=0; j< numberOfDimensions; j++){
-                data[j][i] = Mathamatics.round(this.agents.get(i).position.getValue(j),2);
-            }
-        }
-        return data;
     }
 }

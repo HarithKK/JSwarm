@@ -1,18 +1,14 @@
 package examples.si.algo.gwo;
 
-import org.usa.soc.si.AgentComparator;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-public class GWO extends Algorithm {
+public class GWO extends SIAlgorithm {
 
     private static final Double MAX_A = 2.0;
     private int numberOfWolfs;
@@ -37,20 +33,20 @@ public class GWO extends Algorithm {
         this.numberOfWolfs = numberOfWolfs;
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
-        this.agents = new ArrayList<>(numberOfWolfs);
+        setFirstAgents("Wolves", new ArrayList<>(numberOfWolfs));
 
         this.a = new Vector(numberOfDimensions);
         this.a.resetAllValues(MAX_A);
     }
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Wolfs Are Not Initialized");
         }
         this.nanoDuration = System.nanoTime();
         for(int step = 0; step< stepsCount; step++){
             double aDecrement = 2*(1.0 - (step/ stepsCount));
-            for(Wolf w: (Wolf[]) agents.toArray()){
+            for(Wolf w: (Wolf[]) getFirstAgents().toArray()){
                 Vector X1 = getUpdatedPositionVector(w, alpha, calcA(), calcC());
                 Vector X2 = getUpdatedPositionVector(w, beta,  calcA(), calcC());
                 Vector X3 = getUpdatedPositionVector(w, delta,  calcA(), calcC());
@@ -108,14 +104,14 @@ public class GWO extends Algorithm {
         for(int i =0;i< numberOfWolfs; i++){
             Wolf w = new Wolf(numberOfDimensions, minBoundary, maxBoundary);
             w.setFitnessValue(this.objectiveFunction.setParameters(w.getPosition().getPositionIndexes()).call());
-            agents.add(w);
+            getFirstAgents().add(w);
         }
 
         sort();
 
-        this.alpha = ((Wolf) agents.get(0)).getClonedWolf();
-        this.beta = ((Wolf) agents.get(1)).getClonedWolf();
-        this.delta = ((Wolf) agents.get(2)).getClonedWolf();
+        this.alpha = ((Wolf) getFirstAgents().get(0)).getClonedWolf();
+        this.beta = ((Wolf) getFirstAgents().get(1)).getClonedWolf();
+        this.delta = ((Wolf) getFirstAgents().get(2)).getClonedWolf();
 
         updateWolfHirarchy();
     }
@@ -128,17 +124,17 @@ public class GWO extends Algorithm {
 
         sort();
 
-        this.alpha = ((Wolf) agents.get(0)).getClonedWolf();
-        this.beta = ((Wolf) agents.get(1)).getClonedWolf();
-        this.delta = ((Wolf) agents.get(2)).getClonedWolf();
+        this.alpha = ((Wolf) getFirstAgents().get(0)).getClonedWolf();
+        this.beta = ((Wolf) getFirstAgents().get(1)).getClonedWolf();
+        this.delta = ((Wolf) getFirstAgents().get(2)).getClonedWolf();
 
         this.gBest.setVector(this.alpha.getPosition());
     }
 
     private void findAlpha(){
         for(int j= 0;j < this.numberOfWolfs; j++){
-            if(Validator.validateBestValue(agents.get(j).getFitnessValue(), alpha.getFitnessValue(), isGlobalMinima.isSet())){
-                this.alpha = ((Wolf) agents.get(j)).getClonedWolf();
+            if(Validator.validateBestValue(((Wolf)getFirstAgents().get(j)).getFitnessValue(), alpha.getFitnessValue(), isGlobalMinima.isSet())){
+                this.alpha = ((Wolf) getFirstAgents().get(j)).getClonedWolf();
             }
         }
     }
@@ -147,11 +143,11 @@ public class GWO extends Algorithm {
         for(int j= 0;j < this.numberOfWolfs; j++){
             double falpha = alpha.getFitnessValue();
             double fbeta = beta.getFitnessValue();
-            double f = agents.get(j).getFitnessValue();
+            double f = ((Wolf)getFirstAgents().get(j)).getFitnessValue();
             if(Validator.validateBestValue(f, fbeta, isGlobalMinima.isSet()) &&
                     Validator.validateBestValue(falpha, fbeta, isGlobalMinima.isSet())
             ){
-                this.beta = ((Wolf) agents.get(j)).getClonedWolf();
+                this.beta = ((Wolf) getFirstAgents().get(j)).getClonedWolf();
             }
         }
     }
@@ -160,11 +156,11 @@ public class GWO extends Algorithm {
         for(int j= 0;j < this.numberOfWolfs; j++){
             double fbeta = beta.getFitnessValue();
             double fdelta = delta.getFitnessValue();
-            double f = ((Wolf) agents.get(j)).getFitnessValue();
+            double f = ((Wolf) getFirstAgents().get(j)).getFitnessValue();
             if(Validator.validateBestValue(f, fdelta, isGlobalMinima.isSet()) &&
                     Validator.validateBestValue(fbeta, fdelta, isGlobalMinima.isSet())
             ){
-                this.delta = ((Wolf) agents.get(j)).getClonedWolf();
+                this.delta = ((Wolf) getFirstAgents().get(j)).getClonedWolf();
             }
         }
     }

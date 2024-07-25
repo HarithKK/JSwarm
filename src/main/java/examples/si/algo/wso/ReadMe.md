@@ -22,4 +22,4 @@ List<Double> bestOptimizedLocations = p.getGBest().toList();
 
 ## References
 <a id="1">[1]</a> Cicirello, Vincent A., and Stephen F. Smith. "Wasp-like agents for distributed factory coordination." Autonomous Agents and Multi-agent systems 8.3 (2004): 237-266.
-<a id="2">[2]</a> Pinto, Pedro C., Thomas A. Runkler, and João Sousa. "Wasp swarm algorithm for dynamic MAX-SAT problems." International conference on adaptive and natural computing algorithms. Springer, Berlin, Heidelberg, 2007.
+<a id="2">[2]</a> Pinto, Pedro C., Thomas A. Runkler, and João Sousa. "Wasp swarm SIAlgorithm for dynamic MAX-SAT problems." International conference on adaptive and natural computing algorithms. Springer, Berlin, Heidelberg, 2007.

@@ -3,7 +3,7 @@ package ALSO;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.also.ALSO;
 import utils.AssertUtil;
@@ -13,9 +13,9 @@ public class TestALSO {
 
     private static final int LIMIT = 2;
     private static final double PRECISION_VAL = 10;
-    private Algorithm algo;
+    private SIAlgorithm algo;
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn) {
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn) {
         return new ALSO(
                 fn,
                 100,
@@ -33,7 +33,7 @@ public class TestALSO {
         );
     }
 
-    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance) {
+    public void evaluate(SIAlgorithm algo, double best, double[] variables, int D, double variance) {
         AssertUtil.evaluate(
                 algo.getBestDoubleValue(),
                 best,
@@ -52,7 +52,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +67,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +82,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -99,7 +99,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -115,7 +115,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -131,7 +131,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -147,7 +147,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -163,7 +163,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -179,7 +179,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -195,7 +195,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -212,7 +212,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -228,7 +228,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -244,7 +244,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -260,7 +260,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -276,7 +276,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -292,7 +292,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -308,7 +308,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -324,7 +324,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -340,7 +340,7 @@ public class TestALSO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

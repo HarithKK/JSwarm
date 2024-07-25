@@ -3,7 +3,7 @@ package ACO;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.aco.ACO;
 import org.usa.soc.util.Mathamatics;
@@ -13,11 +13,11 @@ import utils.Logger;
 public class TestACO {
 
     private static final int LIMIT = 2;
-    private Algorithm algo;
+    private SIAlgorithm algo;
 
     private static final double PRECISION_VAL  = 10;
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn){
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn){
         return new ACO(
                 fn,
                 1000,
@@ -30,7 +30,7 @@ public class TestACO {
         );
     }
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn, int i){
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn, int i){
         return new ACO(
                 fn,
                 i,
@@ -43,7 +43,7 @@ public class TestACO {
         );
     }
 
-    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
+    public void evaluate(SIAlgorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
                 algo.getBestDoubleValue(),
                 best,
@@ -62,7 +62,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -77,7 +77,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -92,7 +92,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -109,7 +109,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -125,7 +125,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -141,7 +141,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -157,7 +157,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -173,7 +173,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -189,7 +189,7 @@ public class TestACO {
         algo = getAlgorithm(fn, 2000);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -205,7 +205,7 @@ public class TestACO {
         algo = getAlgorithm(fn,2000);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -222,7 +222,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -238,7 +238,7 @@ public class TestACO {
         algo = getAlgorithm(fn, 2000);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -254,7 +254,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -270,7 +270,7 @@ public class TestACO {
         algo = getAlgorithm(fn, 2000);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -286,7 +286,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -302,7 +302,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -318,7 +318,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -334,7 +334,7 @@ public class TestACO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -350,7 +350,7 @@ public class TestACO {
         algo = getAlgorithm(fn, 2000);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,7 +1,7 @@
 package org.usa.soc.si.runners;
 
+import examples.si.AlgorithmFactory;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.FunctionsList;
 import org.usa.soc.view.surface.plotter.FunctionToMapper;
 import org.usa.soc.view.surface.plotter.Plot;
 
@@ -17,7 +17,7 @@ This is only for displaying function
 public class FunctionDisplay {
     Plot p;
 
-    ObjectiveFunction fns[] = new FunctionsList().getFunctionList();
+    ObjectiveFunction fns[] = new AlgorithmFactory.FunctionsList().getFunctionList();
 
     private void setPloat(ObjectiveFunction fn){
         p = new Plot(new FunctionToMapper(fn),"Function Display", true);

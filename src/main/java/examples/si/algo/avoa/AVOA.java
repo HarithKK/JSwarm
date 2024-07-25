@@ -1,7 +1,6 @@
 package examples.si.algo.avoa;
 
-import org.usa.soc.si.AgentComparator;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Commons;
@@ -11,10 +10,9 @@ import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class AVOA extends Algorithm {
+public class AVOA extends SIAlgorithm {
 
     private int populationSize;
 
@@ -51,11 +49,11 @@ public class AVOA extends Algorithm {
         this.p3 = p3;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
 
-        this.agents = new ArrayList<>(populationSize);
+        setFirstAgents("vultures", new ArrayList<>(populationSize));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Vultures Are Not Initialized");
         }
@@ -67,7 +65,7 @@ public class AVOA extends Algorithm {
                 Vulture[] firstBestVultures = findBestVultures();
                 double F = calculateF(step+1);
 
-                for (Vulture vulture: (Vulture[]) agents.toArray()) {
+                for (Vulture vulture: (Vulture[]) getFirstAgents().toArray()) {
                     Vulture randomVulture = randomSelectVulture(firstBestVultures[0], firstBestVultures[1]);
                     if(vulture != randomVulture){
                         Vector newPosition = null;
@@ -139,7 +137,7 @@ public class AVOA extends Algorithm {
                     }
                 }
 
-                for(Vulture vulture: (Vulture[]) agents.toArray()){
+                for(Vulture vulture: (Vulture[]) getFirstAgents().toArray()){
                     updateGBest(vulture);
                 }
 
@@ -168,7 +166,7 @@ public class AVOA extends Algorithm {
 
     private Vulture[] findBestVultures(){
 
-        List<Vulture> sortedVultures = Arrays.asList((Vulture[]) agents.toArray());
+        List<Vulture> sortedVultures = Arrays.asList((Vulture[]) getFirstAgents().toArray());
         sort();
 
         return new Vulture[]{sortedVultures.get(0), sortedVultures.get(1)};
@@ -194,7 +192,7 @@ public class AVOA extends Algorithm {
         for(int i=0; i<populationSize;i++){
             Vulture vulture = new Vulture(numberOfDimensions, minBoundary, maxBoundary);
             vulture.setFitnessValue(objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call());
-            agents.set(i, vulture);
+            getFirstAgents().set(i, vulture);
         }
     }
 }

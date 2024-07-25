@@ -5,16 +5,13 @@ import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
 import org.usa.soc.core.ds.SeriesDataObject;
-import org.usa.soc.multiagent.Agent;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.action.Action;
 import org.usa.soc.core.ds.Margins;
-import org.usa.soc.core.ds.SeriesData;
 import org.usa.soc.multiagent.StepCompleted;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -93,7 +90,7 @@ public class PlainView2D {
                     }
         });
 
-        this.getAlgo().runOptimizer();
+        this.getAlgo().run();
     }
 
     private void updateChartWithSeries() {

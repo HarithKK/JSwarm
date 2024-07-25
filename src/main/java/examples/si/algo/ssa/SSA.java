@@ -1,6 +1,6 @@
 package examples.si.algo.ssa;
 
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Commons;
@@ -9,10 +9,8 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-public class SSA extends Algorithm {
+public class SSA extends SIAlgorithm {
 
     private int populationSize;
 
@@ -49,11 +47,11 @@ public class SSA extends Algorithm {
         this.speed = speed;
         this.surfaceAreaBody = surfaceAreaBody;
         this.lossInHeight = lossInHeight;
-        this.agents = new ArrayList<>(populationSize);
+        setFirstAgents("Squirrel", new ArrayList<>(populationSize));
     }
 
     @Override
-    public void runOptimizer() throws Exception{
+    public void step() throws Exception{
         if(!this.isInitialized()){
             throw new RuntimeException("Squirrels Are Not Initialized");
         }
@@ -66,10 +64,10 @@ public class SSA extends Algorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                Squirrel squirrelOnHickoryTree = (Squirrel) agents.get(hSquirrel);
+                Squirrel squirrelOnHickoryTree = (Squirrel) getFirstAgents().get(hSquirrel);
                 // case for squirrels from acorn tree to hickory tree
                 for(int i=aSquirrelLower; i <= aSquirrelUpper;i++){
-                    Squirrel squirrelOnAcornTree = (Squirrel)agents.get(i);
+                    Squirrel squirrelOnAcornTree = (Squirrel)getFirstAgents().get(i);
                     double dg = calculateRandomGlidingDistance();
                     if(Randoms.rand(0,1) > Pdp){
                         squirrelOnAcornTree.setPosition(
@@ -87,8 +85,8 @@ public class SSA extends Algorithm {
 
                 // Other squirrels
                 for(int i=0; i<aSquirrelLower;i++){
-                    Squirrel squirrel = (Squirrel)agents.get(i);
-                    Squirrel randomSquirrelOnAcornTree = (Squirrel)agents.get(Randoms.rand(2)+1);
+                    Squirrel squirrel = (Squirrel)getFirstAgents().get(i);
+                    Squirrel randomSquirrelOnAcornTree = (Squirrel)getFirstAgents().get(Randoms.rand(2)+1);
                     double dg = calculateRandomGlidingDistance();
                     // case for squirrels from normal tree to acorn tree
                     if(Randoms.rand(0,1) <= 0.5){
@@ -128,7 +126,7 @@ public class SSA extends Algorithm {
                 double smin = 0.00001 / Mathamatics.pow(365, ((step+1) * 2.5 / stepsCount));
 
                 if(sc < smin){
-                    for (Squirrel s: (Squirrel[]) agents.toArray()) {
+                    for (Squirrel s: (Squirrel[]) getFirstAgents().toArray()) {
                         s.setPosition(getLevyVector());
                         s.setFitnessValue(objectiveFunction.setParameters(s.getPosition().getPositionIndexes()).call());
                     }
@@ -137,8 +135,8 @@ public class SSA extends Algorithm {
                 sort();
 
                 double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
-                if(Validator.validateBestValue(agents.get(hSquirrel).getFitnessValue(), fgbest, isGlobalMinima.isSet())){
-                    gBest.setVector(agents.get(hSquirrel).getPosition());
+                if(Validator.validateBestValue(((Squirrel)getFirstAgents().get(hSquirrel)).getFitnessValue(), fgbest, isGlobalMinima.isSet())){
+                    gBest.setVector(getFirstAgents().get(hSquirrel).getPosition());
                 }
 
                 if(this.stepAction != null)
@@ -155,7 +153,7 @@ public class SSA extends Algorithm {
         double sumSt =0;
 
         for(int i=1; i<4;i++){
-            sumSt += Math.pow((agents.get(i).getFitnessValue() - agents.get(0).getFitnessValue()),2);
+            sumSt += Math.pow((((Squirrel)getFirstAgents().get(i)).getFitnessValue() - ((Squirrel)getFirstAgents().get(0)).getFitnessValue()),2);
         }
         return Math.sqrt(sumSt);
     }
@@ -181,7 +179,7 @@ public class SSA extends Algorithm {
             Squirrel squirrel = new Squirrel(numberOfDimensions, minBoundary, maxBoundary);
             squirrel.setFitnessValue(objectiveFunction.setParameters(squirrel.getPosition().getPositionIndexes()).call());
 
-            agents.add(squirrel);
+            getFirstAgents().add(squirrel);
         }
 
         sort();

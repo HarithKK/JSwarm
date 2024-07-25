@@ -1,17 +1,19 @@
 package examples.si.algo.pso;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.Agent;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PSO extends Algorithm implements Cloneable {
+public class PSO extends SIAlgorithm implements Cloneable {
 
     private int particleCount;
 
@@ -19,8 +21,6 @@ public class PSO extends Algorithm implements Cloneable {
     private final Double c2;
     private final Double wMax;
     private final Double wMin;
-
-    private final Particle[] particles;
 
     public PSO(
             ObjectiveFunction<Double> objectiveFunction,
@@ -45,7 +45,7 @@ public class PSO extends Algorithm implements Cloneable {
         this.wMax = w;
         this.wMin = w;
 
-        this.particles = new Particle[particleCount];
+        setFirstAgents("particles", new ArrayList<>(particleCount));
         this.gBest = new Vector(numberOfDimensions);
         this.isGlobalMinima.setValue(isGlobalMinima);
         this.getGBest().resetAllValues(isGlobalMinima ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
@@ -74,14 +74,14 @@ public class PSO extends Algorithm implements Cloneable {
         this.wMin = wMin;
         this.minBoundary = minBoundary;
         this.maxBoundary = maxBoundary;
-        this.particles = new Particle[particleCount];
+        setFirstAgents("particles", new ArrayList<>(particleCount));
         this.gBest = new Vector(numberOfDimensions);
         this.isGlobalMinima.setValue(isGlobalMinima);
         this.getGBest().resetAllValues(isGlobalMinima ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
     }
 
     @Override
-    public void runOptimizer() throws Exception {
+    public void step() throws Exception {
 
         if (!this.isInitialized()) {
             throw new RuntimeException("Particles Are Not Initialized");
@@ -92,13 +92,15 @@ public class PSO extends Algorithm implements Cloneable {
 
         for (int step = 1; step <= this.getStepsCount(); step++) {
             // update positions
-            for (Particle p : this.particles) {
+            for (AbsAgent agent : getFirstAgents()) {
+                Particle p = (Particle)agent;
                 p.updatePbest(this.objectiveFunction, this.isGlobalMinima.isSet());
                 this.updateGBest(p.getPBest(), this.getGBest());
             }
 
             // update velocity factor
-            for (Particle p : this.particles) {
+            for (AbsAgent agent : getFirstAgents()) {
+                Particle p = (Particle)agent;
                 Vector v = p.updateVelocity(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
                 if(Validator.validateBestValue(
                         objectiveFunction.setParameters(v.getPositionIndexes()).call(),
@@ -138,8 +140,8 @@ public class PSO extends Algorithm implements Cloneable {
             Vector vc = getRandomPosition(Randoms.getRandomVector(numberOfDimensions, this.minBoundary, this.maxBoundary));
             p.setPosition(vc);
             p.setPBest(vc);
-            this.particles[i] = p;
-            this.updateGBest(this.particles[i].getPBest(), this.getGBest());
+            getFirstAgents().set(i, p);
+            this.updateGBest(((Particle)getFirstAgents().get(i)).getPBest(), this.getGBest());
         }
     }
 
@@ -194,7 +196,7 @@ public class PSO extends Algorithm implements Cloneable {
     }
 
     @Override
-    public Algorithm clone() throws CloneNotSupportedException {
+    public SIAlgorithm clone() throws CloneNotSupportedException {
         return new PSO(objectiveFunction, particleCount,
                 numberOfDimensions,
                 getStepsCount(),
@@ -205,10 +207,5 @@ public class PSO extends Algorithm implements Cloneable {
                 minBoundary,
                 maxBoundary,
                 isGlobalMinima.isSet());
-    }
-
-    @Override
-    public List<Agent> getAgents() {
-        return Arrays.asList(particles);
     }
 }

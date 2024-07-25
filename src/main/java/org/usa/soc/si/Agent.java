@@ -1,12 +1,11 @@
 package org.usa.soc.si;
 
 import examples.si.algo.alo.Ant;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Vector;
 
-public class Agent {
-    public Vector position;
-    public double[] minBoundary, maxBoundary;
-    public int numberOfDimensions;
+public abstract class Agent extends AbsAgent {
+
     public double fitnessValue;
 
     public Agent(double[] minBoundary, double[] maxBoundary, int numberOfDimensions, Vector position) {
@@ -21,14 +20,6 @@ public class Agent {
     @Override
     public Agent clone() throws CloneNotSupportedException {
         return (Agent) super.clone();
-    }
-
-    public Vector getPosition() {
-        return position.getClonedVector();
-    }
-
-    public void setPosition(Vector position) {
-        this.position.setVector(position);
     }
 
     public double getFitnessValue() {

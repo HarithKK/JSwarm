@@ -2,7 +2,7 @@ package MBO;
 
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.*;
-import org.usa.soc.si.Algorithm;
+import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.mbo.MBO;
 import org.usa.soc.util.Mathamatics;
@@ -12,11 +12,11 @@ import utils.Logger;
 public class TestMBO {
 
     private static final int LIMIT = 15;
-    private Algorithm algo;
+    private SIAlgorithm algo;
 
     private static final double PRECISION_VAL  = 100;
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn){
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn){
         return new MBO(
                 fn,
                 500,
@@ -36,7 +36,7 @@ public class TestMBO {
         );
     }
 
-    private Algorithm getAlgorithm(ObjectiveFunction fn, int i){
+    private SIAlgorithm getAlgorithm(ObjectiveFunction fn, int i){
         return new MBO(
                 fn,
                 500,
@@ -56,7 +56,7 @@ public class TestMBO {
         );
     }
 
-    public void evaluate(Algorithm algo, double best, double[] variables, int D, double variance){
+    public void evaluate(SIAlgorithm algo, double best, double[] variables, int D, double variance){
         AssertUtil.evaluate(
                 algo.getBestDoubleValue(),
                 best,
@@ -76,7 +76,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -92,7 +92,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -108,7 +108,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -126,7 +126,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -143,7 +143,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -161,7 +161,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -179,7 +179,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -196,7 +196,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -214,7 +214,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -231,7 +231,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -249,7 +249,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -266,7 +266,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -284,7 +284,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -302,7 +302,7 @@ public class TestMBO {
         algo = getAlgorithm(fn, 2000);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -320,7 +320,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -338,7 +338,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -356,7 +356,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -373,7 +373,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -391,7 +391,7 @@ public class TestMBO {
         algo = getAlgorithm(fn);
         algo.initialize();
         try {
-            algo.runOptimizer();
+            algo.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
