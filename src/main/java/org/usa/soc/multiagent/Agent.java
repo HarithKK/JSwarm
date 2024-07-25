@@ -25,6 +25,7 @@ public abstract class Agent extends AbsAgent {
             this.minBoundary = new double[]{m.xMin, m.yMin};
             this.maxBoundary = new double[]{m.xMax, m.yMax};
             setMargines(m);
+            this.numberOfDimensions = 2;
         }
         randPosition();
         this.updatePosition(x, y);

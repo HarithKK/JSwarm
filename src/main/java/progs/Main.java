@@ -223,8 +223,7 @@ public class Main {
         pnlRight.add(new XChartPanel(pltGradiantDecent.getChart()));
 
         functionChartPlotter.setAction(new EmptyAction() {
-
-
+            
             @Override
             public void performAction(int step, double... values) {
                 stepCount = step;

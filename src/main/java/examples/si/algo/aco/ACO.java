@@ -1,5 +1,6 @@
 package examples.si.algo.aco;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -95,7 +96,8 @@ public class ACO extends SIAlgorithm {
                 // generate dx
                 Vector dx = Randoms.getRandomVector(this.numberOfDimensions, -(this.alpha), this.alpha);
 
-                for(Ant a: (Ant[]) getFirstAgents().toArray()){
+                for(AbsAgent agent: getFirstAgents()){
+                    Ant a = (Ant)agent;
                     a.setPosition(getPositionVector(a, dx));
                     a.updatePBest(this.objectiveFunction, this.isGlobalMinima.isSet());
 
@@ -128,7 +130,7 @@ public class ACO extends SIAlgorithm {
 
         for(int i=0;i<this.numberOfAnts; i++){
             Ant ant = new Ant(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
-            getFirstAgents().set(i, ant);
+            getFirstAgents().add(ant);
             this.updateBest(ant);
         }
     }

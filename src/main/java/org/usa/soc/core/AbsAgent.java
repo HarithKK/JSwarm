@@ -12,7 +12,14 @@ public abstract class AbsAgent implements Cloneable {
         return position;
     }
 
-    public void setPosition(Vector p) { position.setVector(p);}
+    public void setPosition(Vector p) {
+        if(position == null){
+            position = p;
+        }else{
+            position.setVector(p);
+        }
+
+    }
 
     public void randPosition(){ position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary); }
 }

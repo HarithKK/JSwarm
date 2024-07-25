@@ -118,7 +118,7 @@ public class FA extends SIAlgorithm {
             Fly d = new Fly(minBoundary, maxBoundary, numberOfDimensions);
             d.setIntensity(objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call());
             updateGBest(d);
-            getFirstAgents().set(i, d);
+            getFirstAgents().add(d);
         }
     }
 }

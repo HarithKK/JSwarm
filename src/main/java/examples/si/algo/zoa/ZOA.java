@@ -1,5 +1,6 @@
 package examples.si.algo.zoa;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -46,7 +47,8 @@ public class ZOA extends SIAlgorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                for(Zebra zebra: (Zebra[]) getFirstAgents().toArray()){
+                for(AbsAgent agent: getFirstAgents()){
+                    Zebra zebra = (Zebra) agent;
                     // phase 1
                     long I = Math.round(1 + Randoms.rand(0,1));
                     Vector newX = pioneerZebra.getPosition()
@@ -71,8 +73,8 @@ public class ZOA extends SIAlgorithm {
 
                 }
 
-                for(Zebra zebra: (Zebra[]) getFirstAgents().toArray()){
-                    updateGbest(zebra);
+                for(AbsAgent zebra: getFirstAgents()){
+                    updateGbest((Zebra)zebra);
                 }
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
@@ -91,11 +93,11 @@ public class ZOA extends SIAlgorithm {
         for(int i=0; i<populationSize; i++){
             Zebra zebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
             zebra.setFitnessValue(objectiveFunction.setParameters(zebra.getPosition().getPositionIndexes()).call());
-            getFirstAgents().set(i,zebra);
+            getFirstAgents().add(zebra);
         }
 
-        for(Zebra zebra: (Zebra[]) getFirstAgents().toArray()){
-            updateGbest(zebra);
+        for(AbsAgent zebra: getFirstAgents()){
+            updateGbest((Zebra) zebra);
         }
 
         attackedZebra = (Zebra) getFirstAgents().get(Randoms.rand(populationSize-1));

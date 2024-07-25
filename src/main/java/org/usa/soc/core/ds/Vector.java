@@ -26,6 +26,8 @@ public class Vector {
     }
 
     public void setVector(Vector v){
+        if(v == null)
+            return;
         if(v.getNumberOfDimensions() != this.getNumberOfDimensions()){
             throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
         }

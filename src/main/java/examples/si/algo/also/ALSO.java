@@ -1,5 +1,6 @@
 package examples.si.algo.also;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -64,7 +65,8 @@ public class ALSO extends SIAlgorithm {
 
         for (int step = 0; step < stepsCount; step++) {
 
-            for(Lizard lizard: (Lizard[]) getFirstAgents().toArray()){
+            for(AbsAgent agent: getFirstAgents()){
+                Lizard lizard = (Lizard)agent;
                 lizard.generateNewTorque(globalBest, globalWorst);
 
                 lizard.calculateValues(totalMass, totalLength);
@@ -94,8 +96,8 @@ public class ALSO extends SIAlgorithm {
                 }
             }
 
-            for(Lizard lizard: (Lizard[]) getFirstAgents().toArray()){
-                updateGBest(lizard);
+            for(AbsAgent agent: getFirstAgents()){
+                updateGBest((Lizard) agent);
             }
 
             if (this.stepAction != null)
@@ -115,11 +117,11 @@ public class ALSO extends SIAlgorithm {
             lizard.setFitnessValue(objectiveFunction.setParameters(lizard.getPosition().getPositionIndexes()).call());
             lizard.setLbest(lizard.getPosition());
             lizard.setLbestValue(lizard.getFitnessValue());
-            getFirstAgents().set(i, lizard);
+            getFirstAgents().add(lizard);
         }
 
-        for(Lizard lizard:  (Lizard[]) getFirstAgents().toArray()){
-            updateGBest(lizard);
+        for(AbsAgent agent: getFirstAgents()){
+            updateGBest((Lizard) agent);
         }
     }
 

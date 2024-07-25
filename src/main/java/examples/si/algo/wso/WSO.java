@@ -82,7 +82,7 @@ public class WSO extends SIAlgorithm {
         this.setInitialized(true);
         for(int i=0; i< this.numberOfWasps;i++){
             Wasp wasp = createNewRandomWasp();
-            getFirstAgents().set(i, wasp);
+            getFirstAgents().add(wasp);
         }
     }
 

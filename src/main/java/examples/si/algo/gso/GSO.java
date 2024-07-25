@@ -1,5 +1,6 @@
 package examples.si.algo.gso;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -83,7 +84,8 @@ public class GSO extends SIAlgorithm {
                 ithWarm.setR(calculateNewR(ithWarm, nWarms.size()));
             }
             // update luciferin
-            for(GlowWorm worm: (GlowWorm[]) getFirstAgents().toArray()){
+            for(AbsAgent agent: getFirstAgents()){
+                GlowWorm worm = (GlowWorm)agent;
                 worm.updateLuciferin(ldc, lac, objectiveFunction);
                 this.updateGBest(worm);
             }
@@ -154,7 +156,7 @@ public class GSO extends SIAlgorithm {
         for(int i=0; i< numberOfGlowWorms; i++){
             GlowWorm g = new GlowWorm(this.l0, this.r0, this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             this.updateGBest(g);
-            getFirstAgents().set(i, g);
+            getFirstAgents().add( g);
         }
     }
 

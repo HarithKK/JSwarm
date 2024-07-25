@@ -1,5 +1,6 @@
 package examples.si.algo.avoa;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -65,7 +66,8 @@ public class AVOA extends SIAlgorithm {
                 Vulture[] firstBestVultures = findBestVultures();
                 double F = calculateF(step+1);
 
-                for (Vulture vulture: (Vulture[]) getFirstAgents().toArray()) {
+                for(AbsAgent agent: getFirstAgents()){
+                    Vulture vulture = (Vulture)agent;
                     Vulture randomVulture = randomSelectVulture(firstBestVultures[0], firstBestVultures[1]);
                     if(vulture != randomVulture){
                         Vector newPosition = null;
@@ -137,8 +139,8 @@ public class AVOA extends SIAlgorithm {
                     }
                 }
 
-                for(Vulture vulture: (Vulture[]) getFirstAgents().toArray()){
-                    updateGBest(vulture);
+                for(AbsAgent agent: getFirstAgents()){
+                    updateGBest((Vulture)agent);
                 }
 
                 if(this.stepAction != null)
@@ -166,10 +168,9 @@ public class AVOA extends SIAlgorithm {
 
     private Vulture[] findBestVultures(){
 
-        List<Vulture> sortedVultures = Arrays.asList((Vulture[]) getFirstAgents().toArray());
         sort();
 
-        return new Vulture[]{sortedVultures.get(0), sortedVultures.get(1)};
+        return new Vulture[]{(Vulture) getFirstAgents().get(0), (Vulture) getFirstAgents().get(1)};
     }
 
     public double calculateF(double term){
@@ -192,7 +193,7 @@ public class AVOA extends SIAlgorithm {
         for(int i=0; i<populationSize;i++){
             Vulture vulture = new Vulture(numberOfDimensions, minBoundary, maxBoundary);
             vulture.setFitnessValue(objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call());
-            getFirstAgents().set(i, vulture);
+            getFirstAgents().add(vulture);
         }
     }
 }

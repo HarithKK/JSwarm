@@ -110,7 +110,7 @@ public class TSA extends SIAlgorithm {
         for(int i=0; i<populationSize; i++){
             Tunicate tunicate = new Tunicate(numberOfDimensions, minBoundary, maxBoundary);
             tunicate.setFitnessValue(objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call());
-            getFirstAgents().set(i, tunicate);
+            getFirstAgents().add( tunicate);
             updateGBest(tunicate);
         }
 

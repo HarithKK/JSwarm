@@ -1,5 +1,6 @@
 package examples.si.algo.goa;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -96,8 +97,8 @@ public class GOA extends SIAlgorithm {
                     ((GrassHopper)getFirstAgents().get(i)).setFitnessValue(fitnessValue);
                 }
 
-                for(GrassHopper g: (GrassHopper[]) getFirstAgents().toArray())
-                    updateGbest(g);
+                for(AbsAgent g: getFirstAgents())
+                    updateGbest((GrassHopper) g);
 
                 if(this.stepAction != null)
                     this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
@@ -122,7 +123,7 @@ public class GOA extends SIAlgorithm {
             GrassHopper grassHopper = new GrassHopper(numberOfDimensions, minBoundary, maxBoundary);
             grassHopper.setFitnessValue(objectiveFunction.setParameters(grassHopper.getPosition().getPositionIndexes()).call());
 
-            getFirstAgents().set(i,grassHopper);
+            getFirstAgents().add(grassHopper);
 
             updateGbest(grassHopper);
         }

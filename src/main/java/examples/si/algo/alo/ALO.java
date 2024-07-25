@@ -1,6 +1,7 @@
 package examples.si.algo.alo;
 
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
@@ -8,6 +9,7 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,8 +41,8 @@ public class ALO extends SIAlgorithm {
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
 
         try{
-            addAgents("ants", Ant.class, numberOfAnts);
-            addAgents("antLions", Ant.class, numberOfAnts);
+            addAgents("ants", Markers.CIRCLE, Color.BLUE);
+            addAgents("antLions", Markers.CROSS, Color.RED);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -179,14 +181,14 @@ public class ALO extends SIAlgorithm {
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant ant = new Ant(numberOfDimensions, minBoundary, maxBoundary);
             ant.setFitnessValue(objectiveFunction.setParameters(ant.getPosition().getPositionIndexes()).call());
-            agents.get("antLions").getAgents().set(i, ant);
+            agents.get("ants").getAgents().add(ant);
         }
 
         Ant elite = new Ant(numberOfDimensions, minBoundary, maxBoundary);
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant antLion = new Ant(numberOfDimensions, minBoundary, maxBoundary);
             antLion.setFitnessValue(objectiveFunction.setParameters(antLion.getPosition().getPositionIndexes()).call());
-            agents.get("antLions").getAgents().set(i, antLion);
+            agents.get("antLions").getAgents().add(antLion);
             this.maxFs = Math.max(this.maxFs, antLion.getFitnessValue());
             this.minFs = Math.min(this.minFs, antLion.getFitnessValue());
 

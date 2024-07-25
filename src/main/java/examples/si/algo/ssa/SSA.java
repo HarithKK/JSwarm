@@ -1,5 +1,6 @@
 package examples.si.algo.ssa;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -126,9 +127,9 @@ public class SSA extends SIAlgorithm {
                 double smin = 0.00001 / Mathamatics.pow(365, ((step+1) * 2.5 / stepsCount));
 
                 if(sc < smin){
-                    for (Squirrel s: (Squirrel[]) getFirstAgents().toArray()) {
+                    for (AbsAgent s: getFirstAgents()) {
                         s.setPosition(getLevyVector());
-                        s.setFitnessValue(objectiveFunction.setParameters(s.getPosition().getPositionIndexes()).call());
+                        ((Squirrel)s).setFitnessValue(objectiveFunction.setParameters(s.getPosition().getPositionIndexes()).call());
                     }
                 }
 

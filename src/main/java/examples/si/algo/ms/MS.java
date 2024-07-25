@@ -81,7 +81,7 @@ public class MS extends SIAlgorithm {
                     this.maxHeightOfTheTree,
                     this.objectiveFunction
             );
-            getAgents("Monkeys").getAgents().set(i, m);
+            getAgents("Monkeys").getAgents().add(m);
             this.updateGBest(m);
         }
     }

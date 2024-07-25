@@ -1,5 +1,6 @@
 package examples.si.algo.gwo;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -46,7 +47,8 @@ public class GWO extends SIAlgorithm {
         this.nanoDuration = System.nanoTime();
         for(int step = 0; step< stepsCount; step++){
             double aDecrement = 2*(1.0 - (step/ stepsCount));
-            for(Wolf w: (Wolf[]) getFirstAgents().toArray()){
+            for(AbsAgent agent : getFirstAgents()){
+                Wolf w = (Wolf)agent;
                 Vector X1 = getUpdatedPositionVector(w, alpha, calcA(), calcC());
                 Vector X2 = getUpdatedPositionVector(w, beta,  calcA(), calcC());
                 Vector X3 = getUpdatedPositionVector(w, delta,  calcA(), calcC());

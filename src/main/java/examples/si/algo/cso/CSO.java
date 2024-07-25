@@ -1,5 +1,6 @@
 package examples.si.algo.cso;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Randoms;
@@ -61,7 +62,8 @@ public class CSO extends SIAlgorithm {
 
         for(int i = 0; i< this.getStepsCount(); i++){
 
-            for (Cat cat: (Cat[]) getFirstAgents().toArray()) {
+            for(AbsAgent agent : getFirstAgents()) {
+                Cat cat = (Cat) agent;
                 if(cat.isSeeker()){
                     cat.seek(objectiveFunction, isMinima());
                 }else{
@@ -94,12 +96,12 @@ public class CSO extends SIAlgorithm {
 
         int i = 0;
         while(i< seekersCount){
-            getFirstAgents().set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.SEEKER, this.smp, this.cdc, this.srd, this.spc));
+            getFirstAgents().add(new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.SEEKER, this.smp, this.cdc, this.srd, this.spc));
             this.updateBestCat((Cat) getFirstAgents().get(i));
             i++;
         }
         while(i< this.numberOfCats){
-            getFirstAgents().set(i, new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.TRACER, this.smp, this.cdc, this.srd, this.spc));
+            getFirstAgents().add(new Cat(i+1,this.minBoundary, this.maxBoundary, this.numberOfDimensions, Mode.TRACER, this.smp, this.cdc, this.srd, this.spc));
             this.updateBestCat((Cat) getFirstAgents().get(i));
             i++;
         }

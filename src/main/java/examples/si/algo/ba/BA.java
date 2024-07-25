@@ -1,5 +1,7 @@
 package examples.si.algo.ba;
 
+import org.apache.commons.math3.analysis.function.Abs;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -53,7 +55,8 @@ public class BA extends SIAlgorithm {
         for(int step = 0; step< getStepsCount(); step++){
 
             double at =0;
-            for(Bat b : (Bat[]) getFirstAgents().toArray()){
+            for(AbsAgent agent : getFirstAgents()){
+                Bat b = (Bat)agent;
                 b.updatePosition(this.gBest);
                 Vector newSolution = b.generateNewSolution(Aavg);
 
@@ -66,8 +69,8 @@ public class BA extends SIAlgorithm {
             }
             Aavg = at /(double)numberOfBats;
 
-            for(Bat b: (Bat[]) getFirstAgents().toArray()){
-                updateGBest(b);
+            for(AbsAgent agent : getFirstAgents()){
+                updateGBest((Bat) agent);
             }
 
             if(this.stepAction != null)
@@ -97,7 +100,7 @@ public class BA extends SIAlgorithm {
             b.updatePulseRates();
             b.updateLoudness();
             at+=b.getA();
-            getFirstAgents().set(i, b);
+            getFirstAgents().add(b);
 
             updateGBest(b);
         }

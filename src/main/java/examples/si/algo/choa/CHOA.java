@@ -1,5 +1,6 @@
 package examples.si.algo.choa;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
@@ -56,7 +57,7 @@ public class CHOA extends SIAlgorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                agents.get(0).sort(new AgentComparator());
+                sort();
                 f = fUpper*(1 - ((step+1)/ stepsCount));
                 attacker = (Chimp) getFirstAgents().get(populationSize-1);
                 attacker.updateFMAC(f, chaoticType);
@@ -67,12 +68,14 @@ public class CHOA extends SIAlgorithm {
                 divider = (Chimp)  getFirstAgents().get(populationSize-4);
                 divider.updateFMAC(f, chaoticType);
 
-                for(Chimp chimp: (Chimp[]) getFirstAgents().toArray()){
+                for(AbsAgent agent : getFirstAgents()){
+                    Chimp chimp = (Chimp)agent;
                     chimp.updateFMAC(f, chaoticType);
                     chimp.updateDValues(attacker, chaser, barrier, divider);
                 }
 
-                for(Chimp chimp: (Chimp[]) getFirstAgents().toArray()){
+                for(AbsAgent agent : getFirstAgents()){
+                    Chimp chimp = (Chimp)agent;
                     Vector newX;
                     double u = Randoms.rand(0,1);
                     if(u < 0.5){
@@ -99,8 +102,8 @@ public class CHOA extends SIAlgorithm {
                     chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
                 }
 
-                for(Chimp chimp: (Chimp[]) getFirstAgents().toArray()){
-                    updateGBest(chimp);
+                for(AbsAgent agent : getFirstAgents()){
+                    updateGBest((Chimp) agent);
                 }
 
                 if(this.stepAction != null)

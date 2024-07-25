@@ -1,5 +1,6 @@
 package examples.si.algo.jso;
 
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -50,8 +51,8 @@ public class JSO extends SIAlgorithm {
         try{
             for(int step = 0; step< getStepsCount(); step++){
 
-                for(Jellyfish jellyfish: (Jellyfish[]) getFirstAgents().toArray()){
-
+                for(AbsAgent agent: getFirstAgents()){
+                    Jellyfish jellyfish = (Jellyfish) agent;
                     double ct = Math.abs((1 - ((step+1)/stepsCount)) * (2*Randoms.rand(0,1)-1));
                     Vector mu = getMeanLocation();
                     Vector newX;
@@ -109,8 +110,8 @@ public class JSO extends SIAlgorithm {
 
     private Vector getMeanLocation() {
         Vector sum = new Vector(numberOfDimensions).resetAllValues(0.0);
-        for(Jellyfish jellyfish: (Jellyfish[]) getFirstAgents().toArray()){
-            sum.operate(Vector.OPERATOR.ADD, jellyfish.getPosition());
+        for(AbsAgent agent : getFirstAgents()){
+            sum.operate(Vector.OPERATOR.ADD, agent.getPosition());
         }
         return sum.operate(Vector.OPERATOR.DIV, (double)populationSize);
     }
@@ -124,11 +125,11 @@ public class JSO extends SIAlgorithm {
             Jellyfish jellyfish = new Jellyfish(numberOfDimensions, minBoundary, maxBoundary);
             jellyfish.setFitnessValue(objectiveFunction.setParameters(jellyfish.getPosition().getPositionIndexes()).call());
 
-            getFirstAgents().set(i,jellyfish);
+            getFirstAgents().add(jellyfish);
         }
 
-        for(Jellyfish jellyfish: (Jellyfish[]) getFirstAgents().toArray()){
-            updateGbest(jellyfish);
+        for(AbsAgent jellyfish: getFirstAgents()){
+            updateGbest((Jellyfish) jellyfish);
         }
     }
 

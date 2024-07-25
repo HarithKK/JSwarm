@@ -130,34 +130,34 @@ public class FunctionChartPlotter {
         SIAlgorithm.setInterval(interval);
         int step =0;
         double fraction = SIAlgorithm.getStepsCount()/100;
-//        SIAlgorithm.addStepAction(new StepAction() {
-//
-//            @Override
-//            public void performAction(Vector best, Double bestValue, int step) {
-//
-//                List d = SIAlgorithm.getAgents();
-//                xdata = d.get(0);
-//                ydata = d.get(1);
-//
-//                if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
-//                    if(bestIndex < xbest.length-1){
-//                        bestIndex++;
-//                    }
-//                    xbest[bestIndex] = best.getValue(0);
-//                    ybest[bestIndex] = best.getValue(1);
-//                }
-//
-//                chart.updateXYSeries("Agents", xdata, ydata, null);
-//                chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
-//
-//                if((step % fraction) == 0){
-//                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
-//                }
-//                if(action != null)
-//                    action.performAction(step, step/fraction, bestValue);
-//                step = step +1;
-//            }
-//        });
+        SIAlgorithm.addStepAction(new StepAction() {
+
+            @Override
+            public void performAction(Vector best, Double bestValue, int step) {
+
+                double [][]d = SIAlgorithm.getDataPoints();
+                xdata = d[0];
+                ydata = d[1];
+
+                if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
+                    if(bestIndex < xbest.length-1){
+                        bestIndex++;
+                    }
+                    xbest[bestIndex] = best.getValue(0);
+                    ybest[bestIndex] = best.getValue(1);
+                }
+
+                chart.updateXYSeries("Agents", xdata, ydata, null);
+                chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
+
+                if((step % fraction) == 0){
+                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
+                }
+                if(action != null)
+                    action.performAction(step, step/fraction, bestValue);
+                step = step +1;
+            }
+        });
         try {
             SIAlgorithm.run();
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package examples.si.algo.mfa;
 
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
@@ -9,6 +10,7 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +40,8 @@ public class MFA extends SIAlgorithm {
         this.gBest = isGlobalMinima.isSet() ? new Vector(numberOfDimensions).setMaxVector() : new Vector(numberOfDimensions).setMinVector();
 
         try{
-            addAgents("moths", Moth.class, numberOfMoths);
-            addAgents("flames", Flame.class, numberOfMoths);
+            addAgents("moths", Markers.CIRCLE, Color.BLUE);
+            addAgents("flames", Markers.CIRCLE, Color.RED);
         }catch (Exception e){
             e.printStackTrace();
         }

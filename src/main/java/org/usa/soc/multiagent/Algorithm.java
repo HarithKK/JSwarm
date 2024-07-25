@@ -156,12 +156,21 @@ public abstract class Algorithm{
         return agentGroup;
     }
 
+    protected AgentGroup addAgents(String key, Marker marker, Color color) throws Exception{
+        AgentGroup agentGroup = new AgentGroup(key);
+        agentGroup.setMarker(marker);
+        agentGroup.setMarkerColor(color);
+        agentGroup.setAgents(new ArrayList<>());
+        this.agents.put(key, agentGroup);
+        return agentGroup;
+    }
+
     private List<AbsAgent> createAgents(int count, Class<?> agent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         List<AbsAgent> list = new ArrayList<>();
         for(int i=0; i<count;i++){
-            Agent inst = (Agent) agent.getDeclaredConstructor().newInstance();
-            inst.initPosition(margins);
-            list.add(inst);
+            var inst = agent.getDeclaredConstructor().newInstance();
+            ((Agent)inst).initPosition(margins);
+            list.add((AbsAgent)inst);
         }
         return list;
     }

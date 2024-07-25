@@ -47,7 +47,7 @@ public class TSOA extends SIAlgorithm {
         this.c1 = 10;
         this.c2 = 10;
 
-        setFirstAgents("trees", new ArrayList<>(populationSize));
+        setFirstAgents("trees", new ArrayList<>());
     }
 
     @Override
@@ -59,20 +59,20 @@ public class TSOA extends SIAlgorithm {
 
         double distanceDecrement = distanceFactor/stepsCount;
 
-        int deligator = (int)(agents.size() * delegator_split);
+        int deligator = (int)(getFirstAgents().size() * delegator_split);
         int totalSeedsCount = deligator*seedsCount;
 
         for(int step = 0; step< getStepsCount(); step++){
             Vector predicted = new Vector(this.numberOfDimensions);
 
-            for(int i =0; i <this.agents.size(); i++){
+            for(int i =0; i < getFirstAgents().size(); i++){
                 Tree t = (Tree) getFirstAgents().get(i);
                 predicted = predicted.operate(Vector.OPERATOR.ADD, t.getPosition().operate(Vector.OPERATOR.MULP, t.getLambda()));
             }
 
             double totalLabmda = 0;
             double totalDistance = 0;
-            for(int i =0; i <this.agents.size(); i++){
+            for(int i =0; i < getFirstAgents().size(); i++){
                 Tree t = (Tree) getFirstAgents().get(i);
                 totalLabmda += t.getLambda();
                 totalDistance += Math.pow(t.getCalculatedDistance(predicted), -p);
@@ -120,7 +120,7 @@ public class TSOA extends SIAlgorithm {
             updateGBest((Tree) getFirstAgents().get(0));
 
             for(int i = 0; i < totalSeedsCount; i++){
-                agents.remove(agents.size()-1);
+                getFirstAgents().remove(getFirstAgents().size()-1);
             }
             if(this.stepAction != null)
                 this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);

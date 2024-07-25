@@ -1,5 +1,7 @@
 package examples.si.algo.abc;
 
+import org.apache.commons.math3.analysis.function.Abs;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -52,8 +54,8 @@ public class ABC extends SIAlgorithm {
             runOnlookerBeePhase(totalFM);
             runScoutBeePhase();
 
-            for(FoodSource f: (FoodSource[]) getFirstAgents().toArray()){
-                updateGbest(f);
+            for(AbsAgent f: getFirstAgents()){
+                updateGbest((FoodSource) f);
             }
 
             if(this.stepAction != null)
@@ -64,7 +66,8 @@ public class ABC extends SIAlgorithm {
     }
 
     private void runScoutBeePhase() {
-        for(FoodSource f: (FoodSource[]) getFirstAgents().toArray()){
+        for(AbsAgent agent: getFirstAgents()){
+            FoodSource f = (FoodSource) agent;
             if(f.getTrials() >= maxTrials){
                 f.reInitiate();
                 f.setFm(f.calculateFitness(objectiveFunction, f.getPosition()));
@@ -134,7 +137,7 @@ public class ABC extends SIAlgorithm {
             f.setFm(f.calculateFitness(objectiveFunction, f.getPosition()));
             f.setCounter(0);
             updateGbest(f);
-            getFirstAgents().set(i, f);
+            getFirstAgents().add(f);
         }
     }
 }

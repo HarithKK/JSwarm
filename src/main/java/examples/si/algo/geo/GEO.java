@@ -1,5 +1,7 @@
 package examples.si.algo.geo;
 
+import examples.multiagent.common.E;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -58,7 +60,8 @@ public class GEO extends SIAlgorithm {
             pa = pa0 + (step/ stepsCount)*(paT - pa0);
             pc = pc0 - (step/ stepsCount)*(pcT - pc0);
 
-            for(Eagle eagle: (Eagle[]) getFirstAgents().toArray()){
+            for(AbsAgent agent : getFirstAgents()){
+                Eagle eagle = (Eagle)agent;
                 // Random prey location
                 Eagle prey = (Eagle) getFirstAgents().get(Randoms.rand(numberOfEagles));
 
@@ -86,7 +89,8 @@ public class GEO extends SIAlgorithm {
                 }
             }
 
-            for(Eagle eagle: (Eagle[]) getFirstAgents().toArray()){
+            for(AbsAgent agent : getFirstAgents()){
+                Eagle eagle = (Eagle) agent;
                 double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
                 if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima.isSet())){
                     this.gBest.setVector(eagle.getLocalBestPositon());
@@ -109,10 +113,11 @@ public class GEO extends SIAlgorithm {
             Eagle eagle = new Eagle(numberOfDimensions, minBoundary, maxBoundary);
             eagle.setFitnessValue(objectiveFunction.setParameters(eagle.getPosition().getPositionIndexes()).call());
             eagle.setLocalBestFitnessValue(objectiveFunction.setParameters(eagle.getLocalBestPositon().getPositionIndexes()).call());
-            getFirstAgents().set(i, eagle);
+            getFirstAgents().add(eagle);
         }
 
-        for(Eagle eagle: (Eagle[]) getFirstAgents().toArray()){
+        for(AbsAgent agent : getFirstAgents()){
+            Eagle eagle = (Eagle) agent;
             double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
             if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima.isSet())){
                 this.gBest.setVector(eagle.getLocalBestPositon());

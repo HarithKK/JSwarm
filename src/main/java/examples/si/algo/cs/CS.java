@@ -110,7 +110,7 @@ public class CS extends SIAlgorithm {
         }
 
         for(int i=0; i< this.numberOfNests; i++){
-            getFirstAgents().set(i, new Nest(minBoundary, maxBoundary, numberOfDimensions));
+            getFirstAgents().add(new Nest(minBoundary, maxBoundary, numberOfDimensions));
         }
     }
 }

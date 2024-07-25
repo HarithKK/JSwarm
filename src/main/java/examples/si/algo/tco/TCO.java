@@ -128,7 +128,7 @@ public class TCO extends SIAlgorithm {
         setInitialized(true);
 
         for(int i=0 ;i< numberOfTermites; i++){
-            getFirstAgents().set(i, new Termite(minBoundary, maxBoundary, numberOfDimensions, p0));
+            getFirstAgents().add(new Termite(minBoundary, maxBoundary, numberOfDimensions, p0));
         }
     }
 }

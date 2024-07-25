@@ -2,6 +2,7 @@ package examples.si.algo.mbo;
 
 import org.apache.commons.math3.analysis.function.Abs;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
@@ -9,6 +10,7 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -62,10 +64,10 @@ public class MBO extends SIAlgorithm {
         this.numberOfDrones = numberOfDrones;
 
         try{
-            addAgents("queens", Queen.class, numberOfQueens);
-            addAgents("workers", Worker.class, numberOfWorkers);
-            addAgents("drones", Drone.class, numberOfDrones);
-            addAgents("broods", Brood.class, 0);
+            addAgents("queens", Markers.CIRCLE, Color.RED);
+            addAgents("workers", Markers.CIRCLE, Color.GREEN);
+            addAgents("drones", Markers.CIRCLE, Color.BLUE);
+            addAgents("broods", Markers.DIAMOND, Color.ORANGE);
         }catch (Exception e){
             e.printStackTrace();
         }
