@@ -54,20 +54,9 @@ public class GOA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Grass Hoppers Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         try{
 
-            for(int step = 0; step< getStepsCount(); step++){
-
-                double c = cmax - ((step+1)*(cmax - cmin)/stepsCount);
+                double c = cmax - ((currentStep+1)*(cmax - cmin)/stepsCount);
                 Vector dc = vectordiff.operate(Vector.OPERATOR.MULP, c);
 
                 for(int i=0 ;i< populationSize; i++){
@@ -99,15 +88,9 @@ public class GOA extends SIAlgorithm {
 
                 for(AbsAgent g: getFirstAgents())
                     updateGbest((GrassHopper) g);
-
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(step);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private double calculateS(double distance) {

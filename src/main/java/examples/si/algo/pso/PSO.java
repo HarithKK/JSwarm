@@ -82,15 +82,6 @@ public class PSO extends SIAlgorithm implements Cloneable {
 
     @Override
     public void step() throws Exception {
-
-        if (!this.isInitialized()) {
-            throw new RuntimeException("Particles Are Not Initialized");
-        }
-
-        this.nanoDuration = System.nanoTime();
-        // run the steps
-
-        for (int step = 1; step <= this.getStepsCount(); step++) {
             // update positions
             for (AbsAgent agent : getFirstAgents()) {
                 Particle p = (Particle)agent;
@@ -101,7 +92,7 @@ public class PSO extends SIAlgorithm implements Cloneable {
             // update velocity factor
             for (AbsAgent agent : getFirstAgents()) {
                 Particle p = (Particle)agent;
-                Vector v = p.updateVelocity(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, step));
+                Vector v = p.updateVelocity(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, (int) currentStep));
                 if(Validator.validateBestValue(
                         objectiveFunction.setParameters(v.getPositionIndexes()).call(),
                         objectiveFunction.setParameters(p.getPosition().getPositionIndexes()).call(),
@@ -110,12 +101,6 @@ public class PSO extends SIAlgorithm implements Cloneable {
                  p.setPosition(v);
                 }
             }
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private Double calculateW(Double wMax, Double wMin, int step) {

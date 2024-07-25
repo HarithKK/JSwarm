@@ -15,11 +15,11 @@ public class SeriesDataObject {
 
     public void addXY(int i, Vector v){
         this.x[i] = v.getValue(0);
-        int n = v.getNumberOfDimensions()-1;
-        for(int j=1; j< n ; j++){
-            this.y[i] += v.getValue(j);
+        double d = 0.0;
+        for(int j=1; j< v.getNumberOfDimensions() ; j++){
+            d += v.getValue(j);
         }
-        this.y[i] /= n;
+        this.y[i] = d / (v.getNumberOfDimensions()-1);
     }
 
     public double[] getX(){ return x; }

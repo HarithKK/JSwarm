@@ -55,13 +55,6 @@ public class CSO extends SIAlgorithm {
     @Override
     public void step() throws Exception{
 
-        if(!this.isInitialized()){
-            throw new RuntimeException("Cats Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-
-        for(int i = 0; i< this.getStepsCount(); i++){
-
             for(AbsAgent agent : getFirstAgents()) {
                 Cat cat = (Cat) agent;
                 if(cat.isSeeker()){
@@ -72,11 +65,6 @@ public class CSO extends SIAlgorithm {
                 cat.updateMode();
                 updateBestCat(cat);
             }
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            stepCompleted(i);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override

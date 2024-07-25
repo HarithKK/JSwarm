@@ -53,68 +53,57 @@ public class ALO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if (!this.isInitialized()) {
-            throw new RuntimeException("Ants Are Not Initialized");
+
+        double I = calculateI((int) currentStep, stepsCount);
+        for (AbsAgent a: agents.get("ants").getAgents()) {
+            int selectedAntLionIndex = getAntLionIndexFromRouletteWheel();
+
+            Vector minValuesVector = new Vector(numberOfDimensions).setMaxVector();
+            Vector maxValuesVector = new Vector(numberOfDimensions).setMinVector();
+
+            for (AbsAgent a1: agents.get("ants").getAgents()){
+                for(int i=0; i< a1.getPosition().getNumberOfDimensions();i++){
+                    double v = a1.getPosition().getValue(i);
+                    minValuesVector.setValue(Math.min(v, minValuesVector.getValue(i)), i);
+                    maxValuesVector.setValue(Math.max(v, maxValuesVector.getValue(i)), i);
+                }
+            }
+
+            Vector RA = getNewPosition(minValuesVector, maxValuesVector, agents.get("antLions").getAgents().get(selectedAntLionIndex).getPosition(), I,  (int)currentStep);
+            Vector RE = getNewPosition(minValuesVector, maxValuesVector, gBest, I, (int)currentStep);
+            Vector R = RA.operate(Vector.OPERATOR.ADD, RE).operate(Vector.OPERATOR.DIV, 2.0).fixVector(minBoundary, maxBoundary);
+
+            a.setPosition(R);
+            ((Agent)a).setFitnessValue(objectiveFunction.setParameters(a.getPosition().getPositionIndexes()).call());
+
         }
 
-        this.nanoDuration = System.nanoTime();
-
-        for (int step = 0; step < stepsCount; step++) {
-            double I = calculateI(step, stepsCount);
-            for (AbsAgent a: agents.get("ants").getAgents()) {
-                int selectedAntLionIndex = getAntLionIndexFromRouletteWheel();
-
-                Vector minValuesVector = new Vector(numberOfDimensions).setMaxVector();
-                Vector maxValuesVector = new Vector(numberOfDimensions).setMinVector();
-
-                for (AbsAgent a1: agents.get("ants").getAgents()){
-                    for(int i=0; i< a1.getPosition().getNumberOfDimensions();i++){
-                        double v = a1.getPosition().getValue(i);
-                        minValuesVector.setValue(Math.min(v, minValuesVector.getValue(i)), i);
-                        maxValuesVector.setValue(Math.max(v, maxValuesVector.getValue(i)), i);
-                    }
-                }
-
-                Vector RA = getNewPosition(minValuesVector, maxValuesVector, agents.get("antLions").getAgents().get(selectedAntLionIndex).getPosition(), I, step);
-                Vector RE = getNewPosition(minValuesVector, maxValuesVector, gBest, I, step);
-                Vector R = RA.operate(Vector.OPERATOR.ADD, RE).operate(Vector.OPERATOR.DIV, 2.0).fixVector(minBoundary, maxBoundary);
-
-                a.setPosition(R);
-                ((Agent)a).setFitnessValue(objectiveFunction.setParameters(a.getPosition().getPositionIndexes()).call());
-
-            }
-
-            for(int i=0; i<numberOfAnts; i++){
-                if(Validator.validateBestValue(
-                        ((Ant)agents.get("ants").getAgents().get(i)).getFitnessValue(),
-                        ((Ant)agents.get("antLions").getAgents().get(i)).getFitnessValue(), !isGlobalMinima.isSet())){
-                        agents.get("antLions").getAgents().set(i, ((Ant)agents.get("ants").getAgents().get(i)).cloneAnt());
-                }
-            }
-
-            Ant elite = (Ant)agents.get("antLions").getAgents().get(0);
-            for(int i=0; i<numberOfAnts; i++) {
-                Ant a = (Ant)agents.get("antLions").getAgents().get(i);
-                if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima.isSet())){
-                    elite = a.cloneAnt();
-                }else{
-                    agents.get("antLions").getAgents().set(i, elite.cloneAnt());
-                }
-            }
-
+        for(int i=0; i<numberOfAnts; i++){
             if(Validator.validateBestValue(
-                    objectiveFunction.setParameters(elite.getPosition().getPositionIndexes()).call(),
-                    objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call(),
-                    isGlobalMinima.isSet()
-            )){
-                this.gBest.setVector(elite.getPosition());
+                    ((Ant)agents.get("ants").getAgents().get(i)).getFitnessValue(),
+                    ((Ant)agents.get("antLions").getAgents().get(i)).getFitnessValue(), !isGlobalMinima.isSet())){
+                    agents.get("antLions").getAgents().set(i, ((Ant)agents.get("ants").getAgents().get(i)).cloneAnt());
             }
-
-            if (this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
         }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
+
+        Ant elite = (Ant)agents.get("antLions").getAgents().get(0);
+        for(int i=0; i<numberOfAnts; i++) {
+            Ant a = (Ant)agents.get("antLions").getAgents().get(i);
+            if(Validator.validateBestValue(a.getFitnessValue(), elite.getFitnessValue(), isGlobalMinima.isSet())){
+                elite = a.cloneAnt();
+            }else{
+                agents.get("antLions").getAgents().set(i, elite.cloneAnt());
+            }
+        }
+
+        if(Validator.validateBestValue(
+                objectiveFunction.setParameters(elite.getPosition().getPositionIndexes()).call(),
+                objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call(),
+                isGlobalMinima.isSet()
+        )){
+            this.gBest.setVector(elite.getPosition());
+        }
+
     }
 
     private Vector getNewPosition(Vector minValuesVector, Vector maxValuesVector, Vector currentVector, Double I, int step){

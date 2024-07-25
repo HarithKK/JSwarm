@@ -39,13 +39,8 @@ public class ZOA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Squirrels Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
 
         try{
-            for(int step = 0; step< getStepsCount(); step++){
 
                 for(AbsAgent agent: getFirstAgents()){
                     Zebra zebra = (Zebra) agent;
@@ -59,7 +54,7 @@ public class ZOA extends SIAlgorithm {
 
                     // phase 2
                     if(Randoms.rand(0,1) <= 0.5){
-                        double c = 0.01*(2*Randoms.rand(0,1) -1)*(1 - (step+1)/stepsCount);
+                        double c = 0.01*(2*Randoms.rand(0,1) -1)*(1 - (currentStep+1)/stepsCount);
                         Vector S1 = zebra.getPosition().operate(Vector.OPERATOR.MULP, (1+c));
                         zebra.updatePosition(objectiveFunction, S1, isGlobalMinima.isSet());
                         attackedZebra = zebra;
@@ -76,14 +71,9 @@ public class ZOA extends SIAlgorithm {
                 for(AbsAgent zebra: getFirstAgents()){
                     updateGbest((Zebra)zebra);
                 }
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(step);
-            }
-        }catch (Exception e){
+        }catch (Exception e) {
             e.printStackTrace();
         }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override

@@ -41,13 +41,6 @@ public class WSO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Wasps Are Not Initialized");
-        }
-
-        this.nanoDuration = System.nanoTime();
-
-        for(int step = 0; step < this.getStepsCount(); step++){
 
             // tournament
             double totalForce = Arrays.stream(getFirstAgents().toArray()).mapToDouble(f -> ((Wasp)f).getForce()).sum();
@@ -64,12 +57,6 @@ public class WSO extends SIAlgorithm {
                 w.updateDiversity(objectiveFunction, isGlobalMinima.isSet());
                 w.updateForce(this.c1, this.c2, this.objectiveFunction);
             }
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override

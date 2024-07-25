@@ -49,12 +49,6 @@ public class TSA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Tunicates Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-
-        for(int step = 0; step< getStepsCount(); step++){
 
             for (AbsAgent agent: getFirstAgents()) {
                 Tunicate tunicate = (Tunicate)agent;
@@ -79,12 +73,6 @@ public class TSA extends SIAlgorithm {
                 Tunicate tunicate = (Tunicate)agent;
                 updateGBest(tunicate);
             }
-
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void calculateConstVectors() {

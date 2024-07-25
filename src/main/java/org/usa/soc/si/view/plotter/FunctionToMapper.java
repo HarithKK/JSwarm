@@ -1,4 +1,4 @@
-package org.usa.soc.view.surface.plotter;
+package org.usa.soc.si.view.plotter;
 
 import net.ericaro.surfaceplotter.Mapper;
 import org.usa.soc.si.ObjectiveFunction;

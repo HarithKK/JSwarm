@@ -21,7 +21,7 @@ public abstract class Algorithm{
 
     protected Map<String, AgentGroup> agents = new HashMap<>();
 
-    protected int interval;
+    protected int interval,stepsCount = -1;
     protected long currentStep;
     private Margins margins;
 
@@ -77,7 +77,8 @@ public abstract class Algorithm{
 
             for(String key: this.agents.keySet()){
                 for(AbsAgent agent: this.agents.get(key).getAgents()){
-                    ((Agent)agent).step();
+                    if(Agent.class.isInstance(agent))
+                        ((Agent)agent).step();
                 }
             }
 
@@ -99,25 +100,30 @@ public abstract class Algorithm{
         }
 
         long step = 0;
+        this.nanoDuration = System.nanoTime();
         for(;;){
-            step();
+            if(stepsCount > 0 && step > stepsCount){
+                break;
+            }
+            this.step();
 
             for(String key: this.agents.keySet()){
                 try{
                     for (AbsAgent agent : this.agents.get(key).getAgents()) {
-                        ((Agent)agent).step();
+                        if(Agent.class.isInstance(agent))
+                            ((Agent)agent).step();
                     }
                 }catch (Exception e){
                     Logger.getInstance().error("Algorithm Error " +e.getMessage());
                 }
             }
 
-
             if(this.stepCompleted != null)
                 this.stepCompleted.performAction(step);
             stepCompleted(step);
             step++;
         }
+        this.nanoDuration = System.nanoTime() - this.nanoDuration;
 
     }
 
@@ -198,8 +204,6 @@ public abstract class Algorithm{
         return currentStep;
     }
 
-    public Map<String, AgentGroup> getSeriesData() { return agents; }
-
     public boolean isPaused() {
         return isPaused.isSet();
     }
@@ -238,7 +242,7 @@ public abstract class Algorithm{
         return Stream.of(agents.values()).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    public Map getAgentsMap(){ return agents; };
+    public Map<String, AgentGroup> getAgentsMap(){ return agents; };
 
     protected boolean isInitialized() {
         return this.initialized.isSet();

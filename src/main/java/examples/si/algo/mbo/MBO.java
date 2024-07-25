@@ -76,13 +76,6 @@ public class MBO extends SIAlgorithm {
     @Override
     public void step() throws Exception{
 
-        if(!this.isInitialized()){
-            throw new RuntimeException("Particles Are Not Initialized");
-        }
-
-        this.nanoDuration = System.nanoTime();
-
-        for(int i = 0; i< this.getStepsCount(); i++){
             for (AbsAgent agent: getAgents("queens").getAgents()) {
                 Queen q = (Queen) agent;
                 if(q.getEnergy() == 0)
@@ -90,7 +83,7 @@ public class MBO extends SIAlgorithm {
                 // update the speed, energy and position
                 q.setPosition(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
                 q.setSpeed(q.getSpeed() * this.alpha);
-                q.setEnergy(q.getEnergy() - i);
+                q.setEnergy((int) (q.getEnergy() - currentStep));
                 q.updateBestValue(this.objectiveFunction, this.isGlobalMinima.isSet());
                 updateSpermatheca(q);
             }
@@ -120,13 +113,6 @@ public class MBO extends SIAlgorithm {
             for (AbsAgent q: getAgents("queens").getAgents()){
                 this.updateBestQueen((Queen) q);
             }
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-            stepCompleted(i);
-        }
-
-
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void sortQueensList() {

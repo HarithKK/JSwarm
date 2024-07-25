@@ -42,15 +42,10 @@ public class CS extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Nests Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-        for(int step = 0; step< getStepsCount(); step++){
 
             for (int i=0; i< numberOfNests; i++) {
                 // get cuckoo
-                Vector cuckooPosition = Mathamatics.getLevyVector(step, numberOfDimensions, 1, 3)
+                Vector cuckooPosition = Mathamatics.getLevyVector((int) currentStep, numberOfDimensions, 1, 3)
                         .operate(Vector.OPERATOR.MULP, this.alpha)
                         .operate(Vector.OPERATOR.ADD, getFirstAgents().get(i).getPosition())
                         .fixVector(minBoundary, maxBoundary);
@@ -71,11 +66,6 @@ public class CS extends SIAlgorithm {
 
                 updateGBest((Nest) getFirstAgents().get(i));
             }
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-                stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void updateGBest(Nest nest) {

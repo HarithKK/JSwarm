@@ -43,17 +43,12 @@ public class JSO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Jellyfishes Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
 
         try{
-            for(int step = 0; step< getStepsCount(); step++){
 
                 for(AbsAgent agent: getFirstAgents()){
                     Jellyfish jellyfish = (Jellyfish) agent;
-                    double ct = Math.abs((1 - ((step+1)/stepsCount)) * (2*Randoms.rand(0,1)-1));
+                    double ct = Math.abs((1 - ((currentStep+1)/stepsCount)) * (2*Randoms.rand(0,1)-1));
                     Vector mu = getMeanLocation();
                     Vector newX;
                     if(ct >= 0.5){
@@ -81,15 +76,9 @@ public class JSO extends SIAlgorithm {
                     jellyfish.setFitnessValue(objectiveFunction.setParameters(jellyfish.getPosition().getPositionIndexes()).call());
                     updateGbest(jellyfish);
                 }
-
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(step);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private Jellyfish getRandomJellyfish(Jellyfish jellyfish) {

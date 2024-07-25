@@ -48,8 +48,7 @@ public class AgentGroup extends SeriesData {
         SeriesDataObject obj = new SeriesDataObject(getAgentsCount());
         for(int i=0; i< getAgentsCount(); i++){
             AbsAgent agent = this.agents.get(i);
-            if(agent.numberOfDimensions >= 2)
-                obj.addXY(i, agent.getPosition());
+            obj.addXY(i, agent.getPosition());
         }
         return obj;
     }

@@ -16,7 +16,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
 
     public Flag isGlobalMinima = new Flag();
     protected double[] minBoundary, maxBoundary;
-    protected int stepsCount, numberOfDimensions;
+    protected int numberOfDimensions;
     protected StepAction stepAction;
     protected ObjectiveFunction<Double> objectiveFunction;
     protected Vector gBest;

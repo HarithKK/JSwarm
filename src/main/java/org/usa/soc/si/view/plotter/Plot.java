@@ -1,4 +1,4 @@
-package org.usa.soc.view.surface.plotter;
+package org.usa.soc.si.view.plotter;
 
 import net.ericaro.surfaceplotter.JSurfacePanel;
 import net.ericaro.surfaceplotter.Mapper;

@@ -48,12 +48,6 @@ public class BA extends SIAlgorithm {
     }
     @Override
     public void step() throws Exception {
-        if(!this.isInitialized()){
-            throw new RuntimeException("Bat Agents Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-        for(int step = 0; step< getStepsCount(); step++){
-
             double at =0;
             for(AbsAgent agent : getFirstAgents()){
                 Bat b = (Bat)agent;
@@ -72,12 +66,6 @@ public class BA extends SIAlgorithm {
             for(AbsAgent agent : getFirstAgents()){
                 updateGBest((Bat) agent);
             }
-
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override

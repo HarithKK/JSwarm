@@ -55,16 +55,10 @@ public class AVOA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Vultures Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
 
         try{
-            for(int step = 0; step< getStepsCount(); step++){
-
                 Vulture[] firstBestVultures = findBestVultures();
-                double F = calculateF(step+1);
+                double F = calculateF(currentStep+1);
 
                 for(AbsAgent agent: getFirstAgents()){
                     Vulture vulture = (Vulture)agent;
@@ -142,15 +136,9 @@ public class AVOA extends SIAlgorithm {
                 for(AbsAgent agent: getFirstAgents()){
                     updateGBest((Vulture)agent);
                 }
-
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(step);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void updateGBest(Vulture vulture) {

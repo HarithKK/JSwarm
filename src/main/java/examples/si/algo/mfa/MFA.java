@@ -49,14 +49,7 @@ public class MFA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception {
-
-        if(!this.isInitialized()){
-            throw new RuntimeException("Moths Are Not Initialized");
-        }
-
-        this.nanoDuration = System.nanoTime();
-        for(int step = 0; step< stepsCount; step++){
-            if(step == 0){
+            if(currentStep == 0){
                 for (AbsAgent agent: getAgents("moths").getAgents()) {
                     Moth m = (Moth) agent;
                     Flame f = new Flame(m.getPosition());
@@ -78,8 +71,8 @@ public class MFA extends SIAlgorithm {
 
             this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition().getClonedVector());
 
-            double a = -1.0 + (double)(step + 1) * (-1.0 / (double)stepsCount);
-            int flameNo = (int) Math.round((numberOfMoths - 1) - (step + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
+            double a = -1.0 + (double)(currentStep + 1) * (-1.0 / (double)stepsCount);
+            int flameNo = (int) Math.round((numberOfMoths - 1) - (currentStep + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
 
             for (int i=0 ; i<numberOfMoths ;i++){
                 Flame tmpFlame = i <= flameNo ? (Flame) getAgents("flames").getAgents().get(i) : (Flame) getAgents("flames").getAgents().get(flameNo);
@@ -92,12 +85,6 @@ public class MFA extends SIAlgorithm {
                 getAgents("moths").getAgents().get(i).setPosition(position);
                 ((Moth)getAgents("moths").getAgents().get(i)).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
             }
-
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
 
     }
 

@@ -6,6 +6,9 @@ import org.knowm.xchart.*;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.usa.soc.core.ds.SeriesDataObject;
+import org.usa.soc.multiagent.AgentGroup;
+import org.usa.soc.multiagent.StepCompleted;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.core.action.StepAction;
@@ -17,16 +20,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
-public class FunctionChartPlotter {
+public class FunctionChartPlotter extends JFrame {
 
     private XYChart chart= null;
 
-    private double xdata[], ydata[], xbest[], ybest[];
+    private double xbest[], ybest[];
 
-    private SIAlgorithm SIAlgorithm;
-    private JFrame frame;
+    private SIAlgorithm siAlgorithm;
 
     private EmptyAction action;
 
@@ -44,13 +46,23 @@ public class FunctionChartPlotter {
         chart.getStyler().setChartTitleVisible(true);
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideSW);
         chart.getStyler().setMarkerSize(8);
+
+        this.setTitle(title);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setAction(new EmptyAction() {
+            @Override
+            public void performAction(int step, double... values) {
+                repaint();
+            }
+        });
+
+        add(new XChartPanel(chart));
+        pack();
     }
 
     public void setChart(SIAlgorithm a){
-        this.SIAlgorithm = a;
+        this.siAlgorithm = a;
         double m = Math.max(a.getFunction().getMax()[0] - a.getFunction().getMin()[0], a.getFunction().getMax()[1] - a.getFunction().getMin()[1]);
-        this.xdata = new double[(int)(m)+50];
-        this.ydata = new double[(int)(m)+50];
         this.xbest = new double[100];
         this.ybest = new double[100];
         this.bestIndex = 0;
@@ -61,15 +73,22 @@ public class FunctionChartPlotter {
         chart.getStyler().setXAxisMax(a.getFunction().getMax()[0]);
         chart.getStyler().setYAxisMax(a.getFunction().getMax()[1]);
 
-        try {
-            chart.removeSeries("Agents");
-            chart.removeSeries("Best");
-            chart.removeSeries("Best Search Trial");
-        }catch(Exception e){
-
+        var keys = chart.getSeriesMap().keySet().toArray();
+        for(Object cs : keys){
+            chart.removeSeries(String.valueOf(cs));
         }
-        XYSeries series = this.chart.addSeries("Agents", xdata, ydata);
-        series.setMarker(SeriesMarkers.CIRCLE);
+        for(AgentGroup ag: a.getAgentsMap().values()){
+            SeriesDataObject obj = ag.getLocations();
+            if(ag.getAgentsCount() > 0) {
+                XYSeries series = this.chart.addSeries(ag.name, obj.getX(), obj.getY());
+                series.setMarker(ag.getMarker());
+                series.setMarkerColor(ag.getMarkerColor());
+            }else{
+                XYSeries series = this.chart.addSeries(ag.name, new double[100], new double[100]);
+                series.setMarker(ag.getMarker());
+                series.setMarkerColor(ag.getMarkerColor());
+            }
+        }
         XYSeries seriesb = this.chart.addSeries("Best Search Trial", xbest, ybest);
         seriesb.setMarker(SeriesMarkers.CROSS);
         seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
@@ -82,10 +101,9 @@ public class FunctionChartPlotter {
 
             System.out.println(best_coords[0][x/2] +" : "+ best_coords[1][x/2]);
         }
-
         XYSeries series1 = this.chart.addSeries("Best", best_coords[0], best_coords[1]);
         series1.setMarker(SeriesMarkers.DIAMOND);
-        series1.setMarkerColor(Color.RED);
+        series1.setMarkerColor(Color.CYAN);
     }
 
     public XYChart getChart(){
@@ -97,28 +115,7 @@ public class FunctionChartPlotter {
     }
 
     public void display(){
-        frame = new JFrame("Algorithm");
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.setAction(new EmptyAction() {
-            @Override
-            public void performAction(int step, double []d) {
-                frame.repaint();
-            }
-        });
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                public void run() {
-                    XChartPanel<Chart<?, ?>> chartPanel = new XChartPanel(chart);
-                    frame.add(chartPanel);
-                    frame.pack();
-                    frame.setVisible(true);
-                }
-            });
-        } catch (InterruptedException var3) {
-            var3.printStackTrace();
-        } catch (InvocationTargetException var4) {
-            var4.printStackTrace();
-        }
+        setVisible(true);
     }
 
     public void execute(){
@@ -126,49 +123,50 @@ public class FunctionChartPlotter {
             return;
         }
         setExecute(true);
-        SIAlgorithm.initialize();
-        SIAlgorithm.setInterval(interval);
+        siAlgorithm.initialize();
+        siAlgorithm.setInterval(interval);
         int step =0;
-        double fraction = SIAlgorithm.getStepsCount()/100;
-        SIAlgorithm.addStepAction(new StepAction() {
-
+        double fraction = siAlgorithm.getStepsCount()/100;
+        siAlgorithm.setStepCompleted(new StepCompleted() {
             @Override
-            public void performAction(Vector best, Double bestValue, int step) {
-
-                double [][]d = SIAlgorithm.getDataPoints();
-                xdata = d[0];
-                ydata = d[1];
-
-                if(bestIndex < 0 || xbest[bestIndex] != best.getValue(0) || ybest[bestIndex] != best.getValue(1)){
+            public void performAction(long step) {
+                if(bestIndex < 0 || xbest[bestIndex] != siAlgorithm.getGBest().getValue(0) || ybest[bestIndex] != siAlgorithm.getGBest().getValue(1)){
                     if(bestIndex < xbest.length-1){
                         bestIndex++;
                     }
-                    xbest[bestIndex] = best.getValue(0);
-                    ybest[bestIndex] = best.getValue(1);
+                    xbest[bestIndex] = siAlgorithm.getGBest().getValue(0);
+                    ybest[bestIndex] = siAlgorithm.getGBest().getValue(1);
                 }
 
-                chart.updateXYSeries("Agents", xdata, ydata, null);
+                for(AgentGroup ag: siAlgorithm.getAgentsMap().values()){
+                    SeriesDataObject obj = ag.getLocations();
+                    if(ag.getAgentsCount() > 0) {
+                        chart.updateXYSeries(ag.name, obj.getX(), obj.getY(), null);
+                    }
+                }
                 chart.updateXYSeries("Best Search Trial", xbest, ybest, null);
 
                 if((step % fraction) == 0){
-                    System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
+                    System.out.print("\r ["+ Mathamatics.round(siAlgorithm.getBestDoubleValue(), 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
                 }
                 if(action != null)
-                    action.performAction(step, step/fraction, bestValue);
+                    action.performAction((int)step, step/fraction, siAlgorithm.getBestDoubleValue());
                 step = step +1;
             }
         });
         try {
-            SIAlgorithm.run();
+            siAlgorithm.run(siAlgorithm.getStepsCount());
         } catch (Exception e) {
             if(e instanceof KillOptimizerException){
                 System.out.println("Optimizer was killed forcefully");
+            }else{
+                e.printStackTrace();
             }
         }
         setExecute(false);
         System.out.println("");
-        System.out.println("Actual: "+ SIAlgorithm.getBestDoubleValue() +" , Expected: "+ SIAlgorithm.getFunction().getExpectedBestValue());
-        System.out.println("Actual: "+ SIAlgorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(SIAlgorithm.getFunction().getExpectedParameters()));
+        System.out.println("Actual: "+ siAlgorithm.getBestDoubleValue() +" , Expected: "+ siAlgorithm.getFunction().getExpectedBestValue());
+        System.out.println("Actual: "+ siAlgorithm.getGBest().toString()+" , Expected: "+ Arrays.toString(siAlgorithm.getFunction().getExpectedParameters()));
     }
 
     public void setTime(int time) {
@@ -184,20 +182,20 @@ public class FunctionChartPlotter {
     }
 
     public void pause() {
-        SIAlgorithm.pauseOptimizer();
+        siAlgorithm.pauseOptimizer();
     }
 
     public void resume() {
-        SIAlgorithm.setInterval(interval);
-        SIAlgorithm.resumeOptimizer();
+        siAlgorithm.setInterval(interval);
+        siAlgorithm.resumeOptimizer();
     }
 
     public boolean isPaused() {
-       return SIAlgorithm.isPaused();
+       return siAlgorithm.isPaused();
     }
 
     public void stopOptimizer() {
-        SIAlgorithm.stopOptimizer();
+        siAlgorithm.stopOptimizer();
     }
 
     public void setInterval(int interval) {

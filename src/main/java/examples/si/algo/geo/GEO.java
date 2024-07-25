@@ -48,17 +48,10 @@ public class GEO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if (!this.isInitialized()) {
-            throw new RuntimeException("Eagles Are Not Initialized");
-        }
-
-        this.nanoDuration = System.nanoTime();
-
-        for (int step = 0; step < stepsCount; step++) {
 
             // update Pa and Pc
-            pa = pa0 + (step/ stepsCount)*(paT - pa0);
-            pc = pc0 - (step/ stepsCount)*(pcT - pc0);
+            pa = pa0 + (currentStep/ stepsCount)*(paT - pa0);
+            pc = pc0 - (currentStep/ stepsCount)*(pcT - pc0);
 
             for(AbsAgent agent : getFirstAgents()){
                 Eagle eagle = (Eagle)agent;
@@ -96,12 +89,6 @@ public class GEO extends SIAlgorithm {
                     this.gBest.setVector(eagle.getLocalBestPositon());
                 }
             }
-
-            if (this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override

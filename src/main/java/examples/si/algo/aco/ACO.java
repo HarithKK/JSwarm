@@ -23,6 +23,8 @@ public class ACO extends SIAlgorithm {
 
     private double pheromoneValue;
 
+    private Long I;
+
     public ACO(
             ObjectiveFunction objectiveFunction,
             int numberOfAnts,
@@ -83,16 +85,8 @@ public class ACO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Ants Are Not Initialized");
-        }
 
-        this.nanoDuration = System.nanoTime();
-        long I = Math.round(Math.sqrt(this.getStepsCount()));
-
-        for(int i=1; i<= numberOfProcessIterations; i++){
-
-            for(long step=i; step< (I*i); step++){
+            for(long step=currentStep; step< (I*currentStep); step++){
                 // generate dx
                 Vector dx = Randoms.getRandomVector(this.numberOfDimensions, -(this.alpha), this.alpha);
 
@@ -105,12 +99,7 @@ public class ACO extends SIAlgorithm {
                     this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
                     updateBest(a);
                 }
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), i);
-                stepCompleted(step);
             }
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private Vector getPositionVector(Ant a, Vector v) {
@@ -133,6 +122,8 @@ public class ACO extends SIAlgorithm {
             getFirstAgents().add(ant);
             this.updateBest(ant);
         }
+
+        I = Math.round(Math.sqrt(this.getStepsCount()));
     }
 
     private void updateBest(Ant a){

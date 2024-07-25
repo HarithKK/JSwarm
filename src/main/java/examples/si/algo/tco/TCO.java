@@ -18,6 +18,8 @@ public class TCO extends SIAlgorithm {
 
     private double p0, eRate, r, omega;
 
+    Vector tau ,tauDecrements;
+
     public TCO(ObjectiveFunction<Double> objectiveFunction,
                int stepsCount,
                int numberOfDimensions,
@@ -49,24 +51,6 @@ public class TCO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Termites Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-
-        Vector tau = new Vector(numberOfDimensions);
-        Vector tauDecrements = new Vector(numberOfDimensions);
-
-        for(int i=0;i<numberOfDimensions;i++){
-            double diff = Math.abs(objectiveFunction.getMax()[i] - objectiveFunction.getMin()[i]);
-            double max = diff/2;
-            double min = diff/8;
-
-            tau.setValue(max, i);
-            tauDecrements.setValue((max - min)/stepsCount, i);
-        }
-
-        for(int step = 0; step< getStepsCount(); step++){
 
             for (AbsAgent agent: getFirstAgents()) {
                 ((Termite)agent).updatePheramoneValue(eRate, objectiveFunction);
@@ -89,13 +73,6 @@ public class TCO extends SIAlgorithm {
                     }
                 }
             }
-
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-            tau.setVector(tau.operate(Vector.OPERATOR.SUB, tauDecrements));
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void updateGBest(Termite ti) {
@@ -129,6 +106,18 @@ public class TCO extends SIAlgorithm {
 
         for(int i=0 ;i< numberOfTermites; i++){
             getFirstAgents().add(new Termite(minBoundary, maxBoundary, numberOfDimensions, p0));
+        }
+
+        tau = new Vector(numberOfDimensions);
+        tauDecrements = new Vector(numberOfDimensions);
+
+        for(int i=0;i<numberOfDimensions;i++){
+            double diff = Math.abs(objectiveFunction.getMax()[i] - objectiveFunction.getMin()[i]);
+            double max = diff/2;
+            double min = diff/8;
+
+            tau.setValue(max, i);
+            tauDecrements.setValue((max - min)/stepsCount, i);
         }
     }
 }

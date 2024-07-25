@@ -40,11 +40,6 @@ public class ABC extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Food Sources Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-        for(int step = 0; step< getStepsCount(); step++){
             double totalFM = 0;
 
             for(int i=0; i< numberOfFoodSources; i++){
@@ -57,12 +52,6 @@ public class ABC extends SIAlgorithm {
             for(AbsAgent f: getFirstAgents()){
                 updateGbest((FoodSource) f);
             }
-
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private void runScoutBeePhase() {

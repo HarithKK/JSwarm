@@ -49,16 +49,9 @@ public class CHOA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Chimps Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-
         try{
-            for(int step = 0; step< getStepsCount(); step++){
-
                 sort();
-                f = fUpper*(1 - ((step+1)/ stepsCount));
+                f = fUpper*(1 - ((currentStep+1)/ stepsCount));
                 attacker = (Chimp) getFirstAgents().get(populationSize-1);
                 attacker.updateFMAC(f, chaoticType);
                 chaser = (Chimp)  getFirstAgents().get(populationSize-2);
@@ -105,15 +98,9 @@ public class CHOA extends SIAlgorithm {
                 for(AbsAgent agent : getFirstAgents()){
                     updateGBest((Chimp) agent);
                 }
-
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(step);
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override

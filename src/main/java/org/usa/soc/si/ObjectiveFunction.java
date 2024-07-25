@@ -1,8 +1,8 @@
 package org.usa.soc.si;
 
 import net.ericaro.surfaceplotter.Mapper;
-import org.usa.soc.view.surface.plotter.FunctionToMapper;
-import org.usa.soc.view.surface.plotter.Plot;
+import org.usa.soc.si.view.plotter.FunctionToMapper;
+import org.usa.soc.si.view.plotter.Plot;
 
 import java.util.concurrent.Callable;
 

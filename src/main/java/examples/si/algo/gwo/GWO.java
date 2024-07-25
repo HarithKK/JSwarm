@@ -41,12 +41,7 @@ public class GWO extends SIAlgorithm {
     }
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Wolfs Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-        for(int step = 0; step< stepsCount; step++){
-            double aDecrement = 2*(1.0 - (step/ stepsCount));
+            double aDecrement = 2*(1.0 - (currentStep/ stepsCount));
             for(AbsAgent agent : getFirstAgents()){
                 Wolf w = (Wolf)agent;
                 Vector X1 = getUpdatedPositionVector(w, alpha, calcA(), calcC());
@@ -68,12 +63,6 @@ public class GWO extends SIAlgorithm {
             updateWolfHirarchy();
 
             this.a.resetAllValues(aDecrement);
-
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private Vector getUpdatedPositionVector(Wolf w, Wolf prey, Vector C, Vector A){

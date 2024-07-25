@@ -21,6 +21,11 @@ public class TSOA extends SIAlgorithm {
     private double delegator_split = 0.3;
     private double p = -1;
 
+    private double distanceDecrement;
+    private int deligator, totalSeedsCount;
+
+
+
     public TSOA(
             ObjectiveFunction objectiveFunction,
             int populationSize,
@@ -52,17 +57,6 @@ public class TSOA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception {
-        if(!this.isInitialized()){
-            throw new RuntimeException("Trees Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-
-        double distanceDecrement = distanceFactor/stepsCount;
-
-        int deligator = (int)(getFirstAgents().size() * delegator_split);
-        int totalSeedsCount = deligator*seedsCount;
-
-        for(int step = 0; step< getStepsCount(); step++){
             Vector predicted = new Vector(this.numberOfDimensions);
 
             for(int i =0; i < getFirstAgents().size(); i++){
@@ -122,11 +116,6 @@ public class TSOA extends SIAlgorithm {
             for(int i = 0; i < totalSeedsCount; i++){
                 getFirstAgents().remove(getFirstAgents().size()-1);
             }
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), step);
-            stepCompleted(step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     @Override
@@ -144,6 +133,11 @@ public class TSOA extends SIAlgorithm {
 
         sort();
         updateGBest((Tree) getFirstAgents().get(0));
+
+        distanceDecrement = distanceFactor/stepsCount;
+
+        deligator = (int)(getFirstAgents().size() * delegator_split);
+        totalSeedsCount = deligator*seedsCount;
     }
 
     private void updateGBest(Tree tree) {

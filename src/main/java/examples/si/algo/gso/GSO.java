@@ -57,13 +57,6 @@ public class GSO extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-
-        if(!this.isInitialized()){
-            throw new RuntimeException("Ants Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-        for(float step = 0; step< getStepsCount(); step+=1){
-
             // movement phase
             for(int i=0; i< numberOfGlowWorms; i++){
 
@@ -89,11 +82,6 @@ public class GSO extends SIAlgorithm {
                 worm.updateLuciferin(ldc, lac, objectiveFunction);
                 this.updateGBest(worm);
             }
-            if(this.stepAction != null)
-                this.stepAction.performAction(this.gBest, this.getBestDoubleValue(), (int)step);
-            stepCompleted((int)step);
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private GlowWorm getJthGlowWorm(List<GlowWorm> nWarms, GlowWorm ithWarm) {

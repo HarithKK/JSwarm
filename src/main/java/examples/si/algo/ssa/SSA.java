@@ -17,6 +17,8 @@ public class SSA extends SIAlgorithm {
 
     private double Pdp, Gc, airDensity, speed, surfaceAreaBody, lossInHeight;
 
+    private int hSquirrel,aSquirrelLower ,aSquirrelUpper;
+
     public SSA(
             ObjectiveFunction objectiveFunction,
             int populationSize,
@@ -53,17 +55,6 @@ public class SSA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception{
-        if(!this.isInitialized()){
-            throw new RuntimeException("Squirrels Are Not Initialized");
-        }
-        this.nanoDuration = System.nanoTime();
-
-        int hSquirrel = populationSize -1;
-        int aSquirrelLower = populationSize - 4;
-        int aSquirrelUpper = populationSize - 2;
-
-        try{
-            for(int step = 0; step< getStepsCount(); step++){
 
                 Squirrel squirrelOnHickoryTree = (Squirrel) getFirstAgents().get(hSquirrel);
                 // case for squirrels from acorn tree to hickory tree
@@ -124,7 +115,7 @@ public class SSA extends SIAlgorithm {
                 }
 
                 double sc = calculateSeasonalConstant();
-                double smin = 0.00001 / Mathamatics.pow(365, ((step+1) * 2.5 / stepsCount));
+                double smin = 0.00001 / Mathamatics.pow(365, ((currentStep+1) * 2.5 / stepsCount));
 
                 if(sc < smin){
                     for (AbsAgent s: getFirstAgents()) {
@@ -139,15 +130,6 @@ public class SSA extends SIAlgorithm {
                 if(Validator.validateBestValue(((Squirrel)getFirstAgents().get(hSquirrel)).getFitnessValue(), fgbest, isGlobalMinima.isSet())){
                     gBest.setVector(getFirstAgents().get(hSquirrel).getPosition());
                 }
-
-                if(this.stepAction != null)
-                    this.stepAction.performAction(this.gBest.getClonedVector(), this.getBestDoubleValue(), step);
-                stepCompleted(step);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        this.nanoDuration = System.nanoTime() - this.nanoDuration;
     }
 
     private double calculateSeasonalConstant() {
@@ -184,6 +166,10 @@ public class SSA extends SIAlgorithm {
         }
 
         sort();
+
+        hSquirrel = populationSize -1;
+        aSquirrelLower = populationSize - 4;
+        aSquirrelUpper = populationSize - 2;
     }
 
     private Vector getLevyVector() {

@@ -8,7 +8,6 @@ import org.usa.soc.util.Validator;
 
 public class Monky extends Agent {
 
-    private Vector bestRoot;
     private int maxHeightOfTheTree;
 
     private ObjectiveFunction fn;
@@ -18,16 +17,16 @@ public class Monky extends Agent {
         this.numberOfDimensions = numberOfDimensions;
         this.maxHeightOfTheTree = maxHeightOfTheTree;
         this.fn=fn;
-        this.bestRoot = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary,0,1);
+        this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary,0,1);
     }
 
     public Vector getBestRoot() {
-        return bestRoot.getClonedVector();
+        return position.getClonedVector();
     }
 
     public void climbTree(double c1, boolean isGlobalMinima, Vector bestRoot) {
 
-        Vector position = this.bestRoot.getClonedVector();
+        Vector position = this.position.getClonedVector();
         for(int i=0; i< this.maxHeightOfTheTree;i++){
             Vector v = createRandomRoot(position, c1);
             Vector r1 = position.operate(Vector.OPERATOR.ADD, v);
@@ -45,7 +44,7 @@ public class Monky extends Agent {
                 position.setVector(position.operate(Vector.OPERATOR.SUB,r2), minBoundary, maxBoundary);
             }
         }
-        this.bestRoot.setVector(this.getBestRoot().operate(Vector.OPERATOR.ADD,position), this.minBoundary, this.maxBoundary);
+        this.position.setVector(this.getBestRoot().operate(Vector.OPERATOR.ADD,position), this.minBoundary, this.maxBoundary);
     }
 
     private Vector createRandomRoot(Vector position, double c1) {

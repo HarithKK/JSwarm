@@ -94,7 +94,7 @@ public class PlainView2D {
     }
 
     private void updateChartWithSeries() {
-        Map<String, AgentGroup> data = this.getAlgo().getSeriesData();
+        Map<String, AgentGroup> data = this.getAlgo().getAgentsMap();
         if(data == null){
             throw new RuntimeException("This Algorithm has not defined get function");
         }
@@ -117,7 +117,7 @@ public class PlainView2D {
     }
 
     private void initChartWithSeries() {
-        Map<String, AgentGroup> data = this.getAlgo().getSeriesData();
+        Map<String, AgentGroup> data = this.getAlgo().getAgentsMap();
         if(data == null){
             throw new RuntimeException("This Algorithm has not defined get function");
         }
