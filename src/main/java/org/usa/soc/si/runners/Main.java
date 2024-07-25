@@ -179,7 +179,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay((ObjectiveFunction) cmbFunction.getSelectedItem(), 600, 600, 0, 0, true);
+        new FunctionDisplay(AlgorithmFactory.FunctionsList.getFunctionList()[cmbFunction.getSelectedIndex()], 600, 600, 0, 0, true).display();
     }
 
     private void fncActionPerformed(double... values){
