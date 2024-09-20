@@ -4,6 +4,8 @@ package nonGeneral;
 Settings
  */
 
+import examples.si.benchmarks.cec2018.ModifiedInvertedDTLZ1;
+import examples.si.benchmarks.cec2018.ModifiedInvertedDTLZ7;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.*;
@@ -38,18 +40,16 @@ public class TestRunner {
     private static final int REPEATER = 5;
     private static final int AGENT_COUNT = 1000;
     private static final int STEPS_COUNT = 1000;
-    private static final int ALGO_INDEX = 2;
+    private static int ALGO_INDEX = 2;
 
-    private static final int RIP_DIS = 10;
-    private static final ObjectiveFunction OBJECTIVE_FUNCTION = new DixonPriceFunction();
-
-    public SIAlgorithm getAlgorithm(){
-        return new AlgorithmFactory(ALGO_INDEX, OBJECTIVE_FUNCTION).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
+    public SIAlgorithm getAlgorithm(ObjectiveFunction fn){
+        return new AlgorithmFactory(ALGO_INDEX, fn).getAlgorithm(STEPS_COUNT, AGENT_COUNT);
     }
 
     private  static SIAlgorithm SIAlgorithm = null;
 
     private String RunTest(ObjectiveFunction fn, String extra){
+
         double[] meanBestValueTrial = new double[STEPS_COUNT];
         double[] meanMeanBestValueTrial = new double[STEPS_COUNT];
         double[] meanConvergence = new double[STEPS_COUNT];
@@ -63,7 +63,7 @@ public class TestRunner {
         Path p = createFile(filename);
         SIAlgorithm = getAlgorithm(fn);
         appendToFile(p, SIAlgorithm.getClass().getSimpleName() + ","+ SIAlgorithm.getFunction().getClass().getSimpleName());
-
+        System.out.println(extra + "=>" + fn.getClass().getSimpleName() + ", " + SIAlgorithm.getName());
         for(int i=0; i<REPEATER; i++){
             SIAlgorithm = getAlgorithm(fn);
             SIAlgorithm.initialize();
@@ -71,8 +71,7 @@ public class TestRunner {
             SIAlgorithm.addStepAction(new StepAction() {
                 @Override
                 public void performAction(Vector best, Double bestValue, int step) {
-
-                    if((step % fraction) == 0){
+                    if((SIAlgorithm.getCurrentStep() % fraction) == 0){
                         System.out.print("\r ["+ Mathamatics.round(bestValue, 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
                     }
                     if(step >1) {
@@ -149,8 +148,8 @@ public class TestRunner {
 
         // list of Objective Functions
         List<ObjectiveFunction> multimodalNonSeparableFunctionList = Arrays.asList(
-               // new AckleysFunction(),
-               // new ColvilleFunction(),
+                // new AckleysFunction(),
+                // new ColvilleFunction(),
                 new CrossInTrayFunction(),
                 new GoldsteinPrice(),
                 new McCormickFunction(),
@@ -188,41 +187,52 @@ public class TestRunner {
                 new SumSquares()
         );
 
+        List<ObjectiveFunction> cec2018FunctionList = Arrays.asList(
+                new ModifiedInvertedDTLZ1(30, 10),
+                new ModifiedInvertedDTLZ7(30, 20)
+        );
+
         Toolkit.getDefaultToolkit().beep();
 
         // start log file writer
         Path p = createResultFile();
 
-        for (ObjectiveFunction fn: multimodalNonSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Multi Modal - Non Separable");
-            appendToFile(p, s);
+//        for (ObjectiveFunction fn: multimodalNonSeparableFunctionList) {
+//            String s = new TestRunner().RunTest(fn,"Multi Modal - Non Separable");
+//            appendToFile(p, s);
+//        }
+//
+//        for (ObjectiveFunction fn: multimodalSeparableFunctionList) {
+//            String s = new TestRunner().RunTest(fn,"Multi Modal - Separable");
+//            appendToFile(p, s);
+//        }
+//
+//        for (ObjectiveFunction fn: unimodalNonSeparableFunctionList) {
+//            String s = new TestRunner().RunTest(fn,"Uni Modal - Non Separable");
+//            appendToFile(p, s);
+//        }
+//
+//        for (ObjectiveFunction fn: unimodalSeparableFunctionList) {
+//            String s = new TestRunner().RunTest(fn,"Uni Modal - Separable");
+//            appendToFile(p, s);
+//        }
+
+        int[] x = new int[]{9,14,15,17,10,22,23,24,25,26,27,7,2,8,16,28,3,12,21,13,0,19,11,18,6,20};
+
+        for(int y: x){
+            ALGO_INDEX = y;
+            for (ObjectiveFunction fn : cec2018FunctionList) {
+                String s = new TestRunner().RunTest(fn, "CEC-2018");
+                System.out.println(s);
+                appendToFile(p, s);
+            }
         }
 
-        for (ObjectiveFunction fn: multimodalSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Multi Modal - Separable");
-            appendToFile(p, s);
-        }
-
-        for (ObjectiveFunction fn: unimodalNonSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Uni Modal - Non Separable");
-            appendToFile(p, s);
-        }
-
-        for (ObjectiveFunction fn: unimodalSeparableFunctionList) {
-            String s = new TestRunner().RunTest(fn,"Uni Modal - Separable");
-            appendToFile(p, s);
-        }
-
-
-    }
-
-    private static SIAlgorithm getAlgorithm(ObjectiveFunction fn) {
-        return new AlgorithmStore().getFA(fn, AGENT_COUNT, STEPS_COUNT);
     }
 
     private static void appendToFile(Path path, String data){
         try {
-            System.out.println(data);
+            //System.out.println(data);
             Files.write(path, data.getBytes(), StandardOpenOption.APPEND);
         }catch (IOException e) {
             e.printStackTrace();

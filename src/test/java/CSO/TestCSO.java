@@ -3,6 +3,8 @@ package CSO;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.cso.CSO;
@@ -19,13 +21,13 @@ public class TestCSO {
         return new CSO(
                 fn,
                 fn.getNumberOfDimensions(),
-                1500,
-                1000,
+                100,
+                100,
                 0.2,
                 fn.getMin(),
                 fn.getMax(),
                 10,
-                0.2,
+                0.5,
                 0.2,
                 true,
                 0.5,
@@ -44,6 +46,28 @@ public class TestCSO {
                 variance,
                 LIMIT
         );
+    }
+
+    @Test
+    public void testAckleysFunctionWithDiff() {
+
+        ObjectiveFunction fn = new AckleysFunction();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        try {
+            algo.addStepAction(new StepAction() {
+                @Override
+                public void performAction(Vector best, Double bestValue, int step) {
+                    System.out.print(bestValue+",");
+                }
+            });
+            algo.run();
+            System.out.println();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(),fn.getNumberOfDimensions(),PRECISION_VAL);
     }
 
     @Test

@@ -195,26 +195,26 @@ public class Quin {
             }
         };
 
-        Executor.getInstance().registerChart(
-                new ProgressiveChart(200, 130, "Pklt-v", "Pklt-v","kTau")
-                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
-                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
-                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
-                        .setLegend(true)
-
-        );
-
-        Executor.getInstance().registerChart(
-                new ProgressiveChart(200, 130, "Pklt-p", "Pklt-p","kTau")
-                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
-                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
-                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
-                        .setLegend(true)
-        );
+//        Executor.getInstance().registerChart(
+//                new ProgressiveChart(200, 130, "Pklt-v", "Pklt-v","kTau")
+//                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
+//                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
+//                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
+//                        .setLegend(true)
+//
+//        );
+//
+//        Executor.getInstance().registerChart(
+//                new ProgressiveChart(200, 130, "Pklt-p", "Pklt-p","kTau")
+//                        .subscribe(new ChartSeries("0-1", 0.0).setColor(Color.BLUE))
+//                        .subscribe(new ChartSeries("1-2", 0.0).setColor(Color.GREEN))
+//                        .subscribe(new ChartSeries("6-7", 0.0).setColor(Color.ORANGE))
+//                        .setLegend(true)
+//        );
 
         for(int i=0; i< 12;i++){
             Executor.getInstance().registerChart(
-                    new ProgressiveChart(200, 130, String.valueOf(i), "","Drone "+i)
+                    new ProgressiveChart(210, 150, String.valueOf(i), "","Drone "+i)
                             .subscribe(new ChartSeries("dOmega", 0.0).setColor(Color.BLUE))
                             .subscribe(new ChartSeries("dUOmega", 0.0).setColor(Color.GREEN))
                             .setMaxLength(50)
