@@ -152,6 +152,10 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         calculateGradiantDecent(step, this.bestValue);
         getHistory().add(this.bestValue);
 
+        if(stepAction != null){
+            stepAction.performAction(this.gBest, this.bestValue, (int) currentStep);
+        }
+
         if (this.interval == 0) {
             return;
         }

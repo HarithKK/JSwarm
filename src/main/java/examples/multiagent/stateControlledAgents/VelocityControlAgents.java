@@ -1,17 +1,11 @@
 package examples.multiagent.stateControlledAgents;
 
-import examples.multiagent.lfclassic.Follower;
-import examples.multiagent.lfclassic.Leader;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
-import org.usa.soc.core.ds.Markers;
-import org.usa.soc.multiagent.Agent;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.VelocityControlledAgent;
 import org.usa.soc.multiagent.runners.Executor;
-import org.usa.soc.util.Randoms;
-
-import java.awt.*;
 
 public class VelocityControlAgents {
 
@@ -25,12 +19,17 @@ public class VelocityControlAgents {
             public void initialize() {
                 try {
                     ag = this.addAgents("agents", VelocityControlledAgent.class, 5);
-                    for(Agent a: ag.getAgents()){
+                    for(AbsAgent a: ag.getAgents()){
                         ((VelocityControlledAgent)a).setAngles(0, 0.1, Math.toRadians(angle));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+            }
+
+            @Override
+            public void step() throws Exception {
+
             }
 
             @Override
@@ -40,7 +39,7 @@ public class VelocityControlAgents {
                 else{
                     angle += 1;
                 }
-                for(Agent a : ag.getAgents()){
+                for(AbsAgent a : ag.getAgents()){
                     ((VelocityControlledAgent)a).setAngles(0, 0.2, Math.toRadians(angle));
                 }
             }

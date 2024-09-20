@@ -1,5 +1,6 @@
 package ABC;
 
+import examples.si.benchmarks.cec2018.ModifiedInvertedDTLZ1;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

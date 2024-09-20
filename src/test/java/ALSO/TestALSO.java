@@ -1,8 +1,12 @@
 package ALSO;
 
+import examples.si.benchmarks.cec2018.ModifiedInvertedDTLZ1;
+import examples.si.benchmarks.cec2018.ModifiedInvertedDTLZ7;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.also.ALSO;
@@ -43,6 +47,29 @@ public class TestALSO {
                 variance,
                 LIMIT
         );
+    }
+
+    @Test
+    public void testAckleysFunctionWithDiff() {
+
+        ObjectiveFunction fn = new AckleysFunction();
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        try {
+
+            algo.addStepAction(new StepAction() {
+                @Override
+                public void performAction(Vector best, Double bestValue, int step) {
+                    System.out.print(bestValue + ",");
+                }
+            });
+            algo.run();
+            System.out.println();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), PRECISION_VAL);
     }
 
     @Test
@@ -336,6 +363,38 @@ public class TestALSO {
     public void testStyblinskiTangFunction() {
 
         ObjectiveFunction fn = new StyblinskiTangFunction();
+
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        try {
+            algo.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
+    }
+
+    @Test
+    public void testModifiedInvertedDTLZ1Function() {
+
+        ObjectiveFunction fn = new ModifiedInvertedDTLZ1(30,10);
+
+        algo = getAlgorithm(fn);
+        algo.initialize();
+        try {
+            algo.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        evaluate(algo, fn.getExpectedBestValue(), fn.getExpectedParameters(), fn.getNumberOfDimensions(), 20);
+    }
+
+    @Test
+    public void testModifiedInvertedDTLZ7Function() {
+
+        ObjectiveFunction fn = new ModifiedInvertedDTLZ7(30,20);
 
         algo = getAlgorithm(fn);
         algo.initialize();
