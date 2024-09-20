@@ -64,7 +64,7 @@ Testing the precision. robustness and general performance of optimization algori
 new FunctionDisplay();
 ```
 
-![Display](https://github.com/kolithawarnakulasooriya/JarSwarm/blob/step_action/image.png)
+![Display](https://github.com/kolithawarnakulasooriya/J-Swarm/blob/develop/image.png)
 
 ## Installing and Using the Library
 
