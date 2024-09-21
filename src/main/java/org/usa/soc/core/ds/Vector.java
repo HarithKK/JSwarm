@@ -114,6 +114,27 @@ public class Vector {
         return this;
     }
 
+    public Vector toCos(){
+        for(int i = 0; i< getNumberOfDimensions(); i++){
+            this.positionIndexes[i] = Math.cos(this.positionIndexes[i]);
+        }
+        return this;
+    }
+
+    public Vector toSin(){
+        for(int i = 0; i< getNumberOfDimensions(); i++){
+            this.positionIndexes[i] = Math.sin(this.positionIndexes[i]);
+        }
+        return this;
+    }
+
+    public Vector toExp(){
+        for(int i = 0; i< getNumberOfDimensions(); i++){
+            this.positionIndexes[i] = Math.exp(this.positionIndexes[i]);
+        }
+        return this;
+    }
+
     public int getNumberOfDimensions() {
         return numberOfDimensions;
     }

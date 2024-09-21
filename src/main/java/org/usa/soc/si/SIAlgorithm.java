@@ -267,6 +267,10 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         for(AgentGroup a: agents.values()){a.sort(new AgentComparator());}
     }
 
+    public void reverseSort(){
+        for(AgentGroup a: agents.values()){a.sort(new AgentRevComparator());}
+    }
+
     public double[][] getDataPoints() {
         double[][] data = new double[this.numberOfDimensions][getFirstAgents().size()];
         for(int i=0; i< getFirstAgents().size(); i++){
