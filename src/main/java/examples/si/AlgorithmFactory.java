@@ -408,7 +408,8 @@ public class AlgorithmFactory {
                     fn.getMax(),
                     true,
                     0.7,
-                    10
+                    10,
+                    0.5
             );
         }
         return null;

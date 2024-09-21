@@ -72,11 +72,11 @@ public class MFA extends SIAlgorithm {
             this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition().getClonedVector());
 
             double a = -1.0 + (double)(currentStep + 1) * (-1.0 / (double)stepsCount);
-            int flameNo = (int) Math.round((numberOfMoths - 1) - (currentStep + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
-
+            int flameNo = (int) Math.round(numberOfMoths - (currentStep + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
+            System.out.println(flameNo);
             for (int i=0 ; i<numberOfMoths ;i++){
                 Flame tmpFlame = i <= flameNo ? (Flame) getAgents("flames").getAgents().get(i) : (Flame) getAgents("flames").getAgents().get(flameNo);
-                double distance = tmpFlame.getPosition().operate(Vector.OPERATOR.SUB, getAgents("moths").getAgents().get(i).getPosition()).getMagnitude();
+                double distance = getAgents("flames").getAgents().get(i).getPosition().getDistance(getAgents("moths").getAgents().get(i).getPosition());
 
                 double t = (a - 1.0) * Randoms.rand(0, 1) + 1.0;
                 double firstComponent = distance * Math.exp(this.b * t) * Math.cos(2 * Math.PI * t);

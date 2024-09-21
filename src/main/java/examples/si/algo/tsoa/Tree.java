@@ -6,11 +6,9 @@ import org.usa.soc.util.Randoms;
 
 public class Tree extends Agent {
 
-    private Vector lBest;
-
-    private double lBestValue;
     private double lambda = 0;
     private double distance = 0;
+    private double w = 0;
 
     public Tree(int numberOfDimensions,double[] minBoundary, double[] maxBoundary) {
         this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0,1);
@@ -27,29 +25,24 @@ public class Tree extends Agent {
     }
 
     public void updateLambda(double p, double totalLabmda, double totalDistance) {
-        this.setLambda(Math.pow(this.distance, -p) / ((totalDistance)* totalLabmda));
-        //this.setLambda(this.distance/(totalLabmda * totalDistance));
+        this.setLambda((Math.pow(this.distance, -p) * this.w ) / ((totalDistance)* totalLabmda));
     }
 
-    public Vector getlBest() {
-        return lBest;
-    }
-
-    public void setlBest(Vector lBest) {
-        this.lBest = lBest;
-    }
-
-    public double getlBestValue() {
-        return lBestValue;
-    }
-
-    public void setlBestValue(double lBestValue) {
-        this.lBestValue = lBestValue;
+    public void updateWeight(double totalFitnessValue) {
+        this.setW(this.fitnessValue / totalFitnessValue);
     }
 
     public void setLambda(double lambda) {
         if(!Double.isNaN(lambda)){
             this.lambda = lambda;
         }
+    }
+
+    public double getW() {
+        return w;
+    }
+
+    public void setW(double w) {
+        this.w = w;
     }
 }
