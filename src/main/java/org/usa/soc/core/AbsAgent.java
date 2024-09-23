@@ -3,6 +3,8 @@ package org.usa.soc.core;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
+import java.util.UUID;
+
 public abstract class AbsAgent implements Cloneable {
     protected Vector position = null;
     public double[] minBoundary = null, maxBoundary = null;

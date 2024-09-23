@@ -181,6 +181,16 @@ public class Vector {
         return StringFormatter.toString(this.positionIndexes);
     }
 
+    public String toStringArray(){
+        StringBuilder sb = new StringBuilder("[");
+        for(double d : positionIndexes){
+            sb.append(d);
+            sb.append(",");
+        }
+        sb.delete(sb.length()-1,sb.length());
+        return sb.toString();
+    }
+
     public List<Double> toAbsList(int round){
 
         ArrayList<Double> l = new ArrayList<>();
