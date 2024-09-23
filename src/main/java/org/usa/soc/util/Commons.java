@@ -1,7 +1,10 @@
 package org.usa.soc.util;
 
 import org.apache.commons.math3.special.Gamma;
+import org.usa.soc.core.ds.Vector;
+
 import java.util.Arrays;
+import java.util.Random;
 
 public class Commons {
     public static double[] fill(double value, int size){
@@ -35,5 +38,62 @@ public class Commons {
         double sigma = Math.pow((Gamma.gamma(1+beta) * Math.sin(Math.PI * (beta/2))) /
                 (Math.pow(Gamma.gamma((1+beta)/2) * beta * 2, ((beta-1)/2))), (1/beta));
         return Math.pow( (Randoms.rand(1, numberOfDimentions) * sigma) / Math.abs(Randoms.rand(1, numberOfDimentions)), (1/beta));
+    }
+
+    public static Vector levyFlightVector(int numberOfDimentions, double beta){
+        double sigma = Math.pow((Gamma.gamma(1+beta) * Math.sin(Math.PI * (beta/2))) /
+                (Math.pow(Gamma.gamma((1+beta)/2) * beta * 2, ((beta-1)/2))), (1/beta));
+
+        Vector v = new Vector(numberOfDimentions);
+        for(int i=0; i< numberOfDimentions;i++){
+            v.setValue(Math.pow( (Randoms.rand(1, numberOfDimentions) * sigma) / Math.abs(Randoms.rand(1, numberOfDimentions)), (1/beta)), i);
+        }
+        return v;
+    }
+
+    public static Vector levyFlightVector(int D, double[] min, double[] max) {
+        Vector v = new Vector(D);
+        Vector levy = Commons.levyFlightVector(3, 1.5);
+
+        for(int i=0;i<D;i++){
+            v.setValue(min[i] + levy.getValue(i)*(max[i] - min[i]),i);
+        }
+        return v.fixVector(min, max);
+    }
+
+    public static int factorial(int n){
+        int f = 1;
+        while(n > 0){
+            f *= n;
+            n = n-1;
+        }
+        return f;
+    }
+
+    public static double[] getRandomPoint(int dimension, double radius) {
+        Random random = new Random();
+
+        double[] coordinates = new double[dimension];
+        for (int i = 0; i < dimension; i++) {
+            coordinates[i] = random.nextGaussian();
+        }
+
+        // Normalize the vector to get a point on the unit sphere
+        double norm = 0;
+        for (double coordinate : coordinates) {
+            norm += coordinate * coordinate;
+        }
+        norm = Math.sqrt(norm);
+
+        for (int i = 0; i < dimension; i++) {
+            coordinates[i] /= norm;
+        }
+
+        // Scale the point to the desired radius
+        for (int i = 0; i < dimension; i++) {
+            coordinates[i] *= radius;
+        }
+
+        return coordinates;
     }
 }

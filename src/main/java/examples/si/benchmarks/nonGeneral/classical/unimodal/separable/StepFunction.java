@@ -6,6 +6,16 @@ import org.usa.soc.util.Commons;
 import java.util.Arrays;
 
 public class StepFunction extends ObjectiveFunction {
+
+    public StepFunction(){
+
+    }
+
+    int d = 10;
+    public StepFunction(int d){
+    this.d = d;
+    }
+
     @Override
     public Double call() {
         return Arrays.asList(super.getParameters()).stream().mapToDouble(d -> Math.pow((double)d + 0.5, 2)).sum();
@@ -13,7 +23,7 @@ public class StepFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 10;
+        return d;
     }
 
     @Override
