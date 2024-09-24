@@ -21,6 +21,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     protected ObjectiveFunction<Double> objectiveFunction;
     protected Vector gBest;
     private List<Double> history = new ArrayList<>();
+    private List<Vector> pHistory = new ArrayList<>();
     private double bestValue = 0,
             convergenceValue = Double.MAX_VALUE,
             gradiantDecent = Double.MAX_VALUE,
@@ -150,7 +151,8 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         calculateMeanValue(step, this.bestValue);
         calculateConvergenceValue(step, this.bestValue);
         calculateGradiantDecent(step, this.bestValue);
-        getHistory().add(this.bestValue);
+        history.add(this.bestValue);
+        pHistory.add(this.gBest);
 
         if(stepAction != null){
             stepAction.performAction(this.gBest, this.bestValue, (int) currentStep);
@@ -251,6 +253,9 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     public List<Double> getHistory() {
         return history;
     }
+    public List<Vector> getPHistory() {
+        return pHistory;
+    }
     protected void checkPaused() {
         if (this.isPaused()) {
             while (this.isPaused()) {
@@ -265,6 +270,10 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
 
     public void sort(){
         for(AgentGroup a: agents.values()){a.sort(new AgentComparator());}
+    }
+
+    public void reverseSort(){
+        for(AgentGroup a: agents.values()){a.sort(new AgentRevComparator());}
     }
 
     public double[][] getDataPoints() {

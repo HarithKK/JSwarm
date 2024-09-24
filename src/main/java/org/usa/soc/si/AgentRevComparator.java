@@ -1,10 +1,8 @@
-package examples.si.algo.mfa;
-
-import org.usa.soc.si.Agent;
+package org.usa.soc.si;
 
 import java.util.Comparator;
 
-public class FlameComparator implements Comparator<Agent> {
+public class AgentRevComparator implements Comparator<Agent> {
     @Override
     public int compare(Agent o1, Agent o2) {
         if(o1.getFitnessValue() < o2.getFitnessValue())
@@ -15,4 +13,3 @@ public class FlameComparator implements Comparator<Agent> {
         return -1;
     }
 }
-

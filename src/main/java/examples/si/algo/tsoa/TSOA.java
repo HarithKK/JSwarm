@@ -1,30 +1,35 @@
 package examples.si.algo.tsoa;
 
+import examples.si.benchmarks.singleObjective.LevyFunction;
+import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
+import org.usa.soc.util.Commons;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
-import java.util.ArrayList;
+import java.awt.*;
 
 public class TSOA extends SIAlgorithm {
 
     private int populationSize;
 
-    private double distanceFactor =0;
-
-    private double c1, c2;
-
     private int seedsCount = 2;
-    private double delegator_split = 0.3;
+    private double fertileHalf = 0.5;
     private double p = -1;
 
     private double distanceDecrement;
     private int deligator, totalSeedsCount;
 
+    private double l = 1.0, c1=10.0, c2=10.0;
 
+    public Vector z;
+
+    public int totalSproutedSeedsCount;
+
+    private double[] minDispressalRadius, maxDispressalRadius;
 
     public TSOA(
             ObjectiveFunction objectiveFunction,
@@ -34,8 +39,8 @@ public class TSOA extends SIAlgorithm {
             double[] minBoundary,
             double[] maxBoundary,
             boolean isGlobalMinima,
-            double distanceFactor,
-            int seedsCount
+            int seedsCount,
+            double fertileHalf
     ){
 
         this.objectiveFunction = objectiveFunction;
@@ -46,75 +51,108 @@ public class TSOA extends SIAlgorithm {
         this.numberOfDimensions = numberOfDimensions;
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         this.isGlobalMinima.setValue(isGlobalMinima);
-        this.distanceFactor = distanceFactor;
         this.seedsCount = seedsCount;
+        this.fertileHalf = fertileHalf;
 
-        this.c1 = 10;
-        this.c2 = 10;
+        this.minDispressalRadius = new double[numberOfDimensions];
+        this.maxDispressalRadius = new double[numberOfDimensions];
 
-        setFirstAgents("trees", new ArrayList<>());
+        for(int i=0; i< numberOfDimensions; i++){
+            double v = (maxBoundary[i] - minBoundary[i])/populationSize;
+            minDispressalRadius[i] = -v;
+            maxDispressalRadius[i] = v;
+        }
+
+        try{
+            addAgents("trees", Markers.CIRCLE, Color.GREEN);
+            addAgents("zTree", Markers.CIRCLE, Color.RED);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void step() throws Exception {
-            Vector predicted = new Vector(this.numberOfDimensions);
 
-            for(int i =0; i < getFirstAgents().size(); i++){
-                Tree t = (Tree) getFirstAgents().get(i);
-                predicted = predicted.operate(Vector.OPERATOR.ADD, t.getPosition().operate(Vector.OPERATOR.MULP, t.getLambda()));
-            }
+            z = new Vector(this.numberOfDimensions);
 
             double totalLabmda = 0;
-            double totalDistance = 0;
-            for(int i =0; i < getFirstAgents().size(); i++){
-                Tree t = (Tree) getFirstAgents().get(i);
+            double totalFitnessValue = 0.0;
+            double totalDistanceWithP = 0.0;
+            double minimumDistance = Double.MAX_VALUE;
+            int lastCount = getAgents("trees").getAgents().size();
+
+            for(int i =0; i < lastCount; i++){
+                Tree t = (Tree) getAgents("trees").getAgents().get(i);
                 totalLabmda += t.getLambda();
-                totalDistance += Math.pow(t.getCalculatedDistance(predicted), -p);
+                totalDistanceWithP += Math.pow(t.getCalculatedDistance(z), -p);
+                totalFitnessValue += t.getFitnessValue();
             }
 
+            int zSize = (int) Math.round(populationSize - (currentStep + 1) * ((double)(populationSize - 1) / (double)stepsCount));
+
+            for(int i=0; i<zSize ; i++){
+                Tree t = ((Tree)getAgents("trees").getAgents().get(i));
+                z = z.operate(Vector.OPERATOR.ADD, t.getPosition().operate(Vector.OPERATOR.MULP, t.getLambda()));
+                t.updateWeight(totalFitnessValue);
+                t.updateLambda(p, totalLabmda, totalDistanceWithP);
+            }
+            for(int i =0; i < lastCount; i++){
+                Tree t = (Tree) getAgents("trees").getAgents().get(i);
+                minimumDistance = Math.min(t.getCalculatedDistance(z), minimumDistance);
+            }
+            getAgents("zTree").getAgents().get(0).setPosition(z);
+
             for(int i = 0; i < deligator; i++){
-                Tree t = (Tree) getFirstAgents().get(i);
-                t.updateLambda(p, totalLabmda, totalDistance);
+                Tree t = (Tree) getAgents("trees").getAgents().get(i);
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
-                    if(Randoms.rand(0,1) < 0.5){
-                        Vector v1 = predicted.operate(Vector.OPERATOR.SUB, t.getlBest())
+
+                    double r = Randoms.rand(0,1);
+                    if(r < 0.3){
+                        newTree.setPosition(t.getPosition().operate(Vector.OPERATOR.ADD,
+                                Randoms.getRandomVector(numberOfDimensions, minDispressalRadius, maxDispressalRadius, 0,1)
+                        ).fixVector(minBoundary, maxBoundary));
+                        if(newTree.getPosition().getDistance(z) <= minimumDistance){
+                            newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                            newTree.setLambda(this.l);
+                            getAgents("trees").getAgents().add(newTree);
+                        }
+                    }else if(r < 0.6){
+                        Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.getPosition())
                                 .operate(Vector.OPERATOR.MULP, c1)
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
                         Vector v2 = this.gBest.getClonedVector()
-                                .operate(Vector.OPERATOR.SUB, t.getlBest())
+                                .operate(Vector.OPERATOR.SUB,  t.getPosition())
                                 .operate(Vector.OPERATOR.MULP, c2)
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
-                        Vector vx = v1.operate(Vector.OPERATOR.ADD, v2)
-                                        .operate(Vector.OPERATOR.MULP, distanceFactor);
+                        Vector vx = v1.operate(Vector.OPERATOR.ADD, v2);
                         newTree.setPosition(
                                 t.getPosition()
                                         .operate(Vector.OPERATOR.ADD, vx)
                                         .fixVector(minBoundary, maxBoundary)
                         );
+                        if(newTree.getPosition().getDistance(z) <= minimumDistance){
+                            newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                            newTree.setLambda(this.l);
+                            getAgents("trees").getAgents().add(newTree);
+                        }
                     }else{
-                        newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                        newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
+                        newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                        newTree.setLambda(this.l);
+                        getAgents("trees").getAgents().add(newTree);
                     }
-
-                    newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
-                    if(Validator.validateBestValue(newTree.getFitnessValue(), t.getlBestValue(), isGlobalMinima.isSet())){
-                        t.setlBest(newTree.getPosition());
-                        t.setlBestValue(newTree.getFitnessValue());
-                    }
-                    newTree.setlBest(newTree.getPosition());
-                    newTree.setlBestValue(newTree.getFitnessValue());
-                    newTree.setLambda(t.getLambda());
-                    getFirstAgents().add(newTree);
                 }
-
-                distanceFactor *= (1-distanceDecrement);
             }
 
             sort();
-            updateGBest((Tree) getFirstAgents().get(0));
+            updateGBest((Tree) getAgents("trees").getAgents().get(0));
 
-            for(int i = 0; i < totalSeedsCount; i++){
-                getFirstAgents().remove(getFirstAgents().size()-1);
+            // Remove old trees
+            totalSproutedSeedsCount = getAgents("trees").getAgents().size() - lastCount;
+            for(int i = 0; i < totalSproutedSeedsCount; i++){
+                getAgents("trees").getAgents().remove(getAgents("trees").getAgents().size()-1);
             }
     }
 
@@ -122,22 +160,28 @@ public class TSOA extends SIAlgorithm {
     public void initialize() {
         this.setInitialized(true);
         Validator.checkBoundaries(this.minBoundary, this.maxBoundary, this.numberOfDimensions);
-
+        double totaFitnessValue = 0.0;
         for(int i=0; i<this.populationSize; i++){
             Tree tree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
             tree.setFitnessValue(objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call());
-            tree.setlBest(tree.getPosition());
-            tree.setlBestValue(tree.getFitnessValue());
-            getFirstAgents().add(tree);
+            tree.setLambda(this.l);
+            totaFitnessValue += tree.getFitnessValue();
+            getAgents("trees").getAgents().add(tree);
+        }
+
+        for(AbsAgent tree: getAgents("trees").getAgents()){
+            Tree t = (Tree)tree;
+            t.updateWeight(totaFitnessValue);
         }
 
         sort();
-        updateGBest((Tree) getFirstAgents().get(0));
+        updateGBest((Tree) getAgents("trees").getAgents().get(0));
 
-        distanceDecrement = distanceFactor/stepsCount;
+        Tree zTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
+        zTree.setPosition(getAgents("trees").getAgents().get(0).getPosition().getClonedVector());
+        getAgents("zTree").getAgents().add(zTree);
 
-        deligator = (int)(getFirstAgents().size() * delegator_split);
-        totalSeedsCount = deligator*seedsCount;
+        deligator = (int)(getAgents("trees").getAgents().size() * fertileHalf);
     }
 
     private void updateGBest(Tree tree) {

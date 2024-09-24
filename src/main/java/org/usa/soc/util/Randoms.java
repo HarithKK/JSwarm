@@ -44,6 +44,15 @@ public class Randoms {
         return v.fixVector(min,max);
     }
 
+    public static Vector getRandomVector(int D, double radius) {
+        Vector v = new Vector(D);
+        double[] d = Commons.getRandomPoint(D, radius);
+        for(int i=0;i<D;i++){
+            v.setValue(d[i],i);
+        }
+        return v;
+    }
+
     public static Vector getRandomVector(int D, double[] min, double[] max, double rMin, double rMax) {
         Vector v = new Vector(D);
         for(int i=0;i<D;i++){
