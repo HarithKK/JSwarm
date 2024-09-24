@@ -22,7 +22,7 @@ import utils.Utils;
 public class TestConvergence {
 
     private void TestFunction(ObjectiveFunction f, int p) throws Exception {
-        TSOA t = new TSOA(f, p, 1000, f.getNumberOfDimensions(), f.getMin(), f.getMax(),true, 0.7, 2);
+        TSOA t = new TSOA(f, p, 1000, f.getNumberOfDimensions(), f.getMin(), f.getMax(),true, 2, 0.7);
         t.initialize();
         t.addStepAction(new StepAction() {
             @Override

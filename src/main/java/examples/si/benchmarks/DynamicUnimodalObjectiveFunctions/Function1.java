@@ -2,6 +2,7 @@ package examples.si.benchmarks.DynamicUnimodalObjectiveFunctions;
 
 import examples.si.benchmarks.DynamicObjectiveFunction;
 
+// sphear
 public class Function1 extends DynamicObjectiveFunction {
 
     public  Function1(int n){

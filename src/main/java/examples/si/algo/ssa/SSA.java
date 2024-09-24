@@ -97,13 +97,13 @@ public class SSA extends SIAlgorithm {
                 double sc = calculateSeasonalConstant();
                 double smin = 0.00001 / Mathamatics.pow(365, ((currentStep+1) * 2.5 / stepsCount));
 
-                if(sc < smin){
-                    for(int i=aSquirrelLower; i < populationSize;i++){
-                        Squirrel sq = (Squirrel)getFirstAgents().get(i);
-                        sq.setPosition(Commons.levyFlightVector(numberOfDimensions, minBoundary, maxBoundary));
-                        sq.setFitnessValue(objectiveFunction.setParameters(sq.getPosition().getPositionIndexes()).call());
-                    }
-                }
+//                if(sc < smin){
+//                    for(int i=aSquirrelLower; i < populationSize;i++){
+//                        Squirrel sq = (Squirrel)getFirstAgents().get(i);
+//                        sq.setPosition(Commons.levyFlightVector(numberOfDimensions, minBoundary, maxBoundary));
+//                        sq.setFitnessValue(objectiveFunction.setParameters(sq.getPosition().getPositionIndexes()).call());
+//                    }
+//                }
 
                 sort();
                 if(((Squirrel) getFirstAgents().get(hSquirrel)).getFitnessValue() < getBestValue()){

@@ -53,7 +53,7 @@ public class Commons {
 
     public static Vector levyFlightVector(int D, double[] min, double[] max) {
         Vector v = new Vector(D);
-        Vector levy = Commons.levyFlightVector(3, 1.5);
+        Vector levy = Commons.levyFlightVector(D, 1.5);
 
         for(int i=0;i<D;i++){
             v.setValue(min[i] + levy.getValue(i)*(max[i] - min[i]),i);
