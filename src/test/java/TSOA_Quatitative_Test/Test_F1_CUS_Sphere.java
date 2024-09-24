@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
+import utils.MongoClientConn;
 import utils.Utils;
 
 import java.sql.SQLException;
@@ -36,6 +37,8 @@ public class Test_F1_CUS_Sphere {
 
     String testName;
 
+    MongoClientConn mongoClientConn;
+
     public ObjectiveFunction getFunction(){
         return new Function1(n);
     }
@@ -53,6 +56,13 @@ public class Test_F1_CUS_Sphere {
 
     @AfterAll
     public void printToFile(){
+
+        mongoClientConn.updateAlgoFinalTestResult(
+                testName,
+                new String[]{"tsoa","ssa","mfa","cso", "pso", "also", "ba", "avoa", "tsa", "gwo"},
+        new List[]{
+                tsoa,ssa,mfa,cso, pso, also, ba, avoa, tsa, gwo
+        });
 
         Utils.writeToFile("data/result_mean.csv",
                 testName + ","
@@ -172,6 +182,7 @@ public class Test_F1_CUS_Sphere {
     public void setPath(){
         this.filepath = "data/result_"+ this.getClass().getSimpleName()+".csv";
         this.testName = this.getClass().getSimpleName();
+        this.mongoClientConn = new MongoClientConn("tsoa-data");
     }
 
     @RepeatedTest(10)
@@ -182,6 +193,7 @@ public class Test_F1_CUS_Sphere {
             algo.run();
             tsoa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
+            mongoClientConn.updateAlgoTestResult(algo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -195,6 +207,7 @@ public class Test_F1_CUS_Sphere {
             algo.run();
             ssa.add(algo.getBestDoubleValue());
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," +testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
+            mongoClientConn.updateAlgoTestResult(algo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -207,6 +220,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             mfa.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -220,6 +234,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             cso.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -233,6 +248,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             pso.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -246,6 +262,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             also.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -259,6 +276,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             ba.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -273,6 +291,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             avoa.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -286,6 +305,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             tsa.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -299,6 +319,7 @@ public class Test_F1_CUS_Sphere {
             algo.initialize();
             algo.run();
             gwo.add(algo.getBestDoubleValue());
+            mongoClientConn.updateAlgoTestResult(algo);
             Utils.writeToFile(filepath, new Date().toString() +","+ algo.getName() + "," + testName + "," + algo.getBestDoubleValue() + "," + algo.getNanoDuration() + "\n");
         } catch (Exception e) {
             throw new RuntimeException(e);

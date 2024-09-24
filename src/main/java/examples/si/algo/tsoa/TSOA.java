@@ -11,6 +11,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class TSOA extends SIAlgorithm {
 
@@ -30,6 +31,8 @@ public class TSOA extends SIAlgorithm {
     public int totalSproutedSeedsCount;
 
     private double[] minDispressalRadius, maxDispressalRadius;
+
+    public ArrayList<Double> z_history = new ArrayList<>();
 
     public TSOA(
             ObjectiveFunction objectiveFunction,
@@ -102,7 +105,7 @@ public class TSOA extends SIAlgorithm {
                 minimumDistance = Math.min(t.getCalculatedDistance(z), minimumDistance);
             }
             getAgents("zTree").getAgents().get(0).setPosition(z);
-
+            z_history.add(objectiveFunction.setParameters(z.getPositionIndexes()).call());
             for(int i = 0; i < deligator; i++){
                 Tree t = (Tree) getAgents("trees").getAgents().get(i);
                 for(int j =0; j< seedsCount; j++){
@@ -155,6 +158,7 @@ public class TSOA extends SIAlgorithm {
                 getAgents("trees").getAgents().remove(getAgents("trees").getAgents().size()-1);
             }
     }
+
 
     @Override
     public void initialize() {

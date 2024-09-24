@@ -4,6 +4,7 @@ package org.usa.soc.core.ds;
 This is the position vector
  */
 
+import org.usa.soc.core.action.Method;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Smoother;
 import org.usa.soc.util.StringFormatter;
@@ -78,6 +79,13 @@ public class Vector {
         return this;
     }
 
+    public Vector setValues(Method method){
+        for(int i=0; i< numberOfDimensions; i++){
+            this.positionIndexes[i] = method.execute();
+        }
+        return this;
+    }
+
     public  void setValue(Double value, int index){
         if(index >= this.getNumberOfDimensions()){
             throw new ArrayIndexOutOfBoundsException("Index should be less than "+ this.getNumberOfDimensions());
@@ -140,6 +148,21 @@ public class Vector {
     }
 
     public Vector operate(OPERATOR o, Double value) {
+        Vector tempV = this.getClonedVector();
+        for(int i=0; i< tempV.numberOfDimensions; i++){
+            Double currentVal = tempV.getValue(i);
+            switch (o){
+                case ADD: tempV.setValue((currentVal+value),i); break;
+                case SUB: tempV.setValue((currentVal-value),i); break;
+                case MULP: tempV.setValue((currentVal*value),i); break;
+                case DIV: tempV.setValue(( value == 0 ? Double.POSITIVE_INFINITY : currentVal/value),i); break;
+            }
+        }
+
+        return Smoother.smooth(tempV, this.maxMagnitude);
+    }
+
+    public Vector operate(OPERATOR o, Integer value) {
         Vector tempV = this.getClonedVector();
         for(int i=0; i< tempV.numberOfDimensions; i++){
             Double currentVal = tempV.getValue(i);

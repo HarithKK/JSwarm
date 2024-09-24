@@ -23,9 +23,9 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     private List<Double> history = new ArrayList<>();
     private List<Vector> pHistory = new ArrayList<>();
     private double bestValue = 0,
-            convergenceValue = Double.MAX_VALUE,
-            gradiantDecent = Double.MAX_VALUE,
-            meanBestValue = 0;
+    convergenceValue = Double.MAX_VALUE,
+    gradiantDecent = Double.MAX_VALUE,
+    meanBestValue = 0;
 
     public SIAlgorithm(
             ObjectiveFunction<Double> objectiveFunction,

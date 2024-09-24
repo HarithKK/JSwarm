@@ -1,6 +1,8 @@
 package examples.si.algo.mfa;
 
+import examples.si.algo.tsoa.Tree;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Markers;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.si.Agent;
@@ -10,6 +12,7 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
+import org.usa.soc.util.Validator;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -51,26 +54,26 @@ public class MFA extends SIAlgorithm {
     @Override
     public void step() throws Exception {
             if(currentStep == 0){
-                reverseSort();
-                for (AbsAgent agent: getAgents("moths").getAgents()) {
-                    Moth m = (Moth) agent;
+                sort();
+                for (int i=0; i<numberOfMoths; i++) {
+                    Moth m = (Moth)  getAgents("moths").getAgents().get(i);
                     Flame f = new Flame(m.getPosition());
                     f.setFitnessValue(m.getFitnessValue());
                     getAgents("flames").getAgents().add(f);
                 }
             }else{
-                reverseSort();
-                for (AbsAgent agent: getAgents("moths").getAgents()) {
-                    Moth m = (Moth) agent;
+                sort();
+                for (int i=0; i<numberOfMoths; i++) {
+                    Moth m = (Moth)  getAgents("moths").getAgents().get(i);
                     Flame f = new Flame(m.getPosition());
                     f.setFitnessValue(m.getFitnessValue());
                     getAgents("flames").getAgents().add(f);
                 }
+                sort();
                 getAgents("flames").setAgents(getAgents("flames").getAgents().subList(0, numberOfMoths));
-                reverseSort();
             }
 
-            this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition().getClonedVector());
+            updateGBest((Flame) getAgents("flames").getAgents().get(0));
 
             double a = -1.0 + (double)(currentStep + 1) * (-1.0 / (double)stepsCount);
             int flameNo = (int) Math.ceil(numberOfMoths - (currentStep + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
@@ -91,6 +94,14 @@ public class MFA extends SIAlgorithm {
                 ((Moth)getAgents("moths").getAgents().get(i)).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
             }
 
+    }
+
+    private void updateGBest(Flame f) {
+        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
+            this.gBest.setVector(f.getPosition());
+        }
     }
 
     @Override

@@ -12,6 +12,11 @@ public class Randoms {
             return max;
         return ThreadLocalRandom.current().nextDouble(min, max+1);
     }
+    public static int rand (int min, int max) {
+        if(max == min)
+            return max;
+        return ThreadLocalRandom.current().nextInt(min, max+1);
+    }
 
     public static double randLBmax (double min, double max) {
         if(max == min)
