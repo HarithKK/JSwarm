@@ -87,9 +87,6 @@ public class ALSO extends SIAlgorithm {
                     lizard.setLbest(lizard.getPosition());
                     lizard.setLbestValue(lizard.getFitnessValue());
                 }
-            }
-
-            for(AbsAgent agent: getFirstAgents()){
                 updateGBest((Lizard) agent);
             }
 

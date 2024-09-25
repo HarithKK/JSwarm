@@ -15,8 +15,6 @@ public class GWO extends SIAlgorithm {
     private int numberOfWolfs;
     private Wolf alpha, beta, delta;
 
-    private Vector a;
-
     public GWO (ObjectiveFunction<Double> objectiveFunction,
                 int stepsCount,
                 int numberOfDimensions,
@@ -35,52 +33,40 @@ public class GWO extends SIAlgorithm {
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         setFirstAgents("Wolves", new ArrayList<>(numberOfWolfs));
-
-        this.a = new Vector(numberOfDimensions);
-        this.a.resetAllValues(MAX_A);
     }
+
     @Override
     public void step() throws Exception{
-            double aDecrement = 2*(1.0 - (currentStep/ stepsCount));
-            for(AbsAgent agent : getFirstAgents()){
-                Wolf w = (Wolf)agent;
-                Vector X1 = getUpdatedPositionVector(w, alpha, calcA(), calcC());
-                Vector X2 = getUpdatedPositionVector(w, beta,  calcA(), calcC());
-                Vector X3 = getUpdatedPositionVector(w, delta,  calcA(), calcC());
+            double aDecrement = 2 - currentStep * (2 / stepsCount);
+            for(int i=0; i<numberOfWolfs; i++){
+                Wolf w = (Wolf)getFirstAgents().get(i);
+                Vector X1 = getUpdatedPositionVector(w, alpha, aDecrement);
+                Vector X2 = getUpdatedPositionVector(w, beta, aDecrement);
+                Vector X3 = getUpdatedPositionVector(w, delta, aDecrement);
 
                 Vector newX = X1
                         .operate(Vector.OPERATOR.ADD, X2)
                         .operate(Vector.OPERATOR.ADD, X3)
                         .operate(Vector.OPERATOR.DIV, 3.0)
                         .fixVector(minBoundary, maxBoundary);
-                Double fitnessValue = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
-                if(Validator.validateBestValue(fitnessValue, w.getFitnessValue(), isGlobalMinima.isSet())){
+
+                if( objectiveFunction.setParameters(newX.getPositionIndexes()).call() < w.getFitnessValue()){
                     w.setPosition(newX);
-                    w.setFitnessValue(fitnessValue);
+                    w.calcFitnessValue(objectiveFunction);
                 }
             }
 
             updateWolfHirarchy();
-
-            this.a.resetAllValues(aDecrement);
     }
 
-    private Vector getUpdatedPositionVector(Wolf w, Wolf prey, Vector C, Vector A){
-        Vector D = prey.getPosition().operate(Vector.OPERATOR.MULP, C).operate(Vector.OPERATOR.SUB, w.getPosition());
-        Vector AD = A.operate(Vector.OPERATOR.MULP, D);
-        return w.getPosition().operate(Vector.OPERATOR.SUB, AD).fixVector(minBoundary, maxBoundary);
-    }
+    private Vector getUpdatedPositionVector(Wolf w, Wolf prey, double a){
 
-    private Vector calcA(){
-        return Randoms.getRandomVector(numberOfDimensions,0,1)
-                .operate(Vector.OPERATOR.MULP, 2.0)
-                .operate(Vector.OPERATOR.SUB, 1.0)
-                .operate(Vector.OPERATOR.MULP, a);
-    }
-
-    private Vector calcC(){
-        return Randoms.getRandomVector(numberOfDimensions,0,1)
-                .operate(Vector.OPERATOR.MULP, 2.0);
+        double A = a*(2*Randoms.rand(0,1)- 1);
+        double C = 2*Randoms.rand(0,1);
+        Vector D = prey.getPosition().getClonedVector()
+                .operate(Vector.OPERATOR.MULP, C)
+                .operate(Vector.OPERATOR.SUB, w.getPosition().getClonedVector());
+        return prey.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, D.toAbs().operate(Vector.OPERATOR.MULP, A)).fixVector(minBoundary, maxBoundary);
     }
 
     @Override
@@ -94,7 +80,7 @@ public class GWO extends SIAlgorithm {
 
         for(int i =0;i< numberOfWolfs; i++){
             Wolf w = new Wolf(numberOfDimensions, minBoundary, maxBoundary);
-            w.setFitnessValue(this.objectiveFunction.setParameters(w.getPosition().getPositionIndexes()).call());
+            w.calcFitnessValue(objectiveFunction);
             getFirstAgents().add(w);
         }
 
@@ -109,50 +95,14 @@ public class GWO extends SIAlgorithm {
 
     private void updateWolfHirarchy(){
 
-//        findAlpha();
-//        findBeta();
-//        findDelta();
-
         sort();
 
         this.alpha = ((Wolf) getFirstAgents().get(0)).getClonedWolf();
         this.beta = ((Wolf) getFirstAgents().get(1)).getClonedWolf();
         this.delta = ((Wolf) getFirstAgents().get(2)).getClonedWolf();
 
-        this.gBest.setVector(this.alpha.getPosition());
-    }
-
-    private void findAlpha(){
-        for(int j= 0;j < this.numberOfWolfs; j++){
-            if(Validator.validateBestValue(((Wolf)getFirstAgents().get(j)).getFitnessValue(), alpha.getFitnessValue(), isGlobalMinima.isSet())){
-                this.alpha = ((Wolf) getFirstAgents().get(j)).getClonedWolf();
-            }
-        }
-    }
-
-    private void findBeta(){
-        for(int j= 0;j < this.numberOfWolfs; j++){
-            double falpha = alpha.getFitnessValue();
-            double fbeta = beta.getFitnessValue();
-            double f = ((Wolf)getFirstAgents().get(j)).getFitnessValue();
-            if(Validator.validateBestValue(f, fbeta, isGlobalMinima.isSet()) &&
-                    Validator.validateBestValue(falpha, fbeta, isGlobalMinima.isSet())
-            ){
-                this.beta = ((Wolf) getFirstAgents().get(j)).getClonedWolf();
-            }
-        }
-    }
-
-    private void findDelta(){
-        for(int j= 0;j < this.numberOfWolfs; j++){
-            double fbeta = beta.getFitnessValue();
-            double fdelta = delta.getFitnessValue();
-            double f = ((Wolf) getFirstAgents().get(j)).getFitnessValue();
-            if(Validator.validateBestValue(f, fdelta, isGlobalMinima.isSet()) &&
-                    Validator.validateBestValue(fbeta, fdelta, isGlobalMinima.isSet())
-            ){
-                this.delta = ((Wolf) getFirstAgents().get(j)).getClonedWolf();
-            }
+        if(Validator.validateBestValue(alpha.getFitnessValue(), getBestDoubleValue(), isGlobalMinima.isSet())){
+            this.gBest.setVector(this.alpha.getPosition());
         }
     }
 }

@@ -142,12 +142,14 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         this.stepAction = a;
     }
 
+    public void updateBestValue(){
+        this.bestValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+    }
     @Override
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
 
         this.currentStep = step;
-        this.bestValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
-
+        updateBestValue();
         calculateMeanValue(step, this.bestValue);
         calculateConvergenceValue(step, this.bestValue);
         calculateGradiantDecent(step, this.bestValue);

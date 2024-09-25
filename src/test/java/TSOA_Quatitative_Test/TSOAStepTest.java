@@ -54,7 +54,9 @@ public class TSOAStepTest {
                 function.getMax(),
                 true,
                 10,
-                0.7
+                0.7,
+                2.05,
+                0.1
         );
 
         algo.addStepAction(new StepAction() {

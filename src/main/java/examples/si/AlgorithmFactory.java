@@ -77,14 +77,14 @@ public class AlgorithmFactory {
                     fn.getNumberOfDimensions(),
                     sc,
                     ac,
-                    0.2,
+                    0.1,
                     fn.getMin(),
                     fn.getMax(),
-                    10,
-                    0.2,
+                    3,
+                    0.85,
                     0.2,
                     true,
-                    0.5,
+                    2.05,
                     0.2,
                     true
             );
@@ -242,11 +242,12 @@ public class AlgorithmFactory {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    10, 210,
-                    2.5,
-                    1.0,
                     10,
-                    10
+                    210,
+                    2.5,
+                    0.1,
+                    1.0,
+                    1.0
             );
             case 16: return new GEO(
                     fn,
@@ -407,8 +408,10 @@ public class AlgorithmFactory {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    10,
-                    0.5
+                    20,
+                    0.3,
+                    0.1,
+                    1.5
             );
         }
         return null;

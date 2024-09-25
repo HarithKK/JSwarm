@@ -52,7 +52,7 @@ public class Particle extends Agent {
                 .operate(Vector.OPERATOR.MULP, c2r2);
 
         this.setVelocity(v1.operate(Vector.OPERATOR.ADD, v2).operate(Vector.OPERATOR.ADD, v3).fixVector(minBoundary, maxBoundary));
-        return this.getPosition().operate(Vector.OPERATOR.ADD, this.getVelocity());
+        return this.getPosition().getClonedVector().operate(Vector.OPERATOR.ADD, this.getVelocity());
     }
 
     public Vector getVelocity() {

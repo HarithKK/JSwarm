@@ -24,7 +24,7 @@ public class TSOA extends SIAlgorithm {
     private double distanceDecrement;
     private int deligator, totalSeedsCount;
 
-    private double l = 1.0, c1=10.0, c2=10.0;
+    private double l = 1.0, c1, c2;
 
     public Vector z;
 
@@ -43,7 +43,9 @@ public class TSOA extends SIAlgorithm {
             double[] maxBoundary,
             boolean isGlobalMinima,
             int seedsCount,
-            double fertileHalf
+            double fertileHalf,
+            double c1,
+            double c2
     ){
 
         this.objectiveFunction = objectiveFunction;
@@ -56,6 +58,8 @@ public class TSOA extends SIAlgorithm {
         this.isGlobalMinima.setValue(isGlobalMinima);
         this.seedsCount = seedsCount;
         this.fertileHalf = fertileHalf;
+        this.c1 = c1;
+        this.c2 = c2;
 
         this.minDispressalRadius = new double[numberOfDimensions];
         this.maxDispressalRadius = new double[numberOfDimensions];
@@ -112,7 +116,7 @@ public class TSOA extends SIAlgorithm {
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
 
                     double r = Randoms.rand(0,1);
-                    if(r < 0.3){
+                    if(r < 0.0){
                         newTree.setPosition(t.getPosition().operate(Vector.OPERATOR.ADD,
                                 Randoms.getRandomVector(numberOfDimensions, minDispressalRadius, maxDispressalRadius, 0,1)
                         ).fixVector(minBoundary, maxBoundary));
@@ -121,7 +125,7 @@ public class TSOA extends SIAlgorithm {
                             newTree.setLambda(this.l);
                             getAgents("trees").getAgents().add(newTree);
                         }
-                    }else if(r < 0.6){
+                    }else if(r < 0.5){
                         Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.getPosition())
                                 .operate(Vector.OPERATOR.MULP, c1)
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));

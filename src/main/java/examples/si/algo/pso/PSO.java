@@ -98,7 +98,7 @@ public class PSO extends SIAlgorithm implements Cloneable {
                         objectiveFunction.setParameters(p.getPosition().getPositionIndexes()).call(),
                         isGlobalMinima.isSet()
                 )){
-                 p.setPosition(v);
+                 p.setPosition(v.getClonedVector());
                 }
             }
     }
@@ -177,6 +177,7 @@ public class PSO extends SIAlgorithm implements Cloneable {
 
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(getRandomPosition(pBestPosition.getClonedVector()), minBoundary, maxBoundary);
+            updateBestValue();
         }
     }
 

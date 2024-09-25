@@ -300,7 +300,10 @@ public class Vector {
 
     public Vector fixVector(double []min, double []max){
         for(int i =0;i< this.getNumberOfDimensions();i++){
-            this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);
+            if(Double.isNaN(this.positionIndexes[i]))
+                this.positionIndexes[i] = min[i];
+            else
+                this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);
         }
         return this;
     }

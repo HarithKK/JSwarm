@@ -32,7 +32,7 @@ public class Bat extends Agent {
         this.step =0;
 
         this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1);
-        this.velocity = position.getClonedVector();
+        this.velocity = new Vector(numberOfDimensions);
         this.best = position.getClonedVector();
     }
 

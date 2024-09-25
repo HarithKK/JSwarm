@@ -1,5 +1,6 @@
 package org.usa.soc.util;
 
+import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.usa.soc.core.ds.Vector;
 
 import java.util.Random;
@@ -44,7 +45,8 @@ public class Randoms {
     public static Vector getRandomVector(int D, double[] min, double[] max) {
         Vector v = new Vector(D);
         for(int i=0;i<D;i++){
-            v.setValue(rand(min[i], max[i]),i);
+            UniformRealDistribution ur = new UniformRealDistribution(min[i], max[i]);
+            v.setValue(ur.sample(),i);
         }
         return v.fixVector(min,max);
     }
@@ -60,23 +62,19 @@ public class Randoms {
 
     public static Vector getRandomVector(int D, double[] min, double[] max, double rMin, double rMax) {
         Vector v = new Vector(D);
+        UniformRealDistribution ur = new UniformRealDistribution(rMin, rMax);
         for(int i=0;i<D;i++){
-            v.setValue((min[i] + rand(rMin, rMax)*(max[i]-min[i])),i);
+            v.setValue((min[i] + ur.sample()*(max[i]-min[i])),i);
         }
         return v.fixVector(min,max);
     }
 
     public static Vector getRandomVector(int D, double min, double max) {
         Vector v = new Vector(D);
+        UniformRealDistribution ur = new UniformRealDistribution(min, max);
         for(int i=0;i<D;i++){
-            v.setValue(rand(min, max),i);
+            v.setValue(ur.sample(),i);
         }
-        return v;
-    }
-
-    public static Vector getRandomUniVector(double min, double max) {
-        Vector v = new Vector(1);
-        v.setValue(rand(min, max),0);
         return v;
     }
 
@@ -84,7 +82,8 @@ public class Randoms {
         Vector v = new Vector(s.getNumberOfDimensions());
         for(int i=0;i<s.getNumberOfDimensions();i++){
             double val = v.getValue(i);
-            v.setValue(rand(val-r, val+r),i);
+            UniformRealDistribution ur = new UniformRealDistribution(val-r, val+r);
+            v.setValue(ur.sample(),i);
         }
         return v;
     }
@@ -93,7 +92,8 @@ public class Randoms {
         Vector v = new Vector(s.getNumberOfDimensions());
         for(int i=0;i<s.getNumberOfDimensions();i++){
             double val = v.getValue(i);
-            v.setValue(rand(val-r.getValue(i), val+r.getValue(i)),i);
+            UniformRealDistribution ur = new UniformRealDistribution(val-r.getValue(i), val+r.getValue(i));
+            v.setValue(ur.sample(),i);
         }
         return v;
     }
