@@ -4,6 +4,7 @@ import org.usa.soc.core.ds.Vector;
 
 public class Smoother {
     public static Vector smooth(Vector input, Double magnitude){
+
         Vector tmpV = input.getClonedVector();
         Double tmpMag = 0.0;
         for (Double d: tmpV.getPositionIndexes()) {

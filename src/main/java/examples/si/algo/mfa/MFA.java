@@ -68,7 +68,7 @@ public class MFA extends SIAlgorithm {
                 for(AbsAgent a: getAgents("moths").getAgents()){
                     Moth m = (Moth) a;
                     Flame f = new Flame(m.getPosition());
-                    f.setFitnessValue(m.getFitnessValue());
+                    f.calcFitnessValue(objectiveFunction);
                     af.add(f);
                 }
 
@@ -101,7 +101,7 @@ public class MFA extends SIAlgorithm {
                 }else{
                     position = flameP.getPosition().operate(Vector.OPERATOR.ADD, firstComponent);
                 }
-                ((Moth)getAgents("moths").getAgents().get(i)).setPosition(position.getClonedVector().fixVector(minBoundary, maxBoundary));
+                ((Moth)getAgents("moths").getAgents().get(i)).setPosition(position.getClonedVector());
                 ((Moth)getAgents("moths").getAgents().get(i)).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
             }
     }
@@ -118,7 +118,7 @@ public class MFA extends SIAlgorithm {
         setInitialized(true);
 
         for(int i=0; i< numberOfMoths; i++){
-            Moth moth = new Moth(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary).fixVector(minBoundary, maxBoundary));
+            Moth moth = new Moth(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
             moth.calcFitnessValue(objectiveFunction);
             getAgents("moths").getAgents().add(moth);
         }

@@ -159,7 +159,7 @@ public class Vector {
             }
         }
 
-        return Smoother.smooth(tempV, this.maxMagnitude);
+        return  Smoother.smooth(tempV, this.maxMagnitude);
     }
 
     public Vector operate(OPERATOR o, Integer value) {
@@ -211,6 +211,7 @@ public class Vector {
             sb.append(",");
         }
         sb.delete(sb.length()-1,sb.length());
+        sb.append(']');
         return sb.toString();
     }
 

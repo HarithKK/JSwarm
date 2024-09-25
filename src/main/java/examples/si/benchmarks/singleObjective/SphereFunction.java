@@ -1,10 +1,16 @@
 package examples.si.benchmarks.singleObjective;
 
 import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.util.Commons;
 
 import java.util.Arrays;
 
 public class SphereFunction extends ObjectiveFunction {
+
+    int n = 2;
+
+    public SphereFunction(){}
+    public SphereFunction(int n){this.n=n;}
     @Override
     public Double call() {
         return Arrays.asList(super.getParameters()).stream().mapToDouble(d -> Math.pow((double)d, 2)).sum();
@@ -12,17 +18,17 @@ public class SphereFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 2;
+        return n;
     }
 
     @Override
     public double[] getMin() {
-        return new double[]{-100,-100};
+        return Commons.fill(-100, n);
     }
 
     @Override
     public double[] getMax() {
-        return new double[]{100,100};
+        return Commons.fill(100, n);
     }
 
     @Override

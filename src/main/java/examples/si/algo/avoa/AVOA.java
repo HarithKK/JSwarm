@@ -127,9 +127,7 @@ public class AVOA extends SIAlgorithm {
                         Double fpbest = this.objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call();
 
                         vulture.setLbest(vulture.getPosition());
-                        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
-                            //  vulture.setLbest(vulture.getPosition());
-                        }
+
                     }
                 }
 
@@ -155,9 +153,7 @@ public class AVOA extends SIAlgorithm {
     }
 
     private Vulture[] findBestVultures(){
-
         sort();
-
         return new Vulture[]{(Vulture) getFirstAgents().get(0), (Vulture) getFirstAgents().get(1)};
     }
 
@@ -180,7 +176,7 @@ public class AVOA extends SIAlgorithm {
 
         for(int i=0; i<populationSize;i++){
             Vulture vulture = new Vulture(numberOfDimensions, minBoundary, maxBoundary);
-            vulture.setFitnessValue(objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call());
+            vulture.calcFitnessValue(objectiveFunction);
             getFirstAgents().add(vulture);
         }
     }

@@ -5,6 +5,7 @@ import java.util.Comparator;
 public class AgentComparator implements Comparator<Agent> {
     @Override
     public int compare(Agent o1, Agent o2) {
+
         if(o1.getFitnessValue() > o2.getFitnessValue())
             return 1;
         else if (o1.getFitnessValue() == o2.getFitnessValue()) {
