@@ -60,30 +60,35 @@ public class GOA extends SIAlgorithm {
                 Vector dc = vectordiff.operate(Vector.OPERATOR.MULP, c);
 
                 for(int i=0 ;i< populationSize; i++){
+                    GrassHopper gh = (GrassHopper)getFirstAgents().get(i);
+                    Vector total = new Vector(numberOfDimensions);
+                    total.resetAllValues(0.0);
+
                     for(int j=i+1; j< populationSize; j++){
-                        double distance = getFirstAgents().get(i).getPosition().getDistance(getFirstAgents().get(j).getPosition());
+                        double distance = gh.getPosition().getDistance(getFirstAgents().get(j).getPosition());
                         double unitMultiplier= 2 + BigDecimal.valueOf(distance).remainder(BigDecimal.valueOf(2)).doubleValue();
 
-                        Vector unitVector = getFirstAgents().get(j).getPosition()
-                                .operate(Vector.OPERATOR.SUB, getFirstAgents().get(i).getPosition())
+                        Vector unitVector = getFirstAgents().get(j).getPosition().getClonedVector()
+                                .operate(Vector.OPERATOR.SUB, gh.getPosition().getClonedVector())
                                 .operate(Vector.OPERATOR.DIV, distance + 1E-14);
 
                         double s = calculateS(unitMultiplier);
 
-                        Vector distanceVector = dc.operate(Vector.OPERATOR.MULP, s)
-                                .operate(Vector.OPERATOR.MULP, unitVector);
+                        Vector distanceVector = unitVector.operate(Vector.OPERATOR.MULP, s)
+                                .operate(Vector.OPERATOR.MULP, dc);
 
-                        ((GrassHopper)getFirstAgents().get(i)).addTotalDistance(distanceVector);
-                        ((GrassHopper)getFirstAgents().get(j)).addTotalDistance(distanceVector);
+//                        ((GrassHopper)getFirstAgents().get(i)).addTotalDistance(distanceVector);
+//                        ((GrassHopper)getFirstAgents().get(j)).addTotalDistance(distanceVector);
+                        total.updateVector(distanceVector);
                     }
 
-                    Vector newX = ((GrassHopper)getFirstAgents().get(i)).getTotalDistanceVector()
+                    Vector newX = total.getClonedVector()
                             .operate(Vector.OPERATOR.MULP, c)
                             .operate(Vector.OPERATOR.ADD, this.gBest.getClonedVector())
                             .fixVector(minBoundary, maxBoundary);
-                    double fitnessValue = objectiveFunction.setParameters(newX.getPositionIndexes()).call();
-                    getFirstAgents().get(i).setPosition(newX);
-                    ((GrassHopper)getFirstAgents().get(i)).setFitnessValue(fitnessValue);
+                    gh.setPosition(newX);
+                    gh.calcFitnessValue(objectiveFunction);
+                    updateGbest(gh);
                 }
 
                 for(AbsAgent g: getFirstAgents())
@@ -104,19 +109,16 @@ public class GOA extends SIAlgorithm {
 
         for(int i=0;i <populationSize; i++){
             GrassHopper grassHopper = new GrassHopper(numberOfDimensions, minBoundary, maxBoundary);
-            grassHopper.setFitnessValue(objectiveFunction.setParameters(grassHopper.getPosition().getPositionIndexes()).call());
-
+            grassHopper.calcFitnessValue(objectiveFunction);
             getFirstAgents().add(grassHopper);
-
             updateGbest(grassHopper);
         }
     }
 
     private void updateGbest(GrassHopper grassHopper) {
-        grassHopper.getTotalDistanceVector().resetAllValues(0.0);
-        double fgbest = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
-        if(Validator.validateBestValue(grassHopper.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
+        if(Validator.validateBestValue(grassHopper.getFitnessValue(), getBestDoubleValue(), isGlobalMinima.isSet())){
             this.gBest.setVector(grassHopper.getPosition());
+            this.updateBestValue();
         }
     }
 }

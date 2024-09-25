@@ -395,8 +395,8 @@ public class AlgorithmFactory {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    1,
                     0.00004,
+                    1.0,
                     0.5,
                     1.5
             );
@@ -455,34 +455,30 @@ public class AlgorithmFactory {
     }
 
     public static class FunctionsList {
-        public static ObjectiveFunction[] getFunctionList(){
+        public static ObjectiveFunction[] getFunctionList(int n){
             return new ObjectiveFunction[]{
-                    new AckleysFunction(),
-                    new BealeFunction(),
-                    new BoothsFunction(),
-                    new Bukin4Function(),
-                    new CrossInTrayFunction(),
-                    new EasomFunction(),
-                    new EggholderFunction(),
-                    new GoldsteinPrice(),
-                    new HimmelblausFunction(),
-                    new HolderTableFunction(),
-                    new LevyFunction(),
-                    new MatyasFunction(),
-                    new McCormickFunction(),
-                    new RastriginFunction(),
-                    new RosenbrockFunction(),
-                    new SchafferFunctionN4(),
-                    new SchafferFunction(),
-                    new SphereFunction(),
-                    new StyblinskiTangFunction(),
-                    new ThreeHumpCamelFunction(),
-                    new ChungReynoldsSquares(),
-                    new SumSquares(),
-                    new Function16(2),
-                    new Function17(2),
-                    new Function18(2),
-                    new Function20(2)
+                    new AckleysFunction().updateDimensions(n),
+                    new BealeFunction().updateDimensions(n),
+                    new BoothsFunction().updateDimensions(n),
+                    new Bukin4Function().updateDimensions(n),
+                    new CrossInTrayFunction().updateDimensions(n),
+                    new EasomFunction().updateDimensions(n),
+                    new EggholderFunction().updateDimensions(n),
+                    new GoldsteinPrice().updateDimensions(n),
+                    new HimmelblausFunction().updateDimensions(n),
+                    new HolderTableFunction().updateDimensions(n),
+                    new LevyFunction().updateDimensions(n),
+                    new MatyasFunction().updateDimensions(n),
+                    new McCormickFunction().updateDimensions(n),
+                    new RastriginFunction().updateDimensions(n),
+                    new RosenbrockFunction().updateDimensions(n),
+                    new SchafferFunctionN4().updateDimensions(n),
+                    new SchafferFunction().updateDimensions(n),
+                    new SphereFunction().updateDimensions(n),
+                    new StyblinskiTangFunction().updateDimensions(n),
+                    new ThreeHumpCamelFunction().updateDimensions(n),
+                    new ChungReynoldsSquares().updateDimensions(n),
+                    new SumSquares().updateDimensions(n),
             };
         }
     }

@@ -13,17 +13,17 @@ public class ChungReynoldsSquares extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 2;
+        return numberOfDimensions;
     }
 
     @Override
     public double[] getMin() {
-        return Commons.fill(-100, this.getNumberOfDimensions());
+        return Commons.fill(-100, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return Commons.fill(100, this.getNumberOfDimensions());
+        return Commons.fill(100, numberOfDimensions);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class ChungReynoldsSquares extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return Commons.fill(0, this.getNumberOfDimensions());
+        return Commons.fill(0, numberOfDimensions);
     }
 }

@@ -19,19 +19,9 @@ public class Adom_Test {
     int p = 30;
     int steps = 1000;
 
-    ObjectiveFunction fn = new SphereFunction(n);
+    ObjectiveFunction fn = new SphereFunction().updateDimensions(n);
 
-    @RepeatedTest(10)
-    public void testMFA() {
-        try {
-            SIAlgorithm algo = new AlgorithmFactory(13, fn).getAlgorithm(steps, p);
-            algo.initialize();
-            algo.run();
-            System.out.println(algo.getBestDoubleValue());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 
     @RepeatedTest(1)
@@ -49,6 +39,30 @@ public class Adom_Test {
 
 
     // -----------------------------------------------------
+
+    @RepeatedTest(1)
+    public void testMFA() {
+        try {
+            SIAlgorithm algo = new AlgorithmFactory(13, fn).getAlgorithm(steps, p);
+            algo.initialize();
+            algo.run();
+            System.out.println(algo.getBestDoubleValue());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @RepeatedTest(1)
+    public void testGOA() {
+        try {
+            SIAlgorithm algo = new AlgorithmFactory(28, fn).getAlgorithm(steps, p);
+            algo.initialize();
+            algo.run();
+            System.out.println(algo.getBestDoubleValue());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @RepeatedTest(1)
     public void testSSA() {
@@ -134,7 +148,7 @@ public class Adom_Test {
         }
     }
 
-    @RepeatedTest(1)
+    @RepeatedTest(10)
     public void testTSOA() {
         try {
             SIAlgorithm algo = new AlgorithmFactory(29, fn).getAlgorithm(steps, p);

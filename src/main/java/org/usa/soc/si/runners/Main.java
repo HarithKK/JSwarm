@@ -46,13 +46,11 @@ public class Main {
 
     int progressValue;
     int stepCount =0;
-    int iterationCount, agentsCount;
+    int iterationCount, agentsCount, nd;
 
     double bestValue;
 
     IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
-
-    ObjectiveFunction fns[] = new AlgorithmFactory.FunctionsList().getFunctionList();
 
     DecimalFormat decimalFormat;
 
@@ -77,7 +75,7 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
+                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, AlgorithmFactory.FunctionsList.getFunctionList(nd)[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
                     functionChartPlotter.setChart(SIAlgorithm);
 
@@ -179,7 +177,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(AlgorithmFactory.FunctionsList.getFunctionList()[cmbFunction.getSelectedIndex()], 600, 600, 0, 0, true).display();
+        new FunctionDisplay(AlgorithmFactory.FunctionsList.getFunctionList(nd)[cmbFunction.getSelectedIndex()], 600, 600, 0, 0, true).display();
     }
 
     private void fncActionPerformed(double... values){
@@ -204,7 +202,7 @@ public class Main {
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, fns[0]).getAlgorithm(100, 100);
+        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, AlgorithmFactory.FunctionsList.getFunctionList(nd)[0]).getAlgorithm(100, 100);
         functionChartPlotter.setChart(SIAlgorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -273,7 +271,7 @@ public class Main {
         lblFunctionComboBox.setFont(f1);
         cmbFunction = new JComboBox<>();
         cmbFunction.setFont(f1);
-        for (ObjectiveFunction f: fns) {
+        for (ObjectiveFunction f: AlgorithmFactory.FunctionsList.getFunctionList(nd)) {
             cmbFunction.addItem(f.getClass().getSimpleName());
         }
         jToolBar.add(lblFunctionComboBox);
@@ -413,6 +411,18 @@ public class Main {
             }
         });
         pnlTop.add(pnlAgentsCount);
+
+        RowPanel pnlNumberOfDimentions = new RowPanel(" Dimentions", "2");
+        nd = 100;
+        pnlNumberOfDimentions.txt.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                if(!pnlNumberOfDimentions.txt.getText().isEmpty()){
+                    nd = Integer.parseInt(pnlNumberOfDimentions.txt.getText());
+                }
+            }
+        });
+        pnlTop.add(pnlNumberOfDimentions);
 
         Panel body = new Panel();
         body.setLayout(new BorderLayout());

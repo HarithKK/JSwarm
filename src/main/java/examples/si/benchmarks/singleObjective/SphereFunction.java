@@ -7,10 +7,8 @@ import java.util.Arrays;
 
 public class SphereFunction extends ObjectiveFunction {
 
-    int n = 2;
 
     public SphereFunction(){}
-    public SphereFunction(int n){this.n=n;}
     @Override
     public Double call() {
         return Arrays.asList(super.getParameters()).stream().mapToDouble(d -> Math.pow((double)d, 2)).sum();
@@ -18,17 +16,17 @@ public class SphereFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return n;
+        return numberOfDimensions;
     }
 
     @Override
     public double[] getMin() {
-        return Commons.fill(-100, n);
+        return Commons.fill(-100, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return Commons.fill(100, n);
+        return Commons.fill(100, numberOfDimensions);
     }
 
     @Override
@@ -38,6 +36,6 @@ public class SphereFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{0,0};
+        return Commons.fill(0.0, numberOfDimensions);
     }
 }

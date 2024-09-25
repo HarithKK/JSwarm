@@ -56,59 +56,58 @@ public class MFA extends SIAlgorithm {
             if(currentStep == 0){
                 for (int i=0; i<numberOfMoths; i++) {
                     Moth m = (Moth)  getAgents("moths").getAgents().get(i);
-                    Flame f = new Flame(m.getPosition());
+                    Flame f = new Flame(m.getPosition().getClonedVector());
                     f.setFitnessValue(m.getFitnessValue());
                     getAgents("flames").getAgents().add(f);
                 }
                 getAgents("flames").sort(1);
                 this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition());
+                this.updateBestValue();
             }else{
-                List<AbsAgent> af = new ArrayList<>(getAgents("flames").getAgents());
 
                 for(AbsAgent a: getAgents("moths").getAgents()){
                     Moth m = (Moth) a;
-                    Flame f = new Flame(m.getPosition());
+                    Flame f = new Flame(m.getPosition().getClonedVector());
                     f.calcFitnessValue(objectiveFunction);
-                    af.add(f);
+                    getAgents("flames").getAgents().add(f);
                 }
-
-                Collections.sort(af, (Comparator) new AgentComparator());
-                getAgents("flames").getAgents().clear();
-                getAgents("flames").setAgents(af.subList(0, numberOfMoths));
-
+                getAgents("flames").sort(1);
+                getAgents("flames").subList(0, numberOfMoths);
+                this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition().getClonedVector());
                 updateGBest();
             }
 
-            double a = -1.0 + (double)(currentStep + 1) * (-1.0 / (double)stepsCount);
-            int flameNo = (int) Math.ceil(numberOfMoths - (currentStep + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
+            double a = -1 + (currentStep + 1) * ((-1) / numberOfMoths);
+            int flameNo = Math.round(numberOfMoths - (currentStep + 1) * ((numberOfMoths - 1) / stepsCount));
             Flame flameP = (Flame)  getAgents("flames").getAgents().get(flameNo-1);
 
             for (int i=0 ; i<numberOfMoths ;i++){
                 Moth moth = (Moth)getAgents("moths").getAgents().get(i);
                 Flame flame = (Flame)getAgents("flames").getAgents().get(i);
 
-                double distance = flame.getPosition().getDistance(moth.getPosition());
-
+                Vector distance = flame.getPosition().getClonedVector()
+                        .operate(Vector.OPERATOR.SUB, moth.getPosition().getClonedVector()).toAbs();
                 Vector t = Randoms.getRandomVector(numberOfDimensions, 0, 1)
                         .operate(Vector.OPERATOR.MULP, (a - 1.0))
                         .operate(Vector.OPERATOR.ADD, 1.0);
                 Vector c1 = t.getClonedVector().operate(Vector.OPERATOR.MULP, 2 * Math.PI).toCos();
                 Vector c2 = t.getClonedVector().operate(Vector.OPERATOR.MULP, this.b).toExp();
                 Vector firstComponent = c1.operate(Vector.OPERATOR.MULP, c2).operate(Vector.OPERATOR.MULP, distance);
+
                 Vector position;
                 if(i <= flameNo){
                     position = flame.getPosition().operate(Vector.OPERATOR.ADD, firstComponent);
                 }else{
                     position = flameP.getPosition().operate(Vector.OPERATOR.ADD, firstComponent);
                 }
-                ((Moth)getAgents("moths").getAgents().get(i)).setPosition(position.getClonedVector().fixVector(minBoundary, maxBoundary));
-                ((Moth)getAgents("moths").getAgents().get(i)).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
+                moth.setPosition(position.getClonedVector().fixVector(minBoundary, maxBoundary));
+                moth.calcFitnessValue(objectiveFunction);
             }
     }
 
     private void updateGBest() {
         Flame f = (Flame) getAgents("flames").getAgents().get(0);
-        if (f.fitnessValue < this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call()) {
+        if (Validator.validateBestValue(f.getFitnessValue(), getBestDoubleValue(), isGlobalMinima.isSet())) {
             this.gBest.setVector(f.getPosition());
         }
     }

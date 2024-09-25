@@ -39,6 +39,10 @@ public class AgentGroup extends SeriesData {
         }
     }
 
+    public void subList(int start, int end){
+        this.setAgents(this.agents.subList(start, end));
+    }
+
     public void setAgents(List<AbsAgent> agents) {
         this.agents = agents;
     }

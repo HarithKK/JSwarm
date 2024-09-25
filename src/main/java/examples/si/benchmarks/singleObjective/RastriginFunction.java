@@ -1,6 +1,7 @@
 package examples.si.benchmarks.singleObjective;
 
 import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.util.Commons;
 
 import java.util.Arrays;
 
@@ -19,17 +20,17 @@ public class RastriginFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 3;
+        return numberOfDimensions;
     }
 
     @Override
     public double[] getMin() {
-        return new double[]{-5.12,-5.12, -5.12};
+        return Commons.fill(-5.12, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return new double[]{5.12,5.12, 5.12};
+        return Commons.fill(5.12, numberOfDimensions);
     }
 
     @Override
@@ -39,6 +40,6 @@ public class RastriginFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{0,0,0};
+        return Commons.fill(0, numberOfDimensions);
     }
 }

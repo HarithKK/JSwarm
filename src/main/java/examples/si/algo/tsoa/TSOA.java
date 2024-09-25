@@ -116,7 +116,7 @@ public class TSOA extends SIAlgorithm {
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
 
                     double r = Randoms.rand(0,1);
-                    if(r < 0.0){
+                    if(r < 0.5){
                         newTree.setPosition(t.getPosition().operate(Vector.OPERATOR.ADD,
                                 Randoms.getRandomVector(numberOfDimensions, minDispressalRadius, maxDispressalRadius, 0,1)
                         ).fixVector(minBoundary, maxBoundary));
@@ -124,8 +124,13 @@ public class TSOA extends SIAlgorithm {
                             newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
                             newTree.setLambda(this.l);
                             getAgents("trees").getAgents().add(newTree);
+                        }else{
+                            newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
+                            newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                            newTree.setLambda(this.l);
+                            getAgents("trees").getAgents().add(newTree);
                         }
-                    }else if(r < 0.5){
+                    }else{
                         Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.getPosition())
                                 .operate(Vector.OPERATOR.MULP, c1)
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
@@ -144,11 +149,6 @@ public class TSOA extends SIAlgorithm {
                             newTree.setLambda(this.l);
                             getAgents("trees").getAgents().add(newTree);
                         }
-                    }else{
-                        newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
-                        newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
-                        newTree.setLambda(this.l);
-                        getAgents("trees").getAgents().add(newTree);
                     }
                 }
             }
