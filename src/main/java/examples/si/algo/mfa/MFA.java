@@ -15,8 +15,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 public class MFA extends SIAlgorithm {
@@ -53,34 +52,42 @@ public class MFA extends SIAlgorithm {
 
     @Override
     public void step() throws Exception {
-            if(currentStep == 0){
-                sort();
-                for (int i=0; i<numberOfMoths; i++) {
-                    Moth m = (Moth)  getAgents("moths").getAgents().get(i);
-                    Flame f = new Flame(m.getPosition());
-                    f.setFitnessValue(m.getFitnessValue());
-                    getAgents("flames").getAgents().add(f);
-                }
-            }else{
-                sort();
-                for (int i=0; i<numberOfMoths; i++) {
-                    Moth m = (Moth)  getAgents("moths").getAgents().get(i);
-                    Flame f = new Flame(m.getPosition());
-                    f.setFitnessValue(m.getFitnessValue());
-                    getAgents("flames").getAgents().add(f);
-                }
-                sort();
-                getAgents("flames").setAgents(getAgents("flames").getAgents().subList(0, numberOfMoths));
-            }
 
-            updateGBest((Flame) getAgents("flames").getAgents().get(0));
+            if(currentStep == 0){
+                for (int i=0; i<numberOfMoths; i++) {
+                    Moth m = (Moth)  getAgents("moths").getAgents().get(i);
+                    Flame f = new Flame(m.getPosition());
+                    f.setFitnessValue(m.getFitnessValue());
+                    getAgents("flames").getAgents().add(f);
+                }
+                getAgents("flames").sort(1);
+                this.gBest.setVector(getAgents("flames").getAgents().get(0).getPosition());
+            }else{
+                List<AbsAgent> af = new ArrayList<>(getAgents("flames").getAgents());
+
+                for(AbsAgent a: getAgents("moths").getAgents()){
+                    Moth m = (Moth) a;
+                    Flame f = new Flame(m.getPosition());
+                    f.setFitnessValue(m.getFitnessValue());
+                    af.add(f);
+                }
+
+                Collections.sort(af, (Comparator) new AgentComparator());
+                getAgents("flames").getAgents().clear();
+                getAgents("flames").setAgents(af.subList(0, numberOfMoths));
+
+                updateGBest();
+            }
 
             double a = -1.0 + (double)(currentStep + 1) * (-1.0 / (double)stepsCount);
             int flameNo = (int) Math.ceil(numberOfMoths - (currentStep + 1) * ((double)(numberOfMoths - 1) / (double)stepsCount));
+            Flame flameP = (Flame)  getAgents("flames").getAgents().get(flameNo-1);
 
             for (int i=0 ; i<numberOfMoths ;i++){
-                Flame tmpFlame = i <= flameNo ? (Flame) getAgents("flames").getAgents().get(i) : (Flame) getAgents("flames").getAgents().get(flameNo);
-                double distance = getAgents("flames").getAgents().get(i).getPosition().getDistance(getAgents("moths").getAgents().get(i).getPosition());
+                Moth moth = (Moth)getAgents("moths").getAgents().get(i);
+                Flame flame = (Flame)getAgents("flames").getAgents().get(i);
+
+                double distance = flame.getPosition().getDistance(moth.getPosition());
 
                 Vector t = Randoms.getRandomVector(numberOfDimensions, 0, 1)
                         .operate(Vector.OPERATOR.MULP, (a - 1.0))
@@ -88,18 +95,20 @@ public class MFA extends SIAlgorithm {
                 Vector c1 = t.getClonedVector().operate(Vector.OPERATOR.MULP, 2 * Math.PI).toCos();
                 Vector c2 = t.getClonedVector().operate(Vector.OPERATOR.MULP, this.b).toExp();
                 Vector firstComponent = c1.operate(Vector.OPERATOR.MULP, c2).operate(Vector.OPERATOR.MULP, distance);
-
-                Vector position = tmpFlame.getPosition().operate(Vector.OPERATOR.ADD, firstComponent).fixVector(minBoundary, maxBoundary);
-                getAgents("moths").getAgents().get(i).setPosition(position);
+                Vector position;
+                if(i <= flameNo){
+                    position = flame.getPosition().operate(Vector.OPERATOR.ADD, firstComponent);
+                }else{
+                    position = flameP.getPosition().operate(Vector.OPERATOR.ADD, firstComponent);
+                }
+                ((Moth)getAgents("moths").getAgents().get(i)).setPosition(position.getClonedVector().fixVector(minBoundary, maxBoundary));
                 ((Moth)getAgents("moths").getAgents().get(i)).setFitnessValue(objectiveFunction.setParameters(position.getPositionIndexes()).call());
             }
-
     }
 
-    private void updateGBest(Flame f) {
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
+    private void updateGBest() {
+        Flame f = (Flame) getAgents("flames").getAgents().get(0);
+        if (f.fitnessValue < this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call()) {
             this.gBest.setVector(f.getPosition());
         }
     }
@@ -109,9 +118,12 @@ public class MFA extends SIAlgorithm {
         setInitialized(true);
 
         for(int i=0; i< numberOfMoths; i++){
-            Moth moth = new Moth(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0 , 1).fixVector(minBoundary, maxBoundary));
-            moth.setFitnessValue(objectiveFunction.setParameters(moth.getPosition().getPositionIndexes()).call());
+            Moth moth = new Moth(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary).fixVector(minBoundary, maxBoundary));
+            moth.calcFitnessValue(objectiveFunction);
             getAgents("moths").getAgents().add(moth);
         }
     }
 }
+
+
+
