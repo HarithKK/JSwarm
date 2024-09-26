@@ -179,5 +179,7 @@ public class AVOA extends SIAlgorithm {
             vulture.calcFitnessValue(objectiveFunction);
             getFirstAgents().add(vulture);
         }
+
+        this.gBest = getFirstAgents().get(0).getPosition().getClonedVector();
     }
 }
