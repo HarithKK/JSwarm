@@ -233,7 +233,7 @@ public class Main {
     private void updateUI() {
 
         progressBar.setValue(progressValue);
-        lblBestValue.setText(decimalFormat.format(bestValue));
+        lblBestValue.setText(String.format("%e", bestValue));
         lblExpectedBestValue.setText(decimalFormat.format(SIAlgorithm.getFunction().getExpectedBestValue()));
         lblExpectedBestValue.updateUI();
         swarmDisplayChart.updateUI();

@@ -77,8 +77,6 @@ public class GOA extends SIAlgorithm {
                         Vector distanceVector = unitVector.operate(Vector.OPERATOR.MULP, s)
                                 .operate(Vector.OPERATOR.MULP, dc);
 
-//                        ((GrassHopper)getFirstAgents().get(i)).addTotalDistance(distanceVector);
-//                        ((GrassHopper)getFirstAgents().get(j)).addTotalDistance(distanceVector);
                         total.updateVector(distanceVector);
                     }
 
@@ -117,7 +115,7 @@ public class GOA extends SIAlgorithm {
 
     private void updateGbest(GrassHopper grassHopper) {
         if(Validator.validateBestValue(grassHopper.getFitnessValue(), getBestDoubleValue(), isGlobalMinima.isSet())){
-            this.gBest.setVector(grassHopper.getPosition());
+            this.gBest.setVector(grassHopper.getPosition().getClonedVector());
             this.updateBestValue();
         }
     }

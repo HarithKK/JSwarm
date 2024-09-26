@@ -191,7 +191,7 @@ public class AlgorithmFactory {
                     0.9,
                     0.9,
                     100,
-                    Randoms.rand(0,1),
+                    Randoms.rand(0.1,1),
                     true
             );
             case 11: return new TCO(

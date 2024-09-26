@@ -2,6 +2,7 @@ package examples.si.algo.ba;
 
 import org.apache.commons.math3.analysis.function.Abs;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.action.Method;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -9,6 +10,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BA extends SIAlgorithm {
 
@@ -41,30 +43,49 @@ public class BA extends SIAlgorithm {
         this.alpha = alpha;
         this.gamma = gamma;
         this.A0 = A0;
-        this.r0 = r0;
+        this.r0 = r0; // pulse rate
 
         this.gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
         setFirstAgents("Bats", new ArrayList<>(numberOfBats));
     }
     @Override
     public void step() throws Exception {
-            double at =0;
-            for(AbsAgent agent : getFirstAgents()){
-                Bat b = (Bat)agent;
-                b.updatePosition(this.gBest);
-                Vector newSolution = b.generateNewSolution(Aavg);
 
-                if(Randoms.rand(0, (alpha * A0)) < b.getA()){
-                    b.updatePBest(objectiveFunction, isGlobalMinima.isSet(), newSolution);
+            this.A0 *= this.alpha;
+            this.r0 = this.r0 * (1 - Math.exp(-this.gamma * currentStep));
+
+            for(int i=0; i< numberOfBats; i++){
+                Bat b = (Bat)getFirstAgents().get(i);
+                Vector frequency = Randoms.getRandomVector(numberOfDimensions, fMin, fMax);
+                Vector vel = b.getPosition().getClonedVector()
+                        .operate(Vector.OPERATOR.SUB, getGBest().getClonedVector())
+                        .operate(Vector.OPERATOR.MULP, frequency);
+                b.getVelocity().updateVector(vel);
+
+                Vector solution;
+                if(Randoms.rand(0,1) > r0){
+                    solution = new Vector(numberOfDimensions);
+                    solution.setValues(new Method() {
+                        @Override
+                        public double execute() {
+                            return new Random().nextGaussian();
+                        }
+                    });
+
+                    solution = solution.operate(Vector.OPERATOR.MULP, A0 * 0.1)
+                            .operate(Vector.OPERATOR.ADD, gBest.getClonedVector());
+                }else{
+                    solution = b.getPosition().getClonedVector().operate(Vector.OPERATOR.ADD, b.getVelocity().getClonedVector());
                 }
-                b.updatePulseRates();
-                b.updateLoudness();
-                at += b.getA();
-            }
-            Aavg = at /(double)numberOfBats;
 
-            for(AbsAgent agent : getFirstAgents()){
-                updateGBest((Bat) agent);
+                //if(objectiveFunction.setParameters(solution.getPositionIndexes()).call() < b.fitnessValue){
+                getFirstAgents().get(i).setPosition(solution.getClonedVector());
+                ((Bat)getFirstAgents().get(i)).calcFitnessValue(objectiveFunction);
+                //}
+
+                if(b.getFitnessValue() < getBestDoubleValue()){
+                    this.gBest.setVector(solution);
+                }
             }
     }
 
@@ -84,23 +105,9 @@ public class BA extends SIAlgorithm {
                     gamma,
                     r0
             );
-            b.initiatePulseFrequency(fMax, fMin, Randoms.getRandomVector(numberOfDimensions, 0, 1));
-            b.updatePulseRates();
-            b.updateLoudness();
-            at+=b.getA();
+            b.calcFitnessValue(objectiveFunction);
             getFirstAgents().add(b);
-
-            updateGBest(b);
         }
-        this.Aavg = at / numberOfBats;
-    }
-
-    private void updateGBest(Bat b) {
-        Double fpbest = this.objectiveFunction.setParameters(b.getBest().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
-
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
-            this.gBest.setVector(b.getBest());
-        }
+        this.gBest = getFirstAgents().get(0).getPosition().getClonedVector();
     }
 }

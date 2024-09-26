@@ -41,9 +41,9 @@ public class Adom_Test {
     // -----------------------------------------------------
 
     @RepeatedTest(1)
-    public void testMFA() {
+    public void testGOA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(13, fn).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(14, fn).getAlgorithm(steps, p);
             algo.initialize();
             algo.run();
             System.out.println(algo.getBestDoubleValue());
@@ -53,9 +53,9 @@ public class Adom_Test {
     }
 
     @RepeatedTest(1)
-    public void testGOA() {
+    public void testMFA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(28, fn).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(13, fn).getAlgorithm(steps, p);
             algo.initialize();
             algo.run();
             System.out.println(algo.getBestDoubleValue());
