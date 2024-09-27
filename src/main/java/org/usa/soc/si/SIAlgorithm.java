@@ -143,7 +143,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     public void updateBestValue(){
-        this.bestValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        this.bestValue = getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
     }
     @Override
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
@@ -201,8 +201,8 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     private void calculateConvergenceValue(long step, double xValue) {
-        double dev = Math.pow(Math.abs(objectiveFunction.getExpectedBestValue() - getBestValue()), (1 / (step + 1)));
-        this.convergenceValue = 1 - ((objectiveFunction.getExpectedBestValue() - xValue) / dev);
+        double dev = Math.pow(Math.abs(getObjectiveFunction().getExpectedBestValue() - getBestValue()), (1 / (step + 1)));
+        this.convergenceValue = 1 - ((getObjectiveFunction().getExpectedBestValue() - xValue) / dev);
     }
 
     /**
@@ -221,7 +221,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     public Double getBestDoubleValue() {
-        return this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
+        return this.getObjectiveFunction().setParameters(this.getGBest().getPositionIndexes()).call();
     }
 
     public String getBestVariables() {
@@ -229,7 +229,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     public ObjectiveFunction getFunction() {
-        return this.objectiveFunction;
+        return this.getObjectiveFunction();
     }
 
     public int getStepsCount() {
@@ -286,5 +286,9 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
             }
         }
         return data;
+    }
+
+    public ObjectiveFunction<Double> getObjectiveFunction() {
+        return objectiveFunction;
     }
 }

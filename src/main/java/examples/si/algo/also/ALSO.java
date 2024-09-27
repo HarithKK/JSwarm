@@ -4,7 +4,6 @@ import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -81,7 +80,7 @@ public class ALSO extends SIAlgorithm {
                         .operate(Vector.OPERATOR.ADD, p3)
                         .fixVector(minBoundary, maxBoundary);
                 lizard.setPosition(newP);
-                lizard.setFitnessValue(objectiveFunction.setParameters(newP.getPositionIndexes()).call());
+                lizard.setFitnessValue(getObjectiveFunction().setParameters(newP.getPositionIndexes()).call());
 
                 if(Validator.validateBestValue(lizard.getFitnessValue(), lizard.getLbestValue(), isGlobalMinima.isSet())){
                     lizard.setLbest(lizard.getPosition());
@@ -99,7 +98,7 @@ public class ALSO extends SIAlgorithm {
 
         for(int i=0; i<numberOfLizards; i++){
             Lizard lizard = new Lizard(numberOfDimensions, minBoundary, maxBoundary, lb, lt, mb, mt, Ib, It);
-            lizard.setFitnessValue(objectiveFunction.setParameters(lizard.getPosition().getPositionIndexes()).call());
+            lizard.setFitnessValue(getObjectiveFunction().setParameters(lizard.getPosition().getPositionIndexes()).call());
             lizard.setLbest(lizard.getPosition());
             lizard.setLbestValue(lizard.getFitnessValue());
             getFirstAgents().add(lizard);
@@ -111,8 +110,8 @@ public class ALSO extends SIAlgorithm {
     }
 
     private void updateGBest(Lizard lizard) {
-        Double fpbest = this.objectiveFunction.setParameters(lizard.getLbest().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(lizard.getLbest().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(lizard.getPosition());

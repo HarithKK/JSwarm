@@ -1,11 +1,9 @@
 package examples.si.algo.geo;
 
-import examples.multiagent.common.E;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
@@ -77,14 +75,14 @@ public class GEO extends SIAlgorithm {
 
                     Vector newX =  eagle.getPosition().operate(Vector.OPERATOR.ADD, p1.operate(Vector.OPERATOR.ADD, p2));
                     eagle.setPosition(newX.fixVector(minBoundary, maxBoundary));
-                    eagle.setFitnessValue(objectiveFunction.setParameters(newX.getPositionIndexes()).call());
+                    eagle.setFitnessValue(getObjectiveFunction().setParameters(newX.getPositionIndexes()).call());
                     eagle.updateLocalBest(isGlobalMinima.isSet());
                 }
             }
 
             for(AbsAgent agent : getFirstAgents()){
                 Eagle eagle = (Eagle) agent;
-                double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
+                double globalBestFitnessValue = getObjectiveFunction().setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
                 if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima.isSet())){
                     this.gBest.setVector(eagle.getLocalBestPositon());
                 }
@@ -98,14 +96,14 @@ public class GEO extends SIAlgorithm {
 
         for (int i=0; i< numberOfEagles; i++){
             Eagle eagle = new Eagle(numberOfDimensions, minBoundary, maxBoundary);
-            eagle.setFitnessValue(objectiveFunction.setParameters(eagle.getPosition().getPositionIndexes()).call());
-            eagle.setLocalBestFitnessValue(objectiveFunction.setParameters(eagle.getLocalBestPositon().getPositionIndexes()).call());
+            eagle.setFitnessValue(getObjectiveFunction().setParameters(eagle.getPosition().getPositionIndexes()).call());
+            eagle.setLocalBestFitnessValue(getObjectiveFunction().setParameters(eagle.getLocalBestPositon().getPositionIndexes()).call());
             getFirstAgents().add(eagle);
         }
 
         for(AbsAgent agent : getFirstAgents()){
             Eagle eagle = (Eagle) agent;
-            double globalBestFitnessValue = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
+            double globalBestFitnessValue = getObjectiveFunction().setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
             if(Validator.validateBestValue(eagle.getLocalBestFitnessValue(), globalBestFitnessValue, isGlobalMinima.isSet())){
                 this.gBest.setVector(eagle.getLocalBestPositon());
             }

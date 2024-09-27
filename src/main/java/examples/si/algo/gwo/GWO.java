@@ -1,6 +1,5 @@
 package examples.si.algo.gwo;
 
-import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -50,9 +49,9 @@ public class GWO extends SIAlgorithm {
                         .operate(Vector.OPERATOR.DIV, 3.0)
                         .fixVector(minBoundary, maxBoundary);
 
-                if( objectiveFunction.setParameters(newX.getPositionIndexes()).call() < w.getFitnessValue()){
+                if( getObjectiveFunction().setParameters(newX.getPositionIndexes()).call() < w.getFitnessValue()){
                     w.setPosition(newX);
-                    w.calcFitnessValue(objectiveFunction);
+                    w.calcFitnessValue(getObjectiveFunction());
                 }
             }
 
@@ -80,7 +79,7 @@ public class GWO extends SIAlgorithm {
 
         for(int i =0;i< numberOfWolfs; i++){
             Wolf w = new Wolf(numberOfDimensions, minBoundary, maxBoundary);
-            w.calcFitnessValue(objectiveFunction);
+            w.calcFitnessValue(getObjectiveFunction());
             getFirstAgents().add(w);
         }
 

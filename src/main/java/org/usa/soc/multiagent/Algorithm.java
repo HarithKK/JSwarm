@@ -124,7 +124,11 @@ public abstract class Algorithm{
             step++;
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
+        this.executionCompleted();
+    }
 
+    public void executionCompleted(){
+        return;
     }
 
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {

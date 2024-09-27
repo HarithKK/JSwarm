@@ -14,10 +14,12 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.si.SIAlgorithm;
+import org.usa.soc.util.Commons;
 
 import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MongoClientConn {
@@ -38,6 +40,7 @@ public class MongoClientConn {
                 .serverApi(serverApi)
                 .build();
         this.databaseName = db;
+
     }
 
     public boolean runPing(){
@@ -51,11 +54,13 @@ public class MongoClientConn {
             } catch (MongoException e) {
                 e.printStackTrace();
                 return false;
+            }finally {
+                mongoClient.close();
             }
         }
     }
 
-    public void updateAlgoTestResult(SIAlgorithm algorithm){
+    public void updateAlgoTestResult(String testid, SIAlgorithm algorithm, int tr){
 
         try (MongoClient mongoClient = MongoClients.create(settings)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -71,6 +76,7 @@ public class MongoClientConn {
 
                 Document gen= new Document()
                         .append("_id", new ObjectId())
+                        .append("testid", testid)
                         .append("algorithm", algorithm.getName())
                         .append("function_name", algorithm.getFunction().getClass().getSimpleName())
                         .append("final_best_result", algorithm.getBestDoubleValue())
@@ -78,12 +84,19 @@ public class MongoClientConn {
                         .append("best_result_history", algorithm.getHistory())
                         .append("time", algorithm.getNanoDuration())
                         .append("d", algorithm.getFunction().getNumberOfDimensions())
-                        .append("convergence", algorithm.getConvergenceValue());
+                        .append("convergence", algorithm.getConvergenceValue())
+                        .append("term", tr);
                         //.append("p_history", phistory);
 
                 if(algorithm instanceof TSOA){
                     TSOA t = (TSOA)algorithm;
                     gen.append("z", t.z_history);
+                    double tt = t.t1 + t.t2 + t.t3;
+                    gen.append("t1", t.t1/tt);
+                    gen.append("t2", t.t2/tt);
+                    gen.append("t3", t.t3/tt);
+                    gen.append("zSize", t.zSize);
+                    gen.append("minZ", t.minimumDistance);
                 }
 
                 InsertOneResult result = collection.insertOne(gen);
@@ -93,11 +106,38 @@ public class MongoClientConn {
                 // Prints a message if any exceptions occur during the operation
             } catch (MongoException me) {
                 System.err.println("Unable to insert due to an error: " + me);
+            }finally {
+                mongoClient.close();
             }
         }
     }
 
-    public void updateAlgoFinalTestResult(String testName, String[] names, List<Double>[] algos){
+    public void updateTestInfo(String testid, String description){
+
+        try (MongoClient mongoClient = MongoClients.create(settings)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            MongoCollection<Document> collection = database.getCollection("test_info");
+
+            try {
+
+                InsertOneResult result = collection.insertOne(new Document()
+                        .append("test_id", testid)
+                        .append("test_description", description)
+                        .append("execution_date", new Date().toString()));
+                // Prints the IDs of the inserted documents
+                System.out.println("Inserted document ids: " + result.getInsertedId());
+
+                // Prints a message if any exceptions occur during the operation
+            } catch (MongoException me) {
+                System.err.println("Unable to insert due to an error: " + me);
+            }finally {
+                mongoClient.close();
+            }
+        }
+    }
+
+
+    public void updateAlgoFinalTestResult(String testid, String testName, String[] names, List<Double>[] algos, SIAlgorithm algorithm){
 
         try (MongoClient mongoClient = MongoClients.create(settings)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -106,13 +146,19 @@ public class MongoClientConn {
             try {
                 List<Document> docs = new ArrayList<>();
                 for(int i=0; i< algos.length; i++){
+                    if(algos[i].size() == 0)
+                        continue;
+                    double[] dr = algos[i].stream().mapToDouble(t->t).toArray();
+                    double[] dl = Commons.fill(algorithm.getObjectiveFunction().getExpectedBestValue(), algos.length);
                     docs.add(new Document()
-                            .append("test", testName)
+                            .append("testid", testid)
                             .append("algorithm", names[i])
+                            .append("test", testName)
                             .append("mean", algos[i].stream().mapToDouble(d -> (Double)d).average().getAsDouble())
                             .append("max", algos[i].stream().mapToDouble(d -> (Double)d).max().getAsDouble())
                             .append("min", algos[i].stream().mapToDouble(d -> (Double)d).min().getAsDouble())
                             .append("std", Utils.calcStd(algos[i]))
+                            .append("pValue", Commons.calculatePValue(dr, dl))
                             .append("values", algos[i]));
                 }
 
@@ -123,6 +169,8 @@ public class MongoClientConn {
                 // Prints a message if any exceptions occur during the operation
             } catch (MongoException me) {
                 System.err.println("Unable to insert due to an error: " + me);
+            }finally {
+                mongoClient.close();
             }
         }
     }

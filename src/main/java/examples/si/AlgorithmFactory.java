@@ -408,9 +408,9 @@ public class AlgorithmFactory {
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    20,
+                    10,
                     0.3,
-                    0.1,
+                    0.4,
                     1.5
             );
         }

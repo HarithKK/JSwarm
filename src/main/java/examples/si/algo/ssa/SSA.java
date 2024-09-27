@@ -1,11 +1,9 @@
 package examples.si.algo.ssa;
 
-import examples.si.algo.tsoa.Tree;
 import org.usa.soc.core.action.Method;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Commons;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
@@ -80,7 +78,7 @@ public class SSA extends SIAlgorithm {
                     }else{
                         squirrelOnAcornTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary));
                     }
-                    squirrelOnAcornTree.setFitnessValue(objectiveFunction.setParameters(squirrelOnAcornTree.getPosition().getPositionIndexes()).call());
+                    squirrelOnAcornTree.setFitnessValue(getObjectiveFunction().setParameters(squirrelOnAcornTree.getPosition().getPositionIndexes()).call());
                 }
 
                 // normal trees and moving towards acorn trees
@@ -98,7 +96,7 @@ public class SSA extends SIAlgorithm {
                     }else{
                         squirrelOnNormalTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary));
                     }
-                    squirrelOnNormalTree.setFitnessValue(objectiveFunction.setParameters(squirrelOnNormalTree.getPosition().getPositionIndexes()).call());
+                    squirrelOnNormalTree.setFitnessValue(getObjectiveFunction().setParameters(squirrelOnNormalTree.getPosition().getPositionIndexes()).call());
                 }
 
                 // normal trees and moving towards hickory nut tree
@@ -115,7 +113,7 @@ public class SSA extends SIAlgorithm {
                     }else{
                         squirrelOnNormalTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary));
                     }
-                    squirrelOnNormalTree.setFitnessValue(objectiveFunction.setParameters(squirrelOnNormalTree.getPosition().getPositionIndexes()).call());
+                    squirrelOnNormalTree.setFitnessValue(getObjectiveFunction().setParameters(squirrelOnNormalTree.getPosition().getPositionIndexes()).call());
                 }
 
                 double sc = calculateSeasonalConstant();
@@ -135,8 +133,8 @@ public class SSA extends SIAlgorithm {
     }
 
     private void updateGBest(Squirrel sq) {
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(sq.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(sq.getPosition().getPositionIndexes()).call();
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(sq.getPosition());
         }
@@ -171,7 +169,7 @@ public class SSA extends SIAlgorithm {
 
         for(int i=0;i <populationSize; i++){
             Squirrel squirrel = new Squirrel(numberOfDimensions, minBoundary, maxBoundary);
-            squirrel.setFitnessValue(objectiveFunction.setParameters(squirrel.getPosition().getPositionIndexes()).call());
+            squirrel.setFitnessValue(getObjectiveFunction().setParameters(squirrel.getPosition().getPositionIndexes()).call());
             getFirstAgents().add(squirrel);
         }
 

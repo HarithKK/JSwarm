@@ -1,22 +1,14 @@
 package examples.si.algo.mfa;
 
-import examples.si.algo.tsoa.Tree;
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Markers;
-import org.usa.soc.multiagent.AgentGroup;
-import org.usa.soc.si.Agent;
-import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.awt.*;
-import java.util.*;
-import java.util.List;
 
 public class MFA extends SIAlgorithm {
 
@@ -68,7 +60,7 @@ public class MFA extends SIAlgorithm {
                 for(AbsAgent a: getAgents("moths").getAgents()){
                     Moth m = (Moth) a;
                     Flame f = new Flame(m.getPosition().getClonedVector());
-                    f.calcFitnessValue(objectiveFunction);
+                    f.calcFitnessValue(getObjectiveFunction());
                     getAgents("flames").getAgents().add(f);
                 }
                 getAgents("flames").sort(1);
@@ -101,7 +93,7 @@ public class MFA extends SIAlgorithm {
                     position = flameP.getPosition().operate(Vector.OPERATOR.ADD, firstComponent);
                 }
                 moth.setPosition(position.getClonedVector().fixVector(minBoundary, maxBoundary));
-                moth.calcFitnessValue(objectiveFunction);
+                moth.calcFitnessValue(getObjectiveFunction());
             }
     }
 
@@ -118,7 +110,7 @@ public class MFA extends SIAlgorithm {
 
         for(int i=0; i< numberOfMoths; i++){
             Moth moth = new Moth(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
-            moth.calcFitnessValue(objectiveFunction);
+            moth.calcFitnessValue(getObjectiveFunction());
             getAgents("moths").getAgents().add(moth);
         }
     }

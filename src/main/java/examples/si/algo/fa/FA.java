@@ -75,7 +75,7 @@ public class FA extends SIAlgorithm {
                                         .fixVector(minBoundary, maxBoundary)
                         );
 
-                        fi.updateIntensity(objectiveFunction, gama, r);
+                        fi.updateIntensity(getObjectiveFunction(), gama, r);
                     }
                     updateGBest(fi);
                     this.alpha *= ALPHA_DECENT;
@@ -84,8 +84,8 @@ public class FA extends SIAlgorithm {
     }
 
     private void updateGBest(Fly fi) {
-        Double fpbest = this.objectiveFunction.setParameters(fi.getPosition().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(fi.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(fi.getPosition());
@@ -106,7 +106,7 @@ public class FA extends SIAlgorithm {
 
         for(int i = 0; i< numberOfFlies; i++){
             Fly d = new Fly(minBoundary, maxBoundary, numberOfDimensions);
-            d.setIntensity(objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call());
+            d.setIntensity(getObjectiveFunction().setParameters(d.getPosition().getPositionIndexes()).call());
             updateGBest(d);
             getFirstAgents().add(d);
         }

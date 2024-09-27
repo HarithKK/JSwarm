@@ -10,8 +10,6 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class AVOA extends SIAlgorithm {
 
@@ -121,10 +119,10 @@ public class AVOA extends SIAlgorithm {
                         }
 
                         vulture.setPosition(newPosition.fixVector(minBoundary, maxBoundary));
-                        vulture.setFitnessValue(objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call());
+                        vulture.setFitnessValue(getObjectiveFunction().setParameters(vulture.getPosition().getPositionIndexes()).call());
 
-                        Double fgbest = this.objectiveFunction.setParameters(vulture.getLbest().getPositionIndexes()).call();
-                        Double fpbest = this.objectiveFunction.setParameters(vulture.getPosition().getPositionIndexes()).call();
+                        Double fgbest = this.getObjectiveFunction().setParameters(vulture.getLbest().getPositionIndexes()).call();
+                        Double fpbest = this.getObjectiveFunction().setParameters(vulture.getPosition().getPositionIndexes()).call();
 
                         vulture.setLbest(vulture.getPosition());
 
@@ -140,8 +138,8 @@ public class AVOA extends SIAlgorithm {
     }
 
     private void updateGBest(Vulture vulture) {
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(vulture.getLbest().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(vulture.getLbest().getPositionIndexes()).call();
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(vulture.getLbest());
         }
@@ -176,7 +174,7 @@ public class AVOA extends SIAlgorithm {
 
         for(int i=0; i<populationSize;i++){
             Vulture vulture = new Vulture(numberOfDimensions, minBoundary, maxBoundary);
-            vulture.calcFitnessValue(objectiveFunction);
+            vulture.calcFitnessValue(getObjectiveFunction());
             getFirstAgents().add(vulture);
         }
 

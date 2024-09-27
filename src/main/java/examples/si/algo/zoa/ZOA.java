@@ -50,20 +50,20 @@ public class ZOA extends SIAlgorithm {
                             .operate(Vector.OPERATOR.SUB, zebra.getPosition().operate(Vector.OPERATOR.MULP, (double)I))
                             .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1))
                             .operate(Vector.OPERATOR.ADD, zebra.getPosition());
-                    zebra.updatePosition(objectiveFunction, newX, isGlobalMinima.isSet());
+                    zebra.updatePosition(getObjectiveFunction(), newX, isGlobalMinima.isSet());
 
                     // phase 2
                     if(Randoms.rand(0,1) <= 0.5){
                         double c = 0.01*(2*Randoms.rand(0,1) -1)*(1 - (currentStep+1)/stepsCount);
                         Vector S1 = zebra.getPosition().operate(Vector.OPERATOR.MULP, (1+c));
-                        zebra.updatePosition(objectiveFunction, S1, isGlobalMinima.isSet());
+                        zebra.updatePosition(getObjectiveFunction(), S1, isGlobalMinima.isSet());
                         attackedZebra = zebra;
                     }else{
                         Vector S2 = attackedZebra.getPosition()
                                 .operate(Vector.OPERATOR.SUB, zebra.getPosition().operate(Vector.OPERATOR.MULP, (double)I))
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1))
                                 .operate(Vector.OPERATOR.ADD, zebra.getPosition());
-                        zebra.updatePosition(objectiveFunction, S2, isGlobalMinima.isSet());
+                        zebra.updatePosition(getObjectiveFunction(), S2, isGlobalMinima.isSet());
                     }
 
                 }
@@ -82,7 +82,7 @@ public class ZOA extends SIAlgorithm {
 
         for(int i=0; i<populationSize; i++){
             Zebra zebra = new Zebra(numberOfDimensions, minBoundary, maxBoundary);
-            zebra.setFitnessValue(objectiveFunction.setParameters(zebra.getPosition().getPositionIndexes()).call());
+            zebra.setFitnessValue(getObjectiveFunction().setParameters(zebra.getPosition().getPositionIndexes()).call());
             getFirstAgents().add(zebra);
         }
 
@@ -94,7 +94,7 @@ public class ZOA extends SIAlgorithm {
     }
 
     private void updateGbest(Zebra zebra) {
-        double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
+        double fgbest = getObjectiveFunction().setParameters(gBest.getClonedVector().getPositionIndexes()).call();
         if(Validator.validateBestValue(zebra.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             gBest.setVector(zebra.getPosition());
             pioneerZebra = zebra;

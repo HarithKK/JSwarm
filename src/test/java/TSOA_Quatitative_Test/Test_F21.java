@@ -10,6 +10,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInstance;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
+import utils.ResultAggrigator;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -114,10 +115,10 @@ public class Test_F21 {
         this.filepath = "data/result_"+ this.getClass().getSimpleName()+".csv";
         this.testName = this.getClass().getSimpleName();
     }
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testTSOA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(29, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(29, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             tsoa.add(algo.getBestDoubleValue());
@@ -127,10 +128,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testSSA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(19, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(19, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             ssa.add(algo.getBestDoubleValue());
@@ -140,10 +141,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testMFA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(13, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(13, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             mfa.add(algo.getBestDoubleValue());
@@ -153,10 +154,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testCSO() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(2, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(2, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             cso.add(algo.getBestDoubleValue());
@@ -166,10 +167,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testPSO() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(0, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(0, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             pso.add(algo.getBestDoubleValue());
@@ -179,10 +180,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testALSO() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(15, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(15, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             also.add(algo.getBestDoubleValue());
@@ -192,10 +193,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testBA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(10, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(10, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             ba.add(algo.getBestDoubleValue());
@@ -206,10 +207,10 @@ public class Test_F21 {
     }
 
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testAVOA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(17, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(17, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             avoa.add(algo.getBestDoubleValue());
@@ -219,10 +220,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testTSA() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(18, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(18, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             tsa.add(algo.getBestDoubleValue());
@@ -232,10 +233,10 @@ public class Test_F21 {
         }
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(value = ResultAggrigator.REP_COUNT)
     public void testGWO() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(12, getFunction()).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(12, getFunction()).getAlgorithm(ResultAggrigator.STEPS, ResultAggrigator.POPULATION);
             algo.initialize();
             algo.run();
             gwo.add(algo.getBestDoubleValue());

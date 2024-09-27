@@ -1,5 +1,7 @@
 package org.usa.soc.util;
 
+import org.apache.commons.math3.analysis.function.Gaussian;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.UniformRealDistribution;
 import org.usa.soc.core.ds.Vector;
 
@@ -17,6 +19,10 @@ public class Randoms {
         if(max == min)
             return max;
         return ThreadLocalRandom.current().nextInt(min, max+1);
+    }
+
+    public static double rand (){
+        return new UniformRealDistribution(0,1).sample();
     }
 
     public static double randLBmax (double min, double max) {
@@ -65,6 +71,15 @@ public class Randoms {
         UniformRealDistribution ur = new UniformRealDistribution(rMin, rMax);
         for(int i=0;i<D;i++){
             v.setValue((min[i] + ur.sample()*(max[i]-min[i])),i);
+        }
+        return v.fixVector(min,max);
+    }
+
+    public static Vector getRandomGaussianVector(int D, double[] min, double[] max, double mean, double std) {
+        Vector v = new Vector(D);
+        NormalDistribution nd = new NormalDistribution(mean, std);
+        for(int i=0;i<D;i++){
+            v.setValue((min[i] + nd.sample()*(max[i]-min[i])),i);
         }
         return v.fixVector(min,max);
     }

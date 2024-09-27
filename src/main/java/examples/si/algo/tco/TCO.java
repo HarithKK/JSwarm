@@ -1,7 +1,6 @@
 package examples.si.algo.tco;
 
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -9,8 +8,6 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class TCO extends SIAlgorithm {
 
@@ -53,7 +50,7 @@ public class TCO extends SIAlgorithm {
     public void step() throws Exception{
 
             for (AbsAgent agent: getFirstAgents()) {
-                ((Termite)agent).updatePheramoneValue(eRate, objectiveFunction);
+                ((Termite)agent).updatePheramoneValue(eRate, getObjectiveFunction());
             }
 
             for(int i=0 ;i< numberOfTermites; i++){
@@ -76,8 +73,8 @@ public class TCO extends SIAlgorithm {
     }
 
     private void updateGBest(Termite ti) {
-        Double fpbest = this.objectiveFunction.setParameters(ti.getPosition().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(ti.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(ti.getPosition());
@@ -112,7 +109,7 @@ public class TCO extends SIAlgorithm {
         tauDecrements = new Vector(numberOfDimensions);
 
         for(int i=0;i<numberOfDimensions;i++){
-            double diff = Math.abs(objectiveFunction.getMax()[i] - objectiveFunction.getMin()[i]);
+            double diff = Math.abs(getObjectiveFunction().getMax()[i] - getObjectiveFunction().getMin()[i]);
             double max = diff/2;
             double min = diff/8;
 

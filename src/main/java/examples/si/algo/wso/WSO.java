@@ -1,7 +1,6 @@
 package examples.si.algo.wso;
 
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Randoms;
@@ -9,7 +8,6 @@ import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class WSO extends SIAlgorithm {
     private int numberOfWasps;
@@ -54,8 +52,8 @@ public class WSO extends SIAlgorithm {
                     this.updateBest(w);
                 }
                 w.setSolution(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
-                w.updateDiversity(objectiveFunction, isGlobalMinima.isSet());
-                w.updateForce(this.c1, this.c2, this.objectiveFunction);
+                w.updateDiversity(getObjectiveFunction(), isGlobalMinima.isSet());
+                w.updateForce(this.c1, this.c2, this.getObjectiveFunction());
             }
     }
 
@@ -79,15 +77,15 @@ public class WSO extends SIAlgorithm {
                 this.maxBoundary,
                 this.numberOfDimensions);
         wasp.setSolution(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
-        wasp.updateDiversity(objectiveFunction, isGlobalMinima.isSet());
-        wasp.updateForce(this.c1, this.c2, this.objectiveFunction);
+        wasp.updateDiversity(getObjectiveFunction(), isGlobalMinima.isSet());
+        wasp.updateForce(this.c1, this.c2, this.getObjectiveFunction());
         this.updateBest(wasp);
         return wasp;
     }
 
     private void updateBest(Wasp w) {
-        Double fgbest = objectiveFunction.setParameters(this.getGBest().getClonedVector().getPositionIndexes()).call();
-        Double fpbest = objectiveFunction.setParameters(w.getBestSolution().getPositionIndexes()).call();
+        Double fgbest = getObjectiveFunction().setParameters(this.getGBest().getClonedVector().getPositionIndexes()).call();
+        Double fpbest = getObjectiveFunction().setParameters(w.getBestSolution().getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(w.getBestSolution().getClonedVector(), minBoundary, maxBoundary);
@@ -96,7 +94,7 @@ public class WSO extends SIAlgorithm {
 
     @Override
     public SIAlgorithm clone() throws CloneNotSupportedException {
-        return new WSO(objectiveFunction,
+        return new WSO(getObjectiveFunction(),
                 getStepsCount(),
                 numberOfWasps,
                 numberOfDimensions,

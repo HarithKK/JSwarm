@@ -58,7 +58,7 @@ public class CSO extends SIAlgorithm {
             for(AbsAgent agent : getFirstAgents()) {
                 Cat cat = (Cat) agent;
                 if(cat.isSeeker()){
-                    cat.seek(objectiveFunction, isMinima());
+                    cat.seek(getObjectiveFunction(), isMinima());
                 }else{
                     cat.trace(c, w, gBest);
                 }
@@ -97,8 +97,8 @@ public class CSO extends SIAlgorithm {
 
     private void updateBestCat(Cat cat) {
 
-        Double fpbest = this.objectiveFunction.setParameters(cat.getPosition().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(cat.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(cat.getPosition().getClonedVector(), this.minBoundary, this.maxBoundary);

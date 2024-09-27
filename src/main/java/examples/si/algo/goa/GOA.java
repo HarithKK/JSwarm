@@ -85,7 +85,7 @@ public class GOA extends SIAlgorithm {
                             .operate(Vector.OPERATOR.ADD, this.gBest.getClonedVector())
                             .fixVector(minBoundary, maxBoundary);
                     gh.setPosition(newX);
-                    gh.calcFitnessValue(objectiveFunction);
+                    gh.calcFitnessValue(getObjectiveFunction());
                     updateGbest(gh);
                 }
 
@@ -107,7 +107,7 @@ public class GOA extends SIAlgorithm {
 
         for(int i=0;i <populationSize; i++){
             GrassHopper grassHopper = new GrassHopper(numberOfDimensions, minBoundary, maxBoundary);
-            grassHopper.calcFitnessValue(objectiveFunction);
+            grassHopper.calcFitnessValue(getObjectiveFunction());
             getFirstAgents().add(grassHopper);
             updateGbest(grassHopper);
         }

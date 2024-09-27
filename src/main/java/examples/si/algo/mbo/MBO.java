@@ -1,9 +1,7 @@
 package examples.si.algo.mbo;
 
-import org.apache.commons.math3.analysis.function.Abs;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Markers;
-import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -11,10 +9,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /*
 H. A. Abbass, "MBO: marriage in honey bees optimization-a Haplometrosis polygynous swarming approach," Proceedings of the 2001 Congress on Evolutionary Computation (IEEE Cat. No.01TH8546), 2001, pp. 207-214 vol. 1, doi: 10.1109/CEC.2001.934391.
@@ -84,7 +79,7 @@ public class MBO extends SIAlgorithm {
                 q.setPosition(Randoms.getRandomVector(this.numberOfDimensions, this.minBoundary, this.maxBoundary));
                 q.setSpeed(q.getSpeed() * this.alpha);
                 q.setEnergy((int) (q.getEnergy() - currentStep));
-                q.updateBestValue(this.objectiveFunction, this.isGlobalMinima.isSet());
+                q.updateBestValue(this.getObjectiveFunction(), this.isGlobalMinima.isSet());
                 updateSpermatheca(q);
             }
             sortQueensList();
@@ -92,7 +87,7 @@ public class MBO extends SIAlgorithm {
             // came to the nest generate broods
             for (AbsAgent agent: getAgents("queens").getAgents()) {
                 Queen q = (Queen) agent;
-                Brood b = q.generateBrood(this.objectiveFunction, this.mutationProbability, this.mutationCount, this.isGlobalMinima.isSet());
+                Brood b = q.generateBrood(this.getObjectiveFunction(), this.mutationProbability, this.mutationCount, this.isGlobalMinima.isSet());
                 if(b!=null){
                     getAgents("broods").addAgent(b);
                 }
@@ -143,10 +138,10 @@ public class MBO extends SIAlgorithm {
 
     private void updateSpermatheca(Queen q) {
 
-        Double f1 = this.objectiveFunction.setParameters(q.getPosition().getPositionIndexes()).call();
+        Double f1 = this.getObjectiveFunction().setParameters(q.getPosition().getPositionIndexes()).call();
 
         for (AbsAgent d: getAgents("drones").getAgents()) {
-            Double f2 = this.objectiveFunction.setParameters(d.getPosition().getPositionIndexes()).call();
+            Double f2 = this.getObjectiveFunction().setParameters(d.getPosition().getPositionIndexes()).call();
 
             double p = Math.exp(-Math.abs(f1-f2)/q.getSpeed());
 
@@ -176,7 +171,7 @@ public class MBO extends SIAlgorithm {
             Queen queen = new Queen(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
             queen.setSpeed(Randoms.rand(this.minQueenSpeed, this.maxQueenSpeed));
             queen.setEnergy(getStepsCount());
-            queen.updateBestValue(this.objectiveFunction, this.isGlobalMinima.isSet());
+            queen.updateBestValue(this.getObjectiveFunction(), this.isGlobalMinima.isSet());
             getAgents("queens").getAgents().add(queen);
             this.updateBestQueen(queen);
         }
@@ -209,7 +204,7 @@ public class MBO extends SIAlgorithm {
     @Override
     public SIAlgorithm clone() throws CloneNotSupportedException {
         return new MBO(
-                objectiveFunction,
+                getObjectiveFunction(),
                 numberOfWorkers,
                 numberOfDrones,
                 numberOfQueens,

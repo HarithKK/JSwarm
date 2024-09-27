@@ -1,16 +1,12 @@
 package examples.si.algo.ms;
 
-import org.apache.commons.math3.analysis.function.Abs;
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MS extends SIAlgorithm {
     private final int numberOfMonkeys;
@@ -66,7 +62,7 @@ public class MS extends SIAlgorithm {
                     this.minBoundary,
                     this.numberOfDimensions,
                     this.maxHeightOfTheTree,
-                    this.objectiveFunction
+                    this.getObjectiveFunction()
             );
             getAgents("Monkeys").getAgents().add(m);
             this.updateGBest(m);
@@ -75,8 +71,8 @@ public class MS extends SIAlgorithm {
 
     private void updateGBest(Monky m) {
 
-        Double fpbest = this.objectiveFunction.setParameters(m.getBestRoot().getClonedVector().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(m.getBestRoot().getClonedVector().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(m.getBestRoot(), this.minBoundary, this.maxBoundary);
         }
@@ -84,7 +80,7 @@ public class MS extends SIAlgorithm {
 
     @Override
     public SIAlgorithm clone() throws CloneNotSupportedException {
-        return new MS(objectiveFunction,
+        return new MS(getObjectiveFunction(),
                 getStepsCount(),
                 numberOfMonkeys,
                 numberOfDimensions,

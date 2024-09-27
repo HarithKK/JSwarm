@@ -1,7 +1,6 @@
 package examples.si.algo.tsa;
 
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -9,8 +8,6 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class TSA extends SIAlgorithm {
     private int populationSize;
@@ -66,7 +63,7 @@ public class TSA extends SIAlgorithm {
                 newP = tunicate.getPosition().operate(Vector.OPERATOR.ADD, newP.getClonedVector())
                         .operate(Vector.OPERATOR.DIV, ( 2 + Randoms.rand(0,1)));
                 tunicate.setPosition(newP.fixVector(minBoundary, maxBoundary));
-                tunicate.setFitnessValue(objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call());
+                tunicate.setFitnessValue(getObjectiveFunction().setParameters(tunicate.getPosition().getPositionIndexes()).call());
             }
 
             for (AbsAgent agent: getFirstAgents()) {
@@ -97,7 +94,7 @@ public class TSA extends SIAlgorithm {
 
         for(int i=0; i<populationSize; i++){
             Tunicate tunicate = new Tunicate(numberOfDimensions, minBoundary, maxBoundary);
-            tunicate.setFitnessValue(objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call());
+            tunicate.setFitnessValue(getObjectiveFunction().setParameters(tunicate.getPosition().getPositionIndexes()).call());
             getFirstAgents().add( tunicate);
             updateGBest(tunicate);
         }
@@ -105,8 +102,8 @@ public class TSA extends SIAlgorithm {
     }
 
     private void updateGBest(Tunicate tunicate) {
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(tunicate.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(tunicate.getPosition().getPositionIndexes()).call();
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(tunicate.getPosition());
         }

@@ -1,7 +1,5 @@
 package examples.si.algo.ba;
 
-import org.apache.commons.math3.analysis.function.Abs;
-import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.Method;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
@@ -80,7 +78,7 @@ public class BA extends SIAlgorithm {
 
                 //if(objectiveFunction.setParameters(solution.getPositionIndexes()).call() < b.fitnessValue){
                 getFirstAgents().get(i).setPosition(solution.getClonedVector());
-                ((Bat)getFirstAgents().get(i)).calcFitnessValue(objectiveFunction);
+                ((Bat)getFirstAgents().get(i)).calcFitnessValue(getObjectiveFunction());
                 //}
 
                 if(b.getFitnessValue() < getBestDoubleValue()){
@@ -105,7 +103,7 @@ public class BA extends SIAlgorithm {
                     gamma,
                     r0
             );
-            b.calcFitnessValue(objectiveFunction);
+            b.calcFitnessValue(getObjectiveFunction());
             getFirstAgents().add(b);
         }
         this.gBest = getFirstAgents().get(0).getPosition().getClonedVector();
