@@ -3,6 +3,7 @@ package utils;
 import examples.si.AlgorithmFactory;
 import examples.si.algo.tsoa.TSOA;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
 import examples.si.benchmarks.singleObjective.SphereFunction;
 import org.apache.commons.math3.stat.inference.TTest;
 import org.junit.Ignore;
@@ -82,7 +83,7 @@ public class Adom_Test {
     @RepeatedTest(1)
     public void testALSO() {
         try {
-            SIAlgorithm algo = new AlgorithmFactory(15, fn).getAlgorithm(steps, p);
+            SIAlgorithm algo = new AlgorithmFactory(15, new QuarticFunction().updateDimensions(30)).getAlgorithm(steps, p);
             algo.initialize();
             algo.run();
             System.out.println(algo.getBestDoubleValue());

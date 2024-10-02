@@ -150,7 +150,7 @@ public class FunctionChartPlotter extends JFrame {
                     System.out.print("\r ["+ Mathamatics.round(siAlgorithm.getBestDoubleValue(), 3) +"] ["+step/fraction+"%] "  + generate(() -> "#").limit((long)(step/fraction)).collect(joining()));
                 }
                 if(action != null)
-                    action.performAction((int)step, step/fraction, siAlgorithm.getBestDoubleValue());
+                    action.performAction((int)step, step/fraction, siAlgorithm.getBestValue());
                 step = step +1;
             }
         });

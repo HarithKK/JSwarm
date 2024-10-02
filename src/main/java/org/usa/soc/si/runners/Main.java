@@ -181,6 +181,7 @@ public class Main {
     }
 
     private void fncActionPerformed(double... values){
+
         progressValue = (int)values[0];
         bestValue = values[1];
         pltBestValue.addData(stepCount, bestValue);

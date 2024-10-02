@@ -119,7 +119,7 @@ public class DB {
     }
 
     public void addTestInfo(String testid, String description)throws SQLException{
-        String sql = "INSERT INTO test_info (testid, execution_date) VALUES (?,?)";
+        String sql = "INSERT INTO test_info (testid, test_description, execution_date) VALUES (?,?,?)";
         PreparedStatement p = conn.prepareStatement(sql);
         p.setString(1, testid);
         p.setString(2, description);

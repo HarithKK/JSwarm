@@ -262,7 +262,9 @@ public class Vector {
 
     public Vector getClonedVector(){
         Vector v = new Vector(this.numberOfDimensions);
-        v.setVector(this);
+        for(int i=0; i<numberOfDimensions; i++){
+            v.setValue(this.getValue(i), i);
+        }
         return v;
     }
 

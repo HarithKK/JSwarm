@@ -57,7 +57,7 @@ public class Test_F24_FD_Goldstein {
 
     @AfterEach
     public void writeToMongo(TestInfo ir, RepetitionInfo i) {
-        ResultAggrigator.getInstance().updateTestResuly(algo, i.getCurrentRepetition());
+        ResultAggrigator.getInstance().updateTestResuly(algo, testName, i.getCurrentRepetition());
     }
 
     @AfterAll

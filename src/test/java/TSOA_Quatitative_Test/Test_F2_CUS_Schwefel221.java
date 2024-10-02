@@ -58,7 +58,7 @@ public class Test_F2_CUS_Schwefel221 {
 
     @AfterEach
     public void writeToMongo(TestInfo ir, RepetitionInfo i) {
-        ResultAggrigator.getInstance().updateTestResuly(algo, i.getCurrentRepetition());
+        ResultAggrigator.getInstance().updateTestResuly(algo, testName, i.getCurrentRepetition());
     }
 
     @AfterAll

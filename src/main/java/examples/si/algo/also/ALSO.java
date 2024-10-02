@@ -66,12 +66,12 @@ public class ALSO extends SIAlgorithm {
 
                 Double deltaTheta = (lizard.getBodyAngle() - lizard.getTailAngle()) * (Math.PI / 180);
                 Double p1 = lizard.getTourque() * 0.3 * deltaTheta;
-                Vector p2 = lizard.getLbest()
-                        .operate(Vector.OPERATOR.SUB, lizard.getPosition())
+                Vector p2 = lizard.getLbest().getClonedVector()
+                        .operate(Vector.OPERATOR.SUB, lizard.getPosition().getClonedVector())
                         .operate(Vector.OPERATOR.MULP, c1)
                         .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
                 Vector p3 = this.gBest.getClonedVector()
-                        .operate(Vector.OPERATOR.SUB, lizard.getPosition())
+                        .operate(Vector.OPERATOR.SUB, lizard.getPosition().getClonedVector())
                         .operate(Vector.OPERATOR.MULP, c2)
                         .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
                 Vector newP = lizard.getPosition()
@@ -82,11 +82,14 @@ public class ALSO extends SIAlgorithm {
                 lizard.setPosition(newP);
                 lizard.setFitnessValue(getObjectiveFunction().setParameters(newP.getPositionIndexes()).call());
 
-                if(Validator.validateBestValue(lizard.getFitnessValue(), lizard.getLbestValue(), isGlobalMinima.isSet())){
-                    lizard.setLbest(lizard.getPosition());
+                if(lizard.getFitnessValue() < lizard.getLbestValue()){
+                    lizard.setLbest(lizard.getPosition().getClonedVector());
                     lizard.setLbestValue(lizard.getFitnessValue());
                 }
-                updateGBest((Lizard) agent);
+            }
+
+            for(AbsAgent agent: getFirstAgents()){
+              updateGBest((Lizard) agent);
             }
 
     }
@@ -99,27 +102,32 @@ public class ALSO extends SIAlgorithm {
         for(int i=0; i<numberOfLizards; i++){
             Lizard lizard = new Lizard(numberOfDimensions, minBoundary, maxBoundary, lb, lt, mb, mt, Ib, It);
             lizard.setFitnessValue(getObjectiveFunction().setParameters(lizard.getPosition().getPositionIndexes()).call());
-            lizard.setLbest(lizard.getPosition());
+            lizard.setLbest(lizard.getPosition().getClonedVector());
             lizard.setLbestValue(lizard.getFitnessValue());
             getFirstAgents().add(lizard);
         }
-
+        updateBestValueForce(Double.MAX_VALUE);
         for(AbsAgent agent: getFirstAgents()){
             updateGBest((Lizard) agent);
         }
+
+        this.globalBest = Double.MAX_VALUE;
+        this.globalWorst = Double.MIN_VALUE;
+        return;
     }
 
     private void updateGBest(Lizard lizard) {
-        Double fpbest = this.getObjectiveFunction().setParameters(lizard.getLbest().getPositionIndexes()).call();
-        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
-
-        if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
-            this.gBest.setVector(lizard.getPosition());
-            this.globalBest = fpbest;
+        if(Validator.validateBestValue(lizard.getLbestValue(), getBestValue(), isGlobalMinima.isSet())){
+            this.gBest = lizard.getLbest().getClonedVector();
+            this.updateBestValueForce(lizard.getLbestValue());
         }
 
-        if(Validator.validateBestValue(fpbest, fgbest, !isGlobalMinima.isSet())){
-            this.globalWorst = fpbest;
+        if(getBestValue() < this.globalBest){
+            this.globalBest = getBestDoubleValue().doubleValue();
+        }
+
+        if(getBestValue() > this.globalWorst){
+            this.globalWorst = getBestDoubleValue().doubleValue();
         }
     }
 }

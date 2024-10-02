@@ -57,7 +57,7 @@ public class Test_F25_FD_McCormic {
 
     @AfterEach
     public void writeToMongo(TestInfo ir, RepetitionInfo i) {
-        ResultAggrigator.getInstance().updateTestResuly(algo, i.getCurrentRepetition());
+        ResultAggrigator.getInstance().updateTestResuly(algo, testName, i.getCurrentRepetition());
     }
 
     @AfterAll

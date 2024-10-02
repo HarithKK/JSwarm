@@ -95,19 +95,20 @@ public class Lizard extends Agent {
     }
 
     public Vector getPosition() {
-        return this.position.getClonedVector();
+        return this.position;
     }
 
     public void setPosition(Vector position) {
-        this.position.setVector(position.fixVector(minBoundary, maxBoundary));
+        this.position.setVector(position);
+        this.position.fixVector(minBoundary, maxBoundary);
     }
 
     public Vector getLbest() {
-        return lbest.getClonedVector();
+        return lbest;
     }
 
     public void setLbest(Vector lbest) {
-        this.lbest.setVector(lbest.fixVector(minBoundary, maxBoundary));
+        this.lbest.setVector(lbest);
     }
 
     public double getTourque() {

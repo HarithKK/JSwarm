@@ -145,6 +145,10 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     public void updateBestValue(){
         this.bestValue = getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
     }
+
+    public void updateBestValueForce(double value){
+        this.bestValue = value;
+    }
     @Override
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
 
@@ -154,7 +158,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         calculateConvergenceValue(step, this.bestValue);
         calculateGradiantDecent(step, this.bestValue);
         history.add(this.bestValue);
-        pHistory.add(this.gBest);
+        pHistory.add(this.gBest.getClonedVector());
 
         if(stepAction != null){
             stepAction.performAction(this.gBest, this.bestValue, (int) currentStep);
@@ -221,7 +225,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     public Double getBestDoubleValue() {
-        return this.getObjectiveFunction().setParameters(this.getGBest().getPositionIndexes()).call();
+        return this.getBestValue();
     }
 
     public String getBestVariables() {

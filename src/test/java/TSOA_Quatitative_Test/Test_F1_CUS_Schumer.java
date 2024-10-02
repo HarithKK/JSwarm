@@ -2,7 +2,8 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function6;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.PowellSumFunction;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.SchumerSteiglitzFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -15,14 +16,16 @@ import java.util.List;
 
 /**
  * Targeted algorithms
- *  MFA
- *  PSO
- *  ALSO
- *  ABC
- *  CSO
+ * MFA
+ * PSO
+ * ALSO
+ * ABC
+ * CSO
  */
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F3_CUS_Step {
+public class Test_F1_CUS_Schumer {
+
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -41,7 +44,7 @@ public class Test_F3_CUS_Step {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function6(n);
+        return new SchumerSteiglitzFunction().updateDimensions(n);
     }
 
     @BeforeAll

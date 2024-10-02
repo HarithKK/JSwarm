@@ -57,7 +57,7 @@ public class Test_F10_CMS_Restrigins {
 
     @AfterEach
     public void writeToMongo(TestInfo ir, RepetitionInfo i) {
-        ResultAggrigator.getInstance().updateTestResuly(algo, i.getCurrentRepetition());
+        ResultAggrigator.getInstance().updateTestResuly(algo, testName, i.getCurrentRepetition());
     }
 
     @AfterAll

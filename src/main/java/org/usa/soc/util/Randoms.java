@@ -35,7 +35,17 @@ public class Randoms {
 
         if(Double.isNaN(f1) || Double.isNaN(f2)){
             return rand(0,1);
-        }else if(f1 < f2){
+        }
+        else if(Double.isInfinite(f1) && Double.isInfinite(f2)){
+            return rand(Double.MIN_VALUE,Double.MAX_VALUE);
+        }
+        else if(Double.isInfinite(f1)){
+            return rand(Double.MIN_VALUE,f2);
+        }
+        else if(Double.isInfinite(f2)){
+            return rand(f1,Double.MAX_VALUE);
+        }
+        else if(f1 < f2){
             return rand(f1, f2);
         }else if (f1 > f2){
             return rand(f2, f1);

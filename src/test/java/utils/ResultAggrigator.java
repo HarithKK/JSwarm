@@ -11,8 +11,8 @@ import static utils.Utils.calcStd;
 
 public class ResultAggrigator {
 
-    public static final int REP_COUNT = 1;
-    public static final int STEPS = 30;
+    public static final int REP_COUNT = 30;
+    public static final int STEPS = 500;
     public static final int POPULATION = 30;
 
     private String dbName = "tsoa-data";
@@ -144,14 +144,14 @@ public class ResultAggrigator {
         }
     }
 
-    public void updateTestResuly(SIAlgorithm algorithm, int tr){
+    public void updateTestResuly(SIAlgorithm algorithm, String testName,  int tr){
         try{
             db.connect();
-            db.addData(uuid.toString(), algorithm.getName(), algorithm.getObjectiveFunction().getClass().getSimpleName(), algorithm.getBestDoubleValue(),tr);
+            db.addData(uuid.toString(), algorithm.getName(), testName, algorithm.getBestDoubleValue(),tr);
             db.close();
         }catch (Exception e){
             e.printStackTrace();
         }
-        mongoClientConn.updateAlgoTestResult(uuid.toString(), algorithm, tr);
+        mongoClientConn.updateAlgoTestResult(uuid.toString(), algorithm, testName,tr);
     }
 }
