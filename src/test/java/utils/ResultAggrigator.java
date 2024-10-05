@@ -139,7 +139,7 @@ public class ResultAggrigator {
 
             db.addFinal(testName, testName, uuid.toString(),algos, algorithm,10);
             db.close();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,15 +1,15 @@
 package examples.si;
 
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function20;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
-import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.CsendesFunction;
-import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Debfunction;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.BentCigarFunction;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.Trid;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
 import examples.si.benchmarks.singleObjective.*;
+import examples.si.benchmarks.singleObjective.Bukin4Function;
+import examples.si.benchmarks.singleObjective.EasomFunction;
+import examples.si.benchmarks.singleObjective.SphereFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.abc.ABC;
@@ -415,6 +415,7 @@ public class AlgorithmFactory {
                     true,
                     10,
                     0.3,
+                    1,
                     0.4,
                     1.5
             );
@@ -462,7 +463,7 @@ public class AlgorithmFactory {
     public static class FunctionsList {
         public static ObjectiveFunction[] getFunctionList(int n){
             return new ObjectiveFunction[]{
-                    new AckleysFunction().updateDimensions(n),
+                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction().updateDimensions(n),
                     new BealeFunction().updateDimensions(n),
                     new BoothsFunction().updateDimensions(n),
                     new Bukin4Function().updateDimensions(n),
@@ -488,7 +489,14 @@ public class AlgorithmFactory {
                     new Debfunction().updateDimensions(n),
                     new ZakharovFunction().updateDimensions(n),
                     new CsendesFunction().updateDimensions(n),
-                    new QuarticFunction().updateDimensions(n)
+                    new QuarticFunction().updateDimensions(n),
+                    new Michalewicz10().setFixedDimentions(10),
+                    new Michalewicz5().setFixedDimentions(5),
+                    new Trid().updateDimensions(n),
+                    new Alpine1Function().updateDimensions(n),
+                    new RastriginFunction().updateDimensions(n),
+                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction().updateDimensions(n),
+                    new BentCigarFunction().updateDimensions(n)
             };
         }
     }

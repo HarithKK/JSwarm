@@ -2,7 +2,10 @@ package utils;
 
 import examples.si.AlgorithmFactory;
 import examples.si.algo.tsoa.TSOA;
+import examples.si.algo.tsoa.TSOA_V1;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
 import examples.si.benchmarks.singleObjective.SphereFunction;
 import org.apache.commons.math3.stat.inference.TTest;
@@ -14,6 +17,7 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.Randoms;
+import org.usa.soc.util.Validator;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -176,36 +180,32 @@ public class Adom_Test {
 
     }
 
-    @RepeatedTest(10)
+    @RepeatedTest(1)
     public void testTSOA() {
         try {
-            algorithm = new TSOA(
-                        new Function5(30),
-                        30,
-                        100,
-                        fn.getNumberOfDimensions(),
-                        fn.getMin(),
-                        fn.getMax(),
-                        true,
-                        10,
-                        0.3,
-                        0.4,
-                        1.5
-                );
+            algorithm = (TSOA)new AlgorithmFactory(29, new ColvilleFunction()).getAlgorithm(500, 30);
             algorithm.initialize();
             algorithm.run();
 
             System.out.println(algorithm.getBestDoubleValue());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void yetyr(){
-        Double d = new Double(10);
-        Double d1 = new Double(0);
+    public void testPSO12() throws Exception {
+        SIAlgorithm al = new AlgorithmFactory(0, new ColvilleFunction()).getAlgorithm(500, 30);
+        al.initialize();
+        al.run();
 
-        System.out.println(d/d1);
+        System.out.println(al.getBestValue());
+    }
+
+    @Test
+    public void a(){
+
+        System.out.println(Math.sin(Math.PI/2));
     }
 }

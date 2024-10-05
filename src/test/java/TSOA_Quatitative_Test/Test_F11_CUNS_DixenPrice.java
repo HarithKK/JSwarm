@@ -2,7 +2,8 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function16;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -22,7 +23,7 @@ import java.util.List;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F10_CMS_Restrigins {
+public class Test_F11_CUNS_DixenPrice {
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -41,7 +42,7 @@ public class Test_F10_CMS_Restrigins {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function9(n);
+        return new DixonPriceFunction().updateDimensions(n);
     }
 
     @BeforeAll

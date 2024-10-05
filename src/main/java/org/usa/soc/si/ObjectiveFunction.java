@@ -11,6 +11,8 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
 
     protected int numberOfDimensions = 2;
 
+    private boolean isFixedDimentions = false;
+
     private double orderOfConvergence;
 
     public ObjectiveFunction<T> setParameters (T []value) {
@@ -20,6 +22,12 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
     }
 
     public ObjectiveFunction updateDimensions(int n){
+        if (!isFixedDimentions)
+            numberOfDimensions = n;
+        return this;
+    }
+
+    public ObjectiveFunction setFixedDimentions(int n){
         numberOfDimensions = n;
         return this;
     }
@@ -29,7 +37,9 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
     }
 
     public abstract Double call ();
-    public abstract int getNumberOfDimensions();
+    public int getNumberOfDimensions(){
+        return numberOfDimensions;
+    }
 
     public abstract double[] getMin();
 

@@ -29,9 +29,9 @@ public class MongoClientConn {
     MongoClientSettings settings;
 
     String databaseName;
-
     public MongoClientConn(String db){
-        this.connectionString = "mongodb+srv://"+System.getenv("MONGO_UNAME")+":"+System.getenv("MONGO_PASSWORD")+"@cluster-tsoa-test.y7i2i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-tsoa-test";
+        //this.connectionString = "mongodb+srv://"+System.getenv("MONGO_UNAME")+":"+System.getenv("MONGO_PASSWORD")+"@cluster-tsoa-test.y7i2i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-tsoa-test";
+        this.connectionString = "mongodb+srv://hkw2021:S5lfEVzu8h4aBocJ@cluster-tsoa-test.y7i2i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-tsoa-test";
         serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
                 .build();
@@ -60,7 +60,7 @@ public class MongoClientConn {
         }
     }
 
-    public void updateAlgoTestResult(String testid, SIAlgorithm algorithm, int tr){
+    public void updateAlgoTestResult(String testid, SIAlgorithm algorithm,  String testName, int tr){
 
         try (MongoClient mongoClient = MongoClients.create(settings)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -78,7 +78,7 @@ public class MongoClientConn {
                         .append("_id", new ObjectId())
                         .append("testid", testid)
                         .append("algorithm", algorithm.getName())
-                        .append("function_name", algorithm.getFunction().getClass().getSimpleName())
+                        .append("function_name", testName)
                         .append("final_best_result", algorithm.getBestDoubleValue())
                         .append("final_best_position", Arrays.asList(algorithm.getGBest().getPositionIndexes()))
                         .append("best_result_history", algorithm.getHistory())

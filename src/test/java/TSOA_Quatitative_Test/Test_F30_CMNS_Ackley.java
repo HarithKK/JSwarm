@@ -2,7 +2,8 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function11;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -22,7 +23,7 @@ import java.util.List;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F15_CMNS_Griewankt {
+public class Test_F30_CMNS_Ackley {
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -41,7 +42,7 @@ public class Test_F15_CMNS_Griewankt {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function11(n);
+        return new AckleysFunction().updateDimensions(n);
     }
 
     @BeforeAll

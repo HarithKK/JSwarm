@@ -2,7 +2,7 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -22,8 +22,7 @@ import java.util.List;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F6_CUNS_Schwefel12 {
-
+public class Test_F37_CMNS_StyblinskiTang {
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -42,7 +41,7 @@ public class Test_F6_CUNS_Schwefel12 {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function3(n);
+        return new StyblinskiTangFunction().updateDimensions(n);
     }
 
     @BeforeAll

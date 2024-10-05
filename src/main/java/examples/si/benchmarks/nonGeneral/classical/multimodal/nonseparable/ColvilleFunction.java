@@ -27,12 +27,12 @@ public class ColvilleFunction extends ObjectiveFunction {
 
     @Override
     public double[] getMin() {
-        return Commons.fill(-10, this.getNumberOfDimensions());
+        return Commons.fill(-10, 4);
     }
 
     @Override
     public double[] getMax() {
-        return Commons.fill(10, this.getNumberOfDimensions());
+        return Commons.fill(10, 4);
     }
 
     @Override
@@ -42,6 +42,6 @@ public class ColvilleFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return Commons.fill(1, this.getNumberOfDimensions());
+        return Commons.fill(1, 4);
     }
 }

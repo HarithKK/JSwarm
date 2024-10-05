@@ -2,7 +2,8 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function5;
+import examples.si.benchmarks.singleObjective.EasomFunction;
+import examples.si.benchmarks.singleObjective.RosenbrockFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -22,7 +23,7 @@ import java.util.List;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F13_CMNS_Generalized_Rosenbrok {
+public class Test_F17_CUNS_Rosenbrok {
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -41,7 +42,7 @@ public class Test_F13_CMNS_Generalized_Rosenbrok {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function5(n);
+        return new RosenbrockFunction().updateDimensions(n);
     }
 
     @BeforeAll

@@ -36,6 +36,7 @@ public class TSOAStepTest {
                 true,
                 10,
                 0.7,
+                0.5,
                 2.05,
                 0.1
         );

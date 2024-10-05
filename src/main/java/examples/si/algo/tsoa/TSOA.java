@@ -17,6 +17,8 @@ public class TSOA extends SIAlgorithm {
 
     private int seedsCount = 2;
     private double fertileHalf = 0.5;
+
+    private double deforestFactor = 0.5;
     private double p = -1;
 
     private double distanceDecrement;
@@ -46,6 +48,7 @@ public class TSOA extends SIAlgorithm {
             boolean isGlobalMinima,
             int seedsCount,
             double fertileHalf,
+            double deforestFactor,
             double c1,
             double c2
     ){
@@ -62,19 +65,20 @@ public class TSOA extends SIAlgorithm {
         this.fertileHalf = fertileHalf;
         this.c1 = c1;
         this.c2 = c2;
+        this.deforestFactor = deforestFactor;
 
         this.minDispressalRadius = new double[numberOfDimensions];
         this.maxDispressalRadius = new double[numberOfDimensions];
 
         for(int i=0; i< numberOfDimensions; i++){
             double v = Math.round((maxBoundary[i] - minBoundary[i])/populationSize);
-            minDispressalRadius[i] = -v;
-            maxDispressalRadius[i] = v;
+            minDispressalRadius[i] = -10;
+            maxDispressalRadius[i] = 10;
         }
 
         try{
             addAgents("trees", Markers.CIRCLE, Color.GREEN);
-            addAgents("zTree", Markers.CIRCLE, Color.RED);
+            addAgents("zTree", Markers.CIRCLE, Color.MAGENTA);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -112,27 +116,27 @@ public class TSOA extends SIAlgorithm {
             }
             getAgents("zTree").getAgents().get(0).setPosition(z);
             z_history.add(getObjectiveFunction().setParameters(z.getPositionIndexes()).call());
-            for(int i = 0; i < deligator; i++){
+            for(int i = 0; i < populationSize; i++){
                 Tree t = (Tree) getAgents("trees").getAgents().get(i);
+
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
-
                     double r = Randoms.rand();
 
-                    if(r < 0.1){
+                    if(r < 0.3){
                         newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
                         newTree.setFitnessValue(getObjectiveFunction().setParameters(newTree.getPosition().getPositionIndexes()).call());
                         newTree.setLambda(this.l);
                         getAgents("trees").getAgents().add(newTree);
                         t1++;
-                    }else if(r < 0.5){
+                    }else if(r < 0.6){
                         newTree.setPosition(t.getPosition().operate(Vector.OPERATOR.ADD,
                                 Randoms.getRandomGaussianVector(numberOfDimensions, minDispressalRadius, maxDispressalRadius, 0,1)
                         ).fixVector(minBoundary, maxBoundary));
                         newTree.setFitnessValue(getObjectiveFunction().setParameters(newTree.getPosition().getPositionIndexes()).call());
                         newTree.setLambda(this.l);
                         getAgents("trees").getAgents().add(newTree);
-                        t1++;
+                        t2++;
                     }else{
                         Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.getPosition())
                                 .operate(Vector.OPERATOR.MULP, c1)
@@ -159,7 +163,7 @@ public class TSOA extends SIAlgorithm {
             updateGBest((Tree) getAgents("trees").getAgents().get(0));
 
             // Remove old trees
-            totalSproutedSeedsCount = getAgents("trees").getAgents().size() - lastCount;
+            totalSproutedSeedsCount = (int)(deforestFactor * (getAgents("trees").getAgents().size() - lastCount));
             for(int i = 0; i < totalSproutedSeedsCount; i++){
                 getAgents("trees").getAgents().remove(getAgents("trees").getAgents().size()-1);
             }
@@ -194,7 +198,7 @@ public class TSOA extends SIAlgorithm {
     }
 
     private void updateGBest(Tree tree) {
-        if (Validator.validateBestValue(tree.getFitnessValue(), getBestDoubleValue(), isGlobalMinima.isSet())) {
+        if (Validator.validateBestValue(tree.getFitnessValue(), getBestDoubleValue().doubleValue(), isGlobalMinima.isSet())) {
             this.gBest.setVector(tree.getPosition());
             updateBestValue();
         }

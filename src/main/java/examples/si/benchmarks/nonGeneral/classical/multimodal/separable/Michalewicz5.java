@@ -3,14 +3,20 @@ package examples.si.benchmarks.nonGeneral.classical.multimodal.separable;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
-import java.util.Arrays;
+public class Michalewicz5 extends ObjectiveFunction {
 
-public class Debfunction extends ObjectiveFunction {
+    public Michalewicz5(){
+        setFixedDimentions(5);
+    }
+
     @Override
     public Double call() {
-        return Arrays.asList(super.getParameters()).stream().mapToDouble(d ->
-                Math.sin(Math.pow((Double) d * 5 * Math.PI, 6))
-        ).sum() * (-1 / getNumberOfDimensions());
+        Double sum = 0.0;
+        for(int i=0; i<numberOfDimensions;i++){
+            Double x = (Double)getParameters()[i];
+            sum += Math.sin(x)*Math.pow(Math.sin(x * x * i / Math.PI), 20);
+        }
+        return -sum;
     }
 
     @Override
@@ -20,21 +26,21 @@ public class Debfunction extends ObjectiveFunction {
 
     @Override
     public double[] getMin() {
-        return Commons.fill(-1, getNumberOfDimensions());
+        return Commons.fill(0, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return  Commons.fill(1, getNumberOfDimensions());
+        return Commons.fill(Math.PI, numberOfDimensions);
     }
 
     @Override
     public double getExpectedBestValue() {
-        return -1;
+        return -4.687658;
     }
 
     @Override
     public double[] getExpectedParameters() {
-        return  Commons.fill(0, getNumberOfDimensions());
+        return new double[]{2.27,1.57};
     }
 }

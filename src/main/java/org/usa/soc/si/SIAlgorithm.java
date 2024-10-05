@@ -45,6 +45,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         this.nanoDuration = nanoDuration;
         this.isPaused.unset();
         this.isKilled.unset();
+        this.actionStepPassed.unset();
         this.setInterval(0);
     }
 
@@ -265,6 +266,10 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     protected void checkPaused() {
         if (this.isPaused()) {
             while (this.isPaused()) {
+                if(actionStepPassed.isSet()){
+                    actionStepPassed.unset();
+                    return;
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

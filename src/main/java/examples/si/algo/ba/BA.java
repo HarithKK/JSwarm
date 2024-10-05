@@ -76,14 +76,14 @@ public class BA extends SIAlgorithm {
                     solution = b.getPosition().getClonedVector().operate(Vector.OPERATOR.ADD, b.getVelocity().getClonedVector());
                 }
 
-                //if(objectiveFunction.setParameters(solution.getPositionIndexes()).call() < b.fitnessValue){
-                getFirstAgents().get(i).setPosition(solution.getClonedVector());
-                ((Bat)getFirstAgents().get(i)).calcFitnessValue(getObjectiveFunction());
-                //}
-
-                if(b.getFitnessValue() < getBestDoubleValue()){
-                    this.gBest.setVector(solution);
+                if(objectiveFunction.setParameters(solution.getPositionIndexes()).call() < b.fitnessValue){
+                    getFirstAgents().get(i).setPosition(solution.getClonedVector());
+                    ((Bat)getFirstAgents().get(i)).calcFitnessValue(getObjectiveFunction());
                 }
+
+                //if(b.getFitnessValue() < getBestDoubleValue()){
+                    this.gBest.setVector(solution.fixVector(minBoundary, maxBoundary));
+                //}
             }
     }
 
@@ -92,7 +92,7 @@ public class BA extends SIAlgorithm {
         this.setInitialized(true);
         Validator.checkBoundaries(this.minBoundary, this.maxBoundary, this.numberOfDimensions);
 
-        double at =0;
+        double at =1;
         for(int i=0; i< numberOfBats; i++){
             Bat b = new Bat(
                     minBoundary,

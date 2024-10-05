@@ -26,6 +26,7 @@ public class TestTSOA {
                 true,
                 20,
                 df,
+                0.5,
                 2.05,
                 0.1
         );

@@ -11,7 +11,7 @@ public class Tree extends Agent {
     private double w = 0;
 
     public Tree(int numberOfDimensions,double[] minBoundary, double[] maxBoundary) {
-        this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0,1);
+        this.position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1);
         this.setLambda(1);
     }
 

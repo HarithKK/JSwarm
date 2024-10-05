@@ -62,7 +62,7 @@ public class Randoms {
         Vector v = new Vector(D);
         for(int i=0;i<D;i++){
             UniformRealDistribution ur = new UniformRealDistribution(min[i], max[i]);
-            v.setValue(ur.sample(),i);
+            v.setValue(ur.sample()+min[i],i);
         }
         return v.fixVector(min,max);
     }
@@ -90,6 +90,14 @@ public class Randoms {
         NormalDistribution nd = new NormalDistribution(mean, std);
         for(int i=0;i<D;i++){
             v.setValue((min[i] + nd.sample()*(max[i]-min[i])),i);
+        }
+        return v.fixVector(min,max);
+    }
+
+    public static Vector getNormalRandomVector(int D, double[] min, double[] max, double m, double n) {
+        Vector v = new Vector(D);
+        for(int i=0;i<D;i++){
+            v.setValue((min[i] + Randoms.rand(m,n)*(max[i]-min[i])),i);
         }
         return v.fixVector(min,max);
     }

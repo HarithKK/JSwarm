@@ -90,8 +90,9 @@ public class FunctionChartPlotter extends JFrame {
             }
         }
         XYSeries seriesb = this.chart.addSeries("Best Search Trial", xbest, ybest);
-        seriesb.setMarker(SeriesMarkers.CROSS);
-        seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+        seriesb.setMarker(SeriesMarkers.DIAMOND);
+        seriesb.setMarkerColor(Color.RED);
+        //seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
 
         double [][]best_coords = new double[2][(int)(a.getFunction().getExpectedParameters().length/2)];
 
@@ -196,6 +197,10 @@ public class FunctionChartPlotter extends JFrame {
 
     public void stopOptimizer() {
         siAlgorithm.stopOptimizer();
+    }
+
+    public void stepOver() {
+        siAlgorithm.stepOver();
     }
 
     public void setInterval(int interval) {

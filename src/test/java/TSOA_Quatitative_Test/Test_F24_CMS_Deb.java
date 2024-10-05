@@ -2,7 +2,8 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.CsendesFunction;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Debfunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -22,7 +23,7 @@ import java.util.List;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F5_CUNS_Schwefel222 {
+public class Test_F24_CMS_Deb {
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -41,7 +42,7 @@ public class Test_F5_CUNS_Schwefel222 {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function2(n);
+        return new Debfunction().updateDimensions(n);
     }
 
     @BeforeAll

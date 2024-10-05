@@ -2,7 +2,7 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function16;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -22,7 +22,7 @@ import java.util.List;
  *  CSO
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class Test_F8_CUNS_DixenPrice {
+public class Test_F27_CMS_Restrigins {
     int n = 30;
     int p = 30;
     int steps = 1000;
@@ -41,7 +41,7 @@ public class Test_F8_CUNS_DixenPrice {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function16(n);
+        return new Function9(n);
     }
 
     @BeforeAll

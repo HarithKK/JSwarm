@@ -37,7 +37,7 @@ public class Main {
 
     JSpinner spnInterval;
 
-    JButton btnRun, btnShowTF, btnPause, btnStop, btnRepeate;
+    JButton btnRun, btnShowTF, btnPause, btnStop, btnRepeate, btnStep;
 
     JProgressBar progressBar;
 
@@ -89,6 +89,7 @@ public class Main {
                         btnRun.setEnabled(true);
                         btnPause.setEnabled(false);
                         btnStop.setEnabled(false);
+                        btnStep.setEnabled(false);
                         btnRepeate.setEnabled(true);
                     }else{
                         selectedFunction++;
@@ -112,6 +113,7 @@ public class Main {
         btnPause.setEnabled(true);
         btnStop.setEnabled(true);
         btnRepeate.setEnabled(false);
+        btnStep.setEnabled(false);
 
         if(currentRunner != null && functionChartPlotter.isPaused()){
             functionChartPlotter.setInterval((Integer) spnInterval.getValue());
@@ -127,6 +129,7 @@ public class Main {
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
             btnRepeate.setEnabled(false);
+            btnStep.setEnabled(true);
             isRepeat = false;
             functionChartPlotter.pause();
         }
@@ -135,6 +138,7 @@ public class Main {
     private void btnRepeatActionPerformed(ActionEvent e){
         btnRun.setEnabled(false);
         btnPause.setEnabled(false);
+        btnStep.setEnabled(false);
         btnStop.setEnabled(true);
         btnRepeate.setEnabled(false);
 
@@ -234,7 +238,7 @@ public class Main {
     private void updateUI() {
 
         progressBar.setValue(progressValue);
-        lblBestValue.setText(String.format("%e", bestValue));
+        lblBestValue.setText(decimalFormat.format(bestValue));
         lblExpectedBestValue.setText(decimalFormat.format(SIAlgorithm.getFunction().getExpectedBestValue()));
         lblExpectedBestValue.updateUI();
         swarmDisplayChart.updateUI();
@@ -312,6 +316,17 @@ public class Main {
             }
         });
         jToolBar.add(btnPause);
+
+        btnStep = new JButton("+ Step");
+        btnStep.setFont(f1);
+        btnStep.setEnabled(false);
+        btnStep.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                functionChartPlotter.stepOver();
+            }
+        });
+        jToolBar.add(btnStep);
 
         btnStop = new JButton("Stop");
         btnStop.setFont(f1);
@@ -414,7 +429,7 @@ public class Main {
         pnlTop.add(pnlAgentsCount);
 
         RowPanel pnlNumberOfDimentions = new RowPanel(" Dimentions", "2");
-        nd = 100;
+        nd = 2;
         pnlNumberOfDimentions.txt.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
