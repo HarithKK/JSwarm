@@ -34,6 +34,10 @@ public class ResultAggrigator {
         return instance;
     }
 
+    public static void clear(){
+        instance = null;
+    }
+
     private static void update_test_info() {
         try{
             instance.db.connect();

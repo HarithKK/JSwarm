@@ -7,7 +7,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInstance;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function11;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.GriewanktFunction;
 import examples.si.AlgorithmFactory;
 import utils.Utils;
 
@@ -36,7 +36,7 @@ public class TestF11 {
     String testName;
 
     public ObjectiveFunction getFunction(){
-        return new Function11(n);
+        return new GriewanktFunction(n);
     }
 
     List<Double> tsoa = new ArrayList<>();

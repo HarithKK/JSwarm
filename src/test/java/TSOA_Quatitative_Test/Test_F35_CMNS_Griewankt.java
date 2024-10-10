@@ -2,7 +2,7 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function11;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.GriewanktFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -41,7 +41,7 @@ public class Test_F35_CMNS_Griewankt {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function11(n);
+        return new GriewanktFunction(n);
     }
 
     @BeforeAll

@@ -81,9 +81,9 @@ public class BA extends SIAlgorithm {
                     ((Bat)getFirstAgents().get(i)).calcFitnessValue(getObjectiveFunction());
                 }
 
-                //if(b.getFitnessValue() < getBestDoubleValue()){
+                if(b.getFitnessValue() < getBestDoubleValue()){
                     this.gBest.setVector(solution.fixVector(minBoundary, maxBoundary));
-                //}
+                }
             }
     }
 

@@ -6,9 +6,15 @@ import org.usa.soc.si.ObjectiveFunction;
 public class FunctionToMapper implements Mapper {
 
     private ObjectiveFunction fn;
+    public double xmin, xmax,ymin,ymax;
 
     public FunctionToMapper(ObjectiveFunction fn){
         this.fn = fn;
+        fn.setFixedDimentions(2);
+        xmin = fn.getMin()[0];
+        ymin = fn.getMin()[1];
+        xmax = fn.getMax()[0];
+        ymax = fn.getMax()[1];
     }
 
     @Override

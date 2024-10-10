@@ -16,16 +16,22 @@ public class Plot extends JPanel {
     private final ProgressiveSurfaceModel model;
     private JSurfacePanel panel;
 
-    public Plot(Mapper m, String title, boolean configVisible) {
+    public Plot(FunctionToMapper m, String title, boolean configVisible) {
 
         initComponents(title, configVisible);
 
         model = new ProgressiveSurfaceModel();
+        model.setXMin((float) m.xmin);
+        model.setYMin((float) m.ymin);
+        model.setXMax((float) m.xmax);
+        model.setYMax((float) m.ymax);
         panel.setModel(model);
         model.setMapper(m);
         model.plot().execute();
         model.setPlotFunction12(true, false);
-
+        model.setDisplayXY(true);
+        model.setDisplayGrids(true);
+        model.setDisplayZ(true);
     }
 
     private void initComponents(String title, boolean c) {

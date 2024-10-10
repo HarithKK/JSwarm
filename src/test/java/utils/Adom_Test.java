@@ -2,26 +2,20 @@ package utils;
 
 import examples.si.AlgorithmFactory;
 import examples.si.algo.tsoa.TSOA;
-import examples.si.algo.tsoa.TSOA_V1;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
+import examples.si.benchmarks.cec2018.MIDTLZ1;
+import examples.si.benchmarks.cec2018.MIDTLZ3;
+import examples.si.benchmarks.cec2022.*;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
 import examples.si.benchmarks.singleObjective.SphereFunction;
-import org.apache.commons.math3.stat.inference.TTest;
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
-import org.usa.soc.core.action.Method;
+import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.Commons;
-import org.usa.soc.util.Randoms;
-import org.usa.soc.util.Validator;
-import utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -204,8 +198,22 @@ public class Adom_Test {
     }
 
     @Test
-    public void a(){
+    public void a() throws Exception {
+        SIAlgorithm al = new AlgorithmFactory(0, new MIDTLZ1().updateDimensions(30)).getAlgorithm(100, 30);
+        al.initialize();
 
-        System.out.println(Math.sin(Math.PI/2));
+        al.addStepAction(new StepAction() {
+            @Override
+            public void performAction(Vector best, Double bestValue, int step) {
+                System.out.println(bestValue);
+            }
+        });
+        al.run();
+
+
+
+        System.out.println(al.getObjectiveFunction().getExpectedBestValue() + "," + al.getBestValue());
+
     }
+
 }

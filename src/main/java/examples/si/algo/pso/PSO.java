@@ -125,6 +125,9 @@ public class PSO extends SIAlgorithm implements Cloneable {
             getFirstAgents().add(p);
             this.updateGBest(((Particle)getFirstAgents().get(i)).getPBest(), this.getGBest());
         }
+
+        gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
+        updateBestValue();
     }
 
     private Vector getRandomPosition(Vector v) {

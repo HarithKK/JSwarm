@@ -1,5 +1,7 @@
 package examples.si;
 
+import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
+import examples.si.benchmarks.cec2018.MIDTLZ1;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.BentCigarFunction;
@@ -416,7 +418,7 @@ public class AlgorithmFactory {
                     10,
                     0.3,
                     1,
-                    0.4,
+                    1.49,
                     1.5
             );
         }
@@ -496,7 +498,9 @@ public class AlgorithmFactory {
                     new Alpine1Function().updateDimensions(n),
                     new RastriginFunction().updateDimensions(n),
                     new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction().updateDimensions(n),
-                    new BentCigarFunction().updateDimensions(n)
+                    new BentCigarFunction().updateDimensions(n),
+                    new ShiftedSphereFunction().updateDimensions(n),
+                    new MIDTLZ1(10, 10).setFixedDimentions(n)
             };
         }
     }
