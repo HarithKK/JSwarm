@@ -18,8 +18,9 @@ public class FunctionDisplay extends JFrame {
         this.setTitle(function.getClass().getSimpleName());
         this.setSize(w, h);
         this.setLocation(x, y);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         p = new Plot(new FunctionToMapper(function),getTitle(), configs);
+
         this.getContentPane().add(p);
     }
 

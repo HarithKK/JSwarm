@@ -4,6 +4,7 @@ package org.usa.soc.core.ds;
 This is the position vector
  */
 
+import org.usa.soc.core.action.Method;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Smoother;
 import org.usa.soc.util.StringFormatter;
@@ -74,6 +75,13 @@ public class Vector {
         int count = Math.min(values.length, this.getNumberOfDimensions());
         for(int i=0; i< count; i++){
             this.positionIndexes[i] = values[i];
+        }
+        return this;
+    }
+
+    public Vector setValues(Method method){
+        for(int i=0; i< numberOfDimensions; i++){
+            this.positionIndexes[i] = method.execute();
         }
         return this;
     }
@@ -151,6 +159,21 @@ public class Vector {
             }
         }
 
+        return  Smoother.smooth(tempV, this.maxMagnitude);
+    }
+
+    public Vector operate(OPERATOR o, Integer value) {
+        Vector tempV = this.getClonedVector();
+        for(int i=0; i< tempV.numberOfDimensions; i++){
+            Double currentVal = tempV.getValue(i);
+            switch (o){
+                case ADD: tempV.setValue((currentVal+value),i); break;
+                case SUB: tempV.setValue((currentVal-value),i); break;
+                case MULP: tempV.setValue((currentVal*value),i); break;
+                case DIV: tempV.setValue(( value == 0 ? Double.POSITIVE_INFINITY : currentVal/value),i); break;
+            }
+        }
+
         return Smoother.smooth(tempV, this.maxMagnitude);
     }
 
@@ -188,6 +211,7 @@ public class Vector {
             sb.append(",");
         }
         sb.delete(sb.length()-1,sb.length());
+        sb.append(']');
         return sb.toString();
     }
 
@@ -238,7 +262,9 @@ public class Vector {
 
     public Vector getClonedVector(){
         Vector v = new Vector(this.numberOfDimensions);
-        v.setVector(this);
+        for(int i=0; i<numberOfDimensions; i++){
+            v.setValue(this.getValue(i), i);
+        }
         return v;
     }
 
@@ -276,7 +302,10 @@ public class Vector {
 
     public Vector fixVector(double []min, double []max){
         for(int i =0;i< this.getNumberOfDimensions();i++){
-            this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);
+            if(Double.isNaN(this.positionIndexes[i]))
+                this.positionIndexes[i] = min[i];
+            else
+                this.positionIndexes[i] = Validator.validatePosition(min[i], max[i],this.positionIndexes[i]);
         }
         return this;
     }

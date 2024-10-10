@@ -1,10 +1,17 @@
 package examples.si;
 
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
-import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function20;
+import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
+import examples.si.benchmarks.cec2018.MIDTLZ1;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
+import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.*;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.BentCigarFunction;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.Trid;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction;
+import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
 import examples.si.benchmarks.singleObjective.*;
+import examples.si.benchmarks.singleObjective.Bukin4Function;
+import examples.si.benchmarks.singleObjective.EasomFunction;
+import examples.si.benchmarks.singleObjective.SphereFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.algo.abc.ABC;
@@ -43,19 +50,19 @@ public class AlgorithmFactory {
     private int a;
     private ObjectiveFunction fn;
 
-    public AlgorithmFactory(int a, ObjectiveFunction fn) {
-        this.a = a;
+    public AlgorithmFactory(int algorithmIndex, ObjectiveFunction fn) {
+        this.a = algorithmIndex;
         this.fn = fn;
     }
 
 
-    public SIAlgorithm getAlgorithm(int sc, int ac) {
+    public SIAlgorithm getAlgorithm(int steps, int agents) {
         switch (a){
             case 0 : return new PSO(
                     fn,
-                    ac,
+                    agents,
                     fn.getNumberOfDimensions(),
-                    sc,
+                    steps,
                     1.496180,
                     1.496180,
                     0.729844,
@@ -64,8 +71,8 @@ public class AlgorithmFactory {
                     true);
             case 1: return new ACO(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     5,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
@@ -75,16 +82,16 @@ public class AlgorithmFactory {
             case 2: return new CSO(
                     fn,
                     fn.getNumberOfDimensions(),
-                    sc,
-                    ac,
-                    0.2,
+                    steps,
+                    agents,
+                    0.1,
                     fn.getMin(),
                     fn.getMax(),
-                    10,
-                    0.2,
+                    3,
+                    0.85,
                     0.2,
                     true,
-                    0.5,
+                    2.05,
                     0.2,
                     true
             );
@@ -92,8 +99,8 @@ public class AlgorithmFactory {
                 return new GSO(
                         fn,
                         fn.getNumberOfDimensions(),
-                        sc,
-                        ac,
+                        steps,
+                        agents,
                         fn.getMin(),
                         fn.getMax(),
                         5,
@@ -109,10 +116,10 @@ public class AlgorithmFactory {
             }
             case 4: return new MBO(
                     fn,
-                    ac,
+                    agents,
                     100,
                     30,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -126,8 +133,8 @@ public class AlgorithmFactory {
             );
             case 5: return new MS(
                     fn,
-                    sc,
-                    ac,
+                    steps,
+                    agents,
                     fn.getNumberOfDimensions(),
                     50,
                     fn.getMin(),
@@ -137,8 +144,8 @@ public class AlgorithmFactory {
             );
             case 6: return new WSO(
                     fn,
-                    sc,
-                    ac,
+                    steps,
+                    agents,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -148,9 +155,9 @@ public class AlgorithmFactory {
             );
             case 7: return new CS(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
-                    ac,
+                    agents,
                     fn.getMin(),
                     fn.getMax(),
                     1,
@@ -159,9 +166,9 @@ public class AlgorithmFactory {
             );
             case 8: return new FA(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
-                    ac,
+                    agents,
                     fn.getMin(),
                     fn.getMax(),
                     1,
@@ -171,9 +178,9 @@ public class AlgorithmFactory {
             );
             case 9: return new ABC(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
-                    ac,
+                    agents,
                     fn.getMin(),
                     fn.getMax(),
                     100,
@@ -181,24 +188,24 @@ public class AlgorithmFactory {
             );
             case 10:  return new BA(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
-                    ac,
+                    agents,
                     0,
                     100,
                     0.9,
                     0.9,
                     100,
-                    Randoms.rand(0,1),
+                    Randoms.rand(0.1,1),
                     true
             );
             case 11: return new TCO(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
-                    ac,
+                    agents,
                     fn.getMin(),
                     fn.getMax(),
                     1,
@@ -209,26 +216,26 @@ public class AlgorithmFactory {
             );
             case 12: return new GWO(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
-                    ac,
+                    agents,
                     fn.getMin(),
                     fn.getMax(),
                     true
             );
             case 13: return new MFA(
                     fn,
-                    sc,
+                    steps,
                     fn.getNumberOfDimensions(),
-                    ac,
+                    agents,
                     fn.getMin(),
                     fn.getMax(),
                     1.0
             );
             case 14: return new ALO(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -236,22 +243,23 @@ public class AlgorithmFactory {
             );
             case 15: return new ALSO(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    10, 210,
-                    2.5,
-                    1.0,
                     10,
-                    10
+                    210,
+                    2.5,
+                    0.1,
+                    1.0,
+                    1.0
             );
             case 16: return new GEO(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -263,8 +271,8 @@ public class AlgorithmFactory {
             );
             case 17: return new AVOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -278,8 +286,8 @@ public class AlgorithmFactory {
             );
             case 18: return new TSA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -287,8 +295,8 @@ public class AlgorithmFactory {
             );
             case 19: return new SSA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -297,13 +305,13 @@ public class AlgorithmFactory {
                     1.9,
                     1.204,
                     5.25,
-                    0.0154,
+                    0.1,
                     8.0
             );
             case 20: return new ZOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -311,8 +319,8 @@ public class AlgorithmFactory {
             );
             case 21:  return new JSO(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -322,8 +330,8 @@ public class AlgorithmFactory {
             );
             case 22: return new CHOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -333,8 +341,8 @@ public class AlgorithmFactory {
             );
             case 23: return new CHOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -344,8 +352,8 @@ public class AlgorithmFactory {
             );
             case 24: return new CHOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -355,8 +363,8 @@ public class AlgorithmFactory {
             );
             case 25: return new CHOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -366,8 +374,8 @@ public class AlgorithmFactory {
             );
             case 26: return new CHOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -377,8 +385,8 @@ public class AlgorithmFactory {
             );
             case 27: return new CHOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
@@ -388,27 +396,30 @@ public class AlgorithmFactory {
             );
             case 28: return new GOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
                     true,
-                    1,
                     0.00004,
+                    1.0,
                     0.5,
                     1.5
             );
             case 29: return new TSOA(
                     fn,
-                    ac,
-                    sc,
+                    agents,
+                    steps,
                     fn.getNumberOfDimensions(),
                     fn.getMin(),
                     fn.getMax(),
                     true,
                     10,
-                    0.5
+                    0.3,
+                    1,
+                    1.49,
+                    1.5
             );
         }
         return null;
@@ -452,34 +463,44 @@ public class AlgorithmFactory {
     }
 
     public static class FunctionsList {
-        public static ObjectiveFunction[] getFunctionList(){
+        public static ObjectiveFunction[] getFunctionList(int n){
             return new ObjectiveFunction[]{
-                    new AckleysFunction(),
-                    new BealeFunction(),
-                    new BoothsFunction(),
-                    new Bukin4Function(),
-                    new CrossInTrayFunction(),
-                    new EasomFunction(),
-                    new EggholderFunction(),
-                    new GoldsteinPrice(),
-                    new HimmelblausFunction(),
-                    new HolderTableFunction(),
-                    new LevyFunction(),
-                    new MatyasFunction(),
-                    new McCormickFunction(),
-                    new RastriginFunction(),
-                    new RosenbrockFunction(),
-                    new SchafferFunctionN4(),
-                    new SchafferFunction(),
-                    new SphereFunction(),
-                    new StyblinskiTangFunction(),
-                    new ThreeHumpCamelFunction(),
-                    new ChungReynoldsSquares(),
-                    new SumSquares(),
-                    new Function16(2),
-                    new Function17(2),
-                    new Function18(2),
-                    new Function20(2)
+                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction().updateDimensions(n),
+                    new BealeFunction().updateDimensions(n),
+                    new BoothsFunction().updateDimensions(n),
+                    new Bukin4Function().updateDimensions(n),
+                    new CrossInTrayFunction().updateDimensions(n),
+                    new EasomFunction().updateDimensions(n),
+                    new EggholderFunction().updateDimensions(n),
+                    new GoldsteinPrice().updateDimensions(n),
+                    new HimmelblausFunction().updateDimensions(n),
+                    new HolderTableFunction().updateDimensions(n),
+                    new LevyFunction().updateDimensions(n),
+                    new MatyasFunction().updateDimensions(n),
+                    new McCormickFunction().updateDimensions(n),
+                    new RastriginFunction().updateDimensions(n),
+                    new RosenbrockFunction().updateDimensions(n),
+                    new SchafferFunctionN4().updateDimensions(n),
+                    new SchafferFunction().updateDimensions(n),
+                    new SphereFunction().updateDimensions(n),
+                    new StyblinskiTangFunction().updateDimensions(n),
+                    new ThreeHumpCamelFunction().updateDimensions(n),
+                    new ChungReynoldsSquares().updateDimensions(n),
+                    new SumSquares().updateDimensions(n),
+                    new DixonPriceFunction().updateDimensions(n),
+                    new Debfunction().updateDimensions(n),
+                    new ZakharovFunction().updateDimensions(n),
+                    new CsendesFunction().updateDimensions(n),
+                    new QuarticFunction().updateDimensions(n),
+                    new Michalewicz10().setFixedDimentions(10),
+                    new Michalewicz5().setFixedDimentions(5),
+                    new Trid().updateDimensions(n),
+                    new Alpine1Function().updateDimensions(n),
+                    new RastriginFunction().updateDimensions(n),
+                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction().updateDimensions(n),
+                    new BentCigarFunction().updateDimensions(n),
+                    new ShiftedSphereFunction().updateDimensions(n),
+                    new MIDTLZ1(10, 10).setFixedDimentions(n)
             };
         }
     }

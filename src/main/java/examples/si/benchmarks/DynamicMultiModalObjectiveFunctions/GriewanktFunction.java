@@ -2,9 +2,9 @@ package examples.si.benchmarks.DynamicMultiModalObjectiveFunctions;
 
 import examples.si.benchmarks.DynamicObjectiveFunction;
 
-public class Function11 extends DynamicObjectiveFunction {
+public class GriewanktFunction extends DynamicObjectiveFunction {
 
-    public Function11(int n){
+    public GriewanktFunction(int n){
         super(n, -600, 600, -400, 0);
     }
 

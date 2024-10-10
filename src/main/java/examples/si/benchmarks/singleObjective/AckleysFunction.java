@@ -1,14 +1,13 @@
 package examples.si.benchmarks.singleObjective;
 
 import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.util.Commons;
 
 /*
 https://en.wikipedia.org/wiki/Ackley_function
 https://www.sfu.ca/~ssurjano/ackley.html
  */
 public class AckleysFunction extends ObjectiveFunction {
-
-    private int numberOfDimensions = 2;
     private double[] min = new double[]{-5, -5};
     private double[] max = new double[]{5,5};
 
@@ -30,12 +29,12 @@ public class AckleysFunction extends ObjectiveFunction {
 
     @Override
     public double[] getMin() {
-        return min;
+        return Commons.fill(-5,numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return max;
+        return Commons.fill(5,numberOfDimensions);
     }
 
     @Override
@@ -45,7 +44,7 @@ public class AckleysFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{0.0, 0.0};
+        return Commons.fill(0,numberOfDimensions);
     }
 
 }

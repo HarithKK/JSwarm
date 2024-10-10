@@ -1,6 +1,7 @@
 package examples.si.benchmarks.singleObjective;
 
 import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.util.Commons;
 
 public class RosenbrockFunction extends ObjectiveFunction {
     @Override
@@ -17,17 +18,17 @@ public class RosenbrockFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 2;
+        return numberOfDimensions;
     }
 
     @Override
     public double[] getMin() {
-        return new double[]{-1000,-1000};
+        return Commons.fill(-1000, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return new double[]{1000,1000};
+        return Commons.fill(1000, numberOfDimensions);
     }
 
     @Override
@@ -37,6 +38,6 @@ public class RosenbrockFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{1,1};
+        return Commons.fill(1, numberOfDimensions);
     }
 }

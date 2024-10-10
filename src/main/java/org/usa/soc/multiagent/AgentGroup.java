@@ -6,6 +6,7 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.SeriesData;
 import org.usa.soc.core.ds.SeriesDataObject;
 import org.usa.soc.si.AgentComparator;
+import org.usa.soc.si.AgentRevComparator;
 import org.usa.soc.util.Mathamatics;
 
 import java.util.ArrayList;
@@ -28,6 +29,18 @@ public class AgentGroup extends SeriesData {
 
     public List<AbsAgent> getAgents() {
         return agents;
+    }
+
+    public void sort(int direction){
+        if(direction == 1){
+            this.sort(new AgentComparator());
+        }else{
+            this.sort(new AgentRevComparator());
+        }
+    }
+
+    public void subList(int start, int end){
+        this.setAgents(this.agents.subList(start, end));
     }
 
     public void setAgents(List<AbsAgent> agents) {

@@ -23,9 +23,9 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     private List<Double> history = new ArrayList<>();
     private List<Vector> pHistory = new ArrayList<>();
     private double bestValue = 0,
-            convergenceValue = Double.MAX_VALUE,
-            gradiantDecent = Double.MAX_VALUE,
-            meanBestValue = 0;
+    convergenceValue = Double.MAX_VALUE,
+    gradiantDecent = Double.MAX_VALUE,
+    meanBestValue = 0;
 
     public SIAlgorithm(
             ObjectiveFunction<Double> objectiveFunction,
@@ -45,6 +45,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         this.nanoDuration = nanoDuration;
         this.isPaused.unset();
         this.isKilled.unset();
+        this.actionStepPassed.unset();
         this.setInterval(0);
     }
 
@@ -142,17 +143,23 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
         this.stepAction = a;
     }
 
+    public void updateBestValue(){
+        this.bestValue = getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
+    }
+
+    public void updateBestValueForce(double value){
+        this.bestValue = value;
+    }
     @Override
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
 
         this.currentStep = step;
-        this.bestValue = objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
-
+        updateBestValue();
         calculateMeanValue(step, this.bestValue);
         calculateConvergenceValue(step, this.bestValue);
         calculateGradiantDecent(step, this.bestValue);
         history.add(this.bestValue);
-        pHistory.add(this.gBest);
+        pHistory.add(this.gBest.getClonedVector());
 
         if(stepAction != null){
             stepAction.performAction(this.gBest, this.bestValue, (int) currentStep);
@@ -199,8 +206,8 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     private void calculateConvergenceValue(long step, double xValue) {
-        double dev = Math.pow(Math.abs(objectiveFunction.getExpectedBestValue() - getBestValue()), (1 / (step + 1)));
-        this.convergenceValue = 1 - ((objectiveFunction.getExpectedBestValue() - xValue) / dev);
+        double dev = Math.pow(Math.abs(getObjectiveFunction().getExpectedBestValue() - getBestValue()), (1 / (step + 1)));
+        this.convergenceValue = 1 - ((getObjectiveFunction().getExpectedBestValue() - xValue) / dev);
     }
 
     /**
@@ -219,7 +226,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     public Double getBestDoubleValue() {
-        return this.objectiveFunction.setParameters(this.getGBest().getPositionIndexes()).call();
+        return this.getBestValue();
     }
 
     public String getBestVariables() {
@@ -227,7 +234,7 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     }
 
     public ObjectiveFunction getFunction() {
-        return this.objectiveFunction;
+        return this.getObjectiveFunction();
     }
 
     public int getStepsCount() {
@@ -259,6 +266,10 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
     protected void checkPaused() {
         if (this.isPaused()) {
             while (this.isPaused()) {
+                if(actionStepPassed.isSet()){
+                    actionStepPassed.unset();
+                    return;
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -284,5 +295,9 @@ public abstract class SIAlgorithm extends Algorithm implements Cloneable {
             }
         }
         return data;
+    }
+
+    public ObjectiveFunction<Double> getObjectiveFunction() {
+        return objectiveFunction;
     }
 }

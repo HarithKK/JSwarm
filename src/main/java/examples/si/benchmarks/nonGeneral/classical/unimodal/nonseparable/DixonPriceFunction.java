@@ -4,6 +4,8 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
 public class DixonPriceFunction extends ObjectiveFunction {
+
+
     @Override
     public Double call() {
         Double res =0.0;
@@ -16,7 +18,7 @@ public class DixonPriceFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 3;
+        return numberOfDimensions;
     }
 
     @Override

@@ -53,8 +53,8 @@ public class CS extends SIAlgorithm {
                 // select the nest randomly
                 int j = Math.min( (int) Math.abs(Randoms.rand(0, 1) * numberOfNests + 1) -1, numberOfNests -1);
 
-                Double fj = this.objectiveFunction.setParameters(getFirstAgents().get(j).getPosition().getPositionIndexes()).call();
-                Double fi = this.objectiveFunction.setParameters(getFirstAgents().get(i).getPosition().getPositionIndexes()).call();
+                Double fj = this.getObjectiveFunction().setParameters(getFirstAgents().get(j).getPosition().getPositionIndexes()).call();
+                Double fi = this.getObjectiveFunction().setParameters(getFirstAgents().get(i).getPosition().getPositionIndexes()).call();
 
                 if(Validator.validateBestValue(fi, fj, isGlobalMinima.isSet())){
                     getFirstAgents().get(j).setPosition(cuckooPosition);
@@ -69,8 +69,8 @@ public class CS extends SIAlgorithm {
     }
 
     private void updateGBest(Nest nest) {
-        Double fpbest = this.objectiveFunction.setParameters(nest.getPosition().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(nest.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(nest.getPosition());
@@ -81,8 +81,8 @@ public class CS extends SIAlgorithm {
         //find worst
         int i0 = 0;
         for(int i=1; i< numberOfNests; i++){
-            Double fi = this.objectiveFunction.setParameters(getFirstAgents().get(i0).getPosition().getPositionIndexes()).call();
-            Double fj = this.objectiveFunction.setParameters(getFirstAgents().get(i).getPosition().getPositionIndexes()).call();
+            Double fi = this.getObjectiveFunction().setParameters(getFirstAgents().get(i0).getPosition().getPositionIndexes()).call();
+            Double fj = this.getObjectiveFunction().setParameters(getFirstAgents().get(i).getPosition().getPositionIndexes()).call();
 
             if(Validator.validateBestValue(fi, fj, isGlobalMinima.isSet())){
                 i0 = i;

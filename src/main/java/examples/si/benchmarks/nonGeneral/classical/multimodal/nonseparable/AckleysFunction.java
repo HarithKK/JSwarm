@@ -1,6 +1,9 @@
 package examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable;
 
 import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.util.Commons;
+
+import java.util.Arrays;
 
 /*
 https://en.wikipedia.org/wiki/Ackley_function
@@ -8,18 +11,13 @@ https://www.sfu.ca/~ssurjano/ackley.html
  */
 public class AckleysFunction extends ObjectiveFunction {
 
-    private int numberOfDimensions = 2;
-    private double[] min = new double[]{-5, -5};
-    private double[] max = new double[]{5,5};
-
     @Override
     public Double call() {
 
-        Double x = (Double) super.getParameters()[0];
-        Double y = (Double) super.getParameters()[1];
-
-        double p1 = -20*Math.exp(-0.2*Math.sqrt(0.5*((x*x)+(y*y))));
-        double p2 = Math.exp(0.5*(Math.cos(2*Math.PI*x)+Math.cos(2*Math.PI*y)));
+        Double d1 = Arrays.asList(super.getParameters()).stream().mapToDouble(d -> Math.pow((Double)d,2)).sum();
+        Double d2 = Arrays.asList(super.getParameters()).stream().mapToDouble(d -> Math.cos(2*Math.PI*(Double)d)).sum();
+        double p1 = -20*Math.exp(-0.2*Math.sqrt(d1/numberOfDimensions));
+        double p2 = Math.exp(d2/numberOfDimensions);
         return p1 - p2 + Math.E + 20;
     }
 
@@ -30,12 +28,12 @@ public class AckleysFunction extends ObjectiveFunction {
 
     @Override
     public double[] getMin() {
-        return min;
+        return Commons.fill(-32.768, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return max;
+        return Commons.fill(32.768, numberOfDimensions);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class AckleysFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{0.0, 0.0};
+        return Commons.fill(0, numberOfDimensions);
     }
 
 }

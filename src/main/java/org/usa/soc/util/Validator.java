@@ -58,4 +58,16 @@ public class Validator {
         }
         return true;
     }
+
+    public static Double validateDouble(Double d){
+        if(d == null)
+            return null;
+        if(Double.isNaN(d)){
+            return null;
+        }
+        if(Double.isInfinite(d)){
+            return d == Double.NEGATIVE_INFINITY ? Double.MIN_VALUE : Double.MAX_VALUE;
+        }
+        return d;
+    }
 }

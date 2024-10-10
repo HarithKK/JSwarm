@@ -93,10 +93,10 @@ public class ACO extends SIAlgorithm {
                 for(AbsAgent agent: getFirstAgents()){
                     Ant a = (Ant)agent;
                     a.setPosition(getPositionVector(a, dx));
-                    a.updatePBest(this.objectiveFunction, this.isGlobalMinima.isSet());
+                    a.updatePBest(this.getObjectiveFunction(), this.isGlobalMinima.isSet());
 
                     // update pheromones
-                    this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call());
+                    this.pheromoneValue = this.pheromoneValue + (this.evaporationRate * this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call());
                     updateBest(a);
                 }
             }
@@ -104,8 +104,8 @@ public class ACO extends SIAlgorithm {
 
     private Vector getPositionVector(Ant a, Vector v) {
 
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(a.getPbest().getPositionIndexes()).call();
 
         boolean sign = !Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet());
 
@@ -128,8 +128,8 @@ public class ACO extends SIAlgorithm {
 
     private void updateBest(Ant a){
 
-        Double fpbest = this.objectiveFunction.setParameters(a.getPbest().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(a.getPbest().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(a.getPbest());
@@ -139,7 +139,7 @@ public class ACO extends SIAlgorithm {
     @Override
     public SIAlgorithm clone() throws CloneNotSupportedException {
         return new ACO(
-                objectiveFunction,
+                getObjectiveFunction(),
                 numberOfAnts,
                 getStepsCount(),
                 numberOfProcessIterations,

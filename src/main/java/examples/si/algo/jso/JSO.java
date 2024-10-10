@@ -73,7 +73,7 @@ public class JSO extends SIAlgorithm {
                                         .operate(Vector.OPERATOR.ADD, jellyfish.getPosition());
                     }
                     jellyfish.setPosition(newX.fixVector(minBoundary, maxBoundary));
-                    jellyfish.setFitnessValue(objectiveFunction.setParameters(jellyfish.getPosition().getPositionIndexes()).call());
+                    jellyfish.setFitnessValue(getObjectiveFunction().setParameters(jellyfish.getPosition().getPositionIndexes()).call());
                     updateGbest(jellyfish);
                 }
         }catch (Exception e){
@@ -112,7 +112,7 @@ public class JSO extends SIAlgorithm {
 
         for(int i=0;i <populationSize; i++){
             Jellyfish jellyfish = new Jellyfish(numberOfDimensions, minBoundary, maxBoundary);
-            jellyfish.setFitnessValue(objectiveFunction.setParameters(jellyfish.getPosition().getPositionIndexes()).call());
+            jellyfish.setFitnessValue(getObjectiveFunction().setParameters(jellyfish.getPosition().getPositionIndexes()).call());
 
             getFirstAgents().add(jellyfish);
         }
@@ -123,7 +123,7 @@ public class JSO extends SIAlgorithm {
     }
 
     private void updateGbest(Jellyfish jellyfish){
-        double fgbest = objectiveFunction.setParameters(gBest.getClonedVector().getPositionIndexes()).call();
+        double fgbest = getObjectiveFunction().setParameters(gBest.getClonedVector().getPositionIndexes()).call();
         if(Validator.validateBestValue(jellyfish.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(jellyfish.getPosition());
         }

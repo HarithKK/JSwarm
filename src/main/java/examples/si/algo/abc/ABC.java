@@ -1,6 +1,5 @@
 package examples.si.algo.abc;
 
-import org.apache.commons.math3.analysis.function.Abs;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
@@ -59,7 +58,7 @@ public class ABC extends SIAlgorithm {
             FoodSource f = (FoodSource) agent;
             if(f.getTrials() >= maxTrials){
                 f.reInitiate();
-                f.setFm(f.calculateFitness(objectiveFunction, f.getPosition()));
+                f.setFm(f.calculateFitness(getObjectiveFunction(), f.getPosition()));
                 f.setCounter(0);
             }
         }
@@ -83,8 +82,8 @@ public class ABC extends SIAlgorithm {
     }
 
     private void updateGbest(FoodSource f) {
-        Double fpbest = this.objectiveFunction.setParameters(f.getPosition().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(f.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(gBest.getPositionIndexes()).call();
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             gBest.setVector(f.getPosition());
         }
@@ -94,8 +93,8 @@ public class ABC extends SIAlgorithm {
         FoodSource currentBee = (FoodSource) getFirstAgents().get(i);
         FoodSource neighbourBeeOccupied = (FoodSource) getFirstAgents().get(getRandomFoodSource(i));
         Vector v = currentBee.calculateNextBestPosition(neighbourBeeOccupied);
-        Double fm = currentBee.calculateFitness(objectiveFunction, v);
-        double pfm = currentBee.calculateFitness(objectiveFunction, currentBee.getPosition());
+        Double fm = currentBee.calculateFitness(getObjectiveFunction(), v);
+        double pfm = currentBee.calculateFitness(getObjectiveFunction(), currentBee.getPosition());
         if(!Validator.validateBestValue(fm,pfm,this.isGlobalMinima.isSet())){
             currentBee.setPosition(v);
             currentBee.setFm(fm);
@@ -123,7 +122,7 @@ public class ABC extends SIAlgorithm {
 
         for(int i = 0; i< numberOfFoodSources; i++){
             FoodSource f = new FoodSource(minBoundary, maxBoundary, numberOfDimensions);
-            f.setFm(f.calculateFitness(objectiveFunction, f.getPosition()));
+            f.setFm(f.calculateFitness(getObjectiveFunction(), f.getPosition()));
             f.setCounter(0);
             updateGbest(f);
             getFirstAgents().add(f);

@@ -1,10 +1,9 @@
 package examples.si.algo.ssa;
 
-import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.action.Method;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Commons;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
@@ -17,7 +16,7 @@ public class SSA extends SIAlgorithm {
 
     private double Pdp, Gc, airDensity, speed, surfaceAreaBody, lossInHeight;
 
-    private int hSquirrel,aSquirrelLower ,aSquirrelUpper;
+    private int hSquirrel, aSquirrel, nSquirrel;
     private double beta = 1.5;
 
     public SSA(
@@ -58,64 +57,93 @@ public class SSA extends SIAlgorithm {
     public void step() throws Exception{
 
                 Squirrel squirrelOnHickoryTree = (Squirrel) getFirstAgents().get(hSquirrel);
-                double dg = calculateRandomGlidingDistance();
+                Vector dg = new Vector(numberOfDimensions);
+                dg.setValues(new Method() {
+                    @Override
+                    public double execute() {
+                        return calculateRandomGlidingDistance();
+                    }
+                });
                 // case for squirrels from acorn tree to hickory tree
-                for(int i=1; i < aSquirrelUpper;i++){
+                for(int i=1; i < aSquirrel;i++){
                     Squirrel squirrelOnAcornTree = (Squirrel)getFirstAgents().get(i);
                     if(Randoms.rand(0,1) > Pdp){
-                        squirrelOnAcornTree.setPosition(
-                                squirrelOnHickoryTree.getPosition().getClonedVector()
-                                        .operate(Vector.OPERATOR.SUB,squirrelOnAcornTree.getPosition().getClonedVector())
-                                        .operate(Vector.OPERATOR.MULP, Gc)
-                                        .operate(Vector.OPERATOR.MULP, dg)
-                                        .operate(Vector.OPERATOR.ADD, squirrelOnAcornTree.getPosition().getClonedVector())
-                                        .fixVector(minBoundary, maxBoundary)
-                        );
+                        Vector vx = squirrelOnHickoryTree.getPosition()
+                                .operate(Vector.OPERATOR.SUB, squirrelOnAcornTree.getPosition())
+                                .operate(Vector.OPERATOR.MULP, Gc)
+                                .operate(Vector.OPERATOR.MULP, dg);
+
+                        squirrelOnAcornTree.getPosition().updateVector(vx);
+                        squirrelOnAcornTree.getPosition().fixVector(minBoundary,maxBoundary);
                     }else{
-                        squirrelOnAcornTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary, 0,1));
+                        squirrelOnAcornTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary));
                     }
-                    squirrelOnAcornTree.setFitnessValue(objectiveFunction.setParameters(squirrelOnAcornTree.getPosition().getPositionIndexes()).call());
+                    squirrelOnAcornTree.setFitnessValue(getObjectiveFunction().setParameters(squirrelOnAcornTree.getPosition().getPositionIndexes()).call());
                 }
 
-                for(int i=aSquirrelUpper; i < aSquirrelLower;i++){
-                    Squirrel squirrel = (Squirrel)getFirstAgents().get(i);
+                // normal trees and moving towards acorn trees
+                for(int i = aSquirrel; i < nSquirrel; i++){
+                    Squirrel squirrelOnNormalTree = (Squirrel)getFirstAgents().get(i);
                     if(Randoms.rand(0,1) > Pdp){
-                        squirrel.setPosition(
-                                squirrelOnHickoryTree.getPosition()
-                                        .operate(Vector.OPERATOR.SUB,squirrelOnHickoryTree.getPosition().getClonedVector())
-                                        .operate(Vector.OPERATOR.MULP, Gc)
-                                        .operate(Vector.OPERATOR.MULP, dg)
-                                        .operate(Vector.OPERATOR.ADD, squirrelOnHickoryTree.getPosition().getClonedVector())
-                                        .fixVector(minBoundary, maxBoundary)
-                        );
+                        Squirrel aSquirrelObj = (Squirrel)getFirstAgents().get(Randoms.rand(1,aSquirrel));
+                        Vector vx = aSquirrelObj.getPosition()
+                                .operate(Vector.OPERATOR.SUB, squirrelOnNormalTree.getPosition())
+                                .operate(Vector.OPERATOR.MULP, Gc)
+                                .operate(Vector.OPERATOR.MULP, dg);
+
+                        squirrelOnNormalTree.getPosition().updateVector(vx);
+                        squirrelOnNormalTree.getPosition().fixVector(minBoundary,maxBoundary);
                     }else{
-                        squirrel.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary, 0,1));
+                        squirrelOnNormalTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary));
                     }
-                    squirrel.setFitnessValue(objectiveFunction.setParameters(squirrel.getPosition().getPositionIndexes()).call());
+                    squirrelOnNormalTree.setFitnessValue(getObjectiveFunction().setParameters(squirrelOnNormalTree.getPosition().getPositionIndexes()).call());
+                }
+
+                // normal trees and moving towards hickory nut tree
+                for(int i = nSquirrel; i < populationSize; i++){
+                    Squirrel squirrelOnNormalTree = (Squirrel)getFirstAgents().get(i);
+                    if(Randoms.rand(0,1) > Pdp){
+                        Vector vx = squirrelOnHickoryTree.getPosition()
+                                .operate(Vector.OPERATOR.SUB, squirrelOnNormalTree.getPosition())
+                                .operate(Vector.OPERATOR.MULP, Gc)
+                                .operate(Vector.OPERATOR.MULP, dg);
+
+                        squirrelOnNormalTree.getPosition().updateVector(vx);
+                        squirrelOnNormalTree.getPosition().fixVector(minBoundary,maxBoundary);
+                    }else{
+                        squirrelOnNormalTree.setPosition(Randoms.getRandomVector(numberOfDimensions,minBoundary, maxBoundary));
+                    }
+                    squirrelOnNormalTree.setFitnessValue(getObjectiveFunction().setParameters(squirrelOnNormalTree.getPosition().getPositionIndexes()).call());
                 }
 
                 double sc = calculateSeasonalConstant();
                 double smin = 0.00001 / Mathamatics.pow(365, ((currentStep+1) * 2.5 / stepsCount));
 
-                if(sc < smin){
-                    for(int i=aSquirrelLower; i < populationSize;i++){
-                        Squirrel sq = (Squirrel)getFirstAgents().get(i);
-                        sq.setPosition(Commons.levyFlightVector(numberOfDimensions, minBoundary, maxBoundary));
-                        sq.setFitnessValue(objectiveFunction.setParameters(sq.getPosition().getPositionIndexes()).call());
-                    }
-                }
+//                if(sc < smin){
+//                    for(int i=nSquirrel; i < populationSize;i++){
+//                        Squirrel sq = (Squirrel)getFirstAgents().get(i);
+//                        sq.setPosition(Commons.levyFlightVector(numberOfDimensions,1.5));
+//                        sq.setFitnessValue(objectiveFunction.setParameters(sq.getPosition().getPositionIndexes()).call());
+//                    }
+//                }
 
                 sort();
-                if(((Squirrel) getFirstAgents().get(hSquirrel)).getFitnessValue() < getBestValue()){
-                    gBest.setVector(getFirstAgents().get(hSquirrel).getPosition());
-                }
+                updateGBest((Squirrel)getFirstAgents().get(0));
 
+    }
+
+    private void updateGBest(Squirrel sq) {
+        Double fgbest = this.getObjectiveFunction().setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(sq.getPosition().getPositionIndexes()).call();
+        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
+            this.gBest.setVector(sq.getPosition());
+        }
     }
 
     private double calculateSeasonalConstant() {
         double sumSt =0;
 
-        for(int i=1; i<aSquirrelLower;i++){
+        for(int i = 1; i< aSquirrel; i++){
             sumSt += Math.pow((((Squirrel)getFirstAgents().get(i)).getFitnessValue() - ((Squirrel)getFirstAgents().get(0)).getFitnessValue()),2);
         }
         return Math.sqrt(sumSt);
@@ -137,18 +165,20 @@ public class SSA extends SIAlgorithm {
         }
 
         this.setInitialized(true);
+        Validator.checkBoundaries(this.minBoundary, this.maxBoundary, this.numberOfDimensions);
 
         for(int i=0;i <populationSize; i++){
             Squirrel squirrel = new Squirrel(numberOfDimensions, minBoundary, maxBoundary);
-            squirrel.setFitnessValue(objectiveFunction.setParameters(squirrel.getPosition().getPositionIndexes()).call());
+            squirrel.setFitnessValue(getObjectiveFunction().setParameters(squirrel.getPosition().getPositionIndexes()).call());
             getFirstAgents().add(squirrel);
         }
 
         sort();
+        updateGBest((Squirrel)getFirstAgents().get(0));
 
-        hSquirrel = 0;
-        aSquirrelLower = 4;
-        aSquirrelUpper = 2;
+        hSquirrel = 1;
+        aSquirrel = 4;
+        nSquirrel = 20;
 
     }
 

@@ -10,12 +10,7 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ALO extends SIAlgorithm {
 
@@ -74,7 +69,7 @@ public class ALO extends SIAlgorithm {
             Vector R = RA.operate(Vector.OPERATOR.ADD, RE).operate(Vector.OPERATOR.DIV, 2.0).fixVector(minBoundary, maxBoundary);
 
             a.setPosition(R);
-            ((Agent)a).setFitnessValue(objectiveFunction.setParameters(a.getPosition().getPositionIndexes()).call());
+            ((Agent)a).setFitnessValue(getObjectiveFunction().setParameters(a.getPosition().getPositionIndexes()).call());
 
         }
 
@@ -97,8 +92,8 @@ public class ALO extends SIAlgorithm {
         }
 
         if(Validator.validateBestValue(
-                objectiveFunction.setParameters(elite.getPosition().getPositionIndexes()).call(),
-                objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call(),
+                getObjectiveFunction().setParameters(elite.getPosition().getPositionIndexes()).call(),
+                getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call(),
                 isGlobalMinima.isSet()
         )){
             this.gBest.setVector(elite.getPosition());
@@ -169,14 +164,14 @@ public class ALO extends SIAlgorithm {
 
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant ant = new Ant(numberOfDimensions, minBoundary, maxBoundary);
-            ant.setFitnessValue(objectiveFunction.setParameters(ant.getPosition().getPositionIndexes()).call());
+            ant.setFitnessValue(getObjectiveFunction().setParameters(ant.getPosition().getPositionIndexes()).call());
             agents.get("ants").getAgents().add(ant);
         }
 
         Ant elite = new Ant(numberOfDimensions, minBoundary, maxBoundary);
         for (int i = 0; i < this.numberOfAnts; i++) {
             Ant antLion = new Ant(numberOfDimensions, minBoundary, maxBoundary);
-            antLion.setFitnessValue(objectiveFunction.setParameters(antLion.getPosition().getPositionIndexes()).call());
+            antLion.setFitnessValue(getObjectiveFunction().setParameters(antLion.getPosition().getPositionIndexes()).call());
             agents.get("antLions").getAgents().add(antLion);
             this.maxFs = Math.max(this.maxFs, antLion.getFitnessValue());
             this.minFs = Math.min(this.minFs, antLion.getFitnessValue());

@@ -1,7 +1,6 @@
 package examples.si.algo.pso;
 
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.si.Agent;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -10,8 +9,6 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class PSO extends SIAlgorithm implements Cloneable {
 
@@ -85,7 +82,7 @@ public class PSO extends SIAlgorithm implements Cloneable {
             // update positions
             for (AbsAgent agent : getFirstAgents()) {
                 Particle p = (Particle)agent;
-                p.updatePbest(this.objectiveFunction, this.isGlobalMinima.isSet());
+                p.updatePbest(this.getObjectiveFunction(), this.isGlobalMinima.isSet());
                 this.updateGBest(p.getPBest(), this.getGBest());
             }
 
@@ -94,11 +91,11 @@ public class PSO extends SIAlgorithm implements Cloneable {
                 Particle p = (Particle)agent;
                 Vector v = p.updateVelocity(this.getGBest(), this.c1, this.c2, this.calculateW(wMax, wMin, (int) currentStep));
                 if(Validator.validateBestValue(
-                        objectiveFunction.setParameters(v.getPositionIndexes()).call(),
-                        objectiveFunction.setParameters(p.getPosition().getPositionIndexes()).call(),
+                        getObjectiveFunction().setParameters(v.getPositionIndexes()).call(),
+                        getObjectiveFunction().setParameters(p.getPosition().getPositionIndexes()).call(),
                         isGlobalMinima.isSet()
                 )){
-                 p.setPosition(v);
+                 p.setPosition(v.getClonedVector());
                 }
             }
     }
@@ -128,13 +125,16 @@ public class PSO extends SIAlgorithm implements Cloneable {
             getFirstAgents().add(p);
             this.updateGBest(((Particle)getFirstAgents().get(i)).getPBest(), this.getGBest());
         }
+
+        gBest = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary);
+        updateBestValue();
     }
 
     private Vector getRandomPosition(Vector v) {
 
         Double[] center = Mathamatics.getCenterPoint(this.numberOfDimensions, this.minBoundary, this.maxBoundary);
 
-        if (objectiveFunction.setParameters(v.getPositionIndexes()).validateRange()) {
+        if (getObjectiveFunction().setParameters(v.getPositionIndexes()).validateRange()) {
             return v;
         }
 
@@ -148,7 +148,7 @@ public class PSO extends SIAlgorithm implements Cloneable {
             for (int i = 0; i < numberOfDimensions; i++) {
                 Double dt = v.getValue(i) + (isPlus[i] ? 0.1 : -0.1);
                 v.setValue(dt, i);
-                if (objectiveFunction.setParameters(v.getPositionIndexes()).validateRange()) {
+                if (getObjectiveFunction().setParameters(v.getPositionIndexes()).validateRange()) {
                     return v;
                 }
             }
@@ -171,18 +171,19 @@ public class PSO extends SIAlgorithm implements Cloneable {
 
     private void updateGBest(Vector pBestPosition, Vector gBestPosition) {
 
-        ObjectiveFunction tfn = this.objectiveFunction.setParameters(pBestPosition.getPositionIndexes());
+        ObjectiveFunction tfn = this.getObjectiveFunction().setParameters(pBestPosition.getPositionIndexes());
         Double fpbest = tfn.call();
-        Double fgbest = this.objectiveFunction.setParameters(gBestPosition.getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(gBestPosition.getPositionIndexes()).call();
 
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(getRandomPosition(pBestPosition.getClonedVector()), minBoundary, maxBoundary);
+            updateBestValue();
         }
     }
 
     @Override
     public SIAlgorithm clone() throws CloneNotSupportedException {
-        return new PSO(objectiveFunction, particleCount,
+        return new PSO(getObjectiveFunction(), particleCount,
                 numberOfDimensions,
                 getStepsCount(),
                 c1,

@@ -37,7 +37,7 @@ public class Main {
 
     JSpinner spnInterval;
 
-    JButton btnRun, btnShowTF, btnPause, btnStop, btnRepeate;
+    JButton btnRun, btnShowTF, btnPause, btnStop, btnRepeate, btnStep;
 
     JProgressBar progressBar;
 
@@ -46,13 +46,11 @@ public class Main {
 
     int progressValue;
     int stepCount =0;
-    int iterationCount, agentsCount;
+    int iterationCount, agentsCount, nd;
 
     double bestValue;
 
     IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
-
-    ObjectiveFunction fns[] = new AlgorithmFactory.FunctionsList().getFunctionList();
 
     DecimalFormat decimalFormat;
 
@@ -77,7 +75,7 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, fns[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
+                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, AlgorithmFactory.FunctionsList.getFunctionList(nd)[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
                     functionChartPlotter.setChart(SIAlgorithm);
 
@@ -91,6 +89,7 @@ public class Main {
                         btnRun.setEnabled(true);
                         btnPause.setEnabled(false);
                         btnStop.setEnabled(false);
+                        btnStep.setEnabled(false);
                         btnRepeate.setEnabled(true);
                     }else{
                         selectedFunction++;
@@ -114,6 +113,7 @@ public class Main {
         btnPause.setEnabled(true);
         btnStop.setEnabled(true);
         btnRepeate.setEnabled(false);
+        btnStep.setEnabled(false);
 
         if(currentRunner != null && functionChartPlotter.isPaused()){
             functionChartPlotter.setInterval((Integer) spnInterval.getValue());
@@ -129,6 +129,7 @@ public class Main {
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
             btnRepeate.setEnabled(false);
+            btnStep.setEnabled(true);
             isRepeat = false;
             functionChartPlotter.pause();
         }
@@ -137,6 +138,7 @@ public class Main {
     private void btnRepeatActionPerformed(ActionEvent e){
         btnRun.setEnabled(false);
         btnPause.setEnabled(false);
+        btnStep.setEnabled(false);
         btnStop.setEnabled(true);
         btnRepeate.setEnabled(false);
 
@@ -179,10 +181,11 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(AlgorithmFactory.FunctionsList.getFunctionList()[cmbFunction.getSelectedIndex()], 600, 600, 0, 0, true).display();
+        new FunctionDisplay(AlgorithmFactory.FunctionsList.getFunctionList(nd)[cmbFunction.getSelectedIndex()], 600, 600, 0, 0, true).display();
     }
 
     private void fncActionPerformed(double... values){
+
         progressValue = (int)values[0];
         bestValue = values[1];
         pltBestValue.addData(stepCount, bestValue);
@@ -204,7 +207,7 @@ public class Main {
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, fns[0]).getAlgorithm(100, 100);
+        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, AlgorithmFactory.FunctionsList.getFunctionList(nd)[0]).getAlgorithm(100, 100);
         functionChartPlotter.setChart(SIAlgorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -273,7 +276,7 @@ public class Main {
         lblFunctionComboBox.setFont(f1);
         cmbFunction = new JComboBox<>();
         cmbFunction.setFont(f1);
-        for (ObjectiveFunction f: fns) {
+        for (ObjectiveFunction f: AlgorithmFactory.FunctionsList.getFunctionList(nd)) {
             cmbFunction.addItem(f.getClass().getSimpleName());
         }
         jToolBar.add(lblFunctionComboBox);
@@ -313,6 +316,17 @@ public class Main {
             }
         });
         jToolBar.add(btnPause);
+
+        btnStep = new JButton("+ Step");
+        btnStep.setFont(f1);
+        btnStep.setEnabled(false);
+        btnStep.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                functionChartPlotter.stepOver();
+            }
+        });
+        jToolBar.add(btnStep);
 
         btnStop = new JButton("Stop");
         btnStop.setFont(f1);
@@ -413,6 +427,18 @@ public class Main {
             }
         });
         pnlTop.add(pnlAgentsCount);
+
+        RowPanel pnlNumberOfDimentions = new RowPanel(" Dimentions", "2");
+        nd = 2;
+        pnlNumberOfDimentions.txt.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                if(!pnlNumberOfDimentions.txt.getText().isEmpty()){
+                    nd = Integer.parseInt(pnlNumberOfDimentions.txt.getText());
+                }
+            }
+        });
+        pnlTop.add(pnlNumberOfDimentions);
 
         Panel body = new Panel();
         body.setLayout(new BorderLayout());

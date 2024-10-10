@@ -1,9 +1,11 @@
 package org.usa.soc.util;
 
 import org.apache.commons.math3.special.Gamma;
+import org.apache.commons.math3.stat.inference.TTest;
 import org.usa.soc.core.ds.Vector;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Commons {
@@ -53,7 +55,7 @@ public class Commons {
 
     public static Vector levyFlightVector(int D, double[] min, double[] max) {
         Vector v = new Vector(D);
-        Vector levy = Commons.levyFlightVector(3, 1.5);
+        Vector levy = Commons.levyFlightVector(D, 1.5);
 
         for(int i=0;i<D;i++){
             v.setValue(min[i] + levy.getValue(i)*(max[i] - min[i]),i);
@@ -95,5 +97,11 @@ public class Commons {
         }
 
         return coordinates;
+    }
+
+    public static double calculatePValue(double[] s1, double[] s2){
+        TTest tTest = new TTest();
+        double d = tTest.tTest(s1, s2);
+        return Double.isNaN(d) ? -1 : d;
     }
 }

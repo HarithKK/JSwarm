@@ -95,7 +95,7 @@ public class TSOA_V1 extends SIAlgorithm {
                     newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
                 }
 
-                newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                newTree.setFitnessValue(getObjectiveFunction().setParameters(newTree.getPosition().getPositionIndexes()).call());
 
                 newTree.setLambda(t.getLambda());
                 getFirstAgents().add(newTree);
@@ -119,7 +119,7 @@ public class TSOA_V1 extends SIAlgorithm {
 
         for(int i=0; i<this.populationSize; i++){
             Tree tree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
-            tree.setFitnessValue(objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call());
+            tree.setFitnessValue(getObjectiveFunction().setParameters(tree.getPosition().getPositionIndexes()).call());
 
             getFirstAgents().add(tree);
         }
@@ -134,8 +134,8 @@ public class TSOA_V1 extends SIAlgorithm {
     }
 
     private void updateGBest(Tree tree) {
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(tree.getPosition().getPositionIndexes()).call();
         if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
             this.gBest.setVector(tree.getPosition());
         }

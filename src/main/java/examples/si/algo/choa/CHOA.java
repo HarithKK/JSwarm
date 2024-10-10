@@ -1,7 +1,6 @@
 package examples.si.algo.choa;
 
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
@@ -9,7 +8,6 @@ import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CHOA extends SIAlgorithm {
 
@@ -92,7 +90,7 @@ public class CHOA extends SIAlgorithm {
                     }
 
                     chimp.setPosition(newX.fixVector(minBoundary, maxBoundary));
-                    chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
+                    chimp.setFitnessValue(getObjectiveFunction().setParameters(chimp.getPosition().getPositionIndexes()).call());
                 }
 
                 for(AbsAgent agent : getFirstAgents()){
@@ -111,7 +109,7 @@ public class CHOA extends SIAlgorithm {
 
         for(int i=0;i <populationSize; i++){
             Chimp chimp = new Chimp(numberOfDimensions, minBoundary, maxBoundary);
-            chimp.setFitnessValue(objectiveFunction.setParameters(chimp.getPosition().getPositionIndexes()).call());
+            chimp.setFitnessValue(getObjectiveFunction().setParameters(chimp.getPosition().getPositionIndexes()).call());
             getFirstAgents().add(chimp);
 
             updateGBest(chimp);
@@ -120,7 +118,7 @@ public class CHOA extends SIAlgorithm {
     }
 
     private void updateGBest(Chimp chimp) {
-        double fgbest = objectiveFunction.setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
+        double fgbest = getObjectiveFunction().setParameters(this.gBest.getClonedVector().getPositionIndexes()).call();
         if(Validator.validateBestValue(chimp.getFitnessValue(), fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(chimp.getPosition());
         }

@@ -1,16 +1,15 @@
 package examples.si.algo.tsoa;
 
-import examples.si.benchmarks.singleObjective.LevyFunction;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Markers;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.ds.Vector;
-import org.usa.soc.util.Commons;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.Validator;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class TSOA extends SIAlgorithm {
 
@@ -18,18 +17,26 @@ public class TSOA extends SIAlgorithm {
 
     private int seedsCount = 2;
     private double fertileHalf = 0.5;
+
+    private double deforestFactor = 0.5;
     private double p = -1;
 
     private double distanceDecrement;
     private int deligator, totalSeedsCount;
 
-    private double l = 1.0, c1=10.0, c2=10.0;
+    private double l = 1.0, c1, c2;
 
     public Vector z;
 
     public int totalSproutedSeedsCount;
 
     private double[] minDispressalRadius, maxDispressalRadius;
+
+    public ArrayList<Double> z_history = new ArrayList<>();
+
+    public int t1=0, t2=0, t3=0, zSize;
+
+    public double minimumDistance = Double.MAX_VALUE;
 
     public TSOA(
             ObjectiveFunction objectiveFunction,
@@ -40,7 +47,10 @@ public class TSOA extends SIAlgorithm {
             double[] maxBoundary,
             boolean isGlobalMinima,
             int seedsCount,
-            double fertileHalf
+            double fertileHalf,
+            double deforestFactor,
+            double c1,
+            double c2
     ){
 
         this.objectiveFunction = objectiveFunction;
@@ -53,19 +63,22 @@ public class TSOA extends SIAlgorithm {
         this.isGlobalMinima.setValue(isGlobalMinima);
         this.seedsCount = seedsCount;
         this.fertileHalf = fertileHalf;
+        this.c1 = c1;
+        this.c2 = c2;
+        this.deforestFactor = deforestFactor;
 
         this.minDispressalRadius = new double[numberOfDimensions];
         this.maxDispressalRadius = new double[numberOfDimensions];
 
         for(int i=0; i< numberOfDimensions; i++){
-            double v = (maxBoundary[i] - minBoundary[i])/populationSize;
-            minDispressalRadius[i] = -v;
-            maxDispressalRadius[i] = v;
+            double v = Math.round((maxBoundary[i] - minBoundary[i])/populationSize);
+            minDispressalRadius[i] = -10;
+            maxDispressalRadius[i] = 10;
         }
 
         try{
             addAgents("trees", Markers.CIRCLE, Color.GREEN);
-            addAgents("zTree", Markers.CIRCLE, Color.RED);
+            addAgents("zTree", Markers.CIRCLE, Color.MAGENTA);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -79,7 +92,7 @@ public class TSOA extends SIAlgorithm {
             double totalLabmda = 0;
             double totalFitnessValue = 0.0;
             double totalDistanceWithP = 0.0;
-            double minimumDistance = Double.MAX_VALUE;
+
             int lastCount = getAgents("trees").getAgents().size();
 
             for(int i =0; i < lastCount; i++){
@@ -89,7 +102,7 @@ public class TSOA extends SIAlgorithm {
                 totalFitnessValue += t.getFitnessValue();
             }
 
-            int zSize = (int) Math.round(populationSize - (currentStep + 1) * ((double)(populationSize - 1) / (double)stepsCount));
+            zSize = (int) Math.round(populationSize - (currentStep + 1) * ((double)(populationSize - 1) / (double)stepsCount));
 
             for(int i=0; i<zSize ; i++){
                 Tree t = ((Tree)getAgents("trees").getAgents().get(i));
@@ -102,23 +115,29 @@ public class TSOA extends SIAlgorithm {
                 minimumDistance = Math.min(t.getCalculatedDistance(z), minimumDistance);
             }
             getAgents("zTree").getAgents().get(0).setPosition(z);
-
-            for(int i = 0; i < deligator; i++){
+            z_history.add(getObjectiveFunction().setParameters(z.getPositionIndexes()).call());
+            for(int i = 0; i < populationSize; i++){
                 Tree t = (Tree) getAgents("trees").getAgents().get(i);
+
                 for(int j =0; j< seedsCount; j++){
                     Tree newTree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
+                    double r = Randoms.rand();
 
-                    double r = Randoms.rand(0,1);
                     if(r < 0.3){
-                        newTree.setPosition(t.getPosition().operate(Vector.OPERATOR.ADD,
-                                Randoms.getRandomVector(numberOfDimensions, minDispressalRadius, maxDispressalRadius, 0,1)
-                        ).fixVector(minBoundary, maxBoundary));
-                        if(newTree.getPosition().getDistance(z) <= minimumDistance){
-                            newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
-                            newTree.setLambda(this.l);
-                            getAgents("trees").getAgents().add(newTree);
-                        }
+                        newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary));
+                        newTree.setFitnessValue(getObjectiveFunction().setParameters(newTree.getPosition().getPositionIndexes()).call());
+                        newTree.setLambda(this.l);
+                        getAgents("trees").getAgents().add(newTree);
+                        t1++;
                     }else if(r < 0.6){
+                        newTree.setPosition(t.getPosition().operate(Vector.OPERATOR.ADD,
+                                Randoms.getRandomGaussianVector(numberOfDimensions, minDispressalRadius, maxDispressalRadius, 0,1)
+                        ).fixVector(minBoundary, maxBoundary));
+                        newTree.setFitnessValue(getObjectiveFunction().setParameters(newTree.getPosition().getPositionIndexes()).call());
+                        newTree.setLambda(this.l);
+                        getAgents("trees").getAgents().add(newTree);
+                        t2++;
+                    }else{
                         Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.getPosition())
                                 .operate(Vector.OPERATOR.MULP, c1)
                                 .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
@@ -132,16 +151,10 @@ public class TSOA extends SIAlgorithm {
                                         .operate(Vector.OPERATOR.ADD, vx)
                                         .fixVector(minBoundary, maxBoundary)
                         );
-                        if(newTree.getPosition().getDistance(z) <= minimumDistance){
-                            newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
-                            newTree.setLambda(this.l);
-                            getAgents("trees").getAgents().add(newTree);
-                        }
-                    }else{
-                        newTree.setPosition(Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0, 1));
-                        newTree.setFitnessValue(objectiveFunction.setParameters(newTree.getPosition().getPositionIndexes()).call());
+                        newTree.setFitnessValue(getObjectiveFunction().setParameters(newTree.getPosition().getPositionIndexes()).call());
                         newTree.setLambda(this.l);
                         getAgents("trees").getAgents().add(newTree);
+                        t3++;
                     }
                 }
             }
@@ -150,7 +163,7 @@ public class TSOA extends SIAlgorithm {
             updateGBest((Tree) getAgents("trees").getAgents().get(0));
 
             // Remove old trees
-            totalSproutedSeedsCount = getAgents("trees").getAgents().size() - lastCount;
+            totalSproutedSeedsCount = (int)(deforestFactor * (getAgents("trees").getAgents().size() - lastCount));
             for(int i = 0; i < totalSproutedSeedsCount; i++){
                 getAgents("trees").getAgents().remove(getAgents("trees").getAgents().size()-1);
             }
@@ -163,7 +176,7 @@ public class TSOA extends SIAlgorithm {
         double totaFitnessValue = 0.0;
         for(int i=0; i<this.populationSize; i++){
             Tree tree = new Tree(numberOfDimensions, minBoundary, maxBoundary);
-            tree.setFitnessValue(objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call());
+            tree.setFitnessValue(getObjectiveFunction().setParameters(tree.getPosition().getPositionIndexes()).call());
             tree.setLambda(this.l);
             totaFitnessValue += tree.getFitnessValue();
             getAgents("trees").getAgents().add(tree);
@@ -185,10 +198,9 @@ public class TSOA extends SIAlgorithm {
     }
 
     private void updateGBest(Tree tree) {
-        Double fgbest = this.objectiveFunction.setParameters(gBest.getPositionIndexes()).call();
-        Double fpbest = this.objectiveFunction.setParameters(tree.getPosition().getPositionIndexes()).call();
-        if (Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())) {
+        if (Validator.validateBestValue(tree.getFitnessValue(), getBestDoubleValue().doubleValue(), isGlobalMinima.isSet())) {
             this.gBest.setVector(tree.getPosition());
+            updateBestValue();
         }
     }
 }

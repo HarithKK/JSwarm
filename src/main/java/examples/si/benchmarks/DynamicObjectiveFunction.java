@@ -4,7 +4,7 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
 public abstract class DynamicObjectiveFunction extends ObjectiveFunction {
-    private int numberOfDimensions = 100;
+    private int numberOfDimensions = 2;
     private double[] min;
     private double[] max;
 

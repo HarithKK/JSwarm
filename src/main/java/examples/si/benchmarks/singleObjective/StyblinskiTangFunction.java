@@ -1,6 +1,7 @@
 package examples.si.benchmarks.singleObjective;
 
 import org.usa.soc.si.ObjectiveFunction;
+import org.usa.soc.util.Commons;
 
 import java.util.Arrays;
 
@@ -17,17 +18,17 @@ public class StyblinskiTangFunction extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return 3;
+        return numberOfDimensions;
     }
 
     @Override
     public double[] getMin() {
-        return new double[]{-5, -5, -5 };
+        return Commons.fill(-5, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return new double[]{1, 1, 1};
+        return Commons.fill(1, numberOfDimensions);
     }
 
     @Override
@@ -37,6 +38,6 @@ public class StyblinskiTangFunction extends ObjectiveFunction {
 
     @Override
     public double[] getExpectedParameters() {
-        return new double[]{-2.903534, -2.903534, -2.903534};
+        return Commons.fill(-2.903534, numberOfDimensions);
     }
 }

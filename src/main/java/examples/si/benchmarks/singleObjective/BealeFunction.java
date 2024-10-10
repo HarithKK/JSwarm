@@ -7,7 +7,7 @@ public class BealeFunction extends ObjectiveFunction {
     public Double call() {
         double x = (double)super.getParameters()[0];
         double y = (double)super.getParameters()[1];
-        return Math.pow((1.5- x + (x*y)), 2) + Math.pow((2.25 - x + (x*Math.pow(y,2))),2) + Math.pow((2.625 - x + (x*Math.pow(y,3))),2);
+        return Math.pow((1.5 - x + (x*y)), 2) + Math.pow((2.25 - x + (x*Math.pow(y,2))),2) + Math.pow((2.625 - x + (x*Math.pow(y,3))),2);
     }
 
     @Override

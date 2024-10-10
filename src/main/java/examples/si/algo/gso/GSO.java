@@ -79,7 +79,7 @@ public class GSO extends SIAlgorithm {
             // update luciferin
             for(AbsAgent agent: getFirstAgents()){
                 GlowWorm worm = (GlowWorm)agent;
-                worm.updateLuciferin(ldc, lac, objectiveFunction);
+                worm.updateLuciferin(ldc, lac, getObjectiveFunction());
                 this.updateGBest(worm);
             }
     }
@@ -104,8 +104,8 @@ public class GSO extends SIAlgorithm {
     }
 
     private void updateGBest(GlowWorm ithWarm) {
-        Double fpbest = this.objectiveFunction.setParameters(ithWarm.getPosition().getPositionIndexes()).call();
-        Double fgbest = this.objectiveFunction.setParameters(this.gBest.getPositionIndexes()).call();
+        Double fpbest = this.getObjectiveFunction().setParameters(ithWarm.getPosition().getPositionIndexes()).call();
+        Double fgbest = this.getObjectiveFunction().setParameters(this.gBest.getPositionIndexes()).call();
 
         if(Validator.validateBestValue(fpbest, fgbest, isGlobalMinima.isSet())){
             this.gBest.setVector(ithWarm.getPosition());

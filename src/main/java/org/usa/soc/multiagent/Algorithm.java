@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 public abstract class Algorithm{
 
-    protected Flag isPaused = new Flag(), isKilled=new Flag(), initialized=new Flag();
+    protected Flag isPaused = new Flag(), isKilled=new Flag(), initialized=new Flag(),actionStepPassed=new Flag();
 
     protected Map<String, AgentGroup> agents = new HashMap<>();
 
@@ -35,6 +35,7 @@ public abstract class Algorithm{
         this.isPaused.unset();
         this.isKilled.unset();
         this.initialized.unset();
+        this.actionStepPassed.unset();
     }
 
     public Algorithm(){
@@ -124,7 +125,11 @@ public abstract class Algorithm{
             step++;
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
+        this.executionCompleted();
+    }
 
+    public void executionCompleted(){
+        return;
     }
 
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
@@ -206,6 +211,10 @@ public abstract class Algorithm{
 
     public boolean isPaused() {
         return isPaused.isSet();
+    }
+
+    public void stepOver() {
+        actionStepPassed.set();
     }
 
     public Margins getMargins() {

@@ -11,6 +11,7 @@ import org.usa.soc.util.Commons;
 import java.util.ArrayList;
 import java.util.List;
 
+// Shifter sphear
 public class Function16 extends ObjectiveFunction {
 
     private int numberOfDimensions = 2;
@@ -32,15 +33,15 @@ public class Function16 extends ObjectiveFunction {
         functions = new ArrayList<>();
 
         functions.add(new Function1(n, -5, 5));
-        functions.add(new Function2(n, -5, 5));
-        functions.add(new Function3(n, -5, 5));
-        functions.add(new Function4(n, -5, 5));
-        functions.add(new Function5(n, -5, 5));
-        functions.add(new Function6(n, -5, 5));
-        functions.add(new Function7(n, -5, 5));
-        functions.add(new Function8(n, -5, 5));
-        functions.add(new Function9(n, -5, 5));
-        functions.add(new Function10(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
+        functions.add(new Function1(n, -5, 5));
 
         sigmas = Commons.fill(1,10);
         lambdas = Commons.fill(0.5,10);
