@@ -86,4 +86,5 @@ public abstract class Agent extends AbsAgent {
     public String toString(){
         return "[x]="+getX() + ", [y]="+getY();
     }
+
 }

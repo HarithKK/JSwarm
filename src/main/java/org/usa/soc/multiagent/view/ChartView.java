@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChartView extends JFrame {
@@ -39,6 +38,7 @@ public class ChartView extends JFrame {
     Thread currentRunner = null;
 
     Flag isRepeat = new Flag();
+
     public ChartView(String title, Algorithm algorithm, int w, int h, Margins m){
 
         setTitle(title);
@@ -50,12 +50,12 @@ public class ChartView extends JFrame {
         this.initComponents();
 
         view2D = new PlainView2D(algorithm.getName(),w, h, algorithm, m);
-        view2D.setInterval(algorithm.getInterval());
+        getView2D().setInterval(algorithm.getInterval());
 
-        chartPanel = new XChartPanel<>(view2D.getChart());
+        chartPanel = new XChartPanel<>(getView2D().getChart());
         pnlCenter.add(chartPanel);
 
-        view2D.setAction(new Action() {
+        getView2D().setAction(new Action() {
             @Override
             public void performAction(double percentage) {
                 progressValue = (int)percentage;
@@ -68,12 +68,12 @@ public class ChartView extends JFrame {
     }
 
     public void setInterval(int delay){
-        this.view2D.setInterval(delay);
+        this.getView2D().setInterval(delay);
     }
 
     private void updateUI() {
         progressBar.setValue(progressValue);
-        labelStep.setText(String.valueOf(this.view2D.getAlgo().getCurrentStep()));
+        labelStep.setText(String.valueOf(this.getView2D().getAlgo().getCurrentStep()));
         labelStep.updateUI();
         pnlCenter.updateUI();
     }
@@ -89,7 +89,7 @@ public class ChartView extends JFrame {
 
                 clearValues();
                 try{
-                    view2D.execute();
+                    getView2D().execute();
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -119,8 +119,8 @@ public class ChartView extends JFrame {
         btnPause.setEnabled(true);
         btnStop.setEnabled(true);
 
-        if(currentRunner != null && view2D.getAlgo().isPaused()){
-            view2D.getAlgo().resumeOptimizer();
+        if(currentRunner != null && getView2D().getAlgo().isPaused()){
+            getView2D().getAlgo().resumeOptimizer();
         }else{
             runOptimizer();
         }
@@ -132,7 +132,7 @@ public class ChartView extends JFrame {
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
             isRepeat.unset();
-            view2D.pauseExecution();
+            getView2D().pauseExecution();
         }
     }
 
@@ -141,8 +141,8 @@ public class ChartView extends JFrame {
             btnRun.setEnabled(true);
             btnPause.setEnabled(false);
             btnStop.setEnabled(false);
-            view2D.getAlgo().stopOptimizer();
-            view2D.stopExecution();
+            getView2D().getAlgo().stopOptimizer();
+            getView2D().stopExecution();
             isRepeat.unset();
             currentRunner=null;
             System.exit(0);
@@ -194,9 +194,9 @@ public class ChartView extends JFrame {
         jToolBar.add(btnStop);
 
         jToolBar.add(new JToolBar.Separator());
-        lblInterval = new JLabel("Interval: 100", JLabel.CENTER);
+        lblInterval = new JLabel("Interval: 150", JLabel.CENTER);
         jToolBar.add(lblInterval);
-        sldInterval = new JSlider(10,3000, 100);
+        sldInterval = new JSlider(10,3000, 150);
         sldInterval.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -233,5 +233,9 @@ public class ChartView extends JFrame {
         for(Component btn: customActions){
             this.jToolBar.add(btn);
         }
+    }
+
+    public PlainView2D getView2D() {
+        return view2D;
     }
 }

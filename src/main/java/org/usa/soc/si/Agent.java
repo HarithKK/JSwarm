@@ -39,8 +39,4 @@ public abstract class Agent extends AbsAgent {
         this.fitnessValue = fn.setParameters(this.getPosition().getPositionIndexes()).call();
         return this.fitnessValue;
     }
-
-    public String getId() {
-        return id.toString();
-    }
 }

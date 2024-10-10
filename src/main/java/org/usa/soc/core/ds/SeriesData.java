@@ -9,10 +9,13 @@ public class SeriesData {
     private Marker marker;
     private Color markerColor;
 
+    private Color lineColor;
+
     public SeriesData(String name){
         this.name = name;
         this.setMarker(Markers.CIRCLE);
         this.setMarkerColor(Color.blue);
+        this.setLineColor(Color.DARK_GRAY);
     }
 
 
@@ -30,5 +33,13 @@ public class SeriesData {
 
     public void setMarkerColor(Color markerColor) {
         this.markerColor = markerColor;
+    }
+
+    public Color getLineColor() {
+        return lineColor;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
     }
 }
