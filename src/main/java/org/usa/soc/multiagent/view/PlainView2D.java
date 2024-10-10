@@ -172,7 +172,7 @@ public class PlainView2D {
             AgentGroup agentGroup = data.get(key);
             for(AbsAgent agent: agentGroup.getAgents()){
                 for(AbsAgent connection: agent.conncetions){
-                    XYSeries seriesb = this.chart.addSeries("#conn"+agent.toString()+","+connection.toString(),
+                    XYSeries seriesb = this.chart.addSeries("#conn"+agent.getId().toString()+","+connection.getId().toString(),
                             new double[]{agent.getPosition().getValue(0), connection.getPosition().getValue(0)},
                             new double[]{agent.getPosition().getValue(1), connection.getPosition().getValue(1)});
 

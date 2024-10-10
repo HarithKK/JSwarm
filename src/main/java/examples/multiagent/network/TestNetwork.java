@@ -37,8 +37,6 @@ public class TestNetwork {
             }
         };
 
-        Executor.getInstance().setLegendVisible(false);
         Executor.getInstance().executePlain2D("T1",algorithm, 700, 700, new Margins(-50, 50, -50, 50));
-
     }
 }
