@@ -19,10 +19,13 @@ public class TestNetwork {
             public void initialize() {
 
                 try {
-                    this.addAgents("agents", InitialTestAgent.class, 3);
+                    this.addAgents("agents", InitialTestAgent.class, 10);
                     List<AbsAgent> nodes = getAgents("agents").getAgents();
-                    nodes.get(0).addConnection(nodes.get(1));
-                    nodes.get(0).addConnection(nodes.get(2));
+                    nodes.get(0).addConnection(nodes.get(1)).addConnection(nodes.get(5));
+                    nodes.get(0).addConnection(nodes.get(2)).addConnection(nodes.get(4));
+                    nodes.get(2).addConnection(nodes.get(3)).addConnection(nodes.get(6));
+                    nodes.get(3).addConnection(nodes.get(7)).addConnection(nodes.get(9));
+                    nodes.get(5).addConnection(nodes.get(3)).addConnection(nodes.get(4));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

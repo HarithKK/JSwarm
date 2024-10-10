@@ -175,8 +175,9 @@ public class PlainView2D {
                     XYSeries seriesb = this.chart.addSeries("#conn"+agent.toString()+","+connection.toString(),
                             new double[]{agent.getPosition().getValue(0), connection.getPosition().getValue(0)},
                             new double[]{agent.getPosition().getValue(1), connection.getPosition().getValue(1)});
-                    seriesb.setMarker(SeriesMarkers.DIAMOND);
-                    seriesb.setMarkerColor(Color.RED);
+
+                    seriesb.setMarker(Markers.NONE);
+                    seriesb.setLineColor(agentGroup.getLineColor());
                     seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
                     connectionMaps.put(seriesb, new ConnectionMap(agent, connection));
                 }
