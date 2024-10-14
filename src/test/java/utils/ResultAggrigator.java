@@ -1,5 +1,7 @@
 package utils;
 
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.Commons;
 
@@ -157,5 +159,10 @@ public class ResultAggrigator {
             e.printStackTrace();
         }
         mongoClientConn.updateAlgoTestResult(uuid.toString(), algorithm, testName,tr);
+    }
+
+    public void updateDocument(Document document){
+        document.append("_id", new ObjectId()).append("testid", uuid.toString());
+        mongoClientConn.updateDocument(document);
     }
 }

@@ -112,6 +112,27 @@ public class MongoClientConn {
         }
     }
 
+    public void updateDocument(Document document){
+
+        try (MongoClient mongoClient = MongoClients.create(settings)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            MongoCollection<Document> collection = database.getCollection("sensitivity_analysis");
+
+            try {
+
+                InsertOneResult result = collection.insertOne(document);
+                // Prints the IDs of the inserted documents
+                System.out.println("Inserted document ids: " + result.getInsertedId());
+
+                // Prints a message if any exceptions occur during the operation
+            } catch (MongoException me) {
+                System.err.println("Unable to insert due to an error: " + me);
+            }finally {
+                mongoClient.close();
+            }
+        }
+    }
+
     public void updateTestInfo(String testid, String description){
 
         try (MongoClient mongoClient = MongoClients.create(settings)) {

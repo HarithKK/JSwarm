@@ -248,23 +248,6 @@ public class DB {
         execute(p);
     }
 
-    public void addDouble(
-            String name,
-            String columns,
-            String aname,
-            String fname,
-            double value,
-            int itr) throws SQLException {
-        String sql = "INSERT INTO "+name+" (aname, fname,"+columns+",itr) VALUES (?,?,?,?)";
-        PreparedStatement p = conn.prepareStatement(sql);
-        p.setString(1, aname);
-        p.setString(2, fname);
-        p.setDouble(3, Validator.validateDouble(value));
-        p.setInt(4, itr);
-
-        execute(p);
-    }
-
     public void execute(PreparedStatement pr) throws SQLException {
         pr.executeUpdate();
         pr.close();
