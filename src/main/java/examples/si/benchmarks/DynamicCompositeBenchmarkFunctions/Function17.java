@@ -1,7 +1,7 @@
 package examples.si.benchmarks.DynamicCompositeBenchmarkFunctions;
 
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Schwefel226;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
 import org.usa.soc.si.ObjectiveFunction;
@@ -31,13 +31,13 @@ public class Function17 extends ObjectiveFunction {
         functions = new ArrayList<>();
 
         functions.add(new Function1(n, -5, 5));
-        functions.add(new Function2(n, -5, 5));
-        functions.add(new Function3(n, -5, 5));
+        functions.add(new Schwefel22Function(n, -5, 5));
+        functions.add(new Schwefel12Function(n, -5, 5));
         functions.add(new Function4(n, -5, 5));
-        functions.add(new Function5(n, -5, 5));
+        functions.add(new GeneralizedRosenbrok(n, -5, 5));
         functions.add(new Function6(n, -5, 5));
         functions.add(new Function7(n, -5, 5));
-        functions.add(new Function8(n, -5, 5));
+        functions.add(new Schwefel226(n, -5, 5));
         functions.add(new Function9(n, -5, 5));
         functions.add(new Function10(n, -5, 5));
 

@@ -2,13 +2,13 @@ package examples.si.benchmarks.DynamicUnimodalObjectiveFunctions;
 
 import examples.si.benchmarks.DynamicObjectiveFunction;
 
-public class Function3 extends DynamicObjectiveFunction {
+public class Schwefel12Function extends DynamicObjectiveFunction {
 
-    public Function3(int n){
+    public Schwefel12Function(int n){
         super(n, -100, 100, -30, 0);
     }
 
-    public Function3(int n, double p, double q){
+    public Schwefel12Function(int n, double p, double q){
         super(n, p, q, -30, 0);
     }
 

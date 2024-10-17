@@ -6,11 +6,11 @@ import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function16;
 import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function17;
 import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function18;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
+import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Schwefel226;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function1;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Schwefel22Function;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Schwefel12Function;
 import examples.si.benchmarks.FixMultiModalObjectiveFunctions.Function22;
 import examples.si.benchmarks.FixMultiModalObjectiveFunctions.Function24;
 import examples.si.benchmarks.FixMultiModalObjectiveFunctions.Function25;
@@ -48,10 +48,10 @@ public class TestConvergence {
     @Test
     public void testF1() throws Exception {
         TestFunction(new Function1(2),30);
-        TestFunction(new Function2(2),30);
-        TestFunction(new Function3(2),30);
+        TestFunction(new Schwefel22Function(2),30);
+        TestFunction(new Schwefel12Function(2),30);
 
-        TestFunction(new Function8(2),30);
+        TestFunction(new Schwefel226(2),30);
         TestFunction(new Function9(2),30);
         TestFunction(new Function10(2),30);
 

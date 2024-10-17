@@ -4,7 +4,7 @@ package TSOA;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function3;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Schwefel12Function;
 import examples.si.AlgorithmFactory;
 import utils.Utils;
 
@@ -34,7 +34,7 @@ public class TestF3 {
     String testName;
 
     public ObjectiveFunction getFunction(){
-        return new Function3(n);
+        return new Schwefel12Function(n);
     }
 
     List<Double> tsoa = new ArrayList<>();

@@ -4,7 +4,7 @@ package TSOA;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function5;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.GeneralizedRosenbrok;
 import examples.si.AlgorithmFactory;
 import utils.Utils;
 
@@ -33,7 +33,7 @@ public class TestF5 {
     String testName;
 
     public ObjectiveFunction getFunction(){
-        return new Function5(n);
+        return new GeneralizedRosenbrok(n);
     }
 
     List<Double> tsoa = new ArrayList<>();

@@ -2,8 +2,6 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function5;
-import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Michalewicz10;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Michalewicz5;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;

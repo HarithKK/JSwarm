@@ -116,7 +116,7 @@ public class TSOA extends SIAlgorithm {
             }
             getAgents("zTree").getAgents().get(0).setPosition(z);
             z_history.add(getObjectiveFunction().setParameters(z.getPositionIndexes()).call());
-            for(int i = 0; i < populationSize; i++){
+            for(int i = 0; i < deligator; i++){
                 Tree t = (Tree) getAgents("trees").getAgents().get(i);
 
                 for(int j =0; j< seedsCount; j++){

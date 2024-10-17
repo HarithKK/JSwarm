@@ -1,11 +1,7 @@
 package examples.si.benchmarks.DynamicCompositeBenchmarkFunctions;
 
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function10;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function8;
-import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Function9;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
 import org.usa.soc.si.ObjectiveFunction;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.*;
 import org.usa.soc.util.Commons;
 
 import java.util.ArrayList;

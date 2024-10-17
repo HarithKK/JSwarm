@@ -4,13 +4,13 @@ import examples.si.benchmarks.DynamicObjectiveFunction;
 
 import java.util.Arrays;
 
-public class Function8 extends DynamicObjectiveFunction {
+public class Schwefel226 extends DynamicObjectiveFunction {
 
-    public Function8(int n){
+    public Schwefel226(int n){
         super(n, -500,500, -300,-418.9829 * n );
     }
 
-    public  Function8(int n, double p, double q){
+    public Schwefel226(int n, double p, double q){
         super(n, p, q, -30, 0);
     }
 
