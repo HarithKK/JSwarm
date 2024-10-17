@@ -2,7 +2,7 @@ package TSOA_Quatitative_Test;
 
 
 import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function2;
+import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Schwefel22Function;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
@@ -41,7 +41,7 @@ public class Test_F14_CUNS_Schwefel222 {
     List<Double> gwo = new ArrayList<>();
 
     public ObjectiveFunction getFunction() {
-        return new Function2(n);
+        return new Schwefel22Function(n);
     }
 
     @BeforeAll

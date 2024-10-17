@@ -112,11 +112,11 @@ public class MongoClientConn {
         }
     }
 
-    public void updateDocument(Document document){
+    public void updateDocument(Document document, String collectionName){
 
         try (MongoClient mongoClient = MongoClients.create(settings)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
-            MongoCollection<Document> collection = database.getCollection("sensitivity_analysis");
+            MongoCollection<Document> collection = database.getCollection(collectionName);
 
             try {
 

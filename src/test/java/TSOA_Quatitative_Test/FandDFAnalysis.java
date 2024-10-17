@@ -1,28 +1,19 @@
 package TSOA_Quatitative_Test;
 
-import examples.si.AlgorithmFactory;
 import examples.si.algo.tsoa.TSOA;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.GriewanktFunction;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.Schwefel226;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.GeneralizedRosenbrok;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Schwefel22Function;
-import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
-import examples.si.benchmarks.cec2014.RotatedHighConditionedEllipticFunction;
-import examples.si.benchmarks.cec2017.HybridFunction1;
-import examples.si.benchmarks.cec2022.HybridFunction2;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Alpine1Function;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.CsendesFunction;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Debfunction;
-import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.Michalewicz5;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.DixonPriceFunction;
-import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.MatyasFunction;
-import examples.si.benchmarks.nonGeneral.classical.unimodal.nonseparable.Schwefel12Function;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.PowellSumFunction;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
-import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.StepFunction;
 import examples.si.benchmarks.singleObjective.ChungReynoldsSquares;
 import examples.si.benchmarks.singleObjective.RastriginFunction;
 import examples.si.benchmarks.singleObjective.RosenbrockFunction;
@@ -38,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Execution(ExecutionMode.CONCURRENT)
-public class C1C2Analysis {
+public class FandDFAnalysis {
 
     public void execute(ObjectiveFunction fn, String name, String aka,  int kt, double min_c,double max_c, double ict) throws Exception {
 
@@ -48,9 +39,9 @@ public class C1C2Analysis {
         document.append("function_name", aka);
 
         List<List<List<Double>>> c1 = new ArrayList<>();
-        for(double i = min_c; i< max_c; i+=ict){
+        for(double i = min_c; i<= max_c; i+=ict){
             List<List<Double>> c2 = new ArrayList<>();
-            for(double j = min_c; j< max_c; j+=ict){
+            for(double j = min_c; j<= max_c; j+=ict){
                 List<Double> data = new ArrayList<>();
                 for(int k=0; k< kt;k++){
                     TSOA algo = new TSOA(
@@ -62,15 +53,15 @@ public class C1C2Analysis {
                             fn.getMax(),
                             true,
                             10,
-                            0.3,
-                            1,
                             i,
-                            j
+                            j,
+                            1.6,
+                            1.4
                     );
                     algo.initialize();
                     algo.run();
                     data.add(algo.getBestDoubleValue());
-                    System.out.println(aka + ": C1:"+i+", C2:"+j+", data: "+algo.getBestDoubleValue()+", size: "+data.size());
+                    System.out.println(aka + ": FH:"+i+", DF:"+j+", data: "+algo.getBestDoubleValue()+", size: "+data.size());
                 }
                 c2.add(data);
             }
@@ -83,34 +74,34 @@ public class C1C2Analysis {
 
     @Test
     public void testUniModalSeperable() throws Exception {
-        execute(new ChungReynoldsSquares().updateDimensions(10), "Chung Reynolds Squares", "F1", 3, 0.1, 3.0, 0.2);
-        execute(new PowellSumFunction().updateDimensions(10), "Powell Sum", "F2", 3, 0.1, 3.0, 0.2);
-        execute(new QuarticFunction().updateDimensions(10), "Quartic", "F3", 3, 0.1, 3.0, 0.2);
-        execute(new SphereFunction().updateDimensions(10), "Sphere", "F8", 3, 0.1, 3.0, 0.2);
+        execute(new ChungReynoldsSquares().updateDimensions(10), "Chung Reynolds Squares", "F1", 3, 0.1, 1.0, 0.2);
+        execute(new PowellSumFunction().updateDimensions(10), "Powell Sum", "F2", 3, 0.1, 1.0, 0.2);
+        execute(new QuarticFunction().updateDimensions(10), "Quartic", "F3", 3, 0.1, 1.0, 0.2);
+        execute(new SphereFunction().updateDimensions(10), "Sphere", "F8", 3, 0.1, 1.0, 0.2);
     }
 
     @Test
     public void testUniModalNonSeperable() throws Exception {
-        execute(new DixonPriceFunction().updateDimensions(10), "Dixon Price", "F11", 3, 0.1, 3.0, 0.2);
-        execute(new Schwefel22Function(10).updateDimensions(10), "Schwefel 2.22", "F14", 3, 0.1, 3.0, 0.2);
-        execute(new ZakharovFunction().updateDimensions(10), "Zakharov", "F16", 3, 0.1, 3.0, 0.2);
-        execute(new RosenbrockFunction().updateDimensions(10), "Rosenbrock", "F18", 3, 0.1, 3.0, 0.2);
+        execute(new DixonPriceFunction().updateDimensions(10), "Dixon Price", "F11", 3, 0.1, 1.0, 0.2);
+        execute(new Schwefel22Function(10).updateDimensions(10), "Schwefel 2.22", "F14", 3, 0.1, 1.0, 0.2);
+        execute(new ZakharovFunction().updateDimensions(10), "Zakharov", "F16", 3, 0.1, 1.0, 0.2);
+        execute(new RosenbrockFunction().updateDimensions(10), "Rosenbrock", "F18", 3, 0.1, 1.0, 0.2);
     }
 
     @Test
     public void testMultiModalSeperable() throws Exception {
-        execute(new Alpine1Function().updateDimensions(10), "Alpine1", "F20", 3, 0.1, 3.0, 0.2);
-        execute(new CsendesFunction().updateDimensions(10), "Csendes", "F23", 3, 0.1, 3.0, 0.2);
-        execute(new RastriginFunction().updateDimensions(10), "Rastrigin", "F27", 3, 0.1, 3.0, 0.2);
-        execute(new Schwefel226(10).updateDimensions(10), "Schwefel226", "F28", 3, 0.1, 3.0, 0.2);
+        execute(new Alpine1Function().updateDimensions(10), "Alpine1", "F20", 3, 0.1, 1.0, 0.2);
+        execute(new CsendesFunction().updateDimensions(10), "Csendes", "F23", 3, 0.1, 1.0, 0.2);
+        execute(new RastriginFunction().updateDimensions(10), "Rastrigin", "F27", 3, 0.1, 1.0, 0.2);
+        execute(new Schwefel226(10).updateDimensions(10), "Schwefel226", "F28", 3, 0.1, 1.0, 0.2);
     }
 
     @Test
     public void testMultiModalMNonSeperable() throws Exception {
-        execute(new AckleysFunction().updateDimensions(10), "Ackleys", "F10", 3, 0.1, 3.0, 0.2);
-        execute(new GriewanktFunction(10).updateDimensions(10), "Griewankt", "F35", 3, 0.1, 3.0, 0.2);
-        execute(new GeneralizedRosenbrok(10).updateDimensions(10), "Generalized Rosenbrok", "F36", 3, 0.1, 3.0, 0.2);
-        execute(new StyblinskiTangFunction().updateDimensions(10), "Styblinski-Tang", "F37", 3, 0.1, 3.0, 0.2);
+        execute(new AckleysFunction().updateDimensions(10), "Ackleys", "F10", 3, 0.1, 1.0, 0.2);
+        execute(new GriewanktFunction(10).updateDimensions(10), "Griewankt", "F35", 3, 0.1, 1.0, 0.2);
+        execute(new GeneralizedRosenbrok(10).updateDimensions(10), "Generalized Rosenbrok", "F36", 3, 0.1, 1.0, 0.2);
+        execute(new StyblinskiTangFunction().updateDimensions(10), "Styblinski-Tang", "F37", 3, 0.1, 1.0, 0.2);
     }
 
     @Test

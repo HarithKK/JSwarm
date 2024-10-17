@@ -2,13 +2,13 @@ package examples.si.benchmarks.DynamicUnimodalObjectiveFunctions;
 
 import examples.si.benchmarks.DynamicObjectiveFunction;
 
-public class Function5 extends DynamicObjectiveFunction {
+public class GeneralizedRosenbrok extends DynamicObjectiveFunction {
 
-    public Function5(int n){
+    public GeneralizedRosenbrok(int n){
         super(n, -30,30, -15, 0);
     }
 
-    public  Function5(int n, double p, double q){
+    public GeneralizedRosenbrok(int n, double p, double q){
         super(n, p, q, -30, 0);
     }
 

@@ -161,8 +161,13 @@ public class ResultAggrigator {
         mongoClientConn.updateAlgoTestResult(uuid.toString(), algorithm, testName,tr);
     }
 
+    public void updateDocument(Document document, String collectionName){
+        document.append("_id", new ObjectId()).append("testid", uuid.toString());
+        mongoClientConn.updateDocument(document, collectionName);
+    }
+
     public void updateDocument(Document document){
         document.append("_id", new ObjectId()).append("testid", uuid.toString());
-        mongoClientConn.updateDocument(document);
+        mongoClientConn.updateDocument(document, "best_values");
     }
 }
