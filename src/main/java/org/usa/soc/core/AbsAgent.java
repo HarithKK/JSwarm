@@ -35,7 +35,7 @@ public abstract class AbsAgent implements Cloneable {
         return this;
     }
 
-    public void randPosition(){ position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary); }
+    public void randPosition(){ position = Randoms.getRandomVector(numberOfDimensions, minBoundary, maxBoundary, 0,1); }
 
     public UUID getId() {
         return id;
