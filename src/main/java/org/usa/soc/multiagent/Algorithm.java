@@ -179,8 +179,9 @@ public abstract class Algorithm{
     private List<AbsAgent> createAgents(int count, Class<?> agent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         List<AbsAgent> list = new ArrayList<>();
         for(int i=0; i<count;i++){
-            var inst = agent.getDeclaredConstructor().newInstance();
-            ((Agent)inst).initPosition(margins);
+            Agent inst = (Agent)agent.getDeclaredConstructor().newInstance();
+            inst.initPosition(margins);
+            inst.setIndex(i);
             list.add((AbsAgent)inst);
         }
         return list;

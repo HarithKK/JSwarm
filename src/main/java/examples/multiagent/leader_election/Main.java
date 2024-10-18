@@ -1,20 +1,34 @@
 package examples.multiagent.leader_election;
 
-import examples.multiagent.initial.InitialTestAgent;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
-import org.usa.soc.multiagent.Agent;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
+import org.usa.soc.multiagent.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
+import org.usa.soc.util.StringFormatter;
 
 import java.util.*;
 
 public class Main {
 
+    private static final double K = 0.0001;
     Algorithm algorithm;
 
     Drone utmostLeader;
+
+    private int MAX_LINKS = 6;
+    private int MIN_DIST=50;
+
+    private RealMatrix A;
+    private RealMatrix B;
+
     public Main(int count){
+
+        A = MatrixUtils.createRealMatrix(count, count);
+        B = MatrixUtils.createRealMatrix(count, count);
 
         algorithm = new Algorithm() {
             @Override
@@ -22,7 +36,7 @@ public class Main {
 
                 try {
                     this.addAgents("drones", Drone.class, count);
-                    utmostLeader = findRoot();
+                    utmostLeader = (Drone) getFirstAgents().get(0);// findRoot();
                     utmostLeader.rank = 0;
 
                     Queue<AbsAgent> bfsQueue = new ArrayDeque<>();
@@ -34,6 +48,35 @@ public class Main {
                             bfsQueue.add(a);
                         }
                     }while(!bfsQueue.isEmpty());
+
+                    getFirstAgents().sort(new ByIndex());
+
+                    // Fill A and B Matrices
+                    for(AbsAgent ai: getFirstAgents()){
+                        for(AbsAgent aj: ai.getConncetions()){
+                            Drone i = (Drone) ai;
+                            Drone j = (Drone) aj;
+                            if(i.getIndex() != j.getIndex()){
+                                A.setEntry(i.getIndex(), j.getIndex(), 1);
+                                if(i.rank < j.rank){
+                                    B.setEntry(i.getIndex(), j.getIndex(), -1);
+                                    B.setEntry(j.getIndex(), i.getIndex(), 1);
+                                }
+                            }
+                        }
+                    }
+
+                    for(int i=0; i< count; i++){
+                        for(int j=i+1; j< count; j++){
+                            Drone ai = (Drone)getFirstAgents().get(i);
+                            Drone aj = (Drone)getFirstAgents().get(j);
+
+
+                        }
+                    }
+
+                    //System.out.println(StringFormatter.toString(B));
+                    System.out.println("ROOT: "+utmostLeader.getIndex());
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -58,13 +101,13 @@ public class Main {
                         }
                     });
 
-                    int max_count = 6;
+                    int max_count = MAX_LINKS;
 
                     for(AbsAgent a: agents){
                         if(max_count < 0){
                             break;
                         }
-                        if(root.conncetions.contains(a)){
+                        if(root.getConncetions().contains(a)){
                             continue;
                         }
                         Drone d1 = (Drone)a;
@@ -95,12 +138,52 @@ public class Main {
             @Override
             public void step() throws Exception {
 
+                for(int i=0; i<count; i++){
+                    Drone dr = (Drone) getFirstAgents().get(i);
+                    if(dr.getIndex() == utmostLeader.getIndex()){
+                        continue;
+                    }
+
+                    Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
+                    dr.velocity = calculateVelocity(leader, dr);
+
+                    for(int j=0; j<A.getRowDimension(); j++){
+                        if(j == leader.getIndex()){
+                            continue;
+                        }
+                        if(A.getEntry(dr.getIndex(), j) > 0)
+                            dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
+                    }
+
+//                    for(AbsAgent sub: dr.getConncetions()){
+//                        if(!(sub.getIndex() < dr.getIndex())){
+//                            dr.velocity.operate(Vector.OPERATOR.ADD, calculateVelocity(dr, sub).toNeg());
+//                        }
+//                    }
+                }
+
             }
+
+            private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
+                Vector vc = d1.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, d2.getPosition());
+                return vc.operate(Vector.OPERATOR.MULP, (vc.getMagnitude()-MIN_DIST)*K);
+            }
+
+            private int getLeaderIndex(int index) {
+                for(int i=0; i<B.getRowDimension(); i++){
+                    if(B.getEntry(index, i) == 1.0){
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
+
         };
 
     }
 
     public static void main(String[] args) {
-        Executor.getInstance().executePlain2D("LF", new Main(50).algorithm, 700, 700, new Margins(0, 100, 0, 100));
+        Executor.getInstance().executePlain2D("LF", new Main(20).algorithm, 700, 700, new Margins(0, 1000, 0, 1000));
     }
 }

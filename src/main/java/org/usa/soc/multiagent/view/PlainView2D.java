@@ -1,11 +1,10 @@
 package org.usa.soc.multiagent.view;
 
-import org.apache.commons.math3.analysis.function.Abs;
+import org.knowm.xchart.AnnotationText;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Markers;
 import org.usa.soc.core.ds.SeriesDataObject;
@@ -16,7 +15,6 @@ import org.usa.soc.core.action.Action;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.StepCompleted;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -127,6 +125,11 @@ public class PlainView2D {
                         XYSeries series = this.chart.addSeries(agentGroup.name, obj.getX(), obj.getY());
                         series.setMarker(agentGroup.getMarker());
                         series.setMarkerColor(agentGroup.getMarkerColor());
+
+                        for(int pi =0; pi < obj.getCount(); pi++){
+                            AnnotationText text = new AnnotationText(String.valueOf(pi), obj.getX()[pi]+0.01, obj.getY()[pi]+0.01, true);
+                            chart.addAnnotation(text);
+                        }
                     }
                 }
             }
@@ -171,7 +174,7 @@ public class PlainView2D {
         for(String key: data.keySet()){
             AgentGroup agentGroup = data.get(key);
             for(AbsAgent agent: agentGroup.getAgents()){
-                for(AbsAgent connection: agent.conncetions){
+                for(AbsAgent connection: agent.getConncetions()){
                     XYSeries seriesb = this.chart.addSeries("#conn"+agent.getId().toString()+","+connection.getId().toString(),
                             new double[]{agent.getPosition().getValue(0), connection.getPosition().getValue(0)},
                             new double[]{agent.getPosition().getValue(1), connection.getPosition().getValue(1)});

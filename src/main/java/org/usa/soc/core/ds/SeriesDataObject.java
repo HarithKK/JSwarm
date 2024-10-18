@@ -3,9 +3,12 @@ package org.usa.soc.core.ds;
 public class SeriesDataObject {
     double x[], y[];
 
+    private int count;
+
     public SeriesDataObject(int count){
         x = new double[count];
         y = new double[count];
+        this.setCount(count);
     }
 
     public void addXY(int i, double x, double y){
@@ -24,4 +27,12 @@ public class SeriesDataObject {
 
     public double[] getX(){ return x; }
     public double[] getY(){ return y; }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

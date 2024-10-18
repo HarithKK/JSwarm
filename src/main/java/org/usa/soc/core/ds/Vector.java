@@ -129,6 +129,13 @@ public class Vector {
         return this;
     }
 
+    public Vector toNeg(){
+        for(int i = 0; i< getNumberOfDimensions(); i++){
+            this.positionIndexes[i] = -1*this.positionIndexes[i];
+        }
+        return this;
+    }
+
     public Vector toSin(){
         for(int i = 0; i< getNumberOfDimensions(); i++){
             this.positionIndexes[i] = Math.sin(this.positionIndexes[i]);
