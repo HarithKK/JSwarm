@@ -1,5 +1,6 @@
 package org.usa.soc.multiagent.runners;
 
+import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.view.ChartView;
@@ -22,6 +23,12 @@ public class Executor {
     private HashMap<String, ProgressiveChart> chartHashMap = new HashMap<>();
 
     private static Algorithm iAlgorithm;
+
+    private Flag isLegendVisible = new Flag();
+
+    public void setLegendVisible(boolean b){
+        isLegendVisible.setValue(b);
+    }
 
     public static Executor getInstance(){
         if(instance == null){
@@ -72,8 +79,9 @@ public class Executor {
             public void run() {
                 iAlgorithm = algorithm;
                 chartView = new ChartView(title, algorithm, w, h, m);
-                chartView.setCustomActions(customActions);
-                chartView.setInterval(50);
+                chartView.getView2D().getChart().getStyler().setLegendVisible(isLegendVisible.isSet());
+                getChartView().setCustomActions(customActions);
+                getChartView().setInterval(150);
 
                 if(!getChartHashMap().isEmpty()){
                     dataView = new DataView("Data View");
@@ -91,4 +99,7 @@ public class Executor {
         return chartHashMap;
     }
 
+    public ChartView getChartView() {
+        return chartView;
+    }
 }

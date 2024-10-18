@@ -1,9 +1,13 @@
 package org.usa.soc.multiagent.view;
 
+import org.apache.commons.math3.analysis.function.Abs;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Markers;
 import org.usa.soc.core.ds.SeriesDataObject;
 import org.usa.soc.multiagent.AgentGroup;
 import org.usa.soc.multiagent.Algorithm;
@@ -12,6 +16,8 @@ import org.usa.soc.core.action.Action;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.StepCompleted;
 
+import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +32,8 @@ public class PlainView2D {
     private Flag isExecuting = new Flag();
 
     private Action action;
+
+    private Map<XYSeries, ConnectionMap> connectionMaps = new HashMap<>();
 
     public PlainView2D(String title, int w, int h){
         this.initComponents(title, w, h);
@@ -93,6 +101,15 @@ public class PlainView2D {
         this.getAlgo().run();
     }
 
+    public boolean contains(AbsAgent agent){
+        Map<String, AgentGroup> data = this.getAlgo().getAgentsMap();
+        for(String key: data.keySet()){
+            AgentGroup agentGroup = data.get(key);
+            return agentGroup.getAgents().contains(agent);
+        }
+        return false;
+    }
+
     private void updateChartWithSeries() {
         Map<String, AgentGroup> data = this.getAlgo().getAgentsMap();
         if(data == null){
@@ -112,6 +129,20 @@ public class PlainView2D {
                         series.setMarkerColor(agentGroup.getMarkerColor());
                     }
                 }
+            }
+        }
+
+        Set<String> keys = this.getChart().getSeriesMap().keySet();
+        for(String s: keys){
+            try{
+                if(s.startsWith("#conn")){
+                    ConnectionMap map = connectionMaps.get(this.getChart().getSeriesMap().get(s));
+                    chart.updateXYSeries(s,
+                            new double[]{map.from.getPosition().getValue(0), map.to.getPosition().getValue(0)},
+                            new double[]{map.from.getPosition().getValue(1), map.to.getPosition().getValue(1)}, null);
+                }
+            }catch (Exception e){
+
             }
         }
     }
@@ -134,6 +165,22 @@ public class PlainView2D {
                 XYSeries series = this.chart.addSeries(agentGroup.name, obj.getX(), obj.getY());
                 series.setMarker(agentGroup.getMarker());
                 series.setMarkerColor(agentGroup.getMarkerColor());
+            }
+        }
+
+        for(String key: data.keySet()){
+            AgentGroup agentGroup = data.get(key);
+            for(AbsAgent agent: agentGroup.getAgents()){
+                for(AbsAgent connection: agent.conncetions){
+                    XYSeries seriesb = this.chart.addSeries("#conn"+agent.getId().toString()+","+connection.getId().toString(),
+                            new double[]{agent.getPosition().getValue(0), connection.getPosition().getValue(0)},
+                            new double[]{agent.getPosition().getValue(1), connection.getPosition().getValue(1)});
+
+                    seriesb.setMarker(Markers.NONE);
+                    seriesb.setLineColor(agentGroup.getLineColor());
+                    seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+                    connectionMaps.put(seriesb, new ConnectionMap(agent, connection));
+                }
             }
         }
     }
