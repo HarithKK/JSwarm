@@ -20,15 +20,18 @@ public class Main {
     Drone utmostLeader;
 
     private int MAX_LINKS = 3;
-    private int MIN_DIST=30;
 
     private RealMatrix A;
     private RealMatrix B;
+
+    public static int agentsCount = 15;
 
     public Main(int count){
 
         A = MatrixUtils.createRealMatrix(count, count);
         B = MatrixUtils.createRealMatrix(count, count);
+
+        double cx = 100, cy = 100, r = 80, av = 5, md = 15, vc_minus=0.015, vc_plus=0.0001;
 
         algorithm = new Algorithm() {
             @Override
@@ -38,8 +41,8 @@ public class Main {
                     this.addAgents("drones", Drone.class, count);
                     utmostLeader = (Drone) getFirstAgents().get(0);// findRoot();
                     utmostLeader.rank = 0;
-                    utmostLeader.setX(100);
-                    utmostLeader.setY(10);
+                    utmostLeader.setX(cx);
+                    utmostLeader.setY(cy);
                     utmostLeader.velocity.setValues(new double[]{0.0, 1.0});
 
                     Queue<AbsAgent> bfsQueue = new ArrayDeque<>();
@@ -55,19 +58,6 @@ public class Main {
                     getFirstAgents().sort(new ByIndex());
 
                     // Fill A and B Matrices
-//                    for(AbsAgent ai: getFirstAgents()){
-//                        for(AbsAgent aj: ai.getConncetions()){
-//                            Drone i = (Drone) ai;
-//                            Drone j = (Drone) aj;
-//                            if(i.getIndex() != j.getIndex()){
-//                                A.setEntry(i.getIndex(), j.getIndex(), 1);
-//                                if(i.rank < j.rank){
-//                                    B.setEntry(i.getIndex(), j.getIndex(), -1);
-//                                    B.setEntry(j.getIndex(), i.getIndex(), 1);
-//                                }
-//                            }
-//                        }
-//                    }
 
                     for(int i=0; i< count; i++){
                         for(int j=0; j< count; j++){
@@ -155,33 +145,31 @@ public class Main {
                 for(int i=0; i<count; i++){
                     Drone dr = (Drone) getFirstAgents().get(i);
                     if(dr.getIndex() == utmostLeader.getIndex()){
+                        double theta = Math.toRadians(currentStep % 360);
+                        utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
+                        utmostLeader.velocity.setValues(new double[]{av*Math.cos(0), av * Math.sin(theta)});
                         continue;
                     }
 
                     Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
-                    dr.velocity = calculateVelocity(leader, dr);
+                    dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 10);
 
                     for(int j=0; j<A.getRowDimension(); j++){
                         if(j == leader.getIndex() || j == dr.getIndex()){
                             continue;
                         }
-                        //if(A.getEntry(dr.getIndex(), j) > 0 && B.getEntry(dr.getIndex(), j) == 0)
-                        if(dr.rank == ((Drone)getFirstAgents().get(j)).rank)
+                        if(A.getEntry(dr.getIndex(), j) > 0)
                             dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
                     }
 
-//                    for(AbsAgent sub: dr.getConncetions()){
-//                        if(!(sub.getIndex() < dr.getIndex())){
-//                            dr.velocity.operate(Vector.OPERATOR.ADD, calculateVelocity(dr, sub));
-//                        }
-//                    }
                 }
 
             }
 
             private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
                 Vector vc = d1.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, d2.getPosition());
-                return vc.operate(Vector.OPERATOR.MULP, (vc.getMagnitude()-MIN_DIST)*K);
+                double k = vc.getMagnitude()-md < 0 ? vc_minus : vc_plus;
+                return vc.operate(Vector.OPERATOR.MULP, (vc.getMagnitude()-md)*k);
             }
 
             private int getLeaderIndex(int index) {
@@ -199,6 +187,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Executor.getInstance().executePlain2D("LF", new Main(15).algorithm, 700, 700, new Margins(0, 200, 0, 1000));
+        Executor.getInstance().executePlain2D("LF", new Main(agentsCount).algorithm, 700, 700, new Margins(0, 200, 0, 200));
     }
 }
