@@ -169,13 +169,13 @@ public class Main {
                         }
 
                         Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
-                        dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 10);
+                        dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 30);
 
                         for(int j=0; j<model.A.getRowDimension(); j++){
                             if(j == leader.getIndex() || j == dr.getIndex()){
                                 continue;
                             }
-                            if(model.A.getEntry(dr.getIndex(), j) > 0)
+                            if(model.A.getEntry(dr.getIndex(), j) > 0 && model.B.getEntry(dr.getIndex(), j) != -1)
                                 dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
                         }
 
@@ -194,6 +194,7 @@ public class Main {
             private int getLeaderIndex(int index) {
                 for(int i=0; i<model.B.getRowDimension(); i++){
                     if(model.B.getEntry(index, i) == 1.0){
+                        System.out.println("DR: "+index+"Leader: "+i);
                         return i;
                     }
                 }
