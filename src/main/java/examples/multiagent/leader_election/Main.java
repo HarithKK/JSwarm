@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election;
 
+import com.mysql.cj.util.TimeUtil;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.AbsAgent;
@@ -8,7 +9,10 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
+import org.usa.soc.util.Commons;
+import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.StringFormatter;
+import java.util.concurrent.TimeUnit;
 
 import java.util.*;
 
@@ -21,17 +25,17 @@ public class Main {
 
     private int MAX_LINKS = 3;
 
-    private RealMatrix A;
-    private RealMatrix B;
+    private StateSpaceModel model;
 
     public static int agentsCount = 15;
 
+    double av = 5;
+    public long last_t;
+
     public Main(int count){
 
-        A = MatrixUtils.createRealMatrix(count, count);
-        B = MatrixUtils.createRealMatrix(count, count);
-
-        double cx = 100, cy = 100, r = 80, av = 5, md = 15, vc_minus=0.015, vc_plus=0.0001;
+        model = new StateSpaceModel(count);
+        double cx = 100, cy = 100, r = 80, md = 15, vc_minus=0.015, vc_plus=0.0001;
 
         algorithm = new Algorithm() {
             @Override
@@ -65,15 +69,15 @@ public class Main {
                             Drone aj = (Drone)getFirstAgents().get(j);
 
                             if(ai.rank == aj.rank){
-                                A.setEntry(ai.getIndex(), aj.getIndex(), 1);
-                                A.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                                model.A.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                                model.A.setEntry(aj.getIndex(), ai.getIndex(), 1);
                                 continue;
                             }
                             if(ai.getConncetions().contains(aj)){
-                                A.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                                model.A.setEntry(ai.getIndex(), aj.getIndex(), 1);
                                 if(ai.rank < aj.rank){
-                                    B.setEntry(ai.getIndex(), aj.getIndex(), -1);
-                                    B.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                                    model.B.setEntry(ai.getIndex(), aj.getIndex(), -1);
+                                    model.B.setEntry(aj.getIndex(), ai.getIndex(), 1);
                                 }
                             }
                         }
@@ -82,6 +86,13 @@ public class Main {
                     //System.out.println(StringFormatter.toString(B));
                     System.out.println("ROOT: "+utmostLeader.getIndex());
 
+                    model.setK0(Commons.fill(1, count));
+                    model.setK1(Commons.fill(1, count));
+                    model.setKR(Commons.fill(1, count));
+                    model.derive();
+                    System.out.println(StringFormatter.toString(model.BB));
+
+                    last_t = System.nanoTime();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -147,23 +158,34 @@ public class Main {
                     if(dr.getIndex() == utmostLeader.getIndex()){
                         double theta = Math.toRadians(currentStep % 360);
                         utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
-                        utmostLeader.velocity.setValues(new double[]{av*Math.cos(0), av * Math.sin(theta)});
+                        utmostLeader.velocity.setValues(new double[]{0,0});
                         continue;
                     }
 
                     Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
                     dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 10);
 
-                    for(int j=0; j<A.getRowDimension(); j++){
+                    for(int j=0; j<model.A.getRowDimension(); j++){
                         if(j == leader.getIndex() || j == dr.getIndex()){
                             continue;
                         }
-                        if(A.getEntry(dr.getIndex(), j) > 0)
+                        if(model.A.getEntry(dr.getIndex(), j) > 0)
                             dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
                     }
 
                 }
 
+                if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-last_t) >5){
+                    av = -av;
+                    last_t = System.nanoTime();
+                }
+
+                System.out.println("GC ---------------");
+                RealMatrix gc = model.calcControllabilityGramian(0, TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-last_t));
+                last_t = System.nanoTime();
+                System.out.println(StringFormatter.toString(gc));
+                System.out.println("Rank: "+model.getGcRank());
+                System.out.println("This System is "+ (model.isModelControllable() ? "Controllable" : "No Controllable"));
             }
 
             private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
@@ -173,8 +195,8 @@ public class Main {
             }
 
             private int getLeaderIndex(int index) {
-                for(int i=0; i<B.getRowDimension(); i++){
-                    if(B.getEntry(index, i) == 1.0){
+                for(int i=0; i<model.B.getRowDimension(); i++){
+                    if(model.B.getEntry(index, i) == 1.0){
                         return i;
                     }
                 }

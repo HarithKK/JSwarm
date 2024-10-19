@@ -1,5 +1,8 @@
 package org.usa.soc.util;
 
+import org.apache.commons.math3.linear.EigenDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.special.Gamma;
 import org.apache.commons.math3.stat.inference.TTest;
 import org.usa.soc.core.ds.Vector;
@@ -103,5 +106,18 @@ public class Commons {
         TTest tTest = new TTest();
         double d = tTest.tTest(s1, s2);
         return Double.isNaN(d) ? -1 : d;
+    }
+
+    public static RealMatrix expm(RealMatrix matrix) {
+        int n = matrix.getRowDimension();
+        RealMatrix result = MatrixUtils.createRealIdentityMatrix(n);
+        RealMatrix power = matrix;
+
+        for (int i = 1; i < 10; i++) { // Adjust the number of iterations for accuracy
+            result = result.add(power.scalarMultiply(1.0 / factorial(i)));
+            power = power.multiply(matrix);
+        }
+
+        return result;
     }
 }

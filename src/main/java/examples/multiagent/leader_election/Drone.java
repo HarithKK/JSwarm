@@ -23,4 +23,11 @@ public class Drone extends Agent {
                 velocity.getValue(1)}
         );
     }
+
+    public void setState(RealMatrix matrix){
+        this.position.setValue(matrix.getEntry(0,0), 0);
+        this.position.setValue(matrix.getEntry(1,0), 1);
+        this.position.setValue(matrix.getEntry(2,0), 2);
+        this.position.setValue(matrix.getEntry(3,0), 3);
+    }
 }
