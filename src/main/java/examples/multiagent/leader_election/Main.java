@@ -194,7 +194,6 @@ public class Main {
             private int getLeaderIndex(int index) {
                 for(int i=0; i<model.B.getRowDimension(); i++){
                     if(model.B.getEntry(index, i) == 1.0){
-                        System.out.println("DR: "+index+"Leader: "+i);
                         return i;
                     }
                 }
