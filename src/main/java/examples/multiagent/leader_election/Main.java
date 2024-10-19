@@ -12,6 +12,9 @@ import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.StringFormatter;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
 import java.util.*;
@@ -153,39 +156,39 @@ public class Main {
             @Override
             public void step() throws Exception {
 
-                for(int i=0; i<count; i++){
-                    Drone dr = (Drone) getFirstAgents().get(i);
-                    if(dr.getIndex() == utmostLeader.getIndex()){
-                        double theta = Math.toRadians(currentStep % 360);
-                        utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
-                        utmostLeader.velocity.setValues(new double[]{0,0});
-                        continue;
-                    }
-
-                    Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
-                    dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 10);
-
-                    for(int j=0; j<model.A.getRowDimension(); j++){
-                        if(j == leader.getIndex() || j == dr.getIndex()){
+                try {
+                    for(int i=0; i<count; i++){
+                        Drone dr = (Drone) getFirstAgents().get(i);
+                        if(utmostLeader != null && dr.getIndex() == utmostLeader.getIndex()){
+                            double theta = Math.toRadians(currentStep % 360);
+                            utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
+                            utmostLeader.velocity.setValues(new double[]{0,0});
                             continue;
                         }
-                        if(model.A.getEntry(dr.getIndex(), j) > 0)
-                            dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
+
+                        Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
+                        dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 10);
+
+                        for(int j=0; j<model.A.getRowDimension(); j++){
+                            if(j == leader.getIndex() || j == dr.getIndex()){
+                                continue;
+                            }
+                            if(model.A.getEntry(dr.getIndex(), j) > 0)
+                                dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
+                        }
+
                     }
+                }catch (Exception e){
 
                 }
 
-                if(TimeUnit.NANOSECONDS.toSeconds(System.nanoTime()-last_t) >5){
-                    av = -av;
-                    last_t = System.nanoTime();
-                }
-
-                System.out.println("GC ---------------");
-                RealMatrix gc = model.calcControllabilityGramian(0, TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-last_t));
-                last_t = System.nanoTime();
-                System.out.println(StringFormatter.toString(gc));
-                System.out.println("Rank: "+model.getGcRank());
-                System.out.println("This System is "+ (model.isModelControllable() ? "Controllable" : "No Controllable"));
+//                System.out.println("GC ---------------");
+               // RealMatrix gc = model.calcControllabilityGramian(0, TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-last_t));
+                //last_t = System.nanoTime();
+//                System.out.println(StringFormatter.toString(gc));
+                //System.out.println("Rank: "+model.getGcRank());
+                //System.out.println("This System is "+ (model.isModelControllable() ? "Controllable" : "No Controllable"));
+//
             }
 
             private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
@@ -203,12 +206,26 @@ public class Main {
                 return -1;
             }
 
-
         };
 
     }
 
+    public void removeAgent0(){
+        model.A = model.A.getSubMatrix(1,model.A.getRowDimension()-1, 1, model.A.getColumnDimension()-1);
+        model.B = model.B.getSubMatrix(1,model.B.getRowDimension()-1, 1, model.B.getColumnDimension()-1);
+        utmostLeader = null;
+
+    }
+
     public static void main(String[] args) {
-        Executor.getInstance().executePlain2D("LF", new Main(agentsCount).algorithm, 700, 700, new Margins(0, 200, 0, 200));
+        Main m = new Main(agentsCount);
+        Executor.getInstance().executePlain2D("LF", m.algorithm, 700, 700, new Margins(0, 200, 0, 200));
+        Executor.getInstance().AddCustomActions("R-0", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Executor.getInstance().getChartView().getView2D().removeAgent(0);
+                m.removeAgent0();
+            }
+        }, true);
     }
 }

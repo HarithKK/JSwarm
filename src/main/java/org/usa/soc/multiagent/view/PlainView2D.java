@@ -15,9 +15,7 @@ import org.usa.soc.core.action.Action;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.StepCompleted;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 
@@ -125,11 +123,6 @@ public class PlainView2D {
                         XYSeries series = this.chart.addSeries(agentGroup.name, obj.getX(), obj.getY());
                         series.setMarker(agentGroup.getMarker());
                         series.setMarkerColor(agentGroup.getMarkerColor());
-
-                        for(int pi =0; pi < obj.getCount(); pi++){
-                            AnnotationText text = new AnnotationText(String.valueOf(pi), obj.getX()[pi]+0.01, obj.getY()[pi]+0.01, true);
-                            chart.addAnnotation(text);
-                        }
                     }
                 }
             }
@@ -175,7 +168,7 @@ public class PlainView2D {
             AgentGroup agentGroup = data.get(key);
             for(AbsAgent agent: agentGroup.getAgents()){
                 for(AbsAgent connection: agent.getConncetions()){
-                    XYSeries seriesb = this.chart.addSeries("#conn"+agent.getId().toString()+","+connection.getId().toString(),
+                    XYSeries seriesb = this.chart.addSeries("#conn"+agent.getIndex()+","+connection.getIndex(),
                             new double[]{agent.getPosition().getValue(0), connection.getPosition().getValue(0)},
                             new double[]{agent.getPosition().getValue(1), connection.getPosition().getValue(1)});
 
@@ -224,5 +217,24 @@ public class PlainView2D {
 
     public void pauseExecution() {
         algo.pauseOptimizer();
+    }
+
+    public void removeAgent(int index){
+        this.algo.getFirstAgents().remove(index);
+        Set<String> keys = this.getChart().getSeriesMap().keySet();
+        List<String> removes = new ArrayList<>();
+        for(String s: keys){
+            try{
+                if(s.startsWith("#conn"+index)){
+                    removes.add(s);
+                }
+            }catch (Exception e){
+
+            }
+        }
+
+        for(String s: removes){
+            getChart().removeSeries(s);
+        }
     }
 }
