@@ -82,4 +82,11 @@ public class StateSpaceModel {
         return getGcRank() == n;
     }
 
+    public void replace(int index, double val){
+        for(int i =0; i<n;i++){
+            AA.setEntry(0,i, val);
+            AA.setEntry(i, 0, val);
+        }
+    }
+
 }

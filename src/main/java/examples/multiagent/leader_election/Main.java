@@ -9,6 +9,8 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
+import org.usa.soc.multiagent.view.ChartSeries;
+import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.StringFormatter;
@@ -39,6 +41,8 @@ public class Main {
 
         model = new StateSpaceModel(count);
         double cx = 100, cy = 100, r = 80, md = 15, vc_minus=0.015, vc_plus=0.0001;
+
+        last_t = System.nanoTime();
 
         algorithm = new Algorithm() {
             @Override
@@ -94,8 +98,6 @@ public class Main {
                     model.setKR(Commons.fill(1, count));
                     model.derive();
                     System.out.println(StringFormatter.toString(model.BB));
-
-                    last_t = System.nanoTime();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -181,14 +183,6 @@ public class Main {
                 }catch (Exception e){
 
                 }
-
-//                System.out.println("GC ---------------");
-               // RealMatrix gc = model.calcControllabilityGramian(0, TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-last_t));
-                //last_t = System.nanoTime();
-//                System.out.println(StringFormatter.toString(gc));
-                //System.out.println("Rank: "+model.getGcRank());
-                //System.out.println("This System is "+ (model.isModelControllable() ? "Controllable" : "No Controllable"));
-//
             }
 
             private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
@@ -208,13 +202,33 @@ public class Main {
 
         };
 
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while(true){
+                    try{
+                        Thread.sleep(100);
+                        if(algorithm.isInitialized())
+                        {
+
+                            model.calcControllabilityGramian(0, TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-last_t));
+                            last_t = System.nanoTime();
+                            Executor.getInstance().updateData("Gc","Rank",model.getGcRank());
+                        }
+                    }catch (Exception e){
+                    }
+                }
+            }
+        }).start();
     }
 
     public void removeAgent0(){
-        model.A = model.A.getSubMatrix(1,model.A.getRowDimension()-1, 1, model.A.getColumnDimension()-1);
-        model.B = model.B.getSubMatrix(1,model.B.getRowDimension()-1, 1, model.B.getColumnDimension()-1);
+        //model.A = model.A.getSubMatrix(1,model.A.getRowDimension()-1, 1, model.A.getColumnDimension()-1);
+        //model.B = model.B.getSubMatrix(1,model.B.getRowDimension()-1, 1, model.B.getColumnDimension()-1);
+        model.replace(0, 0);
         utmostLeader = null;
-
     }
 
     public static void main(String[] args) {
@@ -227,5 +241,7 @@ public class Main {
                 m.removeAgent0();
             }
         }, true);
+        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Gc", "Rank", "Step")
+                .subscribe(new ChartSeries("Rank", 0)));
     }
 }

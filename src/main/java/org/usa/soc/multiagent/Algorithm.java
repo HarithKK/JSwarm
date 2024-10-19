@@ -254,11 +254,11 @@ public abstract class Algorithm{
 
     public Map<String, AgentGroup> getAgentsMap(){ return agents; };
 
-    protected boolean isInitialized() {
+    public boolean isInitialized() {
         return this.initialized.isSet();
     }
 
-    protected void setInitialized(boolean v) {
+    public void setInitialized(boolean v) {
         this.initialized.setValue(v);
     }
 
