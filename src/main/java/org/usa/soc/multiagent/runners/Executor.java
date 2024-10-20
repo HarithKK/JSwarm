@@ -3,9 +3,12 @@ package org.usa.soc.multiagent.runners;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
+import org.usa.soc.multiagent.view.Button;
 import org.usa.soc.multiagent.view.ChartView;
+import org.usa.soc.multiagent.view.DataBox;
 import org.usa.soc.multiagent.view.DataView;
 import org.usa.soc.multiagent.view.ProgressiveChart;
+import org.usa.soc.multiagent.view.TextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +23,7 @@ public class Executor {
     private ChartView chartView;
     private DataView dataView;
 
-    private HashMap<String, ProgressiveChart> chartHashMap = new HashMap<>();
+    private HashMap<String, DataBox> chartHashMap = new HashMap<>();
 
     private static Algorithm iAlgorithm;
 
@@ -67,10 +70,24 @@ public class Executor {
         chartHashMap.put(chart.getChart().getTitle(), chart);
     }
 
+    public void registerTextBox(TextField txt){
+        chartHashMap.put(txt.getKey(), txt);
+    }
+
+    public void registerTextButton(Button btn){
+        chartHashMap.put(btn.getKey(), btn);
+    }
+
     public void updateData(String chartName, String seriesName, double value){
         if(!chartHashMap.containsKey(chartName))
             return;
         dataView.addData(chartName, seriesName, value);
+    }
+
+    public void updateData(String textFieldName, String value){
+        if(!chartHashMap.containsKey(textFieldName))
+            return;
+        dataView.addData(textFieldName, value);
     }
 
     public void executePlain2D(String title, Algorithm algorithm, int w, int h, Margins m){
@@ -83,7 +100,7 @@ public class Executor {
                 getChartView().setCustomActions(customActions);
                 getChartView().setInterval(150);
 
-                if(!getChartHashMap().isEmpty()){
+                if(!getDataMap().isEmpty()){
                     dataView = new DataView("Data View");
                     dataView.setVisible(w);
                 }
@@ -95,7 +112,7 @@ public class Executor {
         return dataView;
     }
 
-    public HashMap<String, ProgressiveChart> getChartHashMap() {
+    public HashMap<String, DataBox> getDataMap() {
         return chartHashMap;
     }
 

@@ -5,10 +5,15 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
 
+import java.util.OptionalDouble;
+
 public class Drone extends Agent {
     int rank = -1;
 
     Vector velocity = new Vector(2);
+
+    double controlEnergy = 0;
+    double commEnergy = 0;
 
     @Override
     public void step() {
@@ -29,5 +34,13 @@ public class Drone extends Agent {
         this.position.setValue(matrix.getEntry(1,0), 1);
         this.position.setValue(matrix.getEntry(2,0), 2);
         this.position.setValue(matrix.getEntry(3,0), 3);
+    }
+
+    public void updateEnergyProfile(){
+        controlEnergy = this.velocity.getMagnitude();
+        OptionalDouble od = getConncetions().stream().mapToDouble(c -> c.getPosition().getDistance(this.getPosition().getClonedVector())).max();
+        if(od.isPresent()){
+            commEnergy = od.getAsDouble();
+        }
     }
 }

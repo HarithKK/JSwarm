@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProgressiveChart {
+public class ProgressiveChart extends DataBox {
 
     private XYChart chart;
 

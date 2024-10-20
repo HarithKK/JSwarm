@@ -9,14 +9,19 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
+import org.usa.soc.multiagent.view.Button;
 import org.usa.soc.multiagent.view.ChartSeries;
 import org.usa.soc.multiagent.view.ProgressiveChart;
+import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.StringFormatter;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import java.util.*;
@@ -28,11 +33,11 @@ public class Main {
 
     Drone utmostLeader;
 
-    private int MAX_LINKS = 3;
+    private int MAX_LINKS = 8;
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 15;
+    public static int agentsCount = 30;
 
     double av = 5;
     public long last_t;
@@ -90,14 +95,11 @@ public class Main {
                         }
                     }
 
-                    //System.out.println(StringFormatter.toString(B));
-                    System.out.println("ROOT: "+utmostLeader.getIndex());
-
                     model.setK0(Commons.fill(1, count));
                     model.setK1(Commons.fill(1, count));
                     model.setKR(Commons.fill(1, count));
                     model.derive();
-                    System.out.println(StringFormatter.toString(model.BB));
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -180,6 +182,7 @@ public class Main {
                         }
 
                     }
+
                 }catch (Exception e){
 
                 }
@@ -212,12 +215,19 @@ public class Main {
                         Thread.sleep(100);
                         if(algorithm.isInitialized())
                         {
+                            double mean_control_e = 0, mean_comm_e =0;
+                            for(AbsAgent a: algorithm.getFirstAgents()){
+                                Drone d = (Drone)a;
+                                d.updateEnergyProfile();
+                                mean_control_e += d.controlEnergy;
+                                mean_comm_e += d.commEnergy;
+                            }
+                            Executor.getInstance().updateData("Energy","Avg_Comm_E", mean_comm_e/algorithm.getFirstAgents().size());
+                            Executor.getInstance().updateData("Energy","Avg_Control_E",mean_control_e/algorithm.getFirstAgents().size());
 
-                            model.calcControllabilityGramian(0, TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-last_t));
-                            last_t = System.nanoTime();
-                            Executor.getInstance().updateData("Gc","Rank",model.getGcRank());
-                        }
+                       }
                     }catch (Exception e){
+                        e.printStackTrace();
                     }
                 }
             }
@@ -225,8 +235,6 @@ public class Main {
     }
 
     public void removeAgent0(){
-        //model.A = model.A.getSubMatrix(1,model.A.getRowDimension()-1, 1, model.A.getColumnDimension()-1);
-        //model.B = model.B.getSubMatrix(1,model.B.getRowDimension()-1, 1, model.B.getColumnDimension()-1);
         model.replace(0, 0);
         utmostLeader = null;
     }
@@ -241,7 +249,18 @@ public class Main {
                 m.removeAgent0();
             }
         }, true);
-        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Gc", "Rank", "Step")
-                .subscribe(new ChartSeries("Rank", 0)));
+
+        Executor.getInstance().registerTextButton(new Button("Press").addAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                m.model.calcControllabilityGramian(0, 100);
+                Executor.getInstance().updateData("Gc", m.model.getGcRank() + " is Model Controllable: " + m.model.isModelControllable());
+            }
+        }));
+        Executor.getInstance().registerTextBox(new TextField("Gc"));
+        Executor.getInstance().registerChart(new ProgressiveChart(600, 300, "Energy", "E", "Step")
+                .subscribe(new ChartSeries("Avg_Comm_E", 0))
+                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED)).setLegend(true));;
+
     }
 }

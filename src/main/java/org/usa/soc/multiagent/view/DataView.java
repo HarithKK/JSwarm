@@ -20,10 +20,29 @@ public class DataView extends JFrame{
     }
 
     public void addData(String chartName, String seriesName, double value){
-        if(!Executor.getInstance().getChartHashMap().containsKey(chartName))
+        if(!Executor.getInstance().getDataMap().containsKey(chartName))
             return;
-        ProgressiveChart chart = Executor.getInstance().getChartHashMap().get(chartName);
-        chart.addData(seriesName, value);
+        DataBox box = Executor.getInstance().getDataMap().get(chartName);
+
+        if(box instanceof ProgressiveChart) {
+            ProgressiveChart chart = (ProgressiveChart) box;
+            chart.addData(seriesName, value);
+        }
+
+        panel.updateUI();
+        this.revalidate();
+        this.repaint();
+    }
+
+    public void addData(String textFieldName, String value){
+        if(!Executor.getInstance().getDataMap().containsKey(textFieldName))
+            return;
+        DataBox box = Executor.getInstance().getDataMap().get(textFieldName);
+
+        if(box instanceof TextField) {
+            TextField chart = (TextField) box;
+            chart.setData(value);
+        }
 
         panel.updateUI();
         this.revalidate();
@@ -33,8 +52,13 @@ public class DataView extends JFrame{
     private void initialize() {
         panel = new JPanel();
 
-        for(ProgressiveChart chart : Executor.getInstance().getChartHashMap().values()){
-            panel.add(chart.getPanel());
+        for(DataBox box : Executor.getInstance().getDataMap().values()){
+            if(box instanceof ProgressiveChart)
+                panel.add(((ProgressiveChart)box).getPanel());
+            if(box instanceof TextField)
+                panel.add(((TextField)box).getPanel());
+            if(box instanceof Button)
+                panel.add(((Button)box).getPanel());
         }
 
         this.add(panel);
