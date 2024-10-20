@@ -1,6 +1,6 @@
-# J-Swarm
+# SwarmX
 
-J-Swarm is the java based natural inspired optimization library. This is intended for 
+SwarmX is the java based natural inspired optimization library. This is intended for 
 researches, software engineers, developers and students who would like to use natural inspired optimization
 to solve their optimization problems. 
 
