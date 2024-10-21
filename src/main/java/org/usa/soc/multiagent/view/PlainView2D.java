@@ -219,6 +219,11 @@ public class PlainView2D {
         algo.pauseOptimizer();
     }
 
+    public void removeAgent(int index){
+        if(index >= algo.getFirstAgents().size())
+            return;
+        algo.getFirstAgents().remove(index);
+    }
     public void redrawNetwork(){
         for(XYSeries series: connectionMaps.keySet()){
             try{

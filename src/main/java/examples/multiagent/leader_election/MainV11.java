@@ -33,7 +33,7 @@ public class MainV11 {
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 20;
+    public static int agentsCount = 5;
 
     double av = 5;
     public long last_t;
@@ -288,7 +288,7 @@ public class MainV11 {
     }
 
     public void removeAgent(int index){
-        algorithm.getFirstAgents().remove(index);
+        Executor.getInstance().getChartView().getView2D().removeAgent(index);
         model.replace(index, 0);
         if(index == 0)
             utmostLeader = null;
