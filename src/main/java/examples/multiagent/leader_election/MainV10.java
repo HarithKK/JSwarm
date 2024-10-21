@@ -1,8 +1,5 @@
 package examples.multiagent.leader_election;
 
-import com.mysql.cj.util.TimeUtil;
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
@@ -14,19 +11,15 @@ import org.usa.soc.multiagent.view.ChartSeries;
 import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.util.Commons;
-import org.usa.soc.util.HomogeneousTransformer;
-import org.usa.soc.util.StringFormatter;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import java.util.Queue;
 import java.util.*;
 
-public class Main {
+public class MainV10 {
 
     private static final double K = 0.0001;
     Algorithm algorithm;
@@ -42,7 +35,7 @@ public class Main {
     double av = 5;
     public long last_t;
 
-    public Main(int count){
+    public MainV10(int count){
 
         model = new StateSpaceModel(count);
         double cx = 100, cy = 100, r = 80, md = 15, vc_minus=0.015, vc_plus=0.0001;
@@ -80,16 +73,21 @@ public class Main {
                             Drone ai = (Drone)getFirstAgents().get(i);
                             Drone aj = (Drone)getFirstAgents().get(j);
 
+                            if(i == j){
+                                continue;
+                            }
+
                             if(ai.rank == aj.rank){
-                                model.A.setEntry(ai.getIndex(), aj.getIndex(), 1);
-                                model.A.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                                model.GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                                model.GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
                                 continue;
                             }
                             if(ai.getConncetions().contains(aj)){
-                                model.A.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                                model.GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                                model.GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
                                 if(ai.rank < aj.rank){
-                                    model.B.setEntry(ai.getIndex(), aj.getIndex(), -1);
-                                    model.B.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                                    model.GB.setEntry(ai.getIndex(), aj.getIndex(), -1);
+                                    model.GB.setEntry(aj.getIndex(), ai.getIndex(), 1);
                                 }
                             }
                         }
@@ -173,11 +171,11 @@ public class Main {
                         Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
                         dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 30);
 
-                        for(int j=0; j<model.A.getRowDimension(); j++){
+                        for(int j = 0; j<model.GA.getRowDimension(); j++){
                             if(j == leader.getIndex() || j == dr.getIndex()){
                                 continue;
                             }
-                            if(model.A.getEntry(dr.getIndex(), j) > 0 && model.B.getEntry(dr.getIndex(), j) != -1)
+                            if(model.GA.getEntry(dr.getIndex(), j) > 0 && model.GB.getEntry(dr.getIndex(), j) != -1)
                                 dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
                         }
 
@@ -195,8 +193,8 @@ public class Main {
             }
 
             private int getLeaderIndex(int index) {
-                for(int i=0; i<model.B.getRowDimension(); i++){
-                    if(model.B.getEntry(index, i) == 1.0){
+                for(int i = 0; i<model.GB.getRowDimension(); i++){
+                    if(model.GB.getEntry(index, i) == 1.0){
                         return i;
                     }
                 }
@@ -204,7 +202,6 @@ public class Main {
             }
 
         };
-
 
         new Thread(new Runnable() {
             @Override
@@ -239,14 +236,23 @@ public class Main {
         utmostLeader = null;
     }
 
+    public void removeAgent(int index){
+        algorithm.getFirstAgents().remove(index);
+        model.replace(index, 0);
+        if(index == 0)
+            utmostLeader = null;
+
+        Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        agentsCount--;
+    }
+
     public static void main(String[] args) {
-        Main m = new Main(agentsCount);
+        MainV10 m = new MainV10(agentsCount);
         Executor.getInstance().executePlain2D("LF", m.algorithm, 700, 700, new Margins(0, 200, 0, 200));
         Executor.getInstance().AddCustomActions("R-0", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Executor.getInstance().getChartView().getView2D().removeAgent(0);
-                m.removeAgent0();
+                m.removeAgent(0);
             }
         }, true);
 
@@ -260,7 +266,10 @@ public class Main {
         Executor.getInstance().registerTextBox(new TextField("Gc"));
         Executor.getInstance().registerChart(new ProgressiveChart(600, 300, "Energy", "E", "Step")
                 .subscribe(new ChartSeries("Avg_Comm_E", 0))
-                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED)).setLegend(true));;
+                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))
+                .setLegend(true)
+                .setMaxLength(100));;
 
     }
+
 }

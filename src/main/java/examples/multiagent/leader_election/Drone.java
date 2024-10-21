@@ -15,6 +15,10 @@ public class Drone extends Agent {
     double controlEnergy = 0;
     double commEnergy = 0;
 
+    public void moveUpper() {
+        this.rank -=1;
+    }
+
     @Override
     public void step() {
         this.getPosition().updateVector(velocity);
@@ -32,8 +36,8 @@ public class Drone extends Agent {
     public void setState(RealMatrix matrix){
         this.position.setValue(matrix.getEntry(0,0), 0);
         this.position.setValue(matrix.getEntry(1,0), 1);
-        this.position.setValue(matrix.getEntry(2,0), 2);
-        this.position.setValue(matrix.getEntry(3,0), 3);
+        this.velocity.setValue(matrix.getEntry(2,0), 0);
+        this.velocity.setValue(matrix.getEntry(3,0), 1);
     }
 
     public void updateEnergyProfile(){

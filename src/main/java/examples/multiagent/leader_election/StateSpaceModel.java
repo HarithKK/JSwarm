@@ -1,6 +1,5 @@
 package examples.multiagent.leader_election;
 
-import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.UnivariateMatrixFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;
 import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
@@ -11,13 +10,19 @@ import org.usa.soc.util.Commons;
 
 public class StateSpaceModel {
 
-    RealMatrix A, B, K0, K1, KR, AA, BB, Gc;
+    RealMatrix GA, GB, K0, K1, KR, A, B, Gc, C, D, KC, KD;
     int n;
 
     public StateSpaceModel(int n){
-        A = MatrixUtils.createRealMatrix(n,n);
-        B = MatrixUtils.createRealMatrix(n,n);
+        GA = MatrixUtils.createRealMatrix(n,n);
+        GB = MatrixUtils.createRealMatrix(n,n);
+        KD = MatrixUtils.createRealIdentityMatrix(n);
         this.n = n;
+    }
+
+    public void reset(){
+        GA = MatrixUtils.createRealMatrix(n,n);
+        GB = MatrixUtils.createRealMatrix(n,n);
     }
 
     public void setK0(double []d){
@@ -32,14 +37,35 @@ public class StateSpaceModel {
         KR = MatrixUtils.createRealDiagonalMatrix(d);
     }
 
+    public void setKD(double []d){
+        KD = MatrixUtils.createRealDiagonalMatrix(d);
+    }
+
+    public void setKC(double []d){
+        KC = MatrixUtils.createRealDiagonalMatrix(d);
+    }
+
     public void derive(){
 
-        BB = K1.scalarMultiply(-1);
+        B = K1.scalarMultiply(-1);
 
-        AA = this.B.multiply(MatrixUtils.createColumnRealMatrix(Commons.fill(1, n)));
-        AA = MatrixUtils.createRealDiagonalMatrix(AA.getColumn(0));
-        AA = K1.multiply(AA).scalarMultiply(-1);
-        AA = K0.multiply(K1).scalarMultiply(-1).add(AA);
+        A = this.GB.multiply(MatrixUtils.createColumnRealMatrix(Commons.fill(1, n)));
+        A = MatrixUtils.createRealDiagonalMatrix(A.getColumn(0));
+        A = K1.multiply(A).scalarMultiply(-1);
+        A = K0.multiply(K1).scalarMultiply(-1).add(A);
+
+        C = elementMultiplier(GB, GB).subtract(GA);
+        D = MatrixUtils.createRealIdentityMatrix(n).multiply(KD);
+    }
+
+    public RealMatrix elementMultiplier(RealMatrix r1, RealMatrix r2){
+        RealMatrix rm = MatrixUtils.createRealMatrix(n, n);
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                rm.setEntry(i,j, r1.getEntry(i,j) * r2.getEntry(i,j));
+            }
+        }
+        return rm;
     }
 
     public RealMatrix calcControllabilityGramian(long t1, long t2){
@@ -47,11 +73,11 @@ public class StateSpaceModel {
         UnivariateMatrixFunction mx = new UnivariateMatrixFunction() {
             @Override
             public double[][] value(double x) {
-                RealMatrix rm = AA.scalarMultiply(t2 - x);
+                RealMatrix rm = A.scalarMultiply(t2 - x);
                 rm = Commons.expm(rm);
-                rm = rm.multiply(BB).multiply(BB.transpose());
+                rm = rm.multiply(B).multiply(B.transpose());
 
-                RealMatrix rm1 = AA.transpose().scalarMultiply(t2 -x);
+                RealMatrix rm1 = A.transpose().scalarMultiply(t2 -x);
                 rm1 = Commons.expm(rm1);
 
                 return rm.multiply(rm1).getData();
@@ -84,8 +110,8 @@ public class StateSpaceModel {
 
     public void replace(int index, double val){
         for(int i =0; i<n;i++){
-            AA.setEntry(0,i, val);
-            AA.setEntry(i, 0, val);
+            A.setEntry(0,i, val);
+            A.setEntry(i, 0, val);
         }
     }
 

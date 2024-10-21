@@ -219,22 +219,32 @@ public class PlainView2D {
         algo.pauseOptimizer();
     }
 
-    public void removeAgent(int index){
-        this.algo.getFirstAgents().remove(index);
-        Set<String> keys = this.getChart().getSeriesMap().keySet();
-        List<String> removes = new ArrayList<>();
-        for(String s: keys){
+    public void redrawNetwork(){
+        for(XYSeries series: connectionMaps.keySet()){
             try{
-                if(s.startsWith("#conn"+index)){
-                    removes.add(s);
-                }
+                getChart().removeSeries(series.getName());
             }catch (Exception e){
 
             }
         }
 
-        for(String s: removes){
-            getChart().removeSeries(s);
+        connectionMaps.clear();
+
+        Map<String, AgentGroup> data = this.getAlgo().getAgentsMap();
+        for(String key: data.keySet()){
+            AgentGroup agentGroup = data.get(key);
+            for(AbsAgent agent: agentGroup.getAgents()){
+                for(AbsAgent connection: agent.getConncetions()){
+                    XYSeries seriesb = this.chart.addSeries("#conn"+agent.getIndex()+","+connection.getIndex(),
+                            new double[]{agent.getPosition().getValue(0), connection.getPosition().getValue(0)},
+                            new double[]{agent.getPosition().getValue(1), connection.getPosition().getValue(1)});
+
+                    seriesb.setMarker(Markers.NONE);
+                    seriesb.setLineColor(agentGroup.getLineColor());
+                    seriesb.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+                    connectionMaps.put(seriesb, new ConnectionMap(agent, connection));
+                }
+            }
         }
     }
 }
