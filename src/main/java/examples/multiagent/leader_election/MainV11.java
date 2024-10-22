@@ -30,11 +30,11 @@ public class MainV11 {
 
     Drone utmostLeader;
 
-    private int MAX_LINKS = 2;
+    private int MAX_LINKS = 5;
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 6;
+    public static int agentsCount = 15;
 
     double av = 0.8;
     public long last_t;
@@ -44,7 +44,7 @@ public class MainV11 {
     public MainV11(){
 
         model = new StateSpaceModel(agentsCount);
-        double cx = 100, cy = 100, r = 80, md = 25, vc_minus=0.0015, vc_plus=0.001;
+        double cx = 100, cy = 100, r = 80, md = 25, vc_minus=0.0015, vc_plus=0.0005;
         Vector c = new Vector(2);
 
         double[] min = Commons.fill(50, 2), max=Commons.fill(150,2);
@@ -156,7 +156,7 @@ public class MainV11 {
                     for(int id=0; id<agentsCount; id++){
 
                         Drone dr = (Drone) getFirstAgents().get(id);
-                        if(dr.getIndex() == utmostLeader.getIndex()){
+                        if(utmostLeader != null && dr.getIndex() == utmostLeader.getIndex()){
                             continue;
                         }
 
@@ -179,20 +179,20 @@ public class MainV11 {
                                             data.getFirst().operate(Vector.OPERATOR.MULP, model.K1.getEntry(dr.getIndex(), j))
                                     );
                                 }
-                                else if(model.GB.getEntry(dr.getIndex(), j) != 1.0){
-                                    int listIndex = findAgentListIndex(j);
-                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
-                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond());
-                                    dr.velocity.updateVector(
-                                            data.getFirst().operate(Vector.OPERATOR.MULP, data.getSecond())
-                                    );
-                                }
+//                                else{
+//                                    int listIndex = findAgentListIndex(j);
+//                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
+//                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond()*60);
+//                                    dr.velocity.updateVector(
+//                                            data.getFirst().operate(Vector.OPERATOR.MULP, data.getSecond())
+//                                    );
+//                                }
                             }
                         }
                     }
 
                 }catch (Exception e){
-                   e.printStackTrace();
+                   //e.printStackTrace();
                 }
             }
 
@@ -238,8 +238,9 @@ public class MainV11 {
                                     Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
                                     Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
                                     if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30
-                                    && xi.rank == xj.rank) {
+                                    && model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0) {
                                         model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
+                                        model.GB.setEntry(xi.getIndex(), xj.getIndex(), 0);
                                     } else if (model.GB.getEntry(xi.getIndex(), xj.getIndex()) == 0) {
                                         model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
                                     }
@@ -254,7 +255,7 @@ public class MainV11 {
                     }
                 }
             }
-        }).start();
+        });
 
         new Thread(new Runnable() {
             @Override
@@ -401,9 +402,12 @@ public class MainV11 {
         Executor.getInstance().registerTextButton(new Button("Calculate Gc").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RealMatrix ms = m.model.calcControllabilityGramian(0, 100);
+                RealMatrix ms = m.model.calcContineousControllabilityGramian(0, 100);
                 Executor.getInstance().updateData("Gc", m.model.getGcRank() + " is Model Controllable: " + m.model.isModelControllable());
                 System.out.println(StringFormatter.toString(ms));
+
+                RealMatrix dc = m.model.calcDiscreteControllabilityGramian(0, 3);
+                System.out.println(StringFormatter.toString(dc));
             }
         }));
 

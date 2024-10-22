@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election;
 
+import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
@@ -11,6 +12,7 @@ import org.usa.soc.multiagent.view.ChartSeries;
 import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.util.Commons;
+import org.usa.soc.util.StringFormatter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -259,8 +261,9 @@ public class MainV10 {
         Executor.getInstance().registerTextButton(new Button("Press").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                m.model.calcControllabilityGramian(0, 100);
+                m.model.calcContineousControllabilityGramian(0, 100);
                 Executor.getInstance().updateData("Gc", m.model.getGcRank() + " is Model Controllable: " + m.model.isModelControllable());
+
             }
         }));
         Executor.getInstance().registerTextBox(new TextField("Gc"));

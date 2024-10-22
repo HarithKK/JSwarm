@@ -120,4 +120,27 @@ public class Commons {
 
         return result;
     }
+
+    public static RealMatrix expm(RealMatrix matrix, double t, int e) {
+        int n = matrix.getRowDimension();
+        RealMatrix result = MatrixUtils.createRealIdentityMatrix(n);
+        RealMatrix power = matrix;
+
+        for (int i = 1; i < e; i++) {
+            result = result.add(power.scalarMultiply(Math.pow(t,i) / factorial(i)));
+            power = Commons.hadamardProduct(power, matrix);
+        }
+
+        return result;
+    }
+
+    private static RealMatrix hadamardProduct(RealMatrix p1, RealMatrix p2) {
+        RealMatrix hm = MatrixUtils.createRealMatrix(p1.getRowDimension(), p1.getColumnDimension());
+        for(int i=0; i< p1.getRowDimension();i++){
+            for(int j=0; j< p1.getRowDimension();j++){
+                hm.setEntry(i,j, p1.getEntry(i,j)* p2.getEntry(i,j));
+            }
+        }
+        return hm;
+    }
 }

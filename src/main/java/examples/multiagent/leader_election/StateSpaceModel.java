@@ -72,19 +72,17 @@ public class StateSpaceModel {
         return rm;
     }
 
-    public RealMatrix calcControllabilityGramian(long t1, long t2){
+    public RealMatrix calcContineousControllabilityGramian(long t1, long t2){
 
         UnivariateMatrixFunction mx = new UnivariateMatrixFunction() {
             @Override
             public double[][] value(double x) {
-                RealMatrix rm = A.scalarMultiply(t2 - x);
-                rm = Commons.expm(rm);
-                rm = rm.multiply(B).multiply(B.transpose());
+                return Commons.expm(A, t2 - x, 10)
+                        .multiply(B)
+                        .multiply(B.transpose())
+                        .multiply(Commons.expm(A.transpose(), t2 - x, 10))
+                        .getData();
 
-                RealMatrix rm1 = A.transpose().scalarMultiply(t2 -x);
-                rm1 = Commons.expm(rm1);
-
-                return rm.multiply(rm1).getData();
             }
         };
 
@@ -99,6 +97,17 @@ public class StateSpaceModel {
             }
         }
 
+
+        return Gc;
+    }
+
+    public RealMatrix calcDiscreteControllabilityGramian(long t1, long t2){
+
+        RealMatrix Gc = MatrixUtils.createRealMatrix(A.getRowDimension(), A.getColumnDimension());
+
+        for(long i =0; i <(t2-t1);i++){
+            Gc = Gc.add(A.power((int)i).multiply(B).multiply(B.transpose()).multiply(A.transpose().power((int)i)));
+        }
 
         return Gc;
     }
