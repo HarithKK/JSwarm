@@ -13,6 +13,7 @@ import org.usa.soc.multiagent.view.ChartSeries;
 import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.util.Commons;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
 import java.awt.*;
@@ -34,7 +35,7 @@ public class MainV11 {
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 15;
+    public static int agentsCount = 8;
 
     double av = 0.8;
     public long last_t;
@@ -44,7 +45,7 @@ public class MainV11 {
     public MainV11(){
 
         model = new StateSpaceModel(agentsCount);
-        double cx = 100, cy = 100, r = 80, md = 25, vc_minus=0.0015, vc_plus=0.0005;
+        double cx = 100, cy = 100, r = 80, medianDistanceLow = 30, medianDistanceHigh = 30, kReject=0.00015, kAttact=0.0001;
         Vector c = new Vector(2);
 
         double[] min = Commons.fill(50, 2), max=Commons.fill(150,2);
@@ -170,41 +171,47 @@ public class MainV11 {
                             }
 
                             if(model.GA.getEntry(dr.getIndex(), j) > 0){
-                                // get upper layer
                                 if(model.GB.getEntry(dr.getIndex(), j) == 1.0){
                                     int listIndex = findAgentListIndex(j);
-                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
-                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond()*10);
-                                    dr.velocity.updateVector(
-                                            data.getFirst().operate(Vector.OPERATOR.MULP, model.K1.getEntry(dr.getIndex(), j))
-                                    );
+                                    Drone f = (Drone) getFirstAgents().get(listIndex);
+                                    Pair<Vector, Double> data = getKValue(f, dr);
+                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond());
+                                    dr.velocity.updateVector(data.getFirst());
                                 }
-//                                else{
-//                                    int listIndex = findAgentListIndex(j);
-//                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
-//                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond()*60);
-//                                    dr.velocity.updateVector(
-//                                            data.getFirst().operate(Vector.OPERATOR.MULP, data.getSecond())
-//                                    );
-//                                }
+                                else if(model.GB.getEntry(dr.getIndex(), j) != 1){
+                                    int listIndex = findAgentListIndex(j);
+                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
+                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond());
+                                    dr.velocity.updateVector(data.getFirst());
+                                }
                             }
                         }
                     }
 
                 }catch (Exception e){
-                   //e.printStackTrace();
+                   e.printStackTrace();
                 }
             }
 
             private Pair<Vector, Double> getKValue(AbsAgent d1, AbsAgent d2) {
-                Vector vc = d1.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, d2.getPosition().getClonedVector());
-                return new Pair<>(vc, (vc.getMagnitude() - md)*vc_plus);
+                double distance = d1.getPosition().getClonedVector().getDistance(d2.getPosition().getClonedVector());
+                Vector velocityVector = d1.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, d2.getPosition().getClonedVector());
+
+                if(distance < medianDistanceLow){
+                    double k = Math.abs(distance - medianDistanceLow)*kReject;
+                    return new Pair<Vector, Double>(velocityVector.toNeg().operate(Vector.OPERATOR.MULP, k), k);
+                }else if(distance > medianDistanceLow){
+                    double k = Math.abs(distance - medianDistanceLow)*kAttact;
+                    return new Pair<Vector, Double>(velocityVector.operate(Vector.OPERATOR.MULP, k), k);
+                }else{
+                    return new Pair<Vector, Double>(Randoms.getRandomVector(2, 0,2), 0.0);
+                }
             }
 
             private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
                 Vector vc = d1.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, d2.getPosition());
-                double k = vc.getMagnitude()-md < 0 ? vc_minus : vc_plus;
-                return vc.operate(Vector.OPERATOR.MULP, (vc.getMagnitude()-md)*k);
+                double k = vc.getMagnitude()-medianDistanceLow < 0 ? kReject : kAttact;
+                return vc.operate(Vector.OPERATOR.MULP, (vc.getMagnitude()-medianDistanceLow)*k);
             }
 
             private int getLeaderIndex(int index) {
@@ -224,31 +231,33 @@ public class MainV11 {
                 while(true){
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(10);
 
                         if (algorithm.isInitialized()){
                             for (int idi = 0; idi < agentsCount; idi++) {
                                 if (idi == utmostLeader.getIndex()) {
                                     continue;
                                 }
-                                for (int idj = 0; idj < agentsCount; idj++) {
+                                for (int idj = idi; idj < agentsCount; idj++) {
                                     if (idj == idi) {
                                         continue;
                                     }
                                     Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
                                     Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
-                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30
-                                    && model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0) {
-                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
-                                        model.GB.setEntry(xi.getIndex(), xj.getIndex(), 0);
-                                    } else if (model.GB.getEntry(xi.getIndex(), xj.getIndex()) == 0) {
-                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 10){
+                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0){
+                                            model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
+                                            model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
+                                        }
+                                    }else{
+                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0){
+                                            model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+                                            model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
+                                        }
                                     }
                                 }
                             }
                         }
-
-
                     }catch (Exception e){
                         System.out.println("ERRRORRRR----------Th 2");
                         e.printStackTrace();
