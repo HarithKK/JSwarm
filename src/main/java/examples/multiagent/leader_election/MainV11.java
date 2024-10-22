@@ -1,6 +1,7 @@
 package examples.multiagent.leader_election;
 
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.Pair;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
@@ -29,19 +30,24 @@ public class MainV11 {
 
     Drone utmostLeader;
 
-    private int MAX_LINKS = 8;
+    private int MAX_LINKS = 2;
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 5;
+    public static int agentsCount = 6;
 
-    double av = 5;
+    double av = 0.8;
     public long last_t;
+
+
 
     public MainV11(){
 
         model = new StateSpaceModel(agentsCount);
-        double cx = 100, cy = 100, r = 80, md = 15, vc_minus=0.015, vc_plus=0.0001;
+        double cx = 100, cy = 100, r = 80, md = 25, vc_minus=0.0015, vc_plus=0.001;
+        Vector c = new Vector(2);
+
+        double[] min = Commons.fill(50, 2), max=Commons.fill(150,2);
 
         last_t = System.nanoTime();
 
@@ -55,7 +61,7 @@ public class MainV11 {
                     utmostLeader.rank = 0;
                     utmostLeader.setX(cx);
                     utmostLeader.setY(cy);
-                    utmostLeader.velocity.setValues(new double[]{0.0, 1.0});
+                    utmostLeader.velocity.setValues(new double[]{0.0, 0.0});
 
                     Queue<AbsAgent> bfsQueue = new ArrayDeque<>();
                     bfsQueue.add(utmostLeader);
@@ -70,8 +76,9 @@ public class MainV11 {
                     getFirstAgents().sort(new ByIndex());
 
                     // Fill A and B Matrices
-                    model.setK0(Commons.fill(1, agentsCount));
+                    model.setK0(Commons.fill(0.1, agentsCount));
                     model.setK1(Commons.fill(1, agentsCount));
+                    model.setK2(Commons.fill(1, agentsCount));
                     model.setKR(Commons.fill(1, agentsCount));
                     formStateSpaceModel();
 
@@ -137,31 +144,61 @@ public class MainV11 {
             public void step() throws Exception {
 
                 try {
-                    for(int i=0; i<agentsCount; i++){
-                        Drone dr = (Drone) getFirstAgents().get(i);
-                        if(utmostLeader != null && dr.getIndex() == utmostLeader.getIndex()){
-                            double theta = Math.toRadians(currentStep % 360);
-                            utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
-                            utmostLeader.velocity.setValues(new double[]{0,0});
+
+                    if(utmostLeader != null){
+                        double theta = Math.toRadians(currentStep % 360);
+
+                        utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
+                        //utmostLeader.updateU(Drone.U_WALK_TYPE.RANDOM_THETA, theta, av);
+                        //utmostLeader.getPosition().fixVector(min, max);
+                    }
+
+                    for(int id=0; id<agentsCount; id++){
+
+                        Drone dr = (Drone) getFirstAgents().get(id);
+                        if(dr.getIndex() == utmostLeader.getIndex()){
                             continue;
                         }
 
-                        Drone leader = (Drone) getFirstAgents().get(getLeaderIndex(dr.getIndex()));
-                        dr.velocity = calculateVelocity(leader, dr).operate(Vector.OPERATOR.MULP, 30);
+                        dr.velocity = dr.velocity.operate(Vector.OPERATOR.MULP, model.K0.getEntry(dr.getIndex(), dr.getIndex()));
+                        model.K1.scalarMultiply(0);
 
                         for(int j = 0; j<model.GA.getRowDimension(); j++){
-                            if(j == leader.getIndex() || j == dr.getIndex()){
+
+                            if(j == dr.getIndex()){
                                 continue;
                             }
-                            if(model.GA.getEntry(dr.getIndex(), j) > 0 && model.GB.getEntry(dr.getIndex(), j) != -1)
-                                dr.velocity.updateVector(calculateVelocity(dr, getFirstAgents().get(j)).toNeg());
-                        }
 
+                            if(model.GA.getEntry(dr.getIndex(), j) > 0){
+                                // get upper layer
+                                if(model.GB.getEntry(dr.getIndex(), j) == 1.0){
+                                    int listIndex = findAgentListIndex(j);
+                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
+                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond()*10);
+                                    dr.velocity.updateVector(
+                                            data.getFirst().operate(Vector.OPERATOR.MULP, model.K1.getEntry(dr.getIndex(), j))
+                                    );
+                                }
+                                else if(model.GB.getEntry(dr.getIndex(), j) != 1.0){
+                                    int listIndex = findAgentListIndex(j);
+                                    Pair<Vector, Double> data = getKValue(getFirstAgents().get(listIndex), dr);
+                                    model.K1.setEntry(dr.getIndex(), j, data.getSecond());
+                                    dr.velocity.updateVector(
+                                            data.getFirst().operate(Vector.OPERATOR.MULP, data.getSecond())
+                                    );
+                                }
+                            }
+                        }
                     }
 
                 }catch (Exception e){
-
+                   e.printStackTrace();
                 }
+            }
+
+            private Pair<Vector, Double> getKValue(AbsAgent d1, AbsAgent d2) {
+                Vector vc = d1.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, d2.getPosition().getClonedVector());
+                return new Pair<>(vc, (vc.getMagnitude() - md)*vc_plus);
             }
 
             private Vector calculateVelocity(AbsAgent d1, AbsAgent d2) {
@@ -184,6 +221,44 @@ public class MainV11 {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                while(true){
+
+                    try {
+                        Thread.sleep(100);
+
+                        if (algorithm.isInitialized()){
+                            for (int idi = 0; idi < agentsCount; idi++) {
+                                if (idi == utmostLeader.getIndex()) {
+                                    continue;
+                                }
+                                for (int idj = 0; idj < agentsCount; idj++) {
+                                    if (idj == idi) {
+                                        continue;
+                                    }
+                                    Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+                                    Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
+                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30
+                                    && xi.rank == xj.rank) {
+                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
+                                    } else if (model.GB.getEntry(xi.getIndex(), xj.getIndex()) == 0) {
+                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }catch (Exception e){
+                        System.out.println("ERRRORRRR----------Th 2");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
                 while(true){
                     try{
@@ -199,7 +274,7 @@ public class MainV11 {
                             }
                             Executor.getInstance().updateData("Energy","Avg_Comm_E", mean_comm_e/algorithm.getFirstAgents().size());
                             Executor.getInstance().updateData("Energy","Avg_Control_E",mean_control_e/algorithm.getFirstAgents().size());
-
+                            Executor.getInstance().updateData("Agents Count:",String.valueOf(agentsCount));
                        }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -237,20 +312,41 @@ public class MainV11 {
         model.derive();
     }
 
-    public void performRandomLE() {
+    public void performRandomOnlyForFirstLayer() {
 
-        List<Drone> layeredList = new ArrayList<>();
+        List<Drone> layer = new ArrayList<>();
 
         for(AbsAgent a: algorithm.getFirstAgents()){
             Drone d = (Drone) a;
             if(d.rank == 1)
-                layeredList.add(d);
+                layer.add(d);
         }
 
-        updateLeaderShip(layeredList, 1, utmostLeader);
-//        model.GA.scalarMultiply(0);
-//        model.GB.scalarMultiply(0);
-//        formStateSpaceModel();
+        int index = new Critarian().selectCritarian(Critarians.RANDOM, layer);
+        utmostLeader = layer.get(index);
+        moveUp(utmostLeader);
+
+        for(AbsAgent a: algorithm.getFirstAgents()){
+            Drone d = (Drone) a;
+            if(d.rank == 1)
+                utmostLeader.addConnection(d);
+        }
+
+        Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        model.GA = model.GA.scalarMultiply(0);
+        model.GB = model.GB.scalarMultiply(0);
+        formStateSpaceModel();
+
+    }
+
+    private void moveUp(Drone a){
+        a.moveUpper();
+        if(a.getConncetions().isEmpty())
+            return;
+
+        for(AbsAgent c: a.getConncetions()){
+            moveUp((Drone)c);
+        }
     }
 
     private void updateLeaderShip(List<Drone> layer, int i, Drone preferredLeaderAgent) {
@@ -259,7 +355,7 @@ public class MainV11 {
             return;
         }
 
-        int index = new Critarian().selectCritarian(Critarians.RANDOM, layer, i);
+        int index = new Critarian().selectCritarian(Critarians.RANDOM, layer);
 
         layer.get(index).moveUpper();
 
@@ -288,7 +384,8 @@ public class MainV11 {
     }
 
     public void removeAgent(int index){
-        Executor.getInstance().getChartView().getView2D().removeAgent(index);
+        int listIndex = algorithm.findAgentListIndex(index);
+        Executor.getInstance().getChartView().getView2D().removeAgent(listIndex);
         model.replace(index, 0);
         if(index == 0)
             utmostLeader = null;
@@ -309,24 +406,27 @@ public class MainV11 {
                 System.out.println(StringFormatter.toString(ms));
             }
         }));
+
         Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                m.removeAgent(0);
+                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
             }
         }));
-        Executor.getInstance().registerTextButton(new Button("Select Leader 0").addAction(new ActionListener() {
+        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                m.removeAgent(0);
-                m.performRandomLE();
+                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
+                m.performRandomOnlyForFirstLayer();
             }
         }));
         Executor.getInstance().registerTextBox(new TextField("Gc"));
-        Executor.getInstance().registerChart(new ProgressiveChart(600, 300, "Energy", "E", "Step")
+        Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
+        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Energy", "E", "Step")
                 .subscribe(new ChartSeries("Avg_Comm_E", 0))
                 .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))
                 .setLegend(true)
+                .setLegendPosition("S", false)
                 .setMaxLength(100));;
 
     }

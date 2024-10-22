@@ -4,6 +4,9 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
+import org.usa.soc.util.Commons;
+import org.usa.soc.util.HomogeneousTransformer;
+import org.usa.soc.util.Randoms;
 
 import java.util.OptionalDouble;
 
@@ -14,6 +17,11 @@ public class Drone extends Agent {
 
     double controlEnergy = 0;
     double commEnergy = 0;
+
+    public enum U_WALK_TYPE{
+        RANDOM_CIRCLE,
+        RANDOM_THETA
+    }
 
     public void moveUpper() {
         this.rank -=1;
@@ -45,6 +53,25 @@ public class Drone extends Agent {
         OptionalDouble od = getConncetions().stream().mapToDouble(c -> c.getPosition().getDistance(this.getPosition().getClonedVector())).max();
         if(od.isPresent()){
             commEnergy = od.getAsDouble();
+        }
+    }
+
+    public void updateU(U_WALK_TYPE selection, double theta, double av) {
+        switch (selection){
+            /*Circular Motion With Velocity*/
+            case RANDOM_CIRCLE: velocity.setValues(new double[]{av*Math.sin(theta),av*Math.cos(theta)}); break;
+            case RANDOM_THETA: {
+                double angle = Randoms.rand(0, 180);
+                RealMatrix vc = MatrixUtils.createRealMatrix(3, 1);
+                vc.setEntry(0,0, velocity.getValue(0));
+                vc.setEntry(1,0, velocity.getValue(1));
+                vc.setEntry(2,0, 1);
+                this.velocity.setVector(
+                        HomogeneousTransformer.getRotationMatrix(Math.toRadians(angle),2)
+                                .multiply(vc)
+                                .getColumnVector(0)
+                );
+            }; break;
         }
     }
 }

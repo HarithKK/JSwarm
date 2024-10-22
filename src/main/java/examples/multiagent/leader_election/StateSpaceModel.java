@@ -10,7 +10,7 @@ import org.usa.soc.util.Commons;
 
 public class StateSpaceModel {
 
-    RealMatrix GA, GB, K0, K1, KR, A, B, Gc, C, D, KC, KD;
+    RealMatrix GA, GB, K0, K1, K2, KR, A, B, Gc, C, D, KC, KD;
     int n;
 
     public StateSpaceModel(int n){
@@ -31,6 +31,10 @@ public class StateSpaceModel {
 
     public void setK1(double []d){
         K1 = MatrixUtils.createRealDiagonalMatrix(d);
+    }
+
+    public void setK2(double []d){
+        K2 = MatrixUtils.createRealDiagonalMatrix(d);
     }
 
     public void setKR(double []d){

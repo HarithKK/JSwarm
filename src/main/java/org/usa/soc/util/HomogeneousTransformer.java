@@ -25,8 +25,8 @@ public class HomogeneousTransformer {
         if(axix == 2){
             return MatrixUtils.createRealMatrix(new double[][]{
                     new double[]{Math.cos(theta),-Math.sin(theta), 1},
-                    new double[]{0, 0, 1},
                     new double[]{Math.sin(theta),Math.cos(theta), 1},
+                    new double[]{0, 0, 1},
             });
         }
 

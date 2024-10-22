@@ -4,6 +4,10 @@ package org.usa.soc.core.ds;
 This is the position vector
  */
 
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
 import org.usa.soc.core.action.Method;
 import org.usa.soc.util.Mathamatics;
 import org.usa.soc.util.Smoother;
@@ -34,6 +38,17 @@ public class Vector {
         }
         for(int i =0;i< this.getNumberOfDimensions();i++){
             this.positionIndexes[i] = v.positionIndexes[i];
+        }
+    }
+
+    public void setVector(RealVector v){
+        if(v == null)
+            return;
+        if(v.getDimension() < this.getNumberOfDimensions()){
+            throw new IllegalArgumentException("Number of Dimensions are Mismatched!");
+        }
+        for(int i =0;i< this.getNumberOfDimensions();i++){
+            this.positionIndexes[i] = v.getEntry(i);
         }
     }
 
@@ -241,6 +256,26 @@ public class Vector {
         }
 
         return l;
+    }
+
+    public RealVector toRealVector(){
+
+        RealVector realVector = new ArrayRealVector(this.numberOfDimensions);
+        for(int i=0;i< this.numberOfDimensions;i++){
+            realVector.addToEntry(i, positionIndexes[i]);
+        }
+
+        return realVector;
+    }
+
+    public RealMatrix toRealMatrix(){
+
+        RealMatrix realVector = MatrixUtils.createRealMatrix(this.numberOfDimensions, 1);
+        for(int i=0;i< this.numberOfDimensions;i++){
+            realVector.setEntry(i,0, positionIndexes[i]);
+        }
+
+        return realVector;
     }
 
     public double[] toDoubleArray(int round){

@@ -4,6 +4,8 @@ import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler;
+
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +43,24 @@ public class ProgressiveChart extends DataBox {
 
     public ProgressiveChart setLegend(boolean isVisible){
         getChart().getStyler().setLegendVisible(isVisible);
+        return this;
+    }
+
+    public ProgressiveChart setLegendPosition(String pos, boolean isInside){
+        if(isInside)
+            switch (pos.toUpperCase()){
+                case "N": getChart().getStyler().setLegendPosition(Styler.LegendPosition.InsideN); break;
+                case "NE": getChart().getStyler().setLegendPosition(Styler.LegendPosition.InsideNE); break;
+                case "NW": getChart().getStyler().setLegendPosition(Styler.LegendPosition.InsideNW); break;
+                case "S": getChart().getStyler().setLegendPosition(Styler.LegendPosition.InsideS); break;
+                case "SE": getChart().getStyler().setLegendPosition(Styler.LegendPosition.InsideSE); break;
+                case "SW": getChart().getStyler().setLegendPosition(Styler.LegendPosition.InsideSW); break;
+            }
+        else
+            switch (pos.toUpperCase()){
+                case "E": getChart().getStyler().setLegendPosition(Styler.LegendPosition.OutsideE); break;
+                case "S": getChart().getStyler().setLegendPosition(Styler.LegendPosition.OutsideS); break;
+            }
         return this;
     }
 

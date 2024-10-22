@@ -262,4 +262,21 @@ public abstract class Algorithm{
         this.initialized.setValue(v);
     }
 
+    public int findAgentListIndex(int index) {
+        for(int i=0; i<getFirstAgents().size(); i++){
+            if(index == getFirstAgents().get(i).getIndex()){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int findAgentListIndex(String name, int index) {
+        for(int i=0; i<getAgents(name).getAgents().size(); i++){
+            if(index == getAgents(name).getAgents().get(i).getIndex()){
+                return index;
+            }
+        }
+        return -1;
+    }
 }

@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Critarian {
 
-    public int selectCritarian(Critarians ctype, List<Drone> layer, int i){
+    public int selectCritarian(Critarians ctype, List<Drone> layer){
         switch (ctype){
             case RANDOM:
-                return random(0, layer.size());
+                return random(0, layer.size()-1);
         }
         return 0;
     }
