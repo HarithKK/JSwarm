@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election;
 
+import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
 import org.usa.soc.core.AbsAgent;
@@ -188,7 +189,7 @@ public class MainV11 {
                     }
 
                 }catch (Exception e){
-                   e.printStackTrace();
+                   //e.printStackTrace();
                 }
             }
 
@@ -246,7 +247,7 @@ public class MainV11 {
 
                         if (algorithm.isInitialized()){
                             for (int idi = 0; idi < agentsCount; idi++) {
-                                if (idi == utmostLeader.getIndex()) {
+                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
                                     continue;
                                 }
                                 for (int idj = idi; idj < agentsCount; idj++) {
@@ -255,13 +256,15 @@ public class MainV11 {
                                     }
                                     Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
                                     Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
-                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 10){
-                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0){
+                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30){
+                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0 & xi.rank == xj.rank){
+                                            System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
                                             model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
                                             model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
                                         }
                                     }else{
-                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0){
+                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 1 && xi.rank == xj.rank){
+                                            System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
                                             model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
                                             model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
                                         }
@@ -270,7 +273,6 @@ public class MainV11 {
                             }
                         }
                     }catch (Exception e){
-                        System.out.println("ERRRORRRR----------Th 2");
                         e.printStackTrace();
                     }
                 }
@@ -422,11 +424,11 @@ public class MainV11 {
         Executor.getInstance().registerTextButton(new Button("Calculate Gc").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RealMatrix ms = m.model.calcContineousControllabilityGramian(0, 100);
-                Executor.getInstance().updateData("Gc", m.model.getGcRank() + " is Model Controllable: " + m.model.isModelControllable());
-                System.out.println(StringFormatter.toString(ms));
+//                RealMatrix ms = m.model.calcContineousControllabilityGramian(0, 100);
+//                Executor.getInstance().updateData("Gc", m.model.getGcRank() + " is Model Controllable: " + m.model.isModelControllable());
+//                System.out.println(StringFormatter.toString(ms));
 
-                RealMatrix dc = m.model.calcDiscreteControllabilityGramian(0, 3);
+                RealMatrix dc = m.model.calcDiscreteControllabilityGramian(0, 100);
                 System.out.println(StringFormatter.toString(dc));
             }
         }));
