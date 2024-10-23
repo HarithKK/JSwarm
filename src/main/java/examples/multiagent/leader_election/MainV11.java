@@ -36,7 +36,7 @@ public class MainV11 {
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 15;
+    public static int agentsCount = 5;
 
     double av = 0.8;
     public long last_t;
@@ -271,6 +271,7 @@ public class MainV11 {
                                     }
                                 }
                             }
+                            model.derive();
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -428,7 +429,7 @@ public class MainV11 {
 //                Executor.getInstance().updateData("Gc", m.model.getGcRank() + " is Model Controllable: " + m.model.isModelControllable());
 //                System.out.println(StringFormatter.toString(ms));
 
-                RealMatrix dc = m.model.calcDiscreteControllabilityGramian(0, 100);
+                RealMatrix dc = m.model.calcDiscreteControllabilityGramian(0, 5);
                 System.out.println(StringFormatter.toString(dc));
             }
         }));
