@@ -31,11 +31,11 @@ public class MainV11 {
 
     Drone utmostLeader;
 
-    private int MAX_LINKS = 5;
+    private int MAX_LINKS = 3;
 
     private StateSpaceModel model;
 
-    public static int agentsCount = 5;
+    public static int agentsCount = 15;
 
     double av = 0.8;
     public long last_t;
@@ -450,31 +450,31 @@ public class MainV11 {
         }));
 
 
-        Executor.getInstance().registerTable(new Table("Gc table", 5, 5));
-        Executor.getInstance().registerTable(new Table("A table", 5, 5));
-//        Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
+        Executor.getInstance().registerTable(new Table("Gc table", agentsCount, agentsCount));
+        Executor.getInstance().registerTable(new Table("A table", agentsCount, agentsCount));
+        Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
         Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
             }
         }));
-//        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
-//                m.performRandomOnlyForFirstLayer();
-//            }
-//        }));
-//        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Energy", "E", "Step")
-//                .subscribe(new ChartSeries("Avg_Comm_E", 0))
-//                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))
-//                .setLegend(true)
-//                .setLegendPosition("S", false)
-//                .setMaxLength(100));
-//
-//
-//
+        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
+                m.performRandomOnlyForFirstLayer();
+            }
+        }));
+        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Energy", "E", "Step")
+                .subscribe(new ChartSeries("Avg_Comm_E", 0))
+                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))
+                .setLegend(true)
+                .setLegendPosition("S", false)
+                .setMaxLength(100));
+
+
+
 
     }
 

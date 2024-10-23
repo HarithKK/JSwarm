@@ -67,6 +67,7 @@ public class DataView extends JFrame{
 
     private void initialize() {
         panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         for(DataBox box : Executor.getInstance().getDataMap().values()){
             if(box instanceof ProgressiveChart)
