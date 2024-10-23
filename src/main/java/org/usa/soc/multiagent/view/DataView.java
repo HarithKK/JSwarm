@@ -1,5 +1,6 @@
 package org.usa.soc.multiagent.view;
 
+import org.apache.commons.math3.linear.RealMatrix;
 import org.knowm.xchart.XYSeries;
 import org.usa.soc.multiagent.runners.Executor;
 
@@ -49,6 +50,21 @@ public class DataView extends JFrame{
         this.repaint();
     }
 
+    public void addData(String textFieldName, RealMatrix matrix){
+        if(!Executor.getInstance().getDataMap().containsKey(textFieldName))
+            return;
+        DataBox box = Executor.getInstance().getDataMap().get(textFieldName);
+
+        if(box instanceof Table) {
+            Table chart = (Table) box;
+            chart.setData(matrix);
+        }
+
+        panel.updateUI();
+        this.revalidate();
+        this.repaint();
+    }
+
     private void initialize() {
         panel = new JPanel();
 
@@ -59,9 +75,13 @@ public class DataView extends JFrame{
                 panel.add(((TextField)box).getPanel());
             if(box instanceof Button)
                 panel.add(((Button)box).getPanel());
+            if(box instanceof Table)
+                panel.add(((Table)box).getPanel());
         }
 
-        this.add(panel);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.add(panel);
+        this.add(scrollPane);
     }
 
     public void setVisible(int loc){

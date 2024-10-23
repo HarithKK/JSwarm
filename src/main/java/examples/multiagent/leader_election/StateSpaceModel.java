@@ -123,8 +123,8 @@ public class StateSpaceModel {
 
     public void replace(int index, double val){
         for(int i =0; i<n;i++){
-            A.setEntry(0,i, val);
-            A.setEntry(i, 0, val);
+            GA.setEntry(index,i, val);
+            GA.setEntry(i, index, val);
         }
     }
 

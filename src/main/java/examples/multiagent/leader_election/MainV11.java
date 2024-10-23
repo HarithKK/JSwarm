@@ -9,9 +9,8 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
+import org.usa.soc.multiagent.view.*;
 import org.usa.soc.multiagent.view.Button;
-import org.usa.soc.multiagent.view.ChartSeries;
-import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.Randoms;
@@ -240,10 +239,14 @@ public class MainV11 {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                int step = 0;
+                RealMatrix Gc = null;
+
                 while(true){
 
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(50);
 
                         if (algorithm.isInitialized()){
                             for (int idi = 0; idi < agentsCount; idi++) {
@@ -258,13 +261,13 @@ public class MainV11 {
                                     Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
                                     if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30){
                                         if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0 & xi.rank == xj.rank){
-                                            System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
+                                            //System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
                                             model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
                                             model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
                                         }
                                     }else{
                                         if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 1 && xi.rank == xj.rank){
-                                            System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
+                                            //System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
                                             model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
                                             model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
                                         }
@@ -272,6 +275,17 @@ public class MainV11 {
                                 }
                             }
                             model.derive();
+                            if(Gc == null){
+                                 Gc= MatrixUtils.createRealMatrix(model.A.getRowDimension(), model.A.getColumnDimension());
+                            }
+                            Gc = Gc.add(model.A.power(step).multiply(model.B).multiply(model.B.transpose()).multiply(model.A.transpose().power(step)));
+                            step += 1;
+                            if(step > 10){
+                                step = 0;
+                                Executor.getInstance().updateData("Gc table", Gc);
+                                Executor.getInstance().updateData("A table", model.GA);
+                                Gc.scalarMultiply(0.0);
+                            }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -299,6 +313,7 @@ public class MainV11 {
                             Executor.getInstance().updateData("Energy","Avg_Comm_E", mean_comm_e/algorithm.getFirstAgents().size());
                             Executor.getInstance().updateData("Energy","Avg_Control_E",mean_control_e/algorithm.getFirstAgents().size());
                             Executor.getInstance().updateData("Agents Count:",String.valueOf(agentsCount));
+
                        }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -434,27 +449,32 @@ public class MainV11 {
             }
         }));
 
+
+        Executor.getInstance().registerTable(new Table("Gc table", 5, 5));
+        Executor.getInstance().registerTable(new Table("A table", 5, 5));
+//        Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
         Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
             }
         }));
-        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
-                m.performRandomOnlyForFirstLayer();
-            }
-        }));
-        Executor.getInstance().registerTextBox(new TextField("Gc"));
-        Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
-        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Energy", "E", "Step")
-                .subscribe(new ChartSeries("Avg_Comm_E", 0))
-                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))
-                .setLegend(true)
-                .setLegendPosition("S", false)
-                .setMaxLength(100));;
+//        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
+//                m.performRandomOnlyForFirstLayer();
+//            }
+//        }));
+//        Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Energy", "E", "Step")
+//                .subscribe(new ChartSeries("Avg_Comm_E", 0))
+//                .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))
+//                .setLegend(true)
+//                .setLegendPosition("S", false)
+//                .setMaxLength(100));
+//
+//
+//
 
     }
 

@@ -1,13 +1,11 @@
 package org.usa.soc.multiagent.runners;
 
+import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.Flag;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
+import org.usa.soc.multiagent.view.*;
 import org.usa.soc.multiagent.view.Button;
-import org.usa.soc.multiagent.view.ChartView;
-import org.usa.soc.multiagent.view.DataBox;
-import org.usa.soc.multiagent.view.DataView;
-import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 
 import javax.swing.*;
@@ -74,6 +72,10 @@ public class Executor {
         chartHashMap.put(txt.getKey(), txt);
     }
 
+    public void registerTable(Table table){
+        chartHashMap.put(table.getKey(), table);
+    }
+
     public void registerTextButton(Button btn){
         chartHashMap.put(btn.getKey(), btn);
     }
@@ -85,6 +87,12 @@ public class Executor {
     }
 
     public void updateData(String textFieldName, String value){
+        if(!chartHashMap.containsKey(textFieldName))
+            return;
+        dataView.addData(textFieldName, value);
+    }
+
+    public void updateData(String textFieldName, RealMatrix value){
         if(!chartHashMap.containsKey(textFieldName))
             return;
         dataView.addData(textFieldName, value);
