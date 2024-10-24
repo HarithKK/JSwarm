@@ -303,20 +303,6 @@ public class Main {
                                     if(xi.rank == xj.rank){
                                         tmpDrones.add(xj);
                                     }
-
-//                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 20){
-//                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0 & xi.rank == xj.rank){
-//                                            tmpDrones.add(xj);
-//                                        }
-//                                    }else{
-//                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 1 && xi.rank == xj.rank){
-//                                            if(xi.nLayeredLinks >0 && xj.nLayeredLinks >0){
-//                                                System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
-//                                                model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
-//                                                model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
-//                                            }
-//                                        }
-//                                    }
                                 }
 
                                 tmpDrones.sort(new Comparator<AbsAgent>() {
