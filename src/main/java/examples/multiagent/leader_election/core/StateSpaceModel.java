@@ -1,4 +1,4 @@
-package examples.multiagent.leader_election;
+package examples.multiagent.leader_election.core;
 
 import org.apache.commons.math3.analysis.UnivariateMatrixFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;
@@ -10,7 +10,7 @@ import org.usa.soc.util.Commons;
 
 public class StateSpaceModel {
 
-    RealMatrix GA, GB, K0, K1, K2, KR, A, B, Gc, C, D, KC, KD;
+    public RealMatrix GA, GB, K0, K1, K2, KR, A, B, Gc, C, D, KC, KD;
     int n;
 
     public StateSpaceModel(int n){

@@ -1,10 +1,14 @@
-package examples.multiagent.leader_election;
+package examples.multiagent.leader_election.core;
 
 import org.usa.soc.util.Randoms;
 
 import java.util.List;
 
 public class Critarian {
+
+    public enum Critarians {
+        RANDOM
+    }
 
     public int selectCritarian(Critarians ctype, List<Drone> layer){
         switch (ctype){

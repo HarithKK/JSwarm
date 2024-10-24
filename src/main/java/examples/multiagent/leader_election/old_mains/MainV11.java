@@ -1,5 +1,9 @@
-package examples.multiagent.leader_election;
+package examples.multiagent.leader_election.old_mains;
 
+import examples.multiagent.leader_election.core.Critarian;
+import examples.multiagent.leader_election.core.Drone;
+import examples.multiagent.leader_election.core.StateSpaceModel;
+import examples.multiagent.leader_election.core.WalkType;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
@@ -150,7 +154,7 @@ public class MainV11 {
                         double theta = Math.toRadians(currentStep % 360);
 
                         //utmostLeader.getPosition().setValues(new double[]{cx + r * Math.cos(theta), cy + r * Math.sin(theta)});
-                        utmostLeader.updateU(Drone.U_WALK_TYPE.RANDOM_THETA, theta, av);
+                        utmostLeader.updateU(WalkType.RANDOM_THETA, theta, av);
                         //utmostLeader.getPosition().fixVector(min, max);
                     }
 
@@ -261,13 +265,13 @@ public class MainV11 {
                                     Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
                                     if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30){
                                         if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0 & xi.rank == xj.rank){
-                                            //System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
+                                            System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
                                             model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
                                             model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
                                         }
                                     }else{
                                         if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 1 && xi.rank == xj.rank){
-                                            //System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
+                                            System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
                                             model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
                                             model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
                                         }
@@ -283,8 +287,7 @@ public class MainV11 {
                             if(step > 10){
                                 step = 0;
                                 Executor.getInstance().updateData("Gc table", Gc);
-                                Executor.getInstance().updateData("A table", model.GA);
-                                Gc.scalarMultiply(0.0);
+                                Gc = Gc.scalarMultiply(0.0);
                             }
                         }
                     }catch (Exception e){
@@ -361,7 +364,7 @@ public class MainV11 {
                 layer.add(d);
         }
 
-        int index = new Critarian().selectCritarian(Critarians.RANDOM, layer);
+        int index = new Critarian().selectCritarian(Critarian.Critarians.RANDOM, layer);
         utmostLeader = layer.get(index);
         moveUp(utmostLeader);
 
@@ -375,7 +378,6 @@ public class MainV11 {
         model.GA = model.GA.scalarMultiply(0);
         model.GB = model.GB.scalarMultiply(0);
         formStateSpaceModel();
-
     }
 
     private void moveUp(Drone a){
@@ -394,7 +396,7 @@ public class MainV11 {
             return;
         }
 
-        int index = new Critarian().selectCritarian(Critarians.RANDOM, layer);
+        int index = new Critarian().selectCritarian(Critarian.Critarians.RANDOM, layer);
 
         layer.get(index).moveUpper();
 
@@ -451,7 +453,6 @@ public class MainV11 {
 
 
         Executor.getInstance().registerTable(new Table("Gc table", agentsCount, agentsCount));
-        Executor.getInstance().registerTable(new Table("A table", agentsCount, agentsCount));
         Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
         Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
             @Override

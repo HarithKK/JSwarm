@@ -1,6 +1,7 @@
-package examples.multiagent.leader_election;
+package examples.multiagent.leader_election.old_mains;
 
-import org.apache.commons.math3.linear.RealMatrix;
+import examples.multiagent.leader_election.core.Drone;
+import examples.multiagent.leader_election.core.StateSpaceModel;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
@@ -12,7 +13,6 @@ import org.usa.soc.multiagent.view.ChartSeries;
 import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.util.Commons;
-import org.usa.soc.util.StringFormatter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

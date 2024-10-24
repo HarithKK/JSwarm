@@ -1,4 +1,4 @@
-package examples.multiagent.leader_election;
+package examples.multiagent.leader_election.core;
 
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -11,17 +11,12 @@ import org.usa.soc.util.Randoms;
 import java.util.OptionalDouble;
 
 public class Drone extends Agent {
-    int rank = -1;
+    public int rank = -1;
 
-    Vector velocity = new Vector(2);
+    public Vector velocity = new Vector(2);
 
-    double controlEnergy = 0;
-    double commEnergy = 0;
-
-    public enum U_WALK_TYPE{
-        RANDOM_CIRCLE,
-        RANDOM_THETA
-    }
+    public double controlEnergy = 0;
+    public double commEnergy = 0;
 
     public void moveUpper() {
         this.rank -=1;
@@ -56,7 +51,7 @@ public class Drone extends Agent {
         }
     }
 
-    public void updateU(U_WALK_TYPE selection, double theta, double av) {
+    public void updateU(WalkType selection, double theta, double av) {
         switch (selection){
             /*Circular Motion With Velocity*/
             case RANDOM_CIRCLE: velocity.setValues(new double[]{av*Math.sin(theta),av*Math.cos(theta)}); break;
