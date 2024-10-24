@@ -4,5 +4,6 @@ public enum WalkType {
     RANDOM_CIRCLE,
     RANDOM_THETA,
     CIRCLE,
-    FIX
+    FIX,
+    STILL
 }

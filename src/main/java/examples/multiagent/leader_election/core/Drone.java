@@ -18,6 +18,8 @@ public class Drone extends Agent {
     public double controlEnergy = 0;
     public double commEnergy = 0;
 
+    public double nLayeredLinks;
+
     public void moveUpper() {
         this.rank -=1;
     }

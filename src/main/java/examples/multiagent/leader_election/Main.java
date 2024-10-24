@@ -21,7 +21,7 @@ import java.util.*;
 public class Main {
     public Algorithm algorithm;
     public Drone utmostLeader;
-    final int MAX_LINKS;
+    final int partialLinks, controlLinks;
 
     public StateSpaceModel model;
 
@@ -34,9 +34,10 @@ public class Main {
 
     final private WalkType type;
 
-    public Main(int nLinks, int agentsCount, double cx, double cy, double r, double safeRage, double k1, double k2, double angularVelocity, WalkType type){
+    public Main(int ncLinks, int npLinks, int agentsCount, double cx, double cy, double r, double safeRage, double k1, double k2, double angularVelocity, WalkType type){
 
-        this.MAX_LINKS = nLinks;
+        this.partialLinks = npLinks;
+        this.controlLinks = ncLinks;
         this.agentsCount = agentsCount;
         this.model = new StateSpaceModel(agentsCount);
         this.centerLocation = new Point2D.Double();
@@ -51,8 +52,8 @@ public class Main {
         initAlgorithm();
     }
 
-    public Main(int nLinks, int agentsCount){
-        this(nLinks, agentsCount, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.CIRCLE);
+    public Main(int ncLinks, int npLinks, int agentsCount){
+        this(ncLinks, npLinks, agentsCount, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.CIRCLE);
     }
 
     private void initAlgorithm() {
@@ -69,6 +70,9 @@ public class Main {
                     utmostLeader.setX(centerLocation.getX());
                     utmostLeader.setY(centerLocation.getY());
                     utmostLeader.velocity.setValues(new double[]{0.0, 0.0});
+
+                     // find Second Layer
+
 
                     Queue<AbsAgent> bfsQueue = new ArrayDeque<>();
                     bfsQueue.add(utmostLeader);
@@ -113,7 +117,7 @@ public class Main {
                         }
                     });
 
-                    int max_count = MAX_LINKS;
+                    int max_count = controlLinks;
 
                     for(AbsAgent a: agents){
                         if(max_count < 0){
@@ -159,6 +163,8 @@ public class Main {
                             utmostLeader.getPosition().setValues(new double[]{centerLocation.getX() + r * Math.cos(theta), centerLocation.getY() + r * Math.sin(theta)});
                         else if(type == WalkType.FIX)
                             utmostLeader.getPosition().fixVector(Commons.fill(50, 2), Commons.fill(150,2));
+                        else if(type == WalkType.STILL)
+                            utmostLeader.hashCode();
                         else
                             utmostLeader.updateU(type, theta, angularVelocity);
                     }
@@ -188,7 +194,7 @@ public class Main {
                                 }
                                 else if(model.GB.getEntry(dr.getIndex(), j) ==0){
                                     int listIndex = findAgentListIndex(j);
-                                    Pair<org.usa.soc.core.ds.Vector, Double> data = getK1Value(getFirstAgents().get(listIndex), dr, 0.02, 0.3);
+                                    Pair<org.usa.soc.core.ds.Vector, Double> data = getK1Value(getFirstAgents().get(listIndex), dr, 0.05, 0.3);
                                     model.K1.setEntry(dr.getIndex(), j, data.getSecond());
                                     dr.velocity.updateVector(data.getFirst());
                                 }
@@ -220,14 +226,14 @@ public class Main {
                 double distance = d1.getPosition().getClonedVector().getDistance(d2.getPosition().getClonedVector());
                 org.usa.soc.core.ds.Vector velocityVector = d1.getPosition().getClonedVector().operate(org.usa.soc.core.ds.Vector.OPERATOR.SUB, d2.getPosition().getClonedVector());
 
-                double k = K*eFactor(i, distance - safeRage, 0.01, 0.5);
+                double k = K*eFactor(i, distance - safeRage, 0.005, 0.05);
                 return new Pair<org.usa.soc.core.ds.Vector, Double>(velocityVector.operate(org.usa.soc.core.ds.Vector.OPERATOR.MULP, k), k);
             }
 
             private double eFactor(double j, double x, double fR, double fA){
 
                 if(x < 0)
-                    return -(1+Math.exp(-(j*x-1)))*fR;
+                    return -Math.exp(-(j*x-1))*fR;
                 else if(x>0)
                     return (1+Math.exp(-(j*x-1)))*fA;
                 else
@@ -258,30 +264,85 @@ public class Main {
                         Thread.sleep(50);
 
                         if (algorithm.isInitialized()){
+
+                            for (int idi = 0; idi < agentsCount; idi++){
+                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+                                    continue;
+                                }
+                                Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+                                for (int idj = idi; idj < agentsCount; idj++){
+                                    if (idj == idi) {
+                                        continue;
+                                    }
+                                    Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
+                                    if(xi.rank == xj.rank){
+                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+                                        model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
+                                    }
+                                }
+                            }
+
+                            for (int idi = 0; idi < agentsCount; idi++){
+                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+                                    continue;
+                                }
+                                ((Drone) algorithm.getFirstAgents().get(idi)).nLayeredLinks =0;
+                            }
+
                             for (int idi = 0; idi < agentsCount; idi++) {
                                 if (utmostLeader != null && idi == utmostLeader.getIndex()) {
                                     continue;
                                 }
+                                Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+                                List<Drone> tmpDrones = new ArrayList<>();
                                 for (int idj = idi; idj < agentsCount; idj++) {
                                     if (idj == idi) {
                                         continue;
                                     }
-                                    Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
                                     Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
-                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 30){
-                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0 & xi.rank == xj.rank){
-                                            model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
-                                            model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
-                                            System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
-                                        }
-                                    }else{
-                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 1 && xi.rank == xj.rank){
-                                            System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
-                                            model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
-                                            model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
+                                    if(xi.rank == xj.rank){
+                                        tmpDrones.add(xj);
+                                    }
+
+//                                    if (xi.getPosition().getClonedVector().operate(Vector.OPERATOR.SUB, xj.getPosition()).getMagnitude() < 20){
+//                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 0 & xi.rank == xj.rank){
+//                                            tmpDrones.add(xj);
+//                                        }
+//                                    }else{
+//                                        if(model.GA.getEntry(xi.getIndex(), xj.getIndex()) == 1 && xi.rank == xj.rank){
+//                                            if(xi.nLayeredLinks >0 && xj.nLayeredLinks >0){
+//                                                System.out.println("Link Removed ["+xi.getIndex()+","+xj.getIndex()+"]");
+//                                                model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+//                                                model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
+//                                            }
+//                                        }
+//                                    }
+                                }
+
+                                tmpDrones.sort(new Comparator<AbsAgent>() {
+                                    @Override
+                                    public int compare(AbsAgent o1, AbsAgent o2) {
+                                        if (o1.getPosition().getDistance(xi.getPosition()) < o2.getPosition().getDistance(xi.getPosition())) {
+                                            return -1;
+                                        }else{
+                                            return 1;
                                         }
                                     }
+                                });
+
+                                for(int ii=0; ii<tmpDrones.size();ii++){
+                                    Drone xj = (Drone)tmpDrones.get(ii);
+                                    if(xi.nLayeredLinks < partialLinks && xj.nLayeredLinks < partialLinks){
+                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
+                                        model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
+                                        xi.nLayeredLinks++;
+                                        xj.nLayeredLinks++;
+                                        //System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
+                                    }else{
+                                        break;
+                                    }
                                 }
+                                Executor.getAlgorithm().getFirstAgents().sort(new ByIndex());
                             }
                             model.derive();
                             if(Gc == null){
@@ -323,8 +384,12 @@ public class Main {
                 }
 
                 if(ai.rank == aj.rank){
-                    model.GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
-                    model.GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                    if(ai.nLayeredLinks < partialLinks && aj.nLayeredLinks < partialLinks){
+                        model.GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                        model.GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                        ai.nLayeredLinks++;
+                        aj.nLayeredLinks++;
+                    }
                     continue;
                 }
                 if(ai.getConncetions().contains(aj)){
