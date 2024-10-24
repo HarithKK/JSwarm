@@ -30,8 +30,7 @@ public class MongoClientConn {
 
     String databaseName;
     public MongoClientConn(String db){
-        //this.connectionString = "mongodb+srv://"+System.getenv("MONGO_UNAME")+":"+System.getenv("MONGO_PASSWORD")+"@cluster-tsoa-test.y7i2i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-tsoa-test";
-        this.connectionString = "mongodb+srv://hkw2021:S5lfEVzu8h4aBocJ@cluster-tsoa-test.y7i2i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-tsoa-test";
+        this.connectionString = "mongodb+srv://"+System.getenv("MONGO_UNAME")+":"+System.getenv("MONGO_PASSWORD")+"@cluster-tsoa-test.y7i2i.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-tsoa-test";
         serverApi = ServerApi.builder()
                 .version(ServerApiVersion.V1)
                 .build();
