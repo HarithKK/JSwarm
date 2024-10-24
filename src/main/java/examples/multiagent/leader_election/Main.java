@@ -25,7 +25,7 @@ public class Main {
 
     public StateSpaceModel model;
 
-    final int agentsCount;
+    int agentsCount;
     final Point2D centerLocation;
     final double r, angularVelocity;
     final double safeRage;
@@ -347,6 +347,17 @@ public class Main {
                 }
             }
         }).start();
+    }
+
+    public void removeAgent(int index){
+        int listIndex = algorithm.findAgentListIndex(index);
+        Executor.getInstance().getChartView().getView2D().removeAgent(listIndex);
+        model.replace(index, 0);
+        if(index == 0)
+            utmostLeader = null;
+
+        Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        this.agentsCount--;
     }
 
     private void moveUp(Drone a){
