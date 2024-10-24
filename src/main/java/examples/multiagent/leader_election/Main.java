@@ -232,8 +232,6 @@ public class Main {
                     return (1+Math.exp(-(j*x-1)))*fA;
                 else
                     return 0;
-
-                //return i + (-i * Math.exp(x)/(100 + Math.exp(x)));
             }
 
             private int getLeaderIndex(int index) {
