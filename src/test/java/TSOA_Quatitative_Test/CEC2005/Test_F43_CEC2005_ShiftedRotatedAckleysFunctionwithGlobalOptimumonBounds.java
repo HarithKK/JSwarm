@@ -1,9 +1,8 @@
 package TSOA_Quatitative_Test.CEC2005;
 
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.cec2005.ShiftedRotatedAckleysFunctionwithGlobalOptimumonBounds;
-import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;

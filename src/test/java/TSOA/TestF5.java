@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.GeneralizedRosenbrok;
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import utils.Utils;
 
 import java.util.ArrayList;

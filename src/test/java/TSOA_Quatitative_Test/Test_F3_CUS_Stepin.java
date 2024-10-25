@@ -1,8 +1,7 @@
 package TSOA_Quatitative_Test;
 
 
-import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.DynamicUnimodalObjectiveFunctions.Function6;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.StepintFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;

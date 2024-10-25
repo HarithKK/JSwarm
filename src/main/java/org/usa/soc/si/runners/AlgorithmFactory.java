@@ -1,4 +1,4 @@
-package examples.si;
+package org.usa.soc.si.runners;
 
 import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
 import examples.si.benchmarks.cec2018.MIDTLZ1;
@@ -461,47 +461,4 @@ public class AlgorithmFactory {
         
         return algo;
     }
-
-//    public static class FunctionsList {
-//        public static ObjectiveFunction[] getFunctionList(int n){
-//            return new ObjectiveFunction[]{
-//                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction().updateDimensions(n),
-//                    new BealeFunction().updateDimensions(n),
-//                    new BoothsFunction().updateDimensions(n),
-//                    new Bukin4Function().updateDimensions(n),
-//                    new CrossInTrayFunction().updateDimensions(n),
-//                    new EasomFunction().updateDimensions(n),
-//                    new EggholderFunction().updateDimensions(n),
-//                    new GoldsteinPrice().updateDimensions(n),
-//                    new HimmelblausFunction().updateDimensions(n),
-//                    new HolderTableFunction().updateDimensions(n),
-//                    new LevyFunction().updateDimensions(n),
-//                    new MatyasFunction().updateDimensions(n),
-//                    new McCormickFunction().updateDimensions(n),
-//                    new RastriginFunction().updateDimensions(n),
-//                    new RosenbrockFunction().updateDimensions(n),
-//                    new SchafferFunctionN4().updateDimensions(n),
-//                    new SchafferFunction().updateDimensions(n),
-//                    new SphereFunction().updateDimensions(n),
-//                    new StyblinskiTangFunction().updateDimensions(n),
-//                    new ThreeHumpCamelFunction().updateDimensions(n),
-//                    new ChungReynoldsSquares().updateDimensions(n),
-//                    new SumSquares().updateDimensions(n),
-//                    new DixonPriceFunction().updateDimensions(n),
-//                    new Debfunction().updateDimensions(n),
-//                    new ZakharovFunction().updateDimensions(n),
-//                    new CsendesFunction().updateDimensions(n),
-//                    new QuarticFunction().updateDimensions(n),
-//                    new Michalewicz10().setFixedDimentions(10),
-//                    new Michalewicz5().setFixedDimentions(5),
-//                    new Trid().updateDimensions(n),
-//                    new Alpine1Function().updateDimensions(n),
-//                    new RastriginFunction().updateDimensions(n),
-//                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction().updateDimensions(n),
-//                    new BentCigarFunction().updateDimensions(n),
-//                    new ShiftedSphereFunction().updateDimensions(n),
-//                    new MIDTLZ1(10, 10).setFixedDimentions(n)
-//            };
-//        }
-//    }
 }

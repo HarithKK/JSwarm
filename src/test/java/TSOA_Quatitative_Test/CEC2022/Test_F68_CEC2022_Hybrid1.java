@@ -1,9 +1,8 @@
 package TSOA_Quatitative_Test.CEC2022;
 
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.cec2022.HybridFunction1;
-import examples.si.benchmarks.cec2022.ShiftedandRotatedNonContinuousRastriginFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;

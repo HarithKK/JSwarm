@@ -1,6 +1,6 @@
 package TSOA_Quatitative_Test;
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.algo.tsoa.TSOA;
 import examples.si.benchmarks.DynamicMultiModalObjectiveFunctions.GriewanktFunction;
 import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
@@ -9,7 +9,6 @@ import examples.si.benchmarks.cec2017.HybridFunction1;
 import examples.si.benchmarks.cec2022.HybridFunction2;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ZakharovFunction;
 import examples.si.benchmarks.singleObjective.RastriginFunction;
-import examples.si.benchmarks.singleObjective.SchafferFunction;
 import examples.si.benchmarks.singleObjective.SphereFunction;
 import org.junit.jupiter.api.Test;
 import org.usa.soc.si.ObjectiveFunction;

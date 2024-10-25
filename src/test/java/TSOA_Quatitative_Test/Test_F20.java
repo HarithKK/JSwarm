@@ -1,7 +1,7 @@
 package TSOA_Quatitative_Test;
 
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.DynamicCompositeBenchmarkFunctions.Function19;
 import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;

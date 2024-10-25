@@ -1,15 +1,11 @@
 package examples.si;
 
-import examples.si.algo.tsoa.TSOA;
-import examples.si.benchmarks.singleObjective.AckleysFunction;
 import examples.si.benchmarks.singleObjective.CrossInTrayFunction;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.si.ObjectiveFunction;
-import org.usa.soc.si.SIAlgorithm;
-
-import javax.swing.*;
+import org.usa.soc.si.runners.AlgorithmFactory;
 
 public class PlotAlgorithmExample {
     public static void main(String[] args) {

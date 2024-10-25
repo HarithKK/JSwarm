@@ -1,6 +1,6 @@
 package Common;
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.separable.CsendesFunction;
 import examples.si.benchmarks.singleObjective.*;
 import org.junit.jupiter.api.Test;

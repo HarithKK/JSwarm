@@ -1,8 +1,7 @@
 package TSOA_Quatitative_Test;
 
 
-import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.singleObjective.EasomFunction;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.singleObjective.RosenbrockFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;

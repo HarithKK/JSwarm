@@ -1,6 +1,5 @@
 package org.usa.soc.si.runners;
 
-import examples.si.AlgorithmFactory;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.usa.soc.si.SIAlgorithm;

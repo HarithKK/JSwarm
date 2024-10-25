@@ -1,10 +1,8 @@
 package utils;
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.algo.tsoa.TSOA;
 import examples.si.benchmarks.cec2018.MIDTLZ1;
-import examples.si.benchmarks.cec2018.MIDTLZ3;
-import examples.si.benchmarks.cec2022.*;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.ColvilleFunction;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.QuarticFunction;
 import examples.si.benchmarks.singleObjective.SphereFunction;

@@ -1,8 +1,7 @@
 package TSOA_Quatitative_Test.CEC2014;
 
 
-import examples.si.AlgorithmFactory;
-import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.cec2014.RotatedBentCigarFunction;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;

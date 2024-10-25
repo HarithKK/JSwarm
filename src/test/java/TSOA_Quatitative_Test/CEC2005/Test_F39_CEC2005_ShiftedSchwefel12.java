@@ -1,7 +1,7 @@
 package TSOA_Quatitative_Test.CEC2005;
 
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.cec2005.ShiftedSchwefel12Function;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;

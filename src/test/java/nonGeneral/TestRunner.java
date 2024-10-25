@@ -17,7 +17,7 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Mathamatics;
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 
 import java.awt.*;
 import java.nio.file.Files;

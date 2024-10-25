@@ -1,9 +1,8 @@
 package TSOA_Quatitative_Test;
 
 
-import examples.si.AlgorithmFactory;
+import org.usa.soc.si.runners.AlgorithmFactory;
 import examples.si.benchmarks.nonGeneral.classical.unimodal.separable.PowellSumFunction;
-import examples.si.benchmarks.singleObjective.ChungReynoldsSquares;
 import org.junit.jupiter.api.*;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
