@@ -47,46 +47,46 @@ import java.util.List;
 
 public class AlgorithmFactory {
 
-    private int a;
-    private ObjectiveFunction fn;
+    private int algorithmIndex;
+    private ObjectiveFunction objectiveFunction;
 
-    public AlgorithmFactory(int algorithmIndex, ObjectiveFunction fn) {
-        this.a = algorithmIndex;
-        this.fn = fn;
+    public AlgorithmFactory(int algorithmIndex, ObjectiveFunction objectiveFunction) {
+        this.algorithmIndex = algorithmIndex;
+        this.objectiveFunction = objectiveFunction;
     }
 
 
     public SIAlgorithm getAlgorithm(int steps, int agents) {
-        switch (a){
+        switch (algorithmIndex){
             case 0 : return new PSO(
-                    fn,
+                    objectiveFunction,
                     agents,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     steps,
                     1.496180,
                     1.496180,
                     0.729844,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true);
             case 1: return new ACO(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
                     5,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true
             );
             case 2: return new CSO(
-                    fn,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction,
+                    objectiveFunction.getNumberOfDimensions(),
                     steps,
                     agents,
                     0.1,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     3,
                     0.85,
                     0.2,
@@ -97,12 +97,12 @@ public class AlgorithmFactory {
             );
             case 3: {
                 return new GSO(
-                        fn,
-                        fn.getNumberOfDimensions(),
+                        objectiveFunction,
+                        objectiveFunction.getNumberOfDimensions(),
                         steps,
                         agents,
-                        fn.getMin(),
-                        fn.getMax(),
+                        objectiveFunction.getMin(),
+                        objectiveFunction.getMax(),
                         5,
                         1,
                         0.4,
@@ -115,14 +115,14 @@ public class AlgorithmFactory {
                 );
             }
             case 4: return new MBO(
-                    fn,
+                    objectiveFunction,
                     agents,
                     100,
                     30,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     0.9,
                     0,
@@ -132,66 +132,66 @@ public class AlgorithmFactory {
                     10
             );
             case 5: return new MS(
-                    fn,
+                    objectiveFunction,
                     steps,
                     agents,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     50,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     0.5,
                     true
             );
             case 6: return new WSO(
-                    fn,
+                    objectiveFunction,
                     steps,
                     agents,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     0.4,
                     0.4,
                     true
             );
             case 7: return new CS(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     agents,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     1,
                     0.75,
                     true
             );
             case 8: return new FA(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     agents,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     1,
                     0.2,
                     1,
                     true
             );
             case 9: return new ABC(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     agents,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     100,
                     true
             );
             case 10:  return new BA(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     agents,
                     0,
                     100,
@@ -202,12 +202,12 @@ public class AlgorithmFactory {
                     true
             );
             case 11: return new TCO(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     agents,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     1,
                     0.8,
                     0.72,
@@ -215,39 +215,39 @@ public class AlgorithmFactory {
                     true
             );
             case 12: return new GWO(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     agents,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true
             );
             case 13: return new MFA(
-                    fn,
+                    objectiveFunction,
                     steps,
-                    fn.getNumberOfDimensions(),
+                    objectiveFunction.getNumberOfDimensions(),
                     agents,
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     1.0
             );
             case 14: return new ALO(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true
             );
             case 15: return new ALSO(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     10,
                     210,
@@ -257,12 +257,12 @@ public class AlgorithmFactory {
                     1.0
             );
             case 16: return new GEO(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2,
                     0.5,
@@ -270,12 +270,12 @@ public class AlgorithmFactory {
                     1
             );
             case 17: return new AVOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     0.8,
@@ -285,21 +285,21 @@ public class AlgorithmFactory {
                     0.6
             );
             case 18: return new TSA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true
             );
             case 19: return new SSA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     0.1,
                     1.9,
@@ -309,98 +309,98 @@ public class AlgorithmFactory {
                     8.0
             );
             case 20: return new ZOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true
             );
             case 21:  return new JSO(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     3,
                     0.1
             );
             case 22: return new CHOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     Chaotics.type.QUADRATIC
             );
             case 23: return new CHOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     Chaotics.type.BERNOULLI
             );
             case 24: return new CHOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     Chaotics.type.GAUSS_MOUSE
             );
             case 25: return new CHOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     Chaotics.type.LOGISTIC
             );
             case 26: return new CHOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     Chaotics.type.SINGER
             );
             case 27: return new CHOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     2.5,
                     Chaotics.type.TENT
             );
             case 28: return new GOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     0.00004,
                     1.0,
@@ -408,12 +408,12 @@ public class AlgorithmFactory {
                     1.5
             );
             case 29: return new TSOA(
-                    fn,
+                    objectiveFunction,
                     agents,
                     steps,
-                    fn.getNumberOfDimensions(),
-                    fn.getMin(),
-                    fn.getMax(),
+                    objectiveFunction.getNumberOfDimensions(),
+                    objectiveFunction.getMin(),
+                    objectiveFunction.getMax(),
                     true,
                     10,
                     0.3,
@@ -462,46 +462,46 @@ public class AlgorithmFactory {
         return algo;
     }
 
-    public static class FunctionsList {
-        public static ObjectiveFunction[] getFunctionList(int n){
-            return new ObjectiveFunction[]{
-                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction().updateDimensions(n),
-                    new BealeFunction().updateDimensions(n),
-                    new BoothsFunction().updateDimensions(n),
-                    new Bukin4Function().updateDimensions(n),
-                    new CrossInTrayFunction().updateDimensions(n),
-                    new EasomFunction().updateDimensions(n),
-                    new EggholderFunction().updateDimensions(n),
-                    new GoldsteinPrice().updateDimensions(n),
-                    new HimmelblausFunction().updateDimensions(n),
-                    new HolderTableFunction().updateDimensions(n),
-                    new LevyFunction().updateDimensions(n),
-                    new MatyasFunction().updateDimensions(n),
-                    new McCormickFunction().updateDimensions(n),
-                    new RastriginFunction().updateDimensions(n),
-                    new RosenbrockFunction().updateDimensions(n),
-                    new SchafferFunctionN4().updateDimensions(n),
-                    new SchafferFunction().updateDimensions(n),
-                    new SphereFunction().updateDimensions(n),
-                    new StyblinskiTangFunction().updateDimensions(n),
-                    new ThreeHumpCamelFunction().updateDimensions(n),
-                    new ChungReynoldsSquares().updateDimensions(n),
-                    new SumSquares().updateDimensions(n),
-                    new DixonPriceFunction().updateDimensions(n),
-                    new Debfunction().updateDimensions(n),
-                    new ZakharovFunction().updateDimensions(n),
-                    new CsendesFunction().updateDimensions(n),
-                    new QuarticFunction().updateDimensions(n),
-                    new Michalewicz10().setFixedDimentions(10),
-                    new Michalewicz5().setFixedDimentions(5),
-                    new Trid().updateDimensions(n),
-                    new Alpine1Function().updateDimensions(n),
-                    new RastriginFunction().updateDimensions(n),
-                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction().updateDimensions(n),
-                    new BentCigarFunction().updateDimensions(n),
-                    new ShiftedSphereFunction().updateDimensions(n),
-                    new MIDTLZ1(10, 10).setFixedDimentions(n)
-            };
-        }
-    }
+//    public static class FunctionsList {
+//        public static ObjectiveFunction[] getFunctionList(int n){
+//            return new ObjectiveFunction[]{
+//                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.AckleysFunction().updateDimensions(n),
+//                    new BealeFunction().updateDimensions(n),
+//                    new BoothsFunction().updateDimensions(n),
+//                    new Bukin4Function().updateDimensions(n),
+//                    new CrossInTrayFunction().updateDimensions(n),
+//                    new EasomFunction().updateDimensions(n),
+//                    new EggholderFunction().updateDimensions(n),
+//                    new GoldsteinPrice().updateDimensions(n),
+//                    new HimmelblausFunction().updateDimensions(n),
+//                    new HolderTableFunction().updateDimensions(n),
+//                    new LevyFunction().updateDimensions(n),
+//                    new MatyasFunction().updateDimensions(n),
+//                    new McCormickFunction().updateDimensions(n),
+//                    new RastriginFunction().updateDimensions(n),
+//                    new RosenbrockFunction().updateDimensions(n),
+//                    new SchafferFunctionN4().updateDimensions(n),
+//                    new SchafferFunction().updateDimensions(n),
+//                    new SphereFunction().updateDimensions(n),
+//                    new StyblinskiTangFunction().updateDimensions(n),
+//                    new ThreeHumpCamelFunction().updateDimensions(n),
+//                    new ChungReynoldsSquares().updateDimensions(n),
+//                    new SumSquares().updateDimensions(n),
+//                    new DixonPriceFunction().updateDimensions(n),
+//                    new Debfunction().updateDimensions(n),
+//                    new ZakharovFunction().updateDimensions(n),
+//                    new CsendesFunction().updateDimensions(n),
+//                    new QuarticFunction().updateDimensions(n),
+//                    new Michalewicz10().setFixedDimentions(10),
+//                    new Michalewicz5().setFixedDimentions(5),
+//                    new Trid().updateDimensions(n),
+//                    new Alpine1Function().updateDimensions(n),
+//                    new RastriginFunction().updateDimensions(n),
+//                    new examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.StyblinskiTangFunction().updateDimensions(n),
+//                    new BentCigarFunction().updateDimensions(n),
+//                    new ShiftedSphereFunction().updateDimensions(n),
+//                    new MIDTLZ1(10, 10).setFixedDimentions(n)
+//            };
+//        }
+//    }
 }

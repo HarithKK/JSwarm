@@ -4,7 +4,6 @@ import examples.si.AlgorithmFactory;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
 import org.usa.soc.si.SIAlgorithm;
-import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.si.view.FunctionChartPlotter;
 import org.usa.soc.si.view.FunctionDisplay;
@@ -46,9 +45,11 @@ public class Main {
 
     int progressValue;
     int stepCount =0;
-    int iterationCount, agentsCount, nd;
+    int iterationCount, agentsCount, numberOfDimensions;
 
     double bestValue;
+
+    FunctionsFactory functionsFactory;
 
     IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
 
@@ -75,7 +76,7 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, AlgorithmFactory.FunctionsList.getFunctionList(nd)[selectedFunction]).getAlgorithm(iterationCount, agentsCount);
+                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, functionsFactory.get(selectedFunction, numberOfDimensions)).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
                     functionChartPlotter.setChart(SIAlgorithm);
 
@@ -181,7 +182,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(AlgorithmFactory.FunctionsList.getFunctionList(nd)[cmbFunction.getSelectedIndex()], 600, 600, 0, 0, true).display();
+        new FunctionDisplay(functionsFactory.get(cmbFunction.getSelectedIndex(), numberOfDimensions), 600, 600, 0, 0, true).display();
     }
 
     private void fncActionPerformed(double... values){
@@ -201,13 +202,15 @@ public class Main {
         updateUI();
     }
 
-    Main(){
+    Main(FunctionsFactory functions){
+
+        this.functionsFactory = functions;
 
         decimalFormat = new DecimalFormat("#.#######");
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, AlgorithmFactory.FunctionsList.getFunctionList(nd)[0]).getAlgorithm(100, 100);
+        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, functionsFactory.get(0, numberOfDimensions)).getAlgorithm(100, 100);
         functionChartPlotter.setChart(SIAlgorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -276,8 +279,8 @@ public class Main {
         lblFunctionComboBox.setFont(f1);
         cmbFunction = new JComboBox<>();
         cmbFunction.setFont(f1);
-        for (ObjectiveFunction f: AlgorithmFactory.FunctionsList.getFunctionList(nd)) {
-            cmbFunction.addItem(f.getClass().getSimpleName());
+        for (String fname: functionsFactory.getFunctionNames()) {
+            cmbFunction.addItem(fname);
         }
         jToolBar.add(lblFunctionComboBox);
         jToolBar.add(cmbFunction);
@@ -429,12 +432,12 @@ public class Main {
         pnlTop.add(pnlAgentsCount);
 
         RowPanel pnlNumberOfDimentions = new RowPanel(" Dimentions", "2");
-        nd = 2;
+        numberOfDimensions = 2;
         pnlNumberOfDimentions.txt.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
                 if(!pnlNumberOfDimentions.txt.getText().isEmpty()){
-                    nd = Integer.parseInt(pnlNumberOfDimentions.txt.getText());
+                    numberOfDimensions = Integer.parseInt(pnlNumberOfDimentions.txt.getText());
                 }
             }
         });
@@ -498,11 +501,11 @@ public class Main {
         }
     }
 
-    public static void executeMain(){
+    public static void executeMain(FunctionsFactory factory){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Main();
+                new Main(factory);
             }
         });
     }

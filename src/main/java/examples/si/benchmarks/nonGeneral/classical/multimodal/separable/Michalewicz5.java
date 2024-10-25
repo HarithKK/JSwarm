@@ -21,7 +21,7 @@ public class Michalewicz5 extends ObjectiveFunction {
 
     @Override
     public int getNumberOfDimensions() {
-        return numberOfDimensions;
+        return 5;
     }
 
     @Override
