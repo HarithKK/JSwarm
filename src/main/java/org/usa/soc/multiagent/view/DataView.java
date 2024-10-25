@@ -67,18 +67,31 @@ public class DataView extends JFrame{
 
     private void initialize() {
         panel = new JPanel();
+        JPanel btnPanel = new JPanel();
+        JPanel chartPanel = new JPanel();
+        JPanel tablePanel = new JPanel();
+        JPanel textPanel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         for(DataBox box : Executor.getInstance().getDataMap().values()){
             if(box instanceof ProgressiveChart)
-                panel.add(((ProgressiveChart)box).getPanel());
+                chartPanel.add(((ProgressiveChart)box).getPanel());
             if(box instanceof TextField)
-                panel.add(((TextField)box).getPanel());
+                textPanel.add(((TextField)box).getPanel());
             if(box instanceof Button)
-                panel.add(((Button)box).getPanel());
+                btnPanel.add(((Button)box).getPanel());
             if(box instanceof Table)
-                panel.add(((Table)box).getPanel());
+                tablePanel.add(((Table)box).getPanel());
         }
+
+        if(btnPanel.getComponentCount() > 0)
+            panel.add(btnPanel);
+        if(textPanel.getComponentCount() > 0)
+            panel.add(textPanel);
+        if(chartPanel.getComponentCount() > 0)
+            panel.add(chartPanel);
+        if(tablePanel.getComponentCount() > 0)
+            panel.add(tablePanel);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.add(panel);
