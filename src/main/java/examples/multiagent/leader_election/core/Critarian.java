@@ -1,5 +1,13 @@
 package examples.multiagent.leader_election.core;
 
+import examples.multiagent.leader_election.testcases.F1;
+import examples.si.algo.tsoa.TSOA;
+import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.action.StepAction;
+import org.usa.soc.core.ds.Vector;
+import org.usa.soc.si.SIAlgorithm;
+import org.usa.soc.si.runners.FunctionsFactory;
+import org.usa.soc.si.runners.Main;
 import org.usa.soc.util.Randoms;
 
 import java.util.List;
@@ -22,4 +30,63 @@ public class Critarian {
         return Randoms.rand(i, j);
     }
 
+    private double findBestValue(StateSpaceModel model, Drone drone){
+        F1 objectiveFunction = new F1(model.calcGcStep(model.getNN(), 1), drone.getIndex());
+
+        //Main.executeMain(new FunctionsFactory().register(objectiveFunction));
+
+        SIAlgorithm algorithm = new TSOA(
+                objectiveFunction,
+                100,
+                15,
+                objectiveFunction.getNumberOfDimensions(),
+                objectiveFunction.getMin(),
+                objectiveFunction.getMax(),
+                true,
+                10,
+                0.3,
+                1,
+                1.49,
+                1.5
+        );
+
+        algorithm.addStepAction(new StepAction() {
+            @Override
+            public void performAction(Vector best, Double bestValue, int step) {
+                objectiveFunction.gc = model.calcGcStep(objectiveFunction.gc, step+1);
+            }
+        });
+
+
+        try {
+            algorithm.initialize();
+            algorithm.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return algorithm.getBestDoubleValue();
+    }
+
+    public AbsAgent SI(StateSpaceModel model, List<AbsAgent> agents){
+
+        AbsAgent minAgent = null;
+        double minValue=0;
+
+        for(AbsAgent agent: agents){
+            double fValue = findBestValue(model, (Drone) agent);
+
+            if(minAgent == null){
+                minAgent = agent;
+                minValue = fValue;
+            }else{
+                if(fValue < minValue){
+                    minAgent = agent;
+                    minValue = fValue;
+                }
+            }
+        }
+
+        return minAgent;
+    }
 }

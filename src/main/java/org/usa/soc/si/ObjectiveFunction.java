@@ -5,11 +5,13 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.view.plotter.FunctionToMapper;
 import org.usa.soc.si.view.plotter.Plot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public abstract class ObjectiveFunction<T> implements Callable<Double> {
@@ -40,6 +42,10 @@ public abstract class ObjectiveFunction<T> implements Callable<Double> {
 
     public T[] getParameters() {
         return parameters;
+    }
+
+    public Vector getParametersCommonVector() {
+        return new Vector(numberOfDimensions).setValues(Arrays.asList(parameters).stream().mapToDouble(d-> (Double)d).toArray());
     }
 
     public RealMatrix getParametersMatrix() {

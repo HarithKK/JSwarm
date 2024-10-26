@@ -9,21 +9,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FunctionsFactory {
-    List<Class<?>> list= new ArrayList<>();
+    List<ObjectiveFunction> list= new ArrayList<>();
 
     public FunctionsFactory register(Class<?> function){
+        try {
+            ObjectiveFunction fn = (ObjectiveFunction) function.getConstructor().newInstance();
+            list.add(fn);
+        } catch (Exception e) {
+            Logger.getInstance().error(e.getMessage());
+            return null;
+        }
+        return this;
+    }
+
+    public FunctionsFactory register(ObjectiveFunction function){
         list.add(function);
         return this;
     }
 
     public ObjectiveFunction get(int i, int d){
-        try {
-            ObjectiveFunction fn = (ObjectiveFunction) list.get(i).getConstructor().newInstance();
-            return fn.updateDimensions(d);
-        } catch (Exception e) {
-            Logger.getInstance().error(e.getMessage());
-            return null;
-        }
+        return list.get(i).updateDimensions(d);
     }
 
     public FunctionsFactory build(){
@@ -31,6 +36,6 @@ public class FunctionsFactory {
     }
 
     public String[] getFunctionNames(){
-        return list.stream().map(d-> d.getSimpleName()).toArray(String[]::new);
+        return list.stream().map(d-> d.getClass().getSimpleName()).toArray(String[]::new);
     }
 }

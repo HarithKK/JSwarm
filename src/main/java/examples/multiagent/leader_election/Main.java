@@ -263,7 +263,7 @@ public class Main {
                     try {
                         Thread.sleep(50);
 
-                        if (algorithm.isInitialized()){
+                        if (algorithm.isInitialized() && !algorithm.isPaused()){
 
                             for (int idi = 0; idi < agentsCount; idi++){
                                 if (utmostLeader != null && idi == utmostLeader.getIndex()) {
@@ -402,7 +402,7 @@ public class Main {
         model.derive();
     }
 
-    public void performRandomOnlyForFirstLayer() {
+    public void performLE(int index) {
 
         List<Drone> layer = new ArrayList<>();
 
@@ -412,7 +412,6 @@ public class Main {
                 layer.add(d);
         }
 
-        int index = new Critarian().selectCritarian(Critarian.Critarians.RANDOM, layer);
         utmostLeader = layer.get(index);
         moveUp(utmostLeader);
 

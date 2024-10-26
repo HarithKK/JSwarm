@@ -219,6 +219,10 @@ public class PlainView2D {
         algo.pauseOptimizer();
     }
 
+    public void resumeExecution() {
+        algo.resumeOptimizer();
+    }
+
     public void removeAgent(int index){
         if(index >= algo.getFirstAgents().size())
             return;

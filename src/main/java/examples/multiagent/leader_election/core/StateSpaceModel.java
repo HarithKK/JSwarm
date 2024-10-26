@@ -112,6 +112,14 @@ public class StateSpaceModel {
         return Gc;
     }
 
+    public RealMatrix getNN(){
+        return MatrixUtils.createRealMatrix(A.getRowDimension(), A.getColumnDimension());
+    }
+
+    public RealMatrix calcGcStep(RealMatrix Gc, int i){
+        return Gc.add(A.power((int)i).multiply(B).multiply(B.transpose()).multiply(A.transpose().power((int)i)));
+    }
+
     public int getGcRank(){
         RRQRDecomposition decomposition = new RRQRDecomposition(Gc);
         return decomposition.getRank(0.00001);
