@@ -10,16 +10,21 @@ import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.multiagent.view.Button;
 import org.usa.soc.multiagent.view.TextField;
+import org.usa.soc.si.runners.FunctionsFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TestCase1 {
     public static void main(String[] args) {
-        Main m = new Main(10, 3, 10, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
+        Main m = new Main(5, 5, 20, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
+        TextField tf = new TextField("SI Index");
+        tf.setData("0");
+
+        Executor.getInstance().registerTextBox(tf);
         Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,6 +39,19 @@ public class TestCase1 {
                 AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents());
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
+            }
+        }));
+
+
+        Executor.getInstance().registerTextButton(new Button("RUN SI").addAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Executor.getInstance().getChartView().getView2D().pauseExecution();
+                int index = Integer.parseInt(((TextField)Executor.getInstance().getDataMap().get("SI Index")).getData());
+                Drone d = (Drone)m.algorithm.getFirstAgents().get(index);
+                OF objectiveFunction = new OF(m.model.calcGcStep(m.model.getNN(), 1), d.getIndex(), d.getPosition().getClonedVector().toPoint2D());
+                org.usa.soc.si.runners.Main.executeMain(new FunctionsFactory().register(objectiveFunction).build());
+                //Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
         }));
 

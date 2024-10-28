@@ -3,16 +3,23 @@ package examples.multiagent.leader_election.testcases;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Commons;
 
-public class F1 extends ObjectiveFunction {
+import java.awt.geom.Point2D;
+
+public class OF extends ObjectiveFunction {
 
     public RealMatrix gc;
     int index;
-    public F1(RealMatrix model, int index){
+
+    RealMatrix or;
+
+    public OF(RealMatrix model, int index, Point2D origin){
         this.gc = model;
         this.index = index;
+        this.or = MatrixUtils.createColumnRealMatrix(new double[]{origin.getX(), origin.getY()});
     }
 
     @Override
@@ -24,7 +31,11 @@ public class F1 extends ObjectiveFunction {
 
             RealMatrix data = xf.transpose().scalarMultiply(MatrixUtils.inverse(gc).getEntry(index, index)).multiply(xf);
 
-            return data.getTrace();
+            double f1 = data.getTrace();
+            double f2 = xf.subtract(or).getNorm();
+
+            return Math.min(f1, f2);
+
         }catch (Exception e){
             return Double.MAX_VALUE;
         }

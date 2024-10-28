@@ -34,4 +34,7 @@ public class TextField extends DataBox {
     public void setData(String value) {
         this.textField.setText(value);
     }
+    public String getData() {
+        return this.textField.getText();
+    }
 }

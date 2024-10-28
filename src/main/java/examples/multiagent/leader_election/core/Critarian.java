@@ -1,6 +1,6 @@
 package examples.multiagent.leader_election.core;
 
-import examples.multiagent.leader_election.testcases.F1;
+import examples.multiagent.leader_election.testcases.OF;
 import examples.si.algo.tsoa.TSOA;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
@@ -31,9 +31,7 @@ public class Critarian {
     }
 
     private double findBestValue(StateSpaceModel model, Drone drone){
-        F1 objectiveFunction = new F1(model.calcGcStep(model.getNN(), 1), drone.getIndex());
-
-        //Main.executeMain(new FunctionsFactory().register(objectiveFunction));
+        OF objectiveFunction = new OF(model.calcGcStep(model.getNN(), 1), drone.getIndex(), drone.getPosition().getClonedVector().toPoint2D());
 
         SIAlgorithm algorithm = new TSOA(
                 objectiveFunction,

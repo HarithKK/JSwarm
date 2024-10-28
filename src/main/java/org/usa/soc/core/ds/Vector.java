@@ -14,6 +14,7 @@ import org.usa.soc.util.Smoother;
 import org.usa.soc.util.StringFormatter;
 import org.usa.soc.util.Validator;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,6 +164,29 @@ public class Vector {
             this.positionIndexes[i] = Math.exp(this.positionIndexes[i]);
         }
         return this;
+    }
+
+    public Point2D toPoint2D(){
+        for(int i = 0; i< getNumberOfDimensions(); i++){
+            this.positionIndexes[i] = Math.exp(this.positionIndexes[i]);
+        }
+        return new Point2D() {
+            @Override
+            public double getX() {
+                return (double)getPositionIndexes()[0];
+            }
+
+            @Override
+            public double getY() {
+                return (double)getPositionIndexes()[1];
+            }
+
+            @Override
+            public void setLocation(double x, double y) {
+                setValue(x, 0);
+                setValue(y, 1);
+            }
+        };
     }
 
     public int getNumberOfDimensions() {
