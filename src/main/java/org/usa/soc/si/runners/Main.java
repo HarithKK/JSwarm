@@ -48,7 +48,7 @@ public class Main {
 
     double bestValue;
 
-    FunctionsFactory functionsFactory;
+    Functions functions;
 
     IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
 
@@ -75,7 +75,7 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, functionsFactory.get(selectedFunction, numberOfDimensions)).getAlgorithm(iterationCount, agentsCount);
+                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, functions.get(selectedFunction, numberOfDimensions)).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
                     functionChartPlotter.setChart(SIAlgorithm);
 
@@ -181,7 +181,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(functionsFactory.get(cmbFunction.getSelectedIndex(), numberOfDimensions), 600, 600, 0, 0, true).display();
+        new FunctionDisplay(functions.get(cmbFunction.getSelectedIndex(), numberOfDimensions), 600, 600, 0, 0, true).display();
     }
 
     private void fncActionPerformed(double... values){
@@ -201,15 +201,15 @@ public class Main {
         updateUI();
     }
 
-    Main(FunctionsFactory functions){
+    Main(Functions functions){
 
-        this.functionsFactory = functions;
+        this.functions = functions;
 
         decimalFormat = new DecimalFormat("#.#######");
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, functionsFactory.get(0, numberOfDimensions)).getAlgorithm(100, 100);
+        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, functions.get(0, numberOfDimensions)).getAlgorithm(100, 100);
         functionChartPlotter.setChart(SIAlgorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -278,7 +278,7 @@ public class Main {
         lblFunctionComboBox.setFont(f1);
         cmbFunction = new JComboBox<>();
         cmbFunction.setFont(f1);
-        for (String fname: functionsFactory.getFunctionNames()) {
+        for (String fname: functions.getFunctionNames()) {
             cmbFunction.addItem(fname);
         }
         jToolBar.add(lblFunctionComboBox);
@@ -500,7 +500,7 @@ public class Main {
         }
     }
 
-    public static void executeMain(FunctionsFactory factory){
+    public static void executeMain(Functions factory){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
