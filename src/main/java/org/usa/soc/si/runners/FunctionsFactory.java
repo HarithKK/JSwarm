@@ -19,16 +19,15 @@ class Functions{
 }
 
 public class FunctionsFactory {
-    Functions f;
+    List<ObjectiveFunction> list= new ArrayList<>();
     public FunctionsFactory(){
-        f = new Functions();
-
+        list= new ArrayList<>();
     }
 
     public FunctionsFactory register(Class<?> function){
         try {
             ObjectiveFunction fn = (ObjectiveFunction) function.getConstructor().newInstance();
-            f.list.add(fn);
+            list.add(fn);
         } catch (Exception e) {
             Logger.getInstance().error(e.getMessage());
             return null;
@@ -37,11 +36,11 @@ public class FunctionsFactory {
     }
 
     public FunctionsFactory register(ObjectiveFunction function){
-        f.list.add(function);
+        list.add(function);
         return this;
     }
 
-    public Functions build(){
-        return this.f;
+    public List<ObjectiveFunction> build(){
+        return this.list;
     }
 }

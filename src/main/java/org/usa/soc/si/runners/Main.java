@@ -2,6 +2,7 @@ package org.usa.soc.si.runners;
 
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.internal.chartpart.Chart;
+import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.si.view.FunctionChartPlotter;
@@ -48,7 +49,7 @@ public class Main {
 
     double bestValue;
 
-    Functions functions;
+    List<ObjectiveFunction> functions;
 
     IterationChartPlotter pltBestValue, pltConvergence, pltGradiantDecent, pltMeanBest;
 
@@ -75,7 +76,7 @@ public class Main {
                     int selectedFunction = cmbFunction.getSelectedIndex();
                     int selectedInterval = (Integer) spnInterval.getValue();
 
-                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, functions.get(selectedFunction, numberOfDimensions)).getAlgorithm(iterationCount, agentsCount);
+                    SIAlgorithm = new AlgorithmFactory(selectedAlgorithm, functions.get(selectedFunction).updateDimensions(numberOfDimensions)).getAlgorithm(iterationCount, agentsCount);
                     functionChartPlotter.setInterval(selectedInterval);
                     functionChartPlotter.setChart(SIAlgorithm);
 
@@ -181,7 +182,7 @@ public class Main {
     }
 
     private void btnShowTFActionPerformed(ActionEvent e){
-        new FunctionDisplay(functions.get(cmbFunction.getSelectedIndex(), numberOfDimensions), 600, 600, 0, 0, true).display();
+        new FunctionDisplay(functions.get(cmbFunction.getSelectedIndex()).updateDimensions(numberOfDimensions), 600, 600, 0, 0, true).display();
     }
 
     private void fncActionPerformed(double... values){
@@ -201,7 +202,7 @@ public class Main {
         updateUI();
     }
 
-    Main(Functions functions){
+    Main(List<ObjectiveFunction> functions){
 
         this.functions = functions;
 
@@ -209,7 +210,7 @@ public class Main {
         this.init();
 
         functionChartPlotter =  new FunctionChartPlotter("Algorithm Viewer", 400, 400);
-        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, functions.get(0, numberOfDimensions)).getAlgorithm(100, 100);
+        SIAlgorithm SIAlgorithm = new AlgorithmFactory(0, functions.get(0).updateDimensions(numberOfDimensions)).getAlgorithm(100, 100);
         functionChartPlotter.setChart(SIAlgorithm);
 
         swarmDisplayChart = new XChartPanel(functionChartPlotter.getChart());
@@ -278,8 +279,8 @@ public class Main {
         lblFunctionComboBox.setFont(f1);
         cmbFunction = new JComboBox<>();
         cmbFunction.setFont(f1);
-        for (String fname: functions.getFunctionNames()) {
-            cmbFunction.addItem(fname);
+        for (ObjectiveFunction fname: functions) {
+            cmbFunction.addItem(fname.getClass().getSimpleName());
         }
         jToolBar.add(lblFunctionComboBox);
         jToolBar.add(cmbFunction);
@@ -500,7 +501,7 @@ public class Main {
         }
     }
 
-    public static void executeMain(Functions factory){
+    public static void executeMain(List<ObjectiveFunction> factory){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
