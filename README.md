@@ -1,5 +1,8 @@
 # SwarmX
 
+<p align="center">
+<img width="300" height="300" src="https://github.com/kolithawarnakulasooriya/SwarmX/blob/develop/wallppr.png" />
+</p>
 SwarmX is the java based natural inspired optimization library. This is intended for 
 researches, software engineers, developers and students who would like to use natural inspired optimization
 to solve their optimization problems. 
