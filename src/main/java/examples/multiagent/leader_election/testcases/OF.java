@@ -43,12 +43,12 @@ public class OF extends ObjectiveFunction {
 
     @Override
     public double[] getMin() {
-        return Commons.fill(-10, numberOfDimensions);
+        return Commons.fill(-100, numberOfDimensions);
     }
 
     @Override
     public double[] getMax() {
-        return Commons.fill(10, numberOfDimensions);
+        return Commons.fill(100, numberOfDimensions);
     }
 
     @Override

@@ -83,15 +83,22 @@ public class DataView extends JFrame{
             if(box instanceof Table)
                 tablePanel.add(((Table)box).getPanel());
         }
-
-        if(btnPanel.getComponentCount() > 0)
+        if(btnPanel.getComponentCount() > 0) {
+            btnPanel.setLayout(new GridLayout((int)Math.ceil(btnPanel.getComponentCount()/3),3));
             panel.add(btnPanel);
-        if(textPanel.getComponentCount() > 0)
+        }
+        if(textPanel.getComponentCount() > 0) {
+            textPanel.setLayout(new GridLayout((int) Math.ceil(textPanel.getComponentCount() / 3), 3));
             panel.add(textPanel);
-        if(chartPanel.getComponentCount() > 0)
+        }
+        if(chartPanel.getComponentCount() > 0) {
+            chartPanel.setLayout(new GridLayout((int) Math.ceil(chartPanel.getComponentCount() / 3), 3));
             panel.add(chartPanel);
-        if(tablePanel.getComponentCount() > 0)
+        }
+        if(tablePanel.getComponentCount() > 0) {
+            tablePanel.setLayout(new BorderLayout());
             panel.add(tablePanel);
+        }
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.add(panel);

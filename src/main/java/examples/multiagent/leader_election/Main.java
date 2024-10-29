@@ -402,6 +402,17 @@ public class Main {
         model.derive();
     }
 
+    public List<Drone> getLayer(int l){
+        List<Drone> layer = new ArrayList<>();
+
+        for(AbsAgent a: algorithm.getFirstAgents()){
+            Drone d = (Drone) a;
+            if(d.rank == l)
+                layer.add(d);
+        }
+        return  layer;
+    }
+
     public void performLE(int index) {
 
         List<Drone> layer = new ArrayList<>();
