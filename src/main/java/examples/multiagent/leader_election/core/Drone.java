@@ -11,6 +11,10 @@ import org.usa.soc.util.Randoms;
 import java.util.OptionalDouble;
 
 public class Drone extends Agent {
+
+    public RaftState raftState;
+
+    public int votesCount = 0;
     public int rank = -1;
 
     public Vector velocity = new Vector(2);
@@ -70,5 +74,14 @@ public class Drone extends Agent {
                 );
             }; break;
         }
+    }
+
+    public void becomeCandidate() {
+        this.raftState = RaftState.CANDIDATE;
+
+    }
+
+    public boolean requestVote(Drone selectedCandidate) {
+        return false;
     }
 }

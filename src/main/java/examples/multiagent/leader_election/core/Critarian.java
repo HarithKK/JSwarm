@@ -182,4 +182,56 @@ public class Critarian {
 
         return minAgent;
     }
+
+    private long getRandomTimeOut(){
+        return Randoms.rand(500, 3000);
+    }
+
+    public AbsAgent Raft(StateSpaceModel model, List<AbsAgent> agents){
+
+        // convert all agents as followers
+        for(AbsAgent a: agents){
+            ((Drone)a).raftState = RaftState.FOLLOWER;
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                int currentTerm = 0;
+                while(true){
+                    try {
+                        Drone selectedCandidate = (Drone)agents.get(Randoms.rand(0, agents.size()));
+
+                        if(selectedCandidate.raftState == RaftState.FOLLOWER){
+                            selectedCandidate.becomeCandidate();
+                            currentTerm++;
+
+                            for(AbsAgent a1: agents){
+                                Drone d1 = (Drone)a1;
+                                if(!d1.equals(selectedCandidate) && d1.raftState == RaftState.FOLLOWER){
+                                    if(d1.requestVote(selectedCandidate)){
+
+                                    }
+                                }
+                            }
+
+                            Thread.sleep(getRandomTimeOut());
+                        }else{
+                            System.out.println("All the agents become candidates");
+                            break;
+                        }
+
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            }
+        }).start();
+
+        return null;
+    }
+
+
 }
