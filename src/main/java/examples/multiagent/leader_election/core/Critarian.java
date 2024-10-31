@@ -13,6 +13,7 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.Randoms;
 
+import java.time.Duration;
 import java.util.List;
 
 public class Critarian {
@@ -184,53 +185,38 @@ public class Critarian {
     }
 
     private long getRandomTimeOut(){
-        return Randoms.rand(500, 3000);
+        return Randoms.rand(100, 500);
     }
 
-    public AbsAgent Raft(StateSpaceModel model, List<AbsAgent> agents){
+    public AbsAgent Raft(List<Drone> agents){
 
         // convert all agents as followers
-        for(AbsAgent a: agents){
-            ((Drone)a).raftState = RaftState.FOLLOWER;
+        for(Drone dr: agents){
+            dr.currentState = RaftState.FOLLOWER;
+            dr.log.add(new LogEntry(1, -1, "start"));
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        int candidateId =0;
+        while(true){
+            try {
+                Thread.sleep(getRandomTimeOut());
 
-                int currentTerm = 0;
-                while(true){
-                    try {
-                        Drone selectedCandidate = (Drone)agents.get(Randoms.rand(0, agents.size()));
+                Drone candidate = (Drone)agents.get(candidateId++);
+                candidate.initCandidate();
+                candidate.updateCandidate(agents);
 
-                        if(selectedCandidate.raftState == RaftState.FOLLOWER){
-                            selectedCandidate.becomeCandidate();
-                            currentTerm++;
-
-                            for(AbsAgent a1: agents){
-                                Drone d1 = (Drone)a1;
-                                if(!d1.equals(selectedCandidate) && d1.raftState == RaftState.FOLLOWER){
-                                    if(d1.requestVote(selectedCandidate)){
-
-                                    }
-                                }
-                            }
-
-                            Thread.sleep(getRandomTimeOut());
-                        }else{
-                            System.out.println("All the agents become candidates");
-                            break;
-                        }
-
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                System.out.println(candidate.getIndex() +": " +candidate.currentState.name()+", id="+candidateId);
+                if(candidate.currentState == RaftState.LEADER){
+                    return candidate;
                 }
 
+                if(candidateId >= agents.size()){
+                    candidateId =0;
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        }).start();
-
-        return null;
+        }
     }
 
 

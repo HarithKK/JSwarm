@@ -88,6 +88,17 @@ public class TestCase1 {
             }
         }));
 
+        Executor.getInstance().registerTextButton(new Button("LE Raft").addAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Executor.getInstance().getChartView().getView2D().pauseExecution();
+                AbsAgent agent = new Critarian().Raft(m.getLayer(1));
+                System.out.println(agent);
+                m.performLE(agent.getIndex());
+                Executor.getInstance().getChartView().getView2D().resumeExecution();
+            }
+        }));
+
         Executor.getInstance().registerTextButton(new Button("LE RUNALL").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

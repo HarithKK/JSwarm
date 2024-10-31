@@ -2,19 +2,35 @@ package examples.multiagent.leader_election.core;
 
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.Pair;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
-import org.usa.soc.util.Commons;
 import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.Randoms;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
 public class Drone extends Agent {
 
-    public RaftState raftState;
+    /**
+     * RAFT Vars
+     */
 
-    public int votesCount = 0;
+    int currentTerm = 0, voteCount = 1;
+    RaftState currentState = RaftState.FOLLOWER;
+    long startTime = System.currentTimeMillis();
+    long electionTimeDuration = getElectionTimeOut();
+    List<LogEntry> log = new ArrayList<LogEntry>();
+
+    Drone votedFor = null;
+
+    private long getElectionTimeOut(){
+        return (long) Randoms.rand(100,500);
+    }
+
     public int rank = -1;
 
     public Vector velocity = new Vector(2);
@@ -76,12 +92,76 @@ public class Drone extends Agent {
         }
     }
 
-    public void becomeCandidate() {
-        this.raftState = RaftState.CANDIDATE;
-
+    private int getLogTerm() {
+        if(log.isEmpty())
+            return 0;
+        return log.get(log.size()-1).term;
     }
 
-    public boolean requestVote(Drone selectedCandidate) {
-        return false;
+    private int getLogIndex() {
+        return log.size()-1;
+    }
+
+    public void initCandidate() {
+        currentState = RaftState.CANDIDATE;
+        currentTerm += 1;
+        electionTimeDuration = getElectionTimeOut();
+        startTime = System.currentTimeMillis();
+    }
+
+    public void initFollower(int term) {
+        currentState = RaftState.FOLLOWER;
+        currentTerm = term;
+    }
+
+    private void initLeader() {
+        currentState = RaftState.LEADER;
+    }
+
+    void updateCandidate(List<Drone> agents) {
+        votedFor = this;
+        voteCount = 1;
+        for(Drone d: agents){
+            int lastLogIndex = getLogIndex();
+            int lastLogTerm = getLogTerm();
+            Pair <Integer, Boolean> response = d.requestVoteRPC(currentTerm, this, lastLogIndex, lastLogTerm);
+
+            if(response.getFirst() > currentTerm){
+                initFollower(response.getFirst());
+                break;
+            }
+
+            if(response.getSecond() == true){
+                voteCount+=1;
+            }
+        }
+
+        System.out.println("\t"+voteCount+" ");
+
+        if(voteCount > Math.ceil((agents.size()+1)/2.0)){
+            initLeader();
+        }else{
+            initFollower(currentTerm);
+            electionTimeDuration = getElectionTimeOut();
+            startTime = System.currentTimeMillis();
+        }
+    }
+
+    public Pair<Integer, Boolean> requestVoteRPC(int term, Drone candidate, int lastLogIndex, int lastLogTerm) {
+        if(term < currentTerm){
+            return new Pair<>(currentTerm, false);
+        }else if(term > currentTerm){
+            initFollower(term);
+        }
+
+        if(votedFor == null || votedFor.equals(candidate)){
+            if(getLogTerm() > lastLogTerm || getLogTerm() == lastLogTerm && getLogIndex() > lastLogIndex){
+                return new Pair<>(currentTerm, false);
+            }else{
+                currentState = RaftState.CANDIDATE;
+                return new Pair<>(currentTerm, true);
+            }
+        }
+        return new Pair<>(currentTerm, false);
     }
 }
