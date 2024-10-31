@@ -21,7 +21,7 @@ import java.util.*;
 public class Main {
     public Algorithm algorithm;
     public Drone utmostLeader;
-    final int partialLinks, controlLinks;
+    public final int partialLinks, controlLinks;
 
     public StateSpaceModel model;
 

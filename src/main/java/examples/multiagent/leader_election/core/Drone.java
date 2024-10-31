@@ -28,7 +28,7 @@ public class Drone extends Agent {
     Drone votedFor = null;
 
     private long getElectionTimeOut(){
-        return (long) Randoms.rand(100,500);
+        return (long) Randoms.rand(500,1000);
     }
 
     public int rank = -1;
@@ -118,10 +118,13 @@ public class Drone extends Agent {
         currentState = RaftState.LEADER;
     }
 
-    void updateCandidate(List<Drone> agents) {
+    void updateCandidate(RealMatrix m, List<Drone> agents, int npLinks) {
         votedFor = this;
-        voteCount = 1;
         for(Drone d: agents){
+
+            if(m.getEntry(this.getIndex(), d.getIndex()) == 0){
+                continue;
+            }
             int lastLogIndex = getLogIndex();
             int lastLogTerm = getLogTerm();
             Pair <Integer, Boolean> response = d.requestVoteRPC(currentTerm, this, lastLogIndex, lastLogTerm);
@@ -136,9 +139,7 @@ public class Drone extends Agent {
             }
         }
 
-        System.out.println("\t"+voteCount+" ");
-
-        if(voteCount > Math.ceil((agents.size()+1)/2.0)){
+        if(voteCount > Math.ceil((npLinks+1)/2.0)){
             initLeader();
         }else{
             initFollower(currentTerm);

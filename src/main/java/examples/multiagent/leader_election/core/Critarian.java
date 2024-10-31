@@ -13,6 +13,7 @@ import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.Randoms;
 
+import javax.swing.plaf.nimbus.State;
 import java.time.Duration;
 import java.util.List;
 
@@ -185,10 +186,10 @@ public class Critarian {
     }
 
     private long getRandomTimeOut(){
-        return Randoms.rand(100, 500);
+        return Randoms.rand(500, 1000);
     }
 
-    public AbsAgent Raft(List<Drone> agents){
+    public AbsAgent Raft(StateSpaceModel model, List<Drone> agents, int npLinks){
 
         // convert all agents as followers
         for(Drone dr: agents){
@@ -203,7 +204,7 @@ public class Critarian {
 
                 Drone candidate = (Drone)agents.get(candidateId++);
                 candidate.initCandidate();
-                candidate.updateCandidate(agents);
+                candidate.updateCandidate(model.GA, agents, npLinks);
 
                 System.out.println(candidate.getIndex() +": " +candidate.currentState.name()+", id="+candidateId);
                 if(candidate.currentState == RaftState.LEADER){

@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 
 public class TestCase1 {
     public static void main(String[] args) {
-        Main m = new Main(20, 5, 20, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
+        Main m = new Main(20, 10, 20, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
@@ -92,7 +92,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().Raft(m.getLayer(1));
+                AbsAgent agent = new Critarian().Raft(m.model,m.getLayer(1), m.partialLinks);
                 System.out.println(agent);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
