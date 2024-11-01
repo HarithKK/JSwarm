@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public abstract class Algorithm{
@@ -263,12 +264,9 @@ public abstract class Algorithm{
     }
 
     public int findAgentListIndex(int index) {
-        for(int i=0; i<getFirstAgents().size(); i++){
-            if(index == getFirstAgents().get(i).getIndex()){
-                return i;
-            }
-        }
-        return -1;
+        return IntStream.range(0, getFirstAgents().size())
+                .filter(i-> getFirstAgents().get(i).getIndex()==index)
+                .findFirst().getAsInt();
     }
 
     public int findAgentListIndex(String name, int index) {

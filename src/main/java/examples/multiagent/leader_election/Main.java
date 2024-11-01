@@ -17,6 +17,7 @@ import org.usa.soc.util.Randoms;
 
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Main {
     public Algorithm algorithm;
@@ -423,7 +424,7 @@ public class Main {
                 layer.add(d);
         }
 
-        utmostLeader = layer.get(index);
+        utmostLeader = layer.stream().filter(d->d.getIndex() == index).findFirst().get();
         moveUp(utmostLeader);
 
         for(AbsAgent a: algorithm.getFirstAgents()){

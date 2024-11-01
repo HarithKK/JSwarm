@@ -1,17 +1,26 @@
 package examples.multiagent.leader_election.core;
 
+import examples.multiagent.leader_election.GHS_NASA_JPL.GHS;
+import examples.multiagent.leader_election.GHS_NASA_JPL.Node;
 import examples.multiagent.leader_election.testcases.OF;
 import examples.si.algo.also.ALSO;
 import examples.si.algo.cso.CSO;
 import examples.si.algo.mfa.MFA;
 import examples.si.algo.pso.PSO;
 import examples.si.algo.tsoa.TSOA;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.Pair;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.Randoms;
+import org.usa.soc.util.StringFormatter;
 
 import javax.swing.plaf.nimbus.State;
 import java.time.Duration;
@@ -163,7 +172,7 @@ public class Critarian {
         return algorithm.getBestDoubleValue();
     }
 
-    public AbsAgent SI(StateSpaceModel model, List<AbsAgent> agents, SICritatianType critatianType){
+    public AbsAgent SI(StateSpaceModel model, List<Drone> agents, SICritatianType critatianType){
 
         AbsAgent minAgent = null;
         double minValue=0;
@@ -220,5 +229,32 @@ public class Critarian {
         }
     }
 
+    private Node findMinJ(DirectedAcyclicGraph<Node,DefaultEdge> graph){
+
+        Node minNode =  null;
+
+        for(Node s: graph.vertexSet()){
+
+            if(minNode == null){
+                minNode = s;
+            }else{
+                minNode = minNode.J < s.J ? minNode : s;
+            }
+
+            for(DefaultEdge e: graph.edgesOf(s)){
+                Node t = graph.getEdgeTarget(e);
+                minNode = minNode.J < t.J ? minNode : t;
+            }
+        }
+
+        return minNode;
+    }
+
+    public Drone GHS(StateSpaceModel model, List<Drone> layer) {
+        GHS ghs = new GHS(layer, model.GA);
+        Node m = findMinJ(ghs.getGraph(ghs.findMST()));
+
+        return layer.stream().filter(d -> d.getIndex() == m.index).findFirst().get();
+    }
 
 }

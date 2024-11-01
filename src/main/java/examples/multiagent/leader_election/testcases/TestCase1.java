@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 
 public class TestCase1 {
     public static void main(String[] args) {
-        Main m = new Main(20, 10, 20, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
+        Main m = new Main(10, 5, 20, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
@@ -36,7 +36,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.TSOA);
+                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.TSOA);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
@@ -45,7 +45,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.ALSO);
+                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.ALSO);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
@@ -54,7 +54,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.CSO);
+                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.CSO);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
@@ -63,7 +63,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.PSO);
+                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.PSO);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
@@ -72,7 +72,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.MFA);
+                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.MFA);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
@@ -99,15 +99,26 @@ public class TestCase1 {
             }
         }));
 
+        Executor.getInstance().registerTextButton(new Button("LE GHS-JPL").addAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Executor.getInstance().getChartView().getView2D().pauseExecution();
+                AbsAgent agent = new Critarian().GHS(m.model,m.getLayer(1));
+                System.out.println(agent);
+                m.performLE(agent.getIndex());
+                Executor.getInstance().getChartView().getView2D().resumeExecution();
+            }
+        }));
+
         Executor.getInstance().registerTextButton(new Button("LE RUNALL").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.TSOA);
-                agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.MFA);
-                agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.CSO);
-                agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.ALSO);
-                agent = new Critarian().SI(m.model, m.algorithm.getFirstAgents(), Critarian.SICritatianType.PSO);
+                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.TSOA);
+                agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.MFA);
+                agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.CSO);
+                agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.ALSO);
+                agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.PSO);
                 m.performLE(agent.getIndex());
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
@@ -121,7 +132,7 @@ public class TestCase1 {
                 int index = Integer.parseInt(((TextField)Executor.getInstance().getDataMap().get("SI Index")).getData());
                 Drone d = (Drone)m.algorithm.getFirstAgents().get(index);
                 OF objectiveFunction = new OF(m.model.calcGcStep(m.model.getNN(), 1), d.getIndex(), d.getPosition().getClonedVector().toPoint2D());
-                org.usa.soc.si.runners.Main.executeMain(new FunctionsFactory().register(objectiveFunction).build());
+                org.usa.soc.si.runners.Main.executeGUI(new FunctionsFactory().register(objectiveFunction).build());
                 //Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
         }));
@@ -139,6 +150,7 @@ public class TestCase1 {
                         if(m.algorithm.isInitialized()){
                             Executor.getInstance().updateData("Agents", String.valueOf(m.algorithm.getFirstAgents().size()));
                             Executor.getInstance().updateData("Max Energy", String.valueOf(Matric.MaxControlEnergy(m.utmostLeader, 0)));
+
                         }
 
                     } catch (InterruptedException e) {

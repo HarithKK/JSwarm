@@ -165,4 +165,8 @@ public class Drone extends Agent {
         }
         return new Pair<>(currentTerm, false);
     }
+
+    public double calculateJ(){
+        return commEnergy + controlEnergy;
+    }
 }

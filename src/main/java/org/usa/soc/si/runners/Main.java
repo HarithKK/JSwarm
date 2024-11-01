@@ -501,7 +501,7 @@ public class Main {
         }
     }
 
-    public static void executeMain(List<ObjectiveFunction> factory){
+    public static void executeGUI(List<ObjectiveFunction> factory){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

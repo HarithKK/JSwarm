@@ -1,6 +1,5 @@
 package examples.si;
 
-import examples.si.algo.tsoa.Tree;
 import examples.si.benchmarks.cec2005.ShiftedSphereFunction;
 import examples.si.benchmarks.cec2018.MIDTLZ1;
 import examples.si.benchmarks.nonGeneral.classical.multimodal.nonseparable.*;
@@ -30,7 +29,7 @@ public class AllDisplay {
 
     public static void main(String[] args) {
 
-        Main.executeMain(new FunctionsFactory()
+        Main.executeGUI(new FunctionsFactory()
                 .register(AckleysFunction.class)
                 .register(BealeFunction.class)
                 .register(BoothsFunction.class)

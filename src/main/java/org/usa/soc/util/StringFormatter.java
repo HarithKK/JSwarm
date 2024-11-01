@@ -1,6 +1,9 @@
 package org.usa.soc.util;
 
+import examples.multiagent.leader_election.GHS_NASA_JPL.Node;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Stream.generate;
@@ -39,6 +42,19 @@ public class StringFormatter {
                 sb.append(",\t");
             }
             sb.replace(sb.length()-1, sb.length(), "|\n");
+        }
+        return sb.toString();
+    }
+
+    public static String toString(Graph<Node, DefaultEdge> g){
+        StringBuilder sb = new StringBuilder();
+
+        for(Node n: g.vertexSet()){
+            sb.append("["+n.index+", "+n.level+"]: ");
+            for(DefaultEdge e: g.edgesOf(n)){
+                sb.append("["+g.getEdgeTarget(e).index+"("+g.getEdgeWeight(e)+","+g.getEdgeTarget(e).level+")], ");
+            }
+            sb.append("\n");
         }
         return sb.toString();
     }
