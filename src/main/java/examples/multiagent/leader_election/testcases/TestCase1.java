@@ -9,15 +9,22 @@ import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.multiagent.view.Button;
+import org.usa.soc.multiagent.view.ChartSeries;
+import org.usa.soc.multiagent.view.ProgressiveChart;
 import org.usa.soc.multiagent.view.TextField;
 import org.usa.soc.si.runners.FunctionsFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestCase1 {
+
+    final static double safeRange = 25.0;
+
     public static void main(String[] args) {
-        Main m = new Main(10, 5, 20, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.RANDOM_THETA);
+        Main m = new Main(10, 5, 5, 100, 100, 80, safeRange, 0.001, 0.0001, 5, WalkType.FORWARD);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
@@ -137,24 +144,55 @@ public class TestCase1 {
             }
         }));
 
-        Executor.getInstance().executePlain2D("LF", m.algorithm, 700, 700, new Margins(0, 200, 0, 200));
+        Executor.getInstance().executePlain2D("LF", m.algorithm, 700, 700, new Margins(0, 200, 0, 600));
 
+        List<ChartSeries> ch = new ArrayList<>();
+        for(int i=0; i<m.agentsCount; i++){
+            ch.add(new ChartSeries(String.valueOf(i), 0));
+        }
+
+        Executor.getInstance().registerChart(
+                new ProgressiveChart(600, 300, "nodel_energy", "er", "steps")
+                .setMaxLength(500).setLegend(false).subscribe(ch).setTitle(true).setLegend(true));
+
+        Executor.getInstance().registerChart(
+                new ProgressiveChart(200, 80, "formation_error", "e", "steps")
+                        .setLegend(false)
+                        .setMaxLength(200)
+                        .subscribe(new ChartSeries("err", 0))
+        );
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true){
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
 
                         if(m.algorithm.isInitialized()){
+
+                            for(AbsAgent a: m.algorithm.getFirstAgents()){
+                                ((Drone)a).updateEnergyProfile();
+                            }
+
                             Executor.getInstance().updateData("Agents", String.valueOf(m.algorithm.getFirstAgents().size()));
                             Executor.getInstance().updateData("Max Energy", String.valueOf(Matric.MaxControlEnergy(m.utmostLeader, 0)));
+                            //Executor.getInstance().updateData("formation_error", "err", Matric.calculateTrackingError(m.algorithm.getFirstAgents(), safeRange));
 
+                            for(int i=0; i<m.agentsCount; i++){
+                                if(i>=m.algorithm.getFirstAgents().size()){
+                                    //Executor.getInstance().updateData("nodel_energy", i+"", 0);
+                                }else{
+                                    Drone d = (Drone)m.algorithm.getFirstAgents().get(i);
+                                    Executor.getInstance().updateData("nodel_energy", d.getIndex()+"", d.nodalEnergy);
+
+                                }
+                            }
                         }
 
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //throw new RuntimeException(e);
                     }
                 }
             }

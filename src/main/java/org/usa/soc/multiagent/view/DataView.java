@@ -92,7 +92,7 @@ public class DataView extends JFrame{
             panel.add(textPanel);
         }
         if(chartPanel.getComponentCount() > 0) {
-            chartPanel.setLayout(new GridLayout((int) Math.ceil(chartPanel.getComponentCount() / 3), 3));
+            chartPanel.setLayout(new GridLayout((int) Math.ceil(chartPanel.getComponentCount() / 2), 2));
             panel.add(chartPanel);
         }
         if(tablePanel.getComponentCount() > 0) {

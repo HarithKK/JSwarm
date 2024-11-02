@@ -9,9 +9,7 @@ import org.usa.soc.multiagent.Agent;
 import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.Randoms;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalDouble;
+import java.util.*;
 
 public class Drone extends Agent {
 
@@ -36,7 +34,7 @@ public class Drone extends Agent {
     public Vector velocity = new Vector(2);
 
     public double controlEnergy = 0;
-    public double commEnergy = 0;
+    public double commEnergy = 0, nodalEnergy =0;
 
     public double nLayeredLinks;
 
@@ -47,6 +45,7 @@ public class Drone extends Agent {
     @Override
     public void step() {
         this.getPosition().updateVector(velocity);
+
     }
 
     public RealMatrix getState() {
@@ -71,6 +70,8 @@ public class Drone extends Agent {
         if(od.isPresent()){
             commEnergy = od.getAsDouble();
         }
+        RealMatrix vm = velocity.toRealMatrix();
+        nodalEnergy += vm.transpose().multiply(vm).getNorm();
     }
 
     public void updateU(WalkType selection, double theta, double av) {
@@ -114,6 +115,9 @@ public class Drone extends Agent {
         currentTerm = term;
     }
 
+    /**
+     * For RAFT
+     */
     private void initLeader() {
         currentState = RaftState.LEADER;
     }
@@ -166,7 +170,11 @@ public class Drone extends Agent {
         return new Pair<>(currentTerm, false);
     }
 
+    /**
+     * For GHS
+     */
     public double calculateJ(){
         return commEnergy + controlEnergy;
     }
+
 }

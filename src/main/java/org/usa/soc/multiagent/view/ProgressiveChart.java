@@ -8,6 +8,7 @@ import org.knowm.xchart.style.Styler;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProgressiveChart extends DataBox {
@@ -46,6 +47,11 @@ public class ProgressiveChart extends DataBox {
         return this;
     }
 
+    public ProgressiveChart setTitle(boolean isVisible){
+        getChart().getStyler().setChartTitleVisible(true);
+        return this;
+    }
+
     public ProgressiveChart setLegendPosition(String pos, boolean isInside){
         if(isInside)
             switch (pos.toUpperCase()){
@@ -70,6 +76,18 @@ public class ProgressiveChart extends DataBox {
         chartSeries.series = getChart().addSeries(chartSeries.seriesName, null, chartSeries.yData);
         chartSeries.initialize();
         chartSeriesMap.put(chartSeries.seriesName, chartSeries);
+        return this;
+    }
+
+    public ProgressiveChart subscribe(List<ChartSeries> charts){
+
+        for(ChartSeries chartSeries: charts) {
+            chartSeries.yData.add(chartSeries.initValue);
+            chartSeries.xData.add(0);
+            chartSeries.series = getChart().addSeries(chartSeries.seriesName, null, chartSeries.yData);
+            chartSeries.initialize();
+            chartSeriesMap.put(chartSeries.seriesName, chartSeries);
+        }
         return this;
     }
 

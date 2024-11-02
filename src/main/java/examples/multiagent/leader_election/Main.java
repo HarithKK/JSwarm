@@ -26,7 +26,7 @@ public class Main {
 
     public StateSpaceModel model;
 
-    int agentsCount;
+    public int agentsCount;
     final Point2D centerLocation;
     final double r, angularVelocity;
     final double safeRage;
@@ -166,6 +166,8 @@ public class Main {
                             utmostLeader.getPosition().fixVector(Commons.fill(50, 2), Commons.fill(150,2));
                         else if(type == WalkType.STILL)
                             utmostLeader.hashCode();
+                        else if(type == WalkType.FORWARD)
+                            utmostLeader.velocity.setValues(new double[]{0, 1});
                         else
                             utmostLeader.updateU(type, theta, angularVelocity);
                     }
