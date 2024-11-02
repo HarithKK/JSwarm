@@ -20,7 +20,7 @@ public class AgentGroup extends SeriesData {
     public AgentGroup(String name){
 
         super(name);
-        this.agents = new ArrayList<>();
+        this.agents = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void addAgent(AbsAgent agent){
@@ -28,7 +28,9 @@ public class AgentGroup extends SeriesData {
     }
 
     public List<AbsAgent> getAgents() {
-        return agents;
+        synchronized (this.agents){
+            return agents;
+        }
     }
 
     public void sort(int direction){

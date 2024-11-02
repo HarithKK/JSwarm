@@ -109,7 +109,7 @@ public class ProgressiveChart extends DataBox {
         }
         ch.xData.add(step++);
         ch.yData.add(Double.valueOf(decimalFormat.format(data)));
-        if(maxLength > 0 && ch.yData.size() == maxLength){
+        if(maxLength > 0 && ch.xData.size() > maxLength){
             ch.yData.remove(0);
             ch.xData.remove(0);
         }

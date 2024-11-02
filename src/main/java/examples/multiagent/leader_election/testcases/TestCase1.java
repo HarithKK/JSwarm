@@ -24,10 +24,11 @@ public class TestCase1 {
     final static double safeRange = 25.0;
 
     public static void main(String[] args) {
-        Main m = new Main(10, 5, 5, 100, 100, 80, safeRange, 0.001, 0.0001, 5, WalkType.FORWARD);
+        Main m = new Main(10, 5, 5, 100, 100, 80, safeRange, 0.001, 0.0001, 5, WalkType.CIRCLE);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
+        Executor.getInstance().registerTextBox(new TextField("Leader ID"));
         TextField tf = new TextField("SI Index");
         tf.setData("0");
 
@@ -152,32 +153,33 @@ public class TestCase1 {
         }
 
         Executor.getInstance().registerChart(
-                new ProgressiveChart(600, 300, "nodel_energy", "er", "steps")
-                .setMaxLength(500).setLegend(false).subscribe(ch).setTitle(true).setLegend(true));
+                new ProgressiveChart(400, 300, "nodel_energy", "er", "steps")
+                .setMaxLength(50).subscribe(ch).setTitle(true).setLegend(true));
 
-        Executor.getInstance().registerChart(
-                new ProgressiveChart(200, 80, "formation_error", "e", "steps")
-                        .setLegend(false)
-                        .setMaxLength(200)
-                        .subscribe(new ChartSeries("err", 0))
-        );
+//        Executor.getInstance().registerChart(
+//                new ProgressiveChart(200, 80, "formation_error", "e", "steps")
+//                        .setLegend(false)
+//                        .setMaxLength(200)
+//                        .subscribe(new ChartSeries("err", 0))
+//        );
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true){
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(200);
 
                         if(m.algorithm.isInitialized()){
 
-                            for(AbsAgent a: m.algorithm.getFirstAgents()){
-                                ((Drone)a).updateEnergyProfile();
-                            }
+//                            List<AbsAgent> agents = m.algorithm.getFirstAgents();
+//                            for(AbsAgent a: agents){
+//                                ((Drone)a).updateEnergyProfile();
+//                            }
 
                             Executor.getInstance().updateData("Agents", String.valueOf(m.algorithm.getFirstAgents().size()));
                             Executor.getInstance().updateData("Max Energy", String.valueOf(Matric.MaxControlEnergy(m.utmostLeader, 0)));
-                            //Executor.getInstance().updateData("formation_error", "err", Matric.calculateTrackingError(m.algorithm.getFirstAgents(), safeRange));
+                            Executor.getInstance().updateData("Leader ID", String.valueOf(m.utmostLeader.getIndex()));
 
                             for(int i=0; i<m.agentsCount; i++){
                                 if(i>=m.algorithm.getFirstAgents().size()){

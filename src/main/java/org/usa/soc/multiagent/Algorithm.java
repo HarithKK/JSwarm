@@ -12,6 +12,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -20,7 +21,9 @@ public abstract class Algorithm{
 
     protected Flag isPaused = new Flag(), isKilled=new Flag(), initialized=new Flag(),actionStepPassed=new Flag();
 
-    protected Map<String, AgentGroup> agents = new HashMap<>();
+    protected ConcurrentHashMap<String, AgentGroup> agents = new ConcurrentHashMap<>();
+
+    private AgentGroup firstAgentGroup = null;
 
     protected int interval,stepsCount = -1;
     protected long currentStep;
@@ -56,7 +59,10 @@ public abstract class Algorithm{
     }
 
     public List<AbsAgent> getFirstAgents(){
-        return this.agents.get(agents.keySet().toArray()[0]).getAgents();
+        if(firstAgentGroup == null){
+            firstAgentGroup = this.agents.get(agents.keySet().toArray()[0]);
+        }
+        return firstAgentGroup.getAgents();
     }
 
     public void  runInitializer(){

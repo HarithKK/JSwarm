@@ -45,6 +45,7 @@ public class Drone extends Agent {
     @Override
     public void step() {
         this.getPosition().updateVector(velocity);
+        updateEnergyProfile();
 
     }
 
@@ -71,7 +72,7 @@ public class Drone extends Agent {
             commEnergy = od.getAsDouble();
         }
         RealMatrix vm = velocity.toRealMatrix();
-        nodalEnergy += vm.transpose().multiply(vm).getNorm();
+        nodalEnergy = vm.transpose().multiply(vm).getNorm();
     }
 
     public void updateU(WalkType selection, double theta, double av) {
