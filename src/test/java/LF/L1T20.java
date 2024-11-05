@@ -6,12 +6,12 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class L1T1 {
+public class L1T20 {
 
     @RepeatedTest(10)
     public void L1T5Raft(RepetitionInfo t) {
         try{
-            Core.executeForwardRaft(5,5,5,15, "L1T5", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
+            Core.executeForwardRaft(20,15,5,15, "L1T20", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -20,7 +20,7 @@ public class L1T1 {
     @RepeatedTest(10)
     public void L1T5Random(RepetitionInfo t) {
         try{
-            Core.executeForwardRandom(5,5,5,15, "L1T5", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
+            Core.executeForwardRandom(20,15,5,15, "L1T20", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -29,7 +29,7 @@ public class L1T1 {
     @RepeatedTest(10)
     public void L1T5GHS(RepetitionInfo t) {
         try{
-            Core.executeForwardGHS(5,5,5,15, "L1T5", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
+            Core.executeForwardGHS(20,15,5,15, "L1T20", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class L1T1 {
     @RepeatedTest(10)
     public void L1T5TSOA(RepetitionInfo t) {
         try{
-            Core.executeForwardTSOA(5,5,5,15, "L1T5", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
+            Core.executeForwardTSOA(20,15,5,15, "L1T20", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
         }catch (Exception e){
             e.printStackTrace();
         }

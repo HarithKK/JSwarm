@@ -174,6 +174,15 @@ public abstract class Algorithm{
         return agentGroup;
     }
 
+    protected AgentGroup addAgent(String key, AbsAgent agent) throws Exception{
+        if(!agents.keySet().contains(key)){
+            this.agents.put(key, new AgentGroup(key));
+        }
+        AgentGroup agentGroup = getAgents(key);
+        agentGroup.addAgent(agent);
+        return agentGroup;
+    }
+
 
     protected AgentGroup addAgents(String key, Class<?> agent, int count, Marker marker, Color color) throws Exception{
         AgentGroup agentGroup = new AgentGroup(key);

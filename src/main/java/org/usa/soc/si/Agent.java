@@ -1,6 +1,7 @@
 package org.usa.soc.si;
 
 import examples.si.algo.alo.Ant;
+import org.apache.commons.math3.util.Pair;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Vector;
 

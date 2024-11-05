@@ -7,6 +7,7 @@ import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
 import java.util.ArrayList;
@@ -44,6 +45,11 @@ public class GHS {
         for (DefaultEdge edge : graph.edgesOf(n)) {
             if (!graph.getEdgeSource(edge).inMST || !graph.getEdgeTarget(edge).inMST) {
                 if (minEdge == null || graph.getEdgeWeight(edge) < graph.getEdgeWeight(minEdge)) {
+                    try {
+                        Thread.sleep(Randoms.rand(10, 50));
+                    } catch (InterruptedException e) {
+
+                    }
                     minEdge = edge;
                 }
             }

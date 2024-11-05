@@ -335,9 +335,10 @@ public class Core {
                 if(step == leaderRemoveAt){
                     m.removeAgent(m.utmostLeader.getIndex());
                     long l = System.currentTimeMillis();
-                    int index = new Critarian().TSOA(m.model, m.getLayer(1));
+                    LE_TSOA le = new Critarian().TSOA_WPF(m.model, m.getLayer(1));
                     dataStore.setTime(System.currentTimeMillis() - l);
-                    m.performLE(index);
+                    m.pf = le.getPeretoFront();
+                    m.performLE(le.getBestIndex());
                 }
 
             }

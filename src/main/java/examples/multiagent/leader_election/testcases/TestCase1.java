@@ -26,7 +26,7 @@ public class TestCase1 {
     final static double safeRange = 25.0;
 
     public static void main(String[] args) {
-        Main m = new Main(10, 5, 5, 100, 100, 80, safeRange, 0.001, 0.0001, 5, WalkType.FORWARD);
+        Main m = new Main(5, 5, 3, safeRange, 0.001, 0.0001, WalkType.FORWARD);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
@@ -47,47 +47,47 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.TSOA);
-                m.performLE(agent.getIndex());
+                int index = new Critarian().TSOA(m.model, m.getLayer(1));
+                m.performLE(index);
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
         }));
-        Executor.getInstance().registerTextButton(new Button("LE ALSO").addAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.ALSO);
-                m.performLE(agent.getIndex());
-                Executor.getInstance().getChartView().getView2D().resumeExecution();
-            }
-        }));
-        Executor.getInstance().registerTextButton(new Button("LE CSO").addAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.CSO);
-                m.performLE(agent.getIndex());
-                Executor.getInstance().getChartView().getView2D().resumeExecution();
-            }
-        }));
-        Executor.getInstance().registerTextButton(new Button("LE PSO").addAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.PSO);
-                m.performLE(agent.getIndex());
-                Executor.getInstance().getChartView().getView2D().resumeExecution();
-            }
-        }));
-        Executor.getInstance().registerTextButton(new Button("LE MFA").addAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Executor.getInstance().getChartView().getView2D().pauseExecution();
-                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.MFA);
-                m.performLE(agent.getIndex());
-                Executor.getInstance().getChartView().getView2D().resumeExecution();
-            }
-        }));
+//        Executor.getInstance().registerTextButton(new Button("LE ALSO").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                Executor.getInstance().getChartView().getView2D().pauseExecution();
+//                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.ALSO);
+//                m.performLE(agent.getIndex());
+//                Executor.getInstance().getChartView().getView2D().resumeExecution();
+//            }
+//        }));
+//        Executor.getInstance().registerTextButton(new Button("LE CSO").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                Executor.getInstance().getChartView().getView2D().pauseExecution();
+//                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.CSO);
+//                m.performLE(agent.getIndex());
+//                Executor.getInstance().getChartView().getView2D().resumeExecution();
+//            }
+//        }));
+//        Executor.getInstance().registerTextButton(new Button("LE PSO").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                Executor.getInstance().getChartView().getView2D().pauseExecution();
+//                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.PSO);
+//                m.performLE(agent.getIndex());
+//                Executor.getInstance().getChartView().getView2D().resumeExecution();
+//            }
+//        }));
+//        Executor.getInstance().registerTextButton(new Button("LE MFA").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                Executor.getInstance().getChartView().getView2D().pauseExecution();
+//                AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), Critarian.SICritatianType.MFA);
+//                m.performLE(agent.getIndex());
+//                Executor.getInstance().getChartView().getView2D().resumeExecution();
+//            }
+//        }));
 
         Executor.getInstance().registerTextButton(new Button("LE Random").addAction(new ActionListener() {
             @Override
@@ -176,10 +176,10 @@ public class TestCase1 {
             public void run() {
                 while (true){
                     try {
-                        Thread.sleep(200);
 
                         if(m.algorithm.isInitialized()){
 
+                            Thread.sleep(5000);
 //                            List<AbsAgent> agents = m.algorithm.getFirstAgents();
 //                            for(AbsAgent a: agents){
 //                                ((Drone)a).updateEnergyProfile();
@@ -189,13 +189,9 @@ public class TestCase1 {
                             Executor.getInstance().updateData("Max Energy", String.valueOf(Matric.MaxControlEnergy(m.utmostLeader, 0)));
                             Executor.getInstance().updateData("Leader ID", String.valueOf(m.utmostLeader.getIndex()));
                             Executor.getInstance().updateData("Re Lambda", String.valueOf(Matric.eigenReLambda(m.model.A)));
-//                            for(int i=0; i<m.agentsCount; i++){
-//                                if(i<m.algorithm.getFirstAgents().size()){
-//                                    Drone d = (Drone)m.algorithm.getFirstAgents().get(i);
-//                                    Executor.getInstance().updateData("nodel_energy", d.getIndex()+"", d.nodalEnergy);
-//
-//                                }
-//                            }
+                            for(Drone d: m.getLayer(1)){
+                                Executor.getInstance().updateData("nodel_energy", d.getIndex()+"", d.nodalEnergy);
+                            }
                         }
 
                     } catch (Exception e) {

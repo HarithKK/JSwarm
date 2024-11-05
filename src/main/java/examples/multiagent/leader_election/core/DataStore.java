@@ -96,6 +96,7 @@ public class DataStore {
         MongoClient mongoClient = new MongoClient("leader-election");
 
         Document doc = new Document();
+        doc.append("desc", "Test-112");
         doc.append("test", name);
         doc.append("test-id", testId);
         doc.append("leader-election-algorithm", leaderElectionAlgorithm);
@@ -109,6 +110,8 @@ public class DataStore {
         doc.append("kAttract",m.kAttract);
         doc.append("exe_time",getTime());
         doc.append("walk_type",m.type.name());
+        doc.append("pareto_front",m.pf);
+
 //        doc.append("K0",m.model.K0);
 //        doc.append("K1",m.model.K1);
 //        doc.append("K2",m.model.K2);
@@ -142,7 +145,7 @@ public class DataStore {
         }
 
         doc.put("nodes", dm);
-        mongoClient.updateDocument(doc, "results-3");
+        mongoClient.updateDocument(doc, "results-1");
     }
 
 }

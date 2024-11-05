@@ -258,9 +258,15 @@ public class Critarian {
     }
 
     public int TSOA(StateSpaceModel model, List<Drone> layer){
-        LE_TSOA algo = new LE_TSOA(model.Gc, layer, 20);
+        LE_TSOA algo = new LE_TSOA(model, layer, 10);
         algo.run();
         return algo.getBestIndex();
+    }
+
+    public LE_TSOA TSOA_WPF(StateSpaceModel model, List<Drone> layer){
+        LE_TSOA algo = new LE_TSOA(model, layer, 10);
+        algo.run();
+        return algo;
     }
 
 }

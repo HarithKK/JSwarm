@@ -37,6 +37,8 @@ public class Main {
 
     public final WalkType type;
 
+    public List<Point2D> pf = new ArrayList<>();
+
     public Main(int ncLinks, int npLinks, int agentsCount, double cx, double cy, double r, double safeRage, double k1, double k2, double angularVelocity, WalkType type){
 
         this.partialLinks = npLinks;
@@ -52,39 +54,79 @@ public class Main {
         this.kAttract = k1;
         this.type = type;
 
-        initAlgorithm();
+        initAlgorithm(-1);
     }
 
     public Main(int ncLinks, int npLinks, int agentsCount){
         this(ncLinks, npLinks, agentsCount, 100, 100, 80, 25, 0.01, 0.001, 5, WalkType.CIRCLE);
     }
 
-    private void initAlgorithm() {
+    public Main(int ncLinks, int npLinks, int nLayers, double safeRage, double k1, double k2, WalkType type){
+
+        this.partialLinks = npLinks;
+        this.controlLinks = ncLinks;
+        this.centerLocation = new Point2D.Double();
+        this.centerLocation.setLocation(100, 100);
+        this.r = 25;
+        this.angularVelocity = 5;
+        this.safeRage = safeRage;
+        this.kReject = k2;
+        this.kAttract = k1;
+        this.type = type;
+
+        initAlgorithm(nLayers);
+    }
+
+    private void initAlgorithm(int maxLayer) {
         last_t = System.nanoTime();
 
         algorithm = new Algorithm() {
             @Override
             public void initialize() {
                 try {
-                    this.addAgents("drones", Drone.class, agentsCount);
-                    utmostLeader = findRoot();
+                    if(maxLayer < 0){
+                        this.addAgents("drones", Drone.class, agentsCount);
+                        utmostLeader = findRoot();
+                    }
+                    utmostLeader = new Drone();
                     utmostLeader.rank = 0;
                     utmostLeader.setX(centerLocation.getX());
                     utmostLeader.setY(centerLocation.getY());
                     utmostLeader.velocity.setValues(new double[]{0.0, 0.0});
 
                      // find Second Layer
-
-
                     Queue<AbsAgent> bfsQueue = new ArrayDeque<>();
                     bfsQueue.add(utmostLeader);
 
-                    do{
-                        List<AbsAgent> l = createNetwork(bfsQueue);
-                        for(AbsAgent a: l){
-                            bfsQueue.add(a);
+                    if(maxLayer < 0){
+                        do{
+                            List<AbsAgent> l = createNetwork(bfsQueue);
+                            for(AbsAgent a: l){
+                                bfsQueue.add(a);
+                            }
+                        }while(!bfsQueue.isEmpty());
+                    }else{
+                        int index = 0;
+                        while(!bfsQueue.isEmpty()){
+                            Drone ag = (Drone)bfsQueue.poll();
+                            this.addAgent("drones", ag);
+
+                            if(ag.rank==maxLayer){
+                                continue;
+                            }else{
+                                for(int i=0; i<(controlLinks-1);i++){
+                                    Drone d = new Drone();
+                                    d.setIndex(++index);
+                                    d.initPosition(getMargins());
+                                    d.rank = ag.rank+1;
+                                    ag.addConnection(d);
+                                    bfsQueue.add(d);
+                                }
+                            }
                         }
-                    }while(!bfsQueue.isEmpty());
+                        agentsCount = getFirstAgents().size();
+                        model = new StateSpaceModel(agentsCount);
+                    }
 
                     getFirstAgents().sort(new ByIndex());
 
@@ -167,7 +209,7 @@ public class Main {
                         else if(type == WalkType.STILL)
                             utmostLeader.hashCode();
                         else if(type == WalkType.FORWARD)
-                            utmostLeader.velocity.setValues(new double[]{0, 1});
+                            utmostLeader.velocity.setValues(new double[]{0, 2.5});
                         else if(type == WalkType.FOUTYFIVE)
                             utmostLeader.velocity.setValues(new double[]{1, 1});
                         else
