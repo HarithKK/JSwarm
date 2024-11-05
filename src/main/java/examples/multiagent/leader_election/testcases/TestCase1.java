@@ -6,6 +6,8 @@ import examples.multiagent.leader_election.core.Drone;
 import examples.multiagent.leader_election.core.Matric;
 import examples.multiagent.leader_election.core.WalkType;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.action.AfterEach;
+import org.usa.soc.core.action.Method;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.multiagent.view.Button;
@@ -24,11 +26,12 @@ public class TestCase1 {
     final static double safeRange = 25.0;
 
     public static void main(String[] args) {
-        Main m = new Main(10, 5, 5, 100, 100, 80, safeRange, 0.001, 0.0001, 5, WalkType.CIRCLE);
+        Main m = new Main(10, 5, 5, 100, 100, 80, safeRange, 0.001, 0.0001, 5, WalkType.FORWARD);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));
         Executor.getInstance().registerTextBox(new TextField("Leader ID"));
+        Executor.getInstance().registerTextBox(new TextField("Re Lambda"));
         TextField tf = new TextField("SI Index");
         tf.setData("0");
 
@@ -145,7 +148,12 @@ public class TestCase1 {
             }
         }));
 
-        Executor.getInstance().executePlain2D("LF", m.algorithm, 700, 700, new Margins(0, 200, 0, 600));
+        Executor.getInstance().executePlain2D("LF", m.algorithm, 700, 700, new Margins(0, 200, 0, 600), true, new AfterEach() {
+            @Override
+            public void execute(long step) {
+                return;
+            }
+        });
 
         List<ChartSeries> ch = new ArrayList<>();
         for(int i=0; i<m.agentsCount; i++){
@@ -180,16 +188,14 @@ public class TestCase1 {
                             Executor.getInstance().updateData("Agents", String.valueOf(m.algorithm.getFirstAgents().size()));
                             Executor.getInstance().updateData("Max Energy", String.valueOf(Matric.MaxControlEnergy(m.utmostLeader, 0)));
                             Executor.getInstance().updateData("Leader ID", String.valueOf(m.utmostLeader.getIndex()));
-
-                            for(int i=0; i<m.agentsCount; i++){
-                                if(i>=m.algorithm.getFirstAgents().size()){
-                                    //Executor.getInstance().updateData("nodel_energy", i+"", 0);
-                                }else{
-                                    Drone d = (Drone)m.algorithm.getFirstAgents().get(i);
-                                    Executor.getInstance().updateData("nodel_energy", d.getIndex()+"", d.nodalEnergy);
-
-                                }
-                            }
+                            Executor.getInstance().updateData("Re Lambda", String.valueOf(Matric.eigenReLambda(m.model.A)));
+//                            for(int i=0; i<m.agentsCount; i++){
+//                                if(i<m.algorithm.getFirstAgents().size()){
+//                                    Drone d = (Drone)m.algorithm.getFirstAgents().get(i);
+//                                    Executor.getInstance().updateData("nodel_energy", d.getIndex()+"", d.nodalEnergy);
+//
+//                                }
+//                            }
                         }
 
                     } catch (Exception e) {

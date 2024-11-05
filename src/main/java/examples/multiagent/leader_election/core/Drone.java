@@ -34,7 +34,7 @@ public class Drone extends Agent {
     public Vector velocity = new Vector(2);
 
     public double controlEnergy = 0;
-    public double commEnergy = 0, nodalEnergy =0;
+    public double commEnergy = 0, nodalEnergy =0, betweennessCentrality=0;
 
     public double nLayeredLinks;
 
@@ -116,6 +116,11 @@ public class Drone extends Agent {
         currentTerm = term;
     }
 
+    @Override
+    public String toString(){
+        return String.valueOf(getIndex());
+    }
+
     /**
      * For RAFT
      */
@@ -176,6 +181,10 @@ public class Drone extends Agent {
      */
     public double calculateJ(){
         return commEnergy + controlEnergy;
+    }
+
+    public static Drone toDrone(AbsAgent a){
+        return (Drone)a;
     }
 
 }

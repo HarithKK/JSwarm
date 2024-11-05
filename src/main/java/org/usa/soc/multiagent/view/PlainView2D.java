@@ -6,6 +6,8 @@ import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.action.AfterEach;
+import org.usa.soc.core.action.Method;
 import org.usa.soc.core.ds.Markers;
 import org.usa.soc.core.ds.SeriesDataObject;
 import org.usa.soc.multiagent.AgentGroup;
@@ -26,6 +28,8 @@ public class PlainView2D {
 
     private int interval = 0;
     private Flag isExecuting = new Flag();
+
+    private AfterEach afterEach = null;
 
     private Action action;
 
@@ -91,11 +95,18 @@ public class PlainView2D {
                             action.performAction(step);
                         }
                         isExecuting.set();
+                        if(afterEach != null){
+                            afterEach.execute(step);
+                        }
                     }
         });
 
         this.getAlgo().run();
     }
+
+    public void afterEach(AfterEach method){
+        this.afterEach = method;
+    };
 
     public boolean contains(AbsAgent agent){
         Map<String, AgentGroup> data = this.getAlgo().getAgentsMap();
@@ -224,9 +235,7 @@ public class PlainView2D {
     }
 
     public void removeAgent(int index){
-        if(index >= algo.getFirstAgents().size())
-            return;
-        algo.getFirstAgents().remove(index);
+        algo.removeAgent(index);
     }
     public void redrawNetwork(){
         for(XYSeries series: connectionMaps.keySet()){

@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election;
 
+import examples.multiagent.common.E;
 import examples.multiagent.leader_election.core.Critarian;
 import examples.multiagent.leader_election.core.Drone;
 import examples.multiagent.leader_election.core.StateSpaceModel;
@@ -8,6 +9,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.comparators.ByIndex;
@@ -20,7 +22,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
-    public Algorithm algorithm;
+    public static Algorithm algorithm;
     public Drone utmostLeader;
     public final int partialLinks, controlLinks;
 
@@ -28,12 +30,12 @@ public class Main {
 
     public int agentsCount;
     final Point2D centerLocation;
-    final double r, angularVelocity;
-    final double safeRage;
-    final double kReject, kAttract;
+    public final double r, angularVelocity;
+    public final double safeRage;
+    public final double kReject, kAttract;
     public long last_t;
 
-    final private WalkType type;
+    public final WalkType type;
 
     public Main(int ncLinks, int npLinks, int agentsCount, double cx, double cy, double r, double safeRage, double k1, double k2, double angularVelocity, WalkType type){
 
@@ -63,7 +65,6 @@ public class Main {
         algorithm = new Algorithm() {
             @Override
             public void initialize() {
-
                 try {
                     this.addAgents("drones", Drone.class, agentsCount);
                     utmostLeader = findRoot();
@@ -98,7 +99,6 @@ public class Main {
                     throw new RuntimeException(e);
                 }
             }
-
 
             private List<AbsAgent> createNetwork(Queue<AbsAgent> q) {
 
@@ -168,6 +168,8 @@ public class Main {
                             utmostLeader.hashCode();
                         else if(type == WalkType.FORWARD)
                             utmostLeader.velocity.setValues(new double[]{0, 1});
+                        else if(type == WalkType.FOUTYFIVE)
+                            utmostLeader.velocity.setValues(new double[]{1, 1});
                         else
                             utmostLeader.updateU(type, theta, angularVelocity);
                     }
@@ -205,6 +207,7 @@ public class Main {
                         }
                     }
 
+                    updateGCS();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -254,112 +257,196 @@ public class Main {
 
         };
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                int step = 0;
+//                RealMatrix Gc = null;
+//
+//                while(true){
+//
+//                    try {
+//                        Thread.sleep(10);
+//
+//                        if (algorithm.isInitialized() && !algorithm.isPaused()){
+//
+//                            for (int idi = 0; idi < agentsCount; idi++){
+//                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+//                                    continue;
+//                                }
+//                                Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+//                                for (int idj = idi; idj < agentsCount; idj++){
+//                                    if (idj == idi) {
+//                                        continue;
+//                                    }
+//                                    Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
+//                                    if(xi.rank == xj.rank){
+//                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+//                                        model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
+//                                    }
+//                                }
+//                            }
+//
+//                            for (int idi = 0; idi < agentsCount; idi++){
+//                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+//                                    continue;
+//                                }
+//                                ((Drone) algorithm.getFirstAgents().get(idi)).nLayeredLinks =0;
+//                            }
+//
+//                            for (int idi = 0; idi < agentsCount; idi++) {
+//                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+//                                    continue;
+//                                }
+//                                Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+//                                List<Drone> tmpDrones = new ArrayList<>();
+//                                for (int idj = idi; idj < agentsCount; idj++) {
+//                                    if (idj == idi) {
+//                                        continue;
+//                                    }
+//                                    Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
+//                                    if(xi.rank == xj.rank){
+//                                        tmpDrones.add(xj);
+//                                    }
+//                                }
+//
+//                                tmpDrones.sort(new Comparator<AbsAgent>() {
+//                                    @Override
+//                                    public int compare(AbsAgent o1, AbsAgent o2) {
+//                                        if (o1.getPosition().getDistance(xi.getPosition()) < o2.getPosition().getDistance(xi.getPosition())) {
+//                                            return -1;
+//                                        }else{
+//                                            return 1;
+//                                        }
+//                                    }
+//                                });
+//
+//                                for(int ii=0; ii<tmpDrones.size();ii++){
+//                                    Drone xj = (Drone)tmpDrones.get(ii);
+//                                    if(xi.nLayeredLinks < partialLinks && xj.nLayeredLinks < partialLinks){
+//                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
+//                                        model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
+//                                        xi.nLayeredLinks++;
+//                                        xj.nLayeredLinks++;
+//                                        //System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
+//                                    }else{
+//                                        break;
+//                                    }
+//                                }
+//                                algorithm.getFirstAgents().sort(new ByIndex());
+//                            }
+//                            model.derive();
+//                            if(Gc == null){
+//                                Gc= MatrixUtils.createRealMatrix(model.A.getRowDimension(), model.A.getColumnDimension());
+//                            }
+//                            Gc = Gc.add(model.A.power(step).multiply(model.B).multiply(model.B.transpose()).multiply(model.A.transpose().power(step)));
+//                            step += 1;
+//                            if(step > 10){
+//                                step = 0;
+//                                Gc = Gc.scalarMultiply(0.0);
+//                            }
+//                        }
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
+    }
 
-                int step = 0;
-                RealMatrix Gc = null;
+    private void updateGCS(){
+        int step = 0;
+        RealMatrix Gc = null;
 
-                while(true){
-
-                    try {
-                        Thread.sleep(50);
-
-                        if (algorithm.isInitialized() && !algorithm.isPaused()){
-
-                            for (int idi = 0; idi < agentsCount; idi++){
-                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
-                                    continue;
-                                }
-                                Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
-                                for (int idj = idi; idj < agentsCount; idj++){
-                                    if (idj == idi) {
-                                        continue;
-                                    }
-                                    Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
-                                    if(xi.rank == xj.rank){
-                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
-                                        model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
-                                    }
-                                }
-                            }
-
-                            for (int idi = 0; idi < agentsCount; idi++){
-                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
-                                    continue;
-                                }
-                                ((Drone) algorithm.getFirstAgents().get(idi)).nLayeredLinks =0;
-                            }
-
-                            for (int idi = 0; idi < agentsCount; idi++) {
-                                if (utmostLeader != null && idi == utmostLeader.getIndex()) {
-                                    continue;
-                                }
-                                Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
-                                List<Drone> tmpDrones = new ArrayList<>();
-                                for (int idj = idi; idj < agentsCount; idj++) {
-                                    if (idj == idi) {
-                                        continue;
-                                    }
-                                    Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
-                                    if(xi.rank == xj.rank){
-                                        tmpDrones.add(xj);
-                                    }
-                                }
-
-                                tmpDrones.sort(new Comparator<AbsAgent>() {
-                                    @Override
-                                    public int compare(AbsAgent o1, AbsAgent o2) {
-                                        if (o1.getPosition().getDistance(xi.getPosition()) < o2.getPosition().getDistance(xi.getPosition())) {
-                                            return -1;
-                                        }else{
-                                            return 1;
-                                        }
-                                    }
-                                });
-
-                                for(int ii=0; ii<tmpDrones.size();ii++){
-                                    Drone xj = (Drone)tmpDrones.get(ii);
-                                    if(xi.nLayeredLinks < partialLinks && xj.nLayeredLinks < partialLinks){
-                                        model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
-                                        model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
-                                        xi.nLayeredLinks++;
-                                        xj.nLayeredLinks++;
-                                        //System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
-                                    }else{
-                                        break;
-                                    }
-                                }
-                                Executor.getAlgorithm().getFirstAgents().sort(new ByIndex());
-                            }
-                            model.derive();
-                            if(Gc == null){
-                                Gc= MatrixUtils.createRealMatrix(model.A.getRowDimension(), model.A.getColumnDimension());
-                            }
-                            Gc = Gc.add(model.A.power(step).multiply(model.B).multiply(model.B.transpose()).multiply(model.A.transpose().power(step)));
-                            step += 1;
-                            if(step > 10){
-                                step = 0;
-                                Gc = Gc.scalarMultiply(0.0);
-                            }
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+        for (int idi = 0; idi < agentsCount; idi++){
+            if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+                continue;
+            }
+            Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+            for (int idj = idi; idj < agentsCount; idj++){
+                if (idj == idi) {
+                    continue;
+                }
+                Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
+                if(xi.rank == xj.rank){
+                    model.GA.setEntry(xi.getIndex(), xj.getIndex(), 0);
+                    model.GA.setEntry(xj.getIndex(), xi.getIndex(), 0);
                 }
             }
-        }).start();
+        }
+
+        for (int idi = 0; idi < agentsCount; idi++){
+            if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+                continue;
+            }
+            ((Drone) algorithm.getFirstAgents().get(idi)).nLayeredLinks =0;
+        }
+
+        for (int idi = 0; idi < agentsCount; idi++) {
+            if (utmostLeader != null && idi == utmostLeader.getIndex()) {
+                continue;
+            }
+            Drone xi = (Drone) algorithm.getFirstAgents().get(idi);
+            List<Drone> tmpDrones = new ArrayList<>();
+            for (int idj = idi; idj < agentsCount; idj++) {
+                if (idj == idi) {
+                    continue;
+                }
+                Drone xj = (Drone) algorithm.getFirstAgents().get(idj);
+                if(xi.rank == xj.rank){
+                    tmpDrones.add(xj);
+                }
+            }
+
+            tmpDrones.sort(new Comparator<AbsAgent>() {
+                @Override
+                public int compare(AbsAgent o1, AbsAgent o2) {
+                    if (o1.getPosition().getDistance(xi.getPosition()) < o2.getPosition().getDistance(xi.getPosition())) {
+                        return -1;
+                    }else{
+                        return 1;
+                    }
+                }
+            });
+
+            for(int ii=0; ii<tmpDrones.size();ii++){
+                Drone xj = (Drone)tmpDrones.get(ii);
+                if(xi.nLayeredLinks < partialLinks && xj.nLayeredLinks < partialLinks){
+                    model.GA.setEntry(xi.getIndex(), xj.getIndex(), 1);
+                    model.GA.setEntry(xj.getIndex(), xi.getIndex(), 1);
+                    xi.nLayeredLinks++;
+                    xj.nLayeredLinks++;
+                    //System.out.println("Link Added ["+xi.getIndex()+","+xj.getIndex()+"]");
+                }else{
+                    break;
+                }
+            }
+            algorithm.getFirstAgents().sort(new ByIndex());
+        }
+        model.derive();
+        if(Gc == null){
+            Gc= MatrixUtils.createRealMatrix(model.A.getRowDimension(), model.A.getColumnDimension());
+        }
+        Gc = Gc.add(model.A.power(step).multiply(model.B).multiply(model.B.transpose()).multiply(model.A.transpose().power(step)));
+        step += 1;
+        if(step > 10){
+            step = 0;
+            Gc = Gc.scalarMultiply(0.0);
+        }
     }
+
 
     public void removeAgent(int index){
         int listIndex = algorithm.findAgentListIndex(index);
-        Executor.getInstance().getChartView().getView2D().removeAgent(listIndex);
+        algorithm.removeAgent(listIndex);
         model.replace(index, 0);
         if(index == 0)
             utmostLeader = null;
 
-        Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        if(Executor.getAlgorithm() != null){
+            Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        }
         this.agentsCount--;
     }
 
@@ -435,7 +522,9 @@ public class Main {
                 utmostLeader.addConnection(d);
         }
 
-        Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        if(Executor.getAlgorithm() != null){
+            Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        }
         model.GA = model.GA.scalarMultiply(0);
         model.GB = model.GB.scalarMultiply(0);
         formStateSpaceModel();

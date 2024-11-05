@@ -4,6 +4,8 @@ import examples.si.algo.ms.Monky;
 import org.knowm.xchart.style.markers.Marker;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.Flag;
+import org.usa.soc.core.action.AfterAll;
+import org.usa.soc.core.action.EmptyAction;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.exceptions.KillOptimizerException;
 import org.usa.soc.util.Logger;
@@ -25,13 +27,15 @@ public abstract class Algorithm{
 
     private AgentGroup firstAgentGroup = null;
 
-    protected int interval,stepsCount = -1;
+    protected int interval, stepsCount = -1;
     protected long currentStep;
     private Margins margins;
 
     protected long nanoDuration;
 
     private StepCompleted stepCompleted;
+
+    private AfterAll executionCompletedAction;
 
     public Algorithm(int interval){
         this.setInterval(interval);
@@ -63,6 +67,10 @@ public abstract class Algorithm{
             firstAgentGroup = this.agents.get(agents.keySet().toArray()[0]);
         }
         return firstAgentGroup.getAgents();
+    }
+
+    public void changeStepCount(int stepsCount){
+        this.stepsCount =stepsCount;
     }
 
     public void  runInitializer(){
@@ -132,11 +140,13 @@ public abstract class Algorithm{
             step++;
         }
         this.nanoDuration = System.nanoTime() - this.nanoDuration;
-        this.executionCompleted();
+        if(this.executionCompletedAction != null){
+            executionCompletedAction.execute();
+        }
     }
 
-    public void executionCompleted(){
-        return;
+    public void executionCompleted(AfterAll action){
+        this.executionCompletedAction = action;
     }
 
     public void stepCompleted(long step) throws InterruptedException, KillOptimizerException {
@@ -181,6 +191,18 @@ public abstract class Algorithm{
         agentGroup.setAgents(new ArrayList<>());
         this.agents.put(key, agentGroup);
         return agentGroup;
+    }
+
+    public void removeAgent(int index){
+        if(index >= getFirstAgents().size())
+            return;
+        getFirstAgents().remove(index);
+    }
+
+    public void removeAgent(String type, int index){
+        if(index >= getAgents(type).getAgents().size())
+            return;
+        getAgents(type).getAgents().remove(index);
     }
 
     private List<AbsAgent> createAgents(int count, Class<?> agent) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

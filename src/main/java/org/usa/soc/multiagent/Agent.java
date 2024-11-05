@@ -10,6 +10,11 @@ import java.util.List;
 public abstract class Agent extends AbsAgent {
     private Margins margines;
 
+    public Agent(){
+        this.numberOfDimensions = 2;
+        this.position = new Vector(2);
+    }
+
     public void initPosition(Margins m){
         if(m != null){
             this.minBoundary = new double[]{m.xMin, m.yMin};

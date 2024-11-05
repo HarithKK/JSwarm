@@ -257,4 +257,10 @@ public class Critarian {
         return layer.stream().filter(d -> d.getIndex() == m.index).findFirst().get();
     }
 
+    public int TSOA(StateSpaceModel model, List<Drone> layer){
+        LE_TSOA algo = new LE_TSOA(model.Gc, layer, 20);
+        algo.run();
+        return algo.getBestIndex();
+    }
+
 }

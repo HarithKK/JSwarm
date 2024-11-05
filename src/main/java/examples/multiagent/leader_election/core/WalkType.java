@@ -6,5 +6,7 @@ public enum WalkType {
     CIRCLE,
     FIX,
     STILL,
-    FORWARD
+    FORWARD,
+
+    FOUTYFIVE
 }

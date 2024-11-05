@@ -2,6 +2,7 @@ package org.usa.soc.multiagent.runners;
 
 import org.apache.commons.math3.linear.RealMatrix;
 import org.usa.soc.core.Flag;
+import org.usa.soc.core.action.AfterEach;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.multiagent.view.*;
@@ -111,6 +112,30 @@ public class Executor {
                 if(!getDataMap().isEmpty()){
                     dataView = new DataView("Data View");
                     dataView.setVisible(w);
+                }
+            }
+        });
+    }
+
+    public void executePlain2D(String title, Algorithm algorithm, int w, int h, Margins m, boolean autoStart, AfterEach action){
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                iAlgorithm = algorithm;
+                chartView = new ChartView(title, algorithm, w, h, m);
+                chartView.getView2D().getChart().getStyler().setLegendVisible(isLegendVisible.isSet());
+                getChartView().setCustomActions(customActions);
+                getChartView().setInterval(150);
+                if(action != null){
+                    chartView.getView2D().afterEach(action);
+                }
+                if(!getDataMap().isEmpty()){
+                    dataView = new DataView("Data View");
+                    dataView.setVisible(w);
+                }
+
+                if(autoStart){
+                    getChartView().autoStart();
                 }
             }
         });
