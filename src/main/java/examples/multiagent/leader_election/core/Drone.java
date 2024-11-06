@@ -187,4 +187,10 @@ public class Drone extends Agent {
         return (Drone)a;
     }
 
+    public void removeConnection(int index) {
+        Optional<AbsAgent> a = getConncetions().stream().filter(d->d.getIndex() == index).findFirst();
+        if(!a.isEmpty()){
+            this.getConncetions().remove(a.get());
+        }
+    }
 }

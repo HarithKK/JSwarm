@@ -1,5 +1,6 @@
 package LF;
 
+import examples.multiagent.leader_election.Main;
 import examples.multiagent.leader_election.core.WalkType;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
@@ -11,7 +12,8 @@ public class L1T20 {
     @RepeatedTest(10)
     public void L1T5Raft(RepetitionInfo t) {
         try{
-            Core.executeForwardRaft(20,15,5,15, "L1T20", t.getCurrentRepetition(), 150, 350, WalkType.FORWARD);
+            Main m = new Main(20, 5, 1, 15,0.001, 0.0001, WalkType.FORWARD);
+            Core.executeForwardRaft(m, "L1T20", t.getCurrentRepetition(), 150, 350);
         }catch (Exception e){
             e.printStackTrace();
         }

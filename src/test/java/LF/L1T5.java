@@ -6,7 +6,7 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class L1T1 {
+public class L1T5 {
 
     @RepeatedTest(10)
     public void L1T5Raft(RepetitionInfo t) {

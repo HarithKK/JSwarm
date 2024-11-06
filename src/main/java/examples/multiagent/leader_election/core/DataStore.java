@@ -3,12 +3,14 @@ package examples.multiagent.leader_election.core;
 import examples.multiagent.leader_election.Main;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
+import org.apache.commons.math3.util.Pair;
 import org.bson.Document;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.data.MongoClient;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DataStore {
 
@@ -110,7 +112,7 @@ public class DataStore {
         doc.append("kAttract",m.kAttract);
         doc.append("exe_time",getTime());
         doc.append("walk_type",m.type.name());
-        doc.append("pareto_front",m.pf);
+        doc.append("pareto_front",m.pf.stream().map(d -> new Document().append("x", d.getX()).append("y", d.getY())).collect(Collectors.toList()));
 
 //        doc.append("K0",m.model.K0);
 //        doc.append("K1",m.model.K1);
@@ -145,7 +147,7 @@ public class DataStore {
         }
 
         doc.put("nodes", dm);
-        mongoClient.updateDocument(doc, "results-1");
+        mongoClient.updateDocument(doc, "results-2");
     }
 
 }

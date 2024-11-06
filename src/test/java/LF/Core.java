@@ -65,7 +65,7 @@ public class Core {
                     long l = System.currentTimeMillis();
                     AbsAgent agent = new Critarian().SI(m.model, m.getLayer(1), c);
                     dataStore.setTime(System.currentTimeMillis() - l);
-                    m.performLE(agent.getIndex());
+                    m.performLE(agent.getIndex(), 0);
                 }
 
             }
@@ -133,7 +133,7 @@ public class Core {
                     long l = System.currentTimeMillis();
                     AbsAgent agent = new Critarian().Raft(m.model, m.algorithm.getFirstAgents().stream().map(Drone::toDrone).collect(Collectors.toList()), m.partialLinks);
                     dataStore.setTime(System.currentTimeMillis() - l);
-                    m.performLE(agent.getIndex());
+                    m.performLE(agent.getIndex(), 0);
                 }
 
             }
@@ -199,9 +199,9 @@ public class Core {
                 if(step == leaderRemoveAt){
                     m.removeAgent(m.utmostLeader.getIndex());
                     long l = System.currentTimeMillis();
-                    int index = new Critarian().random(0, m.algorithm.getFirstAgents().size());
+                    int index = new Critarian().random(m.algorithm.getFirstAgents());
                     dataStore.setTime(System.currentTimeMillis() - l);
-                    m.performLE(index);
+                    m.performLE(index, 0);
                 }
 
             }
@@ -269,7 +269,276 @@ public class Core {
                     long l = System.currentTimeMillis();
                     AbsAgent agent = new Critarian().GHS(m.model, m.algorithm.getFirstAgents().stream().map(Drone::toDrone).collect(Collectors.toList()));
                     dataStore.setTime(System.currentTimeMillis() - l);
-                    m.performLE(agent.getIndex());
+                    m.performLE(agent.getIndex(), 0);
+                }
+
+            }
+        });
+
+        m.algorithm.executionCompleted(new AfterAll() {
+            @Override
+            public void execute() {
+                dataStore.uploadToMongo(testName, testId, m, "GHS");
+            }
+        });
+        m.algorithm.changeStepCount(exitAt);
+        m.algorithm.setInterval(10);
+
+        m.algorithm.run();
+    }
+
+    public static void executeForwardTSOA(Main m, String testName, int testId, int leaderRemoveAt, int exitAt) throws Exception {
+        DataStore dataStore = new DataStore();
+
+        m.algorithm.setMargins(new Margins(0, 200, 0, 600));
+        m.algorithm.initialize();
+        m.algorithm.setInitialized(true);
+
+        for(AbsAgent a: m.algorithm.getFirstAgents()){
+            dataStore.registerNode(a);
+        }
+
+        m.algorithm.setStepCompleted(new StepCompleted() {
+            @Override
+            public void performAction(long step) {
+
+                Map<Drone, Double> bw = Matric.calculateBetweennessCentrality(m.algorithm.getFirstAgents());
+                for(AbsAgent ag: m.algorithm.getFirstAgents()){
+                    Drone a = (Drone)ag;
+                    (a).updateEnergyProfile();
+                    if(bw.containsKey(a)){
+                        a.betweennessCentrality = bw.get(a);
+                    }
+                    dataStore.updateNodalData(a);
+                }
+
+                if(m.utmostLeader != null){
+                    dataStore.updateCurrentLeader(m.utmostLeader.getIndex());
+                    dataStore.updateControlEnergy(Matric.MaxControlEnergy(m.utmostLeader, 0));
+                }else{
+
+                    double e = 0;
+                    List<Drone> ds = m.getLayer(1);
+
+                    for(Drone a: ds){
+                        e = Math.max(e, Matric.MaxControlEnergy(a, 0));
+                    }
+                    dataStore.updateCurrentLeader(-1);
+                    dataStore.updateControlEnergy(e);
+                }
+
+                dataStore.updateA(m.model.GA);
+                dataStore.updateMinEigenValue(Matric.eigenReLambda(m.model.GA));
+                dataStore.updateTrackingError(Matric.calculateTrackingError(m.algorithm.getFirstAgents(),m.safeRage));
+
+                if(step == leaderRemoveAt){
+                    m.removeAgent(m.utmostLeader.getIndex());
+                    long l = System.currentTimeMillis();
+                    LE_TSOA le = new Critarian().TSOA_WPF(m.model, m.getLayer(1));
+                    dataStore.setTime(System.currentTimeMillis() - l);
+                    m.pf = le.getPeretoFront();
+                    m.performLE(le.getBestIndex(), 0);
+                }
+
+            }
+        });
+
+        m.algorithm.executionCompleted(new AfterAll() {
+            @Override
+            public void execute() {
+                dataStore.uploadToMongo(testName, testId, m, "TSOA_LE");
+            }
+        });
+        m.algorithm.changeStepCount(exitAt);
+        m.algorithm.setInterval(10);
+
+        m.algorithm.run();
+    }
+
+    public static void executeForwardRaft(Main m, String testName, int testId, int leaderRemoveAt, int exitAt) throws Exception {
+        DataStore dataStore = new DataStore();
+
+        m.algorithm.setMargins(new Margins(0, 200, 0, 600));
+        m.algorithm.initialize();
+        m.algorithm.setInitialized(true);
+
+        for(AbsAgent a: m.algorithm.getFirstAgents()){
+            dataStore.registerNode(a);
+        }
+
+        m.algorithm.setStepCompleted(new StepCompleted() {
+            @Override
+            public void performAction(long step) {
+
+                Map<Drone, Double> bw = Matric.calculateBetweennessCentrality(m.algorithm.getFirstAgents());
+                for(AbsAgent ag: m.algorithm.getFirstAgents()){
+                    Drone a = (Drone)ag;
+                    (a).updateEnergyProfile();
+                    if(bw.containsKey(a)){
+                        a.betweennessCentrality = bw.get(a);
+                    }
+                    dataStore.updateNodalData(a);
+                }
+
+                if(m.utmostLeader != null){
+                    dataStore.updateCurrentLeader(m.utmostLeader.getIndex());
+                    dataStore.updateControlEnergy(Matric.MaxControlEnergy(m.utmostLeader, 0));
+                }else{
+
+                    double e = 0;
+                    List<Drone> ds = m.getLayer(1);
+
+                    for(Drone a: ds){
+                        e = Math.max(e, Matric.MaxControlEnergy(a, 0));
+                    }
+                    dataStore.updateCurrentLeader(-1);
+                    dataStore.updateControlEnergy(e);
+                }
+
+                dataStore.updateA(m.model.GA);
+                dataStore.updateMinEigenValue(Matric.eigenReLambda(m.model.GA));
+                dataStore.updateTrackingError(Matric.calculateTrackingError(m.algorithm.getFirstAgents(),m.safeRage));
+
+                if(step == leaderRemoveAt){
+                    m.removeAgent(m.utmostLeader.getIndex());
+                    long l = System.currentTimeMillis();
+                    AbsAgent agent = new Critarian().Raft(m.model, m.algorithm.getFirstAgents().stream().map(Drone::toDrone).collect(Collectors.toList()), m.partialLinks);
+                    dataStore.setTime(System.currentTimeMillis() - l);
+                    m.performLE(agent.getIndex(), 0);
+                }
+
+            }
+        });
+
+        m.algorithm.executionCompleted(new AfterAll() {
+            @Override
+            public void execute() {
+                dataStore.uploadToMongo(testName, testId, m, "Raft");
+            }
+        });
+        m.algorithm.changeStepCount(exitAt);
+        m.algorithm.setInterval(10);
+
+        m.algorithm.run();
+    }
+
+    public static void executeForwardRandom(Main m, String testName, int testId, int leaderRemoveAt, int exitAt) throws Exception {
+        DataStore dataStore = new DataStore();
+
+        m.algorithm.setMargins(new Margins(0, 200, 0, 600));
+        m.algorithm.initialize();
+        m.algorithm.setInitialized(true);
+
+        for(AbsAgent a: m.algorithm.getFirstAgents()){
+            dataStore.registerNode(a);
+        }
+
+        m.algorithm.setStepCompleted(new StepCompleted() {
+            @Override
+            public void performAction(long step) {
+
+                Map<Drone, Double> bw = Matric.calculateBetweennessCentrality(m.algorithm.getFirstAgents());
+                for(AbsAgent ag: m.algorithm.getFirstAgents()){
+                    Drone a = (Drone)ag;
+                    (a).updateEnergyProfile();
+                    if(bw.containsKey(a)){
+                        a.betweennessCentrality = bw.get(a);
+                    }
+                    dataStore.updateNodalData(a);
+                }
+
+                if(m.utmostLeader != null){
+                    dataStore.updateCurrentLeader(m.utmostLeader.getIndex());
+                    dataStore.updateControlEnergy(Matric.MaxControlEnergy(m.utmostLeader, 0));
+                }else{
+
+                    double e = 0;
+                    List<Drone> ds = m.getLayer(1);
+
+                    for(Drone a: ds){
+                        e = Math.max(e, Matric.MaxControlEnergy(a, 0));
+                    }
+                    dataStore.updateCurrentLeader(-1);
+                    dataStore.updateControlEnergy(e);
+                }
+
+                dataStore.updateA(m.model.GA);
+                dataStore.updateMinEigenValue(Matric.eigenReLambda(m.model.GA));
+                dataStore.updateTrackingError(Matric.calculateTrackingError(m.algorithm.getFirstAgents(),m.safeRage));
+
+                if(step == leaderRemoveAt){
+                    m.removeAgent(m.utmostLeader.getIndex());
+                    long l = System.currentTimeMillis();
+                    int index = new Critarian().random(0, m.algorithm.getFirstAgents().size());
+                    dataStore.setTime(System.currentTimeMillis() - l);
+                    m.performLE(index, 0);
+                }
+
+            }
+        });
+
+        m.algorithm.executionCompleted(new AfterAll() {
+            @Override
+            public void execute() {
+                dataStore.uploadToMongo(testName, testId, m, "Random");
+            }
+        });
+        m.algorithm.changeStepCount(exitAt);
+        m.algorithm.setInterval(10);
+
+        m.algorithm.run();
+    }
+
+    public static void executeForwardGHS(Main m, String testName, int testId, int leaderRemoveAt, int exitAt) throws Exception {
+        DataStore dataStore = new DataStore();
+
+        m.algorithm.setMargins(new Margins(0, 200, 0, 600));
+        m.algorithm.initialize();
+        m.algorithm.setInitialized(true);
+
+        for(AbsAgent a: m.algorithm.getFirstAgents()){
+            dataStore.registerNode(a);
+        }
+
+        m.algorithm.setStepCompleted(new StepCompleted() {
+            @Override
+            public void performAction(long step) {
+
+                Map<Drone, Double> bw = Matric.calculateBetweennessCentrality(m.algorithm.getFirstAgents());
+                for(AbsAgent ag: m.algorithm.getFirstAgents()){
+                    Drone a = (Drone)ag;
+                    (a).updateEnergyProfile();
+                    if(bw.containsKey(a)){
+                        a.betweennessCentrality = bw.get(a);
+                    }
+                    dataStore.updateNodalData(a);
+                }
+
+                if(m.utmostLeader != null){
+                    dataStore.updateCurrentLeader(m.utmostLeader.getIndex());
+                    dataStore.updateControlEnergy(Matric.MaxControlEnergy(m.utmostLeader, 0));
+                }else{
+
+                    double e = 0;
+                    List<Drone> ds = m.getLayer(1);
+
+                    for(Drone a: ds){
+                        e = Math.max(e, Matric.MaxControlEnergy(a, 0));
+                    }
+                    dataStore.updateCurrentLeader(-1);
+                    dataStore.updateControlEnergy(e);
+                }
+
+                dataStore.updateA(m.model.GA);
+                dataStore.updateMinEigenValue(Matric.eigenReLambda(m.model.GA));
+                dataStore.updateTrackingError(Matric.calculateTrackingError(m.algorithm.getFirstAgents(),m.safeRage));
+
+                if(step == leaderRemoveAt){
+                    m.removeAgent(m.utmostLeader.getIndex());
+                    long l = System.currentTimeMillis();
+                    AbsAgent agent = new Critarian().GHS(m.model, m.algorithm.getFirstAgents().stream().map(Drone::toDrone).collect(Collectors.toList()));
+                    dataStore.setTime(System.currentTimeMillis() - l);
+                    m.performLE(agent.getIndex(), 0);
                 }
 
             }
@@ -338,7 +607,7 @@ public class Core {
                     LE_TSOA le = new Critarian().TSOA_WPF(m.model, m.getLayer(1));
                     dataStore.setTime(System.currentTimeMillis() - l);
                     m.pf = le.getPeretoFront();
-                    m.performLE(le.getBestIndex());
+                    m.performLE(le.getBestIndex(), 0);
                 }
 
             }

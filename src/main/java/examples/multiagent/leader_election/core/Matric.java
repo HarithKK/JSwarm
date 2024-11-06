@@ -57,7 +57,7 @@ public class Matric {
 
         for(AbsAgent a: agent){
             for(AbsAgent a1: a.getConncetions()){
-                if(g.getEdge(a, a1) == null){
+                if(g.containsVertex(a) && g.containsVertex(a1) && g.getEdge(a, a1) == null && a != a1){
                     g.addEdge(a,a1);
                 }
             }

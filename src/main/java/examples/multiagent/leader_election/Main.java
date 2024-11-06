@@ -114,7 +114,7 @@ public class Main {
                             if(ag.rank==maxLayer){
                                 continue;
                             }else{
-                                for(int i=0; i<(controlLinks-1);i++){
+                                for(int i=0; i<(int)(controlLinks/2);i++){
                                     Drone d = new Drone();
                                     d.setIndex(++index);
                                     d.initPosition(getMargins());
@@ -502,6 +502,19 @@ public class Main {
         }
     }
 
+    private void moveUp(Drone a, int layer){
+        if(layer<0){
+            return;
+        }
+        a.rank = layer;
+        if(a.getConncetions().isEmpty())
+            return;
+
+        for(AbsAgent c: a.getConncetions()){
+            moveUp((Drone)c, layer+1);
+        }
+    }
+
     private void formStateSpaceModel() {
         for(int i=0; i< agentsCount; i++){
             for(int j=0; j< agentsCount; j++){
@@ -545,18 +558,13 @@ public class Main {
         return  layer;
     }
 
-    public void performLE(int index) {
-
-        List<Drone> layer = new ArrayList<>();
-
+    private void electLeader(int index, int expectedLayer){
         for(AbsAgent a: algorithm.getFirstAgents()){
-            Drone d = (Drone) a;
-            if(d.rank == 1)
-                layer.add(d);
+            ((Drone)a).removeConnection(index);
         }
 
-        utmostLeader = layer.stream().filter(d->d.getIndex() == index).findFirst().get();
-        moveUp(utmostLeader);
+        utmostLeader = (Drone) algorithm.getFirstAgents().stream().filter(d->d.getIndex() == index).findFirst().get();
+        moveUp(utmostLeader, expectedLayer);
 
         for(AbsAgent a: algorithm.getFirstAgents()){
             Drone d = (Drone) a;
@@ -570,6 +578,14 @@ public class Main {
         model.GA = model.GA.scalarMultiply(0);
         model.GB = model.GB.scalarMultiply(0);
         formStateSpaceModel();
+    }
+
+    public void performLE(int index) {
+        electLeader(index, 0);
+    }
+
+    public void performLE(int index, int expectedLayer) {
+        electLeader(index, expectedLayer);
     }
 
 }

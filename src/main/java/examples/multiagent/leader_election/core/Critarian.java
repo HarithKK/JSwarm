@@ -25,6 +25,7 @@ import org.usa.soc.util.StringFormatter;
 import javax.swing.plaf.nimbus.State;
 import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Critarian {
 
@@ -45,6 +46,11 @@ public class Critarian {
 
     public void setIterationCount(int iterationCount) {
         this.iterationCount = iterationCount;
+    }
+
+    public int random(List<AbsAgent> firstAgents) {
+        List<Integer>ty = firstAgents.stream().map(d->d.getIndex()).collect(Collectors.toList());
+        return ty.get(Randoms.rand(0, ty.size()-1));
     }
 
     public enum Critarians {
