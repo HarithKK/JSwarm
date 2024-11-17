@@ -6,127 +6,33 @@ import examples.si.algo.tsoa.Tree;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
+import org.bson.Document;
+import org.usa.soc.comparators.ParetoComparator;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.Agent;
 import org.usa.soc.si.AgentComparator;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.util.Commons;
+import org.usa.soc.util.ParetoUtils;
 import org.usa.soc.util.Randoms;
 
+import javax.print.Doc;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-class FlyingTree extends Agent{
-    private int index;
-    private Vector originalPosition;
-
-    private List<FlyingTree> newPopulation = new ArrayList<>();
-
-    private double lambda = 1.0;
-    private double w, distance;
-
-    private double fitnessValue2;
-
-    public FlyingTree(Drone drone){
-        this.numberOfDimensions = 2;
-        this.setPosition(drone.getPosition().getClonedVector());
-        this.setOriginalPosition(drone.getPosition().getClonedVector());
-        this.setIndex(drone.getIndex());
-        setFitnessValue(0);
-        setFitnessValue2(0);
-    }
-
-    public FlyingTree(FlyingTree source){
-        this.numberOfDimensions = 2;
-        this.setPosition(source.getPosition().getClonedVector());
-        this.setOriginalPosition(source.getPosition().getClonedVector());
-        this.setIndex(source.getIndex());
-        setFitnessValue(0);
-        setFitnessValue2(0);
-    }
-
-
-    public void setFitnessValues(Pair<Double, Double> values) {
-        this.fitnessValue = values.getFirst();
-        this.fitnessValue2 = values.getSecond();
-    }
-
-    @Override
-    public int getIndex() {
-        return index;
-    }
-
-    @Override
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public Vector getOriginalPosition() {
-        return originalPosition;
-    }
-
-    public void setOriginalPosition(Vector originalPosition) {
-        this.originalPosition = originalPosition;
-    }
-
-    public List<FlyingTree> getNewPopulation() {
-        return newPopulation;
-    }
-
-    public void setNewPopulation(List<FlyingTree> newPopulation) {
-        this.newPopulation = newPopulation;
-    }
-
-    public void addNewPopulation(FlyingTree newPopulationTree) {
-        this.newPopulation.add(newPopulationTree);
-    }
-
-    public double getLambda() {
-        return lambda;
-    }
-
-    public void setLambda(double lambda) {
-        this.lambda = lambda;
-    }
-
-    public double getW() {
-        return w;
-    }
-
-    public void setW(double w) {
-        this.w = w;
-    }
-
-    public double getCalculatedDistance(Vector predicted) {
-        this.distance = this.getPosition().operate(Vector.OPERATOR.SUB, predicted).getMagnitude();
-        return this.distance;
-    }
-
-    public void updateLambda(double p, double totalLabmda, double totalDistance) {
-        this.setLambda((Math.pow(this.distance, -p) * this.w ) / ((totalDistance)* totalLabmda));
-    }
-
-    public void updateWeight(double totalFitnessValue) {
-        this.setW(this.fitnessValue / totalFitnessValue);
-    }
-
-    public double getFitnessValue2() {
-        return fitnessValue2;
-    }
-
-    public void setFitnessValue2(double fitnessValue2) {
-        this.fitnessValue2 = fitnessValue2;
-    }
-}
 
 public class LE_TSOA {
     private int stepCount = 0;
     private List<FlyingTree> trees = new ArrayList<>();
 
-    private List<FlyingTree> po;
+    List<Double> gbestHistory = new ArrayList<>();
+
+    private Collection<FlyingTree> po;
 
     private RealMatrix gc;
 
@@ -140,6 +46,8 @@ public class LE_TSOA {
     private int deligator, seedsCount;
 
     private FlyingTree gbest;
+
+    private ParetoComparator<FlyingTree> comparators = new ParetoComparator<>();
 
     public LE_TSOA(StateSpaceModel model, List<Drone> drones, int count){
         this.stepCount = count;
@@ -155,6 +63,20 @@ public class LE_TSOA {
         z = new Vector(this.d);
         deligator = (int)(trees.size() * fertileHalf);
         seedsCount = 10;
+
+        comparators.add(new Comparator<FlyingTree>() {
+            @Override
+            public int compare(FlyingTree o1, FlyingTree o2) {
+                return Double.compare(o1.getFitnessValue(), o2.getFitnessValue());
+            }
+        });
+
+        comparators.add(new Comparator<FlyingTree>() {
+            @Override
+            public int compare(FlyingTree o1, FlyingTree o2) {
+                return Double.compare(o1.getFitnessValue2(), o2.getFitnessValue2());
+            }
+        });
     }
 
     private Pair<Double, Double> f(FlyingTree t){
@@ -254,26 +176,29 @@ public class LE_TSOA {
         }
 
         for(FlyingTree t: trees){
-            t.addNewPopulation(t);
-            List<FlyingTree> po = findParetoOptimal(t.getNewPopulation());
+            //t.addNewPopulation(t);
+            po = ParetoUtils.getMinimalFrontierOf(t.getNewPopulation(), comparators);
             if(po != null && po.size() >0){
-                FlyingTree o = findOptimal(po);
+                FlyingTree o = po.iterator().next();
                 t.setPosition(o.getPosition().getClonedVector());
                 t.setFitnessValue(o.fitnessValue);
             }
         }
 
-        po = findParetoOptimal(this.trees);
+        po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
         if(po != null && po.size() >0){
-            FlyingTree o = findOptimal(po);
+            FlyingTree o = po.iterator().next();
             gbest.setPosition(o.getPosition().getClonedVector());
             gbest.setFitnessValue(o.fitnessValue);
+            gbestHistory.add(gbest.getFitnessValue());
         }
-
-        System.out.println("----- Pareto F"+po.size());
 
         for(FlyingTree t: trees){
             t.setNewPopulation(new ArrayList<>());
+            t.f1.add(t.getFitnessValue());
+            t.f2.add(t.getFitnessValue2());
+            t.x.add(t.getPosition().getValue(0));
+            t.y.add(t.getPosition().getValue(1));
         }
     }
 
@@ -304,7 +229,7 @@ public class LE_TSOA {
 
             for (FlyingTree other : ts) {
                 if (other != solution) {
-                    if (other.getFitnessValue() >= solution.getFitnessValue() && other.getFitnessValue2() >= solution.getFitnessValue2()) {
+                    if (other.getFitnessValue() < solution.getFitnessValue() && other.getFitnessValue2() < solution.getFitnessValue2()) {
                         isDominated = true;
                         break;
                     }
@@ -339,5 +264,25 @@ public class LE_TSOA {
     }
     public int getBestIndex(){
         return gbest.getIndex();
+    }
+
+    public Document getHistory(){
+        List<Document> nodes = new ArrayList<>();
+        for(FlyingTree t : trees){
+            nodes.add(new Document()
+                    .append("f1", t.f1)
+                    .append("f2", t.f2)
+                    .append("x", t.x)
+                    .append("y", t.y));
+        }
+        return new Document().append("nodes", nodes).append("best_value", gbestHistory);
+    }
+
+    public void gc(){
+        gbestHistory = null;
+        trees =null;
+        po=null;
+        comparators = null;
+        System.gc();
     }
 }

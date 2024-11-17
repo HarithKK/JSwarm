@@ -1,4 +1,4 @@
-package org.usa.soc.multiagent.comparators;
+package org.usa.soc.comparators;
 
 import org.usa.soc.core.AbsAgent;
 

@@ -26,7 +26,7 @@ public class TestCase1 {
     final static double safeRange = 25.0;
 
     public static void main(String[] args) {
-        Main m = new Main(20, 5, 2, safeRange, 0.001, 0.0001, WalkType.FORWARD);
+        Main m = new Main(15, 5, 3, safeRange, 0.001, 0.0001, WalkType.FORWARD);
 
         Executor.getInstance().registerTextBox(new TextField("Max Energy"));
         Executor.getInstance().registerTextBox(new TextField("Agents"));

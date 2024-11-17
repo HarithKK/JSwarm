@@ -43,7 +43,7 @@ public class L2T15 {
     public void L2T5TSOA(RepetitionInfo t) {
         try{
             Main m = new Main(15, 5, 2, 15,0.001, 0.0001, WalkType.FORWARD);
-            Core.executeForwardTSOA(m, "L2T15", t.getCurrentRepetition(), 150, 350);
+            Core.executeForwardTSOAInd(m, "L2T15", t.getCurrentRepetition(), 150, 350);
         }catch (Exception e){
             e.printStackTrace();
         }

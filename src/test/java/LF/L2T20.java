@@ -40,10 +40,10 @@ public class L2T20 {
     }
 
     @RepeatedTest(10)
-    public void L2T20xTSOA(RepetitionInfo t) {
+    public void L2T20TSOA(RepetitionInfo t) {
         try{
             Main m = new Main(20, 5, 2, 15,0.001, 0.0001, WalkType.FORWARD);
-            Core.executeForwardTSOA(m, "L2T20", t.getCurrentRepetition(), 150, 350);
+            Core.executeForwardTSOAInd(m, "L2T20-3", t.getCurrentRepetition(), 150, 350);
         }catch (Exception e){
             e.printStackTrace();
         }

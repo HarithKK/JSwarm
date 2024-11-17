@@ -94,6 +94,15 @@ public class Randoms {
         return v.fixVector(min,max);
     }
 
+    public static Vector getRandomGaussianVector(int D, double min, double max, double mean, double std) {
+        Vector v = new Vector(D);
+        NormalDistribution nd = new NormalDistribution(mean, std);
+        for(int i=0;i<D;i++){
+            v.setValue((min + nd.sample()*(max-min)),i);
+        }
+        return v;
+    }
+
     public static Vector getNormalRandomVector(int D, double[] min, double[] max, double m, double n) {
         Vector v = new Vector(D);
         for(int i=0;i<D;i++){

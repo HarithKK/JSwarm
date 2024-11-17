@@ -28,6 +28,16 @@ public class StringFormatter {
         return sb.toString();
     }
 
+    public static String toJoinString(double p[]){
+        StringBuilder sb = new StringBuilder();
+        for (double d: p) {
+            sb.append(d);
+            sb.append(",");
+        }
+        sb.replace(sb.length()-1, sb.length(), "");
+        return sb.toString();
+    }
+
     public static String format(String i, int routes){
         String s = i + generate(() -> " ").limit(routes).collect(joining());
         return s.substring(0,routes);

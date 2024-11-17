@@ -1,7 +1,5 @@
 package examples.multiagent.leader_election;
 
-import examples.multiagent.common.E;
-import examples.multiagent.leader_election.core.Critarian;
 import examples.multiagent.leader_election.core.Drone;
 import examples.multiagent.leader_election.core.StateSpaceModel;
 import examples.multiagent.leader_election.core.WalkType;
@@ -9,17 +7,14 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
 import org.usa.soc.core.AbsAgent;
-import org.usa.soc.core.ds.Margins;
-import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
-import org.usa.soc.multiagent.comparators.ByIndex;
+import org.usa.soc.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.util.Commons;
 import org.usa.soc.util.Randoms;
 
 import java.awt.geom.Point2D;
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class Main {
     public static Algorithm algorithm;
@@ -36,6 +31,8 @@ public class Main {
     public long last_t;
 
     public final WalkType type;
+
+    private double freeMemory;
 
     public List<Point2D> pf = new ArrayList<>();
 
@@ -63,6 +60,7 @@ public class Main {
 
     public Main(int ncLinks, int npLinks, int nLayers, double safeRage, double k1, double k2, WalkType type){
 
+        System.gc();
         this.partialLinks = npLinks;
         this.controlLinks = ncLinks;
         this.centerLocation = new Point2D.Double();
@@ -114,7 +112,12 @@ public class Main {
                             if(ag.rank==maxLayer){
                                 continue;
                             }else{
-                                for(int i=0; i<(int)(controlLinks/2);i++){
+                                int mx = 4;// (int)(controlLinks*0.3);
+                                if(ag.rank==0){
+                                    mx = controlLinks;
+                                    // Randoms.rand((int)(controlLinks*0.3), controlLinks-1);
+                                }
+                                for(int i=0; i<mx;i++){
                                     Drone d = new Drone();
                                     d.setIndex(++index);
                                     d.initPosition(getMargins());
@@ -129,6 +132,7 @@ public class Main {
                     }
 
                     getFirstAgents().sort(new ByIndex());
+                    System.out.println("Agent Count = "+agentsCount);
 
                     // Fill A and B Matrices
                     model.setK0(Commons.fill(0.1, agentsCount));
@@ -588,4 +592,11 @@ public class Main {
         electLeader(index, expectedLayer);
     }
 
+    public double getFreeMemory() {
+        return freeMemory;
+    }
+
+    public void setFreeMemory() {
+        this.freeMemory = Runtime.getRuntime().freeMemory();
+    }
 }

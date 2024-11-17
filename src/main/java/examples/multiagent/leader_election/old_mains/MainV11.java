@@ -11,7 +11,7 @@ import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Algorithm;
-import org.usa.soc.multiagent.comparators.ByIndex;
+import org.usa.soc.comparators.ByIndex;
 import org.usa.soc.multiagent.runners.Executor;
 import org.usa.soc.multiagent.view.*;
 import org.usa.soc.multiagent.view.Button;

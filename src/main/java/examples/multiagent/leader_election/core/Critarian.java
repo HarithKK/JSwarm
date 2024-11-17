@@ -14,16 +14,21 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.usa.soc.comparators.ParetoComparator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
+import org.usa.soc.util.ParetoUtils;
 import org.usa.soc.util.Randoms;
 import org.usa.soc.util.StringFormatter;
 
 import javax.swing.plaf.nimbus.State;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +56,49 @@ public class Critarian {
     public int random(List<AbsAgent> firstAgents) {
         List<Integer>ty = firstAgents.stream().map(d->d.getIndex()).collect(Collectors.toList());
         return ty.get(Randoms.rand(0, ty.size()-1));
+    }
+
+    public int TSOA_IND(StateSpaceModel model, List<Drone> layer) {
+        List<Drone.Tree> trees = new ArrayList<>();
+        ParetoComparator<Drone.Tree> comparators = new ParetoComparator<>();
+        comparators.add(new Comparator<Drone.Tree>() {
+            @Override
+            public int compare(Drone.Tree o1, Drone.Tree o2) {
+                return Double.compare(o1.f1, o2.f1);
+            }
+        });
+        comparators.add(new Comparator<Drone.Tree>() {
+            @Override
+            public int compare(Drone.Tree o1, Drone.Tree o2) {
+                return Double.compare(o1.f2, o2.f2);
+            }
+        });
+
+        for(Drone d: layer){
+            trees.add(d.executeTSOA(10, model));
+        }
+
+        Collection<Drone.Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
+        int tx = po.iterator().next().index;
+        po.clear();
+        po = null;
+
+//        trees.sort(new Comparator<Drone.Tree>() {
+//            @Override
+//            public int compare(Drone.Tree o1, Drone.Tree o2) {
+//                if(o1.f1 < o2.f1){
+//                    return -1;
+//                }else{
+//                    return 1;
+//                }
+//            }
+//        });
+//        int tx = trees.get(0).index;
+
+        trees = null;
+        comparators = null;
+        System.gc();
+        return tx;
     }
 
     public enum Critarians {
@@ -270,7 +318,7 @@ public class Critarian {
     }
 
     public LE_TSOA TSOA_WPF(StateSpaceModel model, List<Drone> layer){
-        LE_TSOA algo = new LE_TSOA(model, layer, 10);
+        LE_TSOA algo = new LE_TSOA(model, layer, 15);
         algo.run();
         return algo;
     }

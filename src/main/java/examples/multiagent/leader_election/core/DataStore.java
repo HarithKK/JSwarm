@@ -3,12 +3,11 @@ package examples.multiagent.leader_election.core;
 import examples.multiagent.leader_election.Main;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
-import org.apache.commons.math3.util.Pair;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.data.MongoClient;
 
-import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,10 +21,23 @@ public class DataStore {
         this.time = time;
     }
 
+    public void updateTSOAHistory(Document history) {
+        this.tsoaHistory = history;
+    }
+
+    public double getMemory() {
+        return memory/1024.0;
+    }
+
+    public void setMemory(Main m) {
+        this.memory = Math.abs(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+        System.out.println("Memory: "+ getMemory());
+    }
+
     class NodeData{
         public double nodalEnergy;
         public double betweennessCentrality;
-        public double x_traj, y_traj;
+        public double x_traj, y_traj, f1, f2;
         public RealVector velocity;
         public int rank;
 
@@ -33,20 +45,28 @@ public class DataStore {
 
     }
 
-    List<Double> controlEnergy = new ArrayList<>();
+    List<Double> comEnergy = new ArrayList<>();
     List<Double> trackingError = new ArrayList<>();
 
     List<Integer> currentLeader = new ArrayList<>();
     List<RealMatrix> Ahistory = new ArrayList<>();
 
     List<Double> minEigenValue = new ArrayList<>();
+
+    List<Double> controlEnergy = new ArrayList<>();
     Map<Integer, List<NodeData>> nodeData = new HashMap<>();
 
+    Document tsoaHistory = null;
+
     private long time;
+    private double memory;
     public void registerNode(AbsAgent agent){
         nodeData.put(agent.getIndex(), new ArrayList<>());
     }
 
+    public void updateComEnergy(double data){
+        this.comEnergy.add(data);
+    }
     public void updateControlEnergy(double data){
         this.controlEnergy.add(data);
     }
@@ -95,10 +115,11 @@ public class DataStore {
     }
 
     public void uploadToMongo(String name, int testId, Main m, String leaderElectionAlgorithm){
+        String collection = "results-11";
         MongoClient mongoClient = new MongoClient("leader-election");
 
         Document doc = new Document();
-        doc.append("desc", "Test-112");
+        doc.append("desc", "Test- Change the OF");
         doc.append("test", name);
         doc.append("test-id", testId);
         doc.append("leader-election-algorithm", leaderElectionAlgorithm);
@@ -106,48 +127,49 @@ public class DataStore {
         doc.append("np",m.partialLinks);
         doc.append("agentsCount",m.agentsCount);
         doc.append("angularVelocity",m.angularVelocity);
+
+
         doc.append("r",m.r);
         doc.append("safeRage",m.safeRage);
         doc.append("kReject",m.kReject);
         doc.append("kAttract",m.kAttract);
         doc.append("exe_time",getTime());
+        doc.append("exe_memory",getMemory());
         doc.append("walk_type",m.type.name());
         doc.append("pareto_front",m.pf.stream().map(d -> new Document().append("x", d.getX()).append("y", d.getY())).collect(Collectors.toList()));
-
-//        doc.append("K0",m.model.K0);
-//        doc.append("K1",m.model.K1);
-//        doc.append("K2",m.model.K2);
-//        doc.append("KR",m.model.KR);
-//        doc.append("KC",m.model.KC);
-//        doc.append("KD",m.model.KD);
-//        doc.append("A",toDocument(Ahistory));
+        if(tsoaHistory != null){
+            doc.append("tsoa_history",tsoaHistory);
+        }
         doc.append("controlEnergy", controlEnergy);
+        doc.append("maxComEnergy", comEnergy);
         doc.append("trackingError", trackingError);
         doc.append("currentLeader", currentLeader);
         doc.append("minEigenValue", minEigenValue);
 
-        Document dm = new Document();
-        for(int i: nodeData.keySet()){
-            List<NodeData> ns = nodeData.get(i);
-            List<Document> nsn = new ArrayList<>();
-            for(NodeData n: ns){
-                Document ds = new Document()
-                        .append("betweennessCentrality", n.betweennessCentrality)
-                        .append("nodalEnergy",n.nodalEnergy)
-                        .append("rank",n.rank)
-                        .append("index",n.index)
-                        .append("x_traj",n.x_traj)
-                        .append("y_traj",n.y_traj)
-                        .append("velocity.x",n.velocity.getEntry(0))
-                        .append("velocity.y",n.velocity.getEntry(1));
+        ObjectId id = mongoClient.insertDocument(doc, collection);
 
-                nsn.add(ds);
+        if(id != null){
+            Document dm = new Document();
+            for(int i: nodeData.keySet()){
+                List<NodeData> ns = nodeData.get(i);
+                List<Document> nsn = new ArrayList<>();
+                for(NodeData n: ns){
+                    Document ds = new Document()
+                            .append("betweennessCentrality", n.betweennessCentrality)
+                            .append("nodalEnergy",n.nodalEnergy)
+                            .append("rank",n.rank)
+                            .append("index",n.index)
+                            .append("x_traj",n.x_traj)
+                            .append("y_traj",n.y_traj)
+                            .append("velocity.x",n.velocity.getEntry(0))
+                            .append("velocity.y",n.velocity.getEntry(1));
+
+                    nsn.add(ds);
+                }
+                dm.put(String.valueOf(i), nsn);
             }
-            dm.put(String.valueOf(i), nsn);
+            mongoClient.updateInserDocument(id, dm, "nodes",collection);
         }
-
-        doc.put("nodes", dm);
-        mongoClient.updateDocument(doc, "results-2");
     }
 
 }

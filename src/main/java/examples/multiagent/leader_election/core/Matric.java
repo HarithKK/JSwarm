@@ -15,6 +15,10 @@ import java.util.Map;
 
 public class Matric {
 
+    public static double controlEnergy(List<AbsAgent> agent){
+        return agent.stream().map(Drone::toDrone).mapToDouble(d -> Math.pow(d.velocity.getMagnitude(),2)).sum();
+    }
+
     public static double MaxControlEnergy(Drone d, double energy){
 
         if(d == null)

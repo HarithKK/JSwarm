@@ -4,8 +4,12 @@ import com.mongodb.*;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 public class MongoClient {
     String connectionString;
@@ -44,7 +48,7 @@ public class MongoClient {
         }
     }
 
-    public void updateDocument(Document document, String collectionName){
+    public ObjectId insertDocument(Document document, String collectionName){
 
         try (com.mongodb.client.MongoClient mongoClient = MongoClients.create(settings)) {
             MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -54,11 +58,32 @@ public class MongoClient {
 
                 InsertOneResult result = collection.insertOne(document);
                 System.out.println("Inserted document ids: " + result.getInsertedId());
+                return result.getInsertedId().asObjectId().getValue();
             } catch (MongoException me) {
                 System.err.println("Unable to insert due to an error: " + me);
             }finally {
                 mongoClient.close();
             }
         }
+        return null;
+    }
+
+    public ObjectId updateInserDocument(ObjectId objectId, Document document, String key, String collectionName){
+
+        try (com.mongodb.client.MongoClient mongoClient = MongoClients.create(settings)) {
+            MongoDatabase database = mongoClient.getDatabase(databaseName);
+            MongoCollection<Document> collection = database.getCollection(collectionName);
+
+            try {
+                UpdateResult ur = collection.updateOne(Filters.eq("_id", objectId), Updates.set(key, document));
+                System.out.println("Inserted update ids: " + objectId);
+                return objectId;
+            } catch (MongoException me) {
+                System.err.println("Unable to update due to an error: " + me);
+            }finally {
+                mongoClient.close();
+            }
+        }
+        return null;
     }
 }
