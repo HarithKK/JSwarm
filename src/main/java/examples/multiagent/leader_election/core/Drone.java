@@ -266,13 +266,13 @@ public class Drone extends Agent {
 
                 if(r < 0.3){
                     newTree.position = Randoms.getRandomVector(2, -2, 2);
-                    newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, getIndex(), getPosition()));
+                    newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, model.GA, getIndex(), getPosition()));
                     newTree.lambda = 1.0;
                 }else if(r < 0.6){
                     newTree.position = t.position.operate(Vector.OPERATOR.ADD,
                             Randoms.getRandomGaussianVector(2, -2, 2, 0,1)
                     );
-                    newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, getIndex(), getPosition()));
+                    newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, model.GA , getIndex(), getPosition()));
                     newTree.lambda = 1.0;
                 }else{
                     Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.position)
@@ -284,7 +284,7 @@ public class Drone extends Agent {
                             .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
                     Vector vx = v1.operate(Vector.OPERATOR.ADD, v2);
                     newTree.position = t.position.operate(Vector.OPERATOR.ADD, vx);
-                    newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, getIndex(), getPosition()));
+                    newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, model.GA, getIndex(), getPosition()));
                     newTree.lambda = 1.0;
                 }
                 trees.add(newTree);
@@ -325,7 +325,7 @@ public class Drone extends Agent {
     class Tree{
         int index =0;
         Vector position;
-        double f1 =0, f2 =0, w=0;
+        double f1 =0, f2 =0, w=0, closenessCentrality;
         double lambda =1.0;
         double distance =0;
         public Tree(Vector pos){

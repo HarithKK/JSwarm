@@ -112,7 +112,7 @@ public class Main {
                             if(ag.rank==maxLayer){
                                 continue;
                             }else{
-                                int mx = 4;// (int)(controlLinks*0.3);
+                                int mx = (int)(controlLinks*0.3);
                                 if(ag.rank==0){
                                     mx = controlLinks;
                                     // Randoms.rand((int)(controlLinks*0.3), controlLinks-1);

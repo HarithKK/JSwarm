@@ -115,7 +115,7 @@ public class DataStore {
     }
 
     public void uploadToMongo(String name, int testId, Main m, String leaderElectionAlgorithm){
-        String collection = "results-11";
+        String collection = "results-12";
         MongoClient mongoClient = new MongoClient("leader-election");
 
         Document doc = new Document();
@@ -135,6 +135,7 @@ public class DataStore {
         doc.append("kAttract",m.kAttract);
         doc.append("exe_time",getTime());
         doc.append("exe_memory",getMemory());
+        doc.append("avg_memory",getMemory()/m.agentsCount);
         doc.append("walk_type",m.type.name());
         doc.append("pareto_front",m.pf.stream().map(d -> new Document().append("x", d.getX()).append("y", d.getY())).collect(Collectors.toList()));
         if(tsoaHistory != null){

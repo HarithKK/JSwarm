@@ -12,8 +12,11 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.scoring.ClosenessCentrality;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 import org.usa.soc.comparators.ParetoComparator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
@@ -26,10 +29,7 @@ import org.usa.soc.util.StringFormatter;
 
 import javax.swing.plaf.nimbus.State;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Critarian {
@@ -67,15 +67,44 @@ public class Critarian {
                 return Double.compare(o1.f1, o2.f1);
             }
         });
+//        comparators.add(new Comparator<Drone.Tree>() {
+//            @Override
+//            public int compare(Drone.Tree o1, Drone.Tree o2) {
+//                return Double.compare(o1.f2, o2.f2);
+//            }
+//        });
         comparators.add(new Comparator<Drone.Tree>() {
             @Override
             public int compare(Drone.Tree o1, Drone.Tree o2) {
-                return Double.compare(o1.f2, o2.f2);
+                return Double.compare(o1.closenessCentrality, o2.closenessCentrality);
             }
         });
 
         for(Drone d: layer){
             trees.add(d.executeTSOA(10, model));
+        }
+
+        Graph<Drone.Tree, DefaultEdge> g = new SimpleWeightedGraph<>(DefaultEdge.class);
+
+        for(Drone.Tree tr: trees){
+            g.addVertex(tr);
+        }
+
+        for(Drone.Tree str: trees){
+            for(Drone.Tree dtr: trees){
+                if(str != dtr && model.GA.getEntry(str.index, dtr.index) == 1){
+                    if(g.containsVertex(str) && g.containsVertex(dtr) && g.getEdge(str, dtr) == null){
+                        DefaultEdge edge = g.addEdge(str,dtr);
+                        g.setEdgeWeight(edge, str.position.getClonedVector().getDistance(dtr.position));
+                    }
+                }
+            }
+        }
+
+        ClosenessCentrality<Drone.Tree, DefaultEdge> cc = new ClosenessCentrality(g);
+        Map<Drone.Tree, Double> ccScores = cc.getScores();
+        for(Drone.Tree tr: trees){
+            tr.closenessCentrality = ccScores.get(tr);
         }
 
         Collection<Drone.Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
@@ -321,6 +350,74 @@ public class Critarian {
         LE_TSOA algo = new LE_TSOA(model, layer, 15);
         algo.run();
         return algo;
+    }
+
+    public int TSOA_Swamping(StateSpaceModel model, List<Drone> layer) {
+        List<Drone.Tree> trees = new ArrayList<>();
+        ParetoComparator<Drone.Tree> comparators = new ParetoComparator<>();
+        comparators.add(new Comparator<Drone.Tree>() {
+            @Override
+            public int compare(Drone.Tree o1, Drone.Tree o2) {
+                return Double.compare(o1.f1, o2.f1);
+            }
+        });
+        comparators.add(new Comparator<Drone.Tree>() {
+            @Override
+            public int compare(Drone.Tree o1, Drone.Tree o2) {
+                return Double.compare(o1.closenessCentrality, o2.closenessCentrality);
+            }
+        });
+
+        // find the minimum
+
+        for(Drone d: layer){
+            trees.add(d.executeTSOA(10, model));
+        }
+
+        Graph<Drone.Tree, DefaultEdge> g = new SimpleWeightedGraph<>(DefaultEdge.class);
+
+        for(Drone.Tree tr: trees){
+            g.addVertex(tr);
+        }
+
+        for(Drone.Tree str: trees){
+            for(Drone.Tree dtr: trees){
+                if(str != dtr && model.GA.getEntry(str.index, dtr.index) == 1){
+                    if(g.containsVertex(str) && g.containsVertex(dtr) && g.getEdge(str, dtr) == null){
+                        DefaultEdge edge = g.addEdge(str,dtr);
+                        g.setEdgeWeight(edge, str.position.getClonedVector().getDistance(dtr.position));
+                    }
+                }
+            }
+        }
+
+        ClosenessCentrality<Drone.Tree, DefaultEdge> cc = new ClosenessCentrality(g);
+        Map<Drone.Tree, Double> ccScores = cc.getScores();
+        for(Drone.Tree tr: trees){
+            tr.closenessCentrality = ccScores.get(tr);
+        }
+
+        Collection<Drone.Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
+        int tx = po.iterator().next().index;
+        po.clear();
+        po = null;
+
+//        trees.sort(new Comparator<Drone.Tree>() {
+//            @Override
+//            public int compare(Drone.Tree o1, Drone.Tree o2) {
+//                if(o1.f1 < o2.f1){
+//                    return -1;
+//                }else{
+//                    return 1;
+//                }
+//            }
+//        });
+//        int tx = trees.get(0).index;
+
+        trees = null;
+        comparators = null;
+        System.gc();
+        return tx;
     }
 
 }
