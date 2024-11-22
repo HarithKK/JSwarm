@@ -552,6 +552,10 @@ public class Main {
     }
 
     public List<Drone> getLayer(int l){
+        return getLayer(algorithm, l);
+    }
+
+    public static List<Drone> getLayer(Algorithm algorithm, int l){
         List<Drone> layer = new ArrayList<>();
 
         for(AbsAgent a: algorithm.getFirstAgents()){
@@ -582,6 +586,10 @@ public class Main {
         model.GA = model.GA.scalarMultiply(0);
         model.GB = model.GB.scalarMultiply(0);
         formStateSpaceModel();
+    }
+
+    public void transferToUpperLayer(int index){
+
     }
 
     public void performLE(int index) {

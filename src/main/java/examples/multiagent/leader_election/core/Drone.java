@@ -322,8 +322,8 @@ public class Drone extends Agent {
         return t;
     }
 
-    class Tree{
-        int index =0;
+    public class Tree{
+        public int index =0;
         Vector position;
         double f1 =0, f2 =0, w=0, closenessCentrality;
         double lambda =1.0;
