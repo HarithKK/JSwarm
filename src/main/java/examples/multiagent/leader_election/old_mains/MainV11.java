@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election.old_mains;
 
+import examples.multiagent.leader_election.Main;
 import examples.multiagent.leader_election.core.Critarian;
 import examples.multiagent.leader_election.core.Drone;
 import examples.multiagent.leader_election.core.StateSpaceModel;
@@ -467,6 +468,7 @@ public class MainV11 {
                 m.performRandomOnlyForFirstLayer();
             }
         }));
+
         Executor.getInstance().registerChart(new ProgressiveChart(300, 300, "Energy", "E", "Step")
                 .subscribe(new ChartSeries("Avg_Comm_E", 0))
                 .subscribe(new ChartSeries("Avg_Control_E", 0).setColor(Color.RED))

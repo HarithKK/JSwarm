@@ -2,6 +2,7 @@ package examples.multiagent.leader_election.core;
 
 import examples.multiagent.leader_election.GHS_NASA_JPL.GHS;
 import examples.multiagent.leader_election.GHS_NASA_JPL.Node;
+import examples.multiagent.leader_election.Main;
 import examples.multiagent.leader_election.testcases.OF;
 import examples.si.algo.also.ALSO;
 import examples.si.algo.cso.CSO;
@@ -21,6 +22,7 @@ import org.usa.soc.comparators.ParetoComparator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.ParetoUtils;
@@ -53,12 +55,33 @@ public class Critarian {
         this.iterationCount = iterationCount;
     }
 
+    public enum Critarians {
+        RANDOM
+    }
+
+    public enum SICritatianType {
+        TSOA, CSO, ALSO, MFA, PSO
+    }
+
+    public int selectCritarian(Critarians ctype, List<Drone> layer){
+        switch (ctype){
+            case RANDOM:
+                return random(0, layer.size()-1);
+        }
+        return 0;
+    }
+
+    public int random(int i, int j){
+        int x = Randoms.rand(i, j);
+        System.out.println("Random:"+ x);
+        return x;
+    }
     public int random(List<AbsAgent> firstAgents) {
         List<Integer>ty = firstAgents.stream().map(d->d.getIndex()).collect(Collectors.toList());
         return ty.get(Randoms.rand(0, ty.size()-1));
     }
 
-    public int TSOA_IND(StateSpaceModel model, List<Drone> layer) {
+    public Drone.Tree TSOA(StateSpaceModel model, List<Drone> layer) {
         List<Drone.Tree> trees = new ArrayList<>();
         ParetoComparator<Drone.Tree> comparators = new ParetoComparator<>();
         comparators.add(new Comparator<Drone.Tree>() {
@@ -67,12 +90,6 @@ public class Critarian {
                 return Double.compare(o1.f1, o2.f1);
             }
         });
-//        comparators.add(new Comparator<Drone.Tree>() {
-//            @Override
-//            public int compare(Drone.Tree o1, Drone.Tree o2) {
-//                return Double.compare(o1.f2, o2.f2);
-//            }
-//        });
         comparators.add(new Comparator<Drone.Tree>() {
             @Override
             public int compare(Drone.Tree o1, Drone.Tree o2) {
@@ -108,48 +125,13 @@ public class Critarian {
         }
 
         Collection<Drone.Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
-        int tx = po.iterator().next().index;
+        Drone.Tree tx = po.iterator().next();
         po.clear();
         po = null;
-
-//        trees.sort(new Comparator<Drone.Tree>() {
-//            @Override
-//            public int compare(Drone.Tree o1, Drone.Tree o2) {
-//                if(o1.f1 < o2.f1){
-//                    return -1;
-//                }else{
-//                    return 1;
-//                }
-//            }
-//        });
-//        int tx = trees.get(0).index;
-
         trees = null;
         comparators = null;
         System.gc();
         return tx;
-    }
-
-    public enum Critarians {
-        RANDOM
-    }
-
-    public enum SICritatianType {
-        TSOA, CSO, ALSO, MFA, PSO
-    }
-
-    public int selectCritarian(Critarians ctype, List<Drone> layer){
-        switch (ctype){
-            case RANDOM:
-                return random(0, layer.size()-1);
-        }
-        return 0;
-    }
-
-    public int random(int i, int j){
-        int x = Randoms.rand(i, j);
-        System.out.println("Random:"+ x);
-        return x;
     }
 
     private SIAlgorithm getSIAlgorithm(ObjectiveFunction objectiveFunction, SICritatianType critatianType){
@@ -338,86 +320,6 @@ public class Critarian {
         Node m = findMinJ(ghs.getGraph(ghs.findMST()));
 
         return layer.stream().filter(d -> d.getIndex() == m.index).findFirst().get();
-    }
-
-    public int TSOA(StateSpaceModel model, List<Drone> layer){
-        LE_TSOA algo = new LE_TSOA(model, layer, 10);
-        algo.run();
-        return algo.getBestIndex();
-    }
-
-    public LE_TSOA TSOA_WPF(StateSpaceModel model, List<Drone> layer){
-        LE_TSOA algo = new LE_TSOA(model, layer, 15);
-        algo.run();
-        return algo;
-    }
-
-    public int TSOA_Swamping(StateSpaceModel model, List<Drone> layer) {
-        List<Drone.Tree> trees = new ArrayList<>();
-        ParetoComparator<Drone.Tree> comparators = new ParetoComparator<>();
-        comparators.add(new Comparator<Drone.Tree>() {
-            @Override
-            public int compare(Drone.Tree o1, Drone.Tree o2) {
-                return Double.compare(o1.f1, o2.f1);
-            }
-        });
-        comparators.add(new Comparator<Drone.Tree>() {
-            @Override
-            public int compare(Drone.Tree o1, Drone.Tree o2) {
-                return Double.compare(o1.closenessCentrality, o2.closenessCentrality);
-            }
-        });
-
-        // find the minimum
-
-        for(Drone d: layer){
-            trees.add(d.executeTSOA(10, model));
-        }
-
-        Graph<Drone.Tree, DefaultEdge> g = new SimpleWeightedGraph<>(DefaultEdge.class);
-
-        for(Drone.Tree tr: trees){
-            g.addVertex(tr);
-        }
-
-        for(Drone.Tree str: trees){
-            for(Drone.Tree dtr: trees){
-                if(str != dtr && model.GA.getEntry(str.index, dtr.index) == 1){
-                    if(g.containsVertex(str) && g.containsVertex(dtr) && g.getEdge(str, dtr) == null){
-                        DefaultEdge edge = g.addEdge(str,dtr);
-                        g.setEdgeWeight(edge, str.position.getClonedVector().getDistance(dtr.position));
-                    }
-                }
-            }
-        }
-
-        ClosenessCentrality<Drone.Tree, DefaultEdge> cc = new ClosenessCentrality(g);
-        Map<Drone.Tree, Double> ccScores = cc.getScores();
-        for(Drone.Tree tr: trees){
-            tr.closenessCentrality = ccScores.get(tr);
-        }
-
-        Collection<Drone.Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
-        int tx = po.iterator().next().index;
-        po.clear();
-        po = null;
-
-//        trees.sort(new Comparator<Drone.Tree>() {
-//            @Override
-//            public int compare(Drone.Tree o1, Drone.Tree o2) {
-//                if(o1.f1 < o2.f1){
-//                    return -1;
-//                }else{
-//                    return 1;
-//                }
-//            }
-//        });
-//        int tx = trees.get(0).index;
-
-        trees = null;
-        comparators = null;
-        System.gc();
-        return tx;
     }
 
 }

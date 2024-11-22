@@ -47,7 +47,7 @@ public class TestCase1 {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Executor.getInstance().getChartView().getView2D().pauseExecution();
-                int index = new Critarian().TSOA(m.model, m.getLayer(1));
+                int index = new Critarian().TSOA(m.model, m.getLayer(1)).index;
                 m.performLE(index);
                 Executor.getInstance().getChartView().getView2D().resumeExecution();
             }
