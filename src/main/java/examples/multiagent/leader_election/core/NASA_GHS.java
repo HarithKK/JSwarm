@@ -1,6 +1,6 @@
-package examples.multiagent.leader_election.GHS_NASA_JPL;
+package examples.multiagent.leader_election.core;
 
-import examples.multiagent.leader_election.core.Drone;
+import examples.multiagent.leader_election.core.data_structures.Node;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
@@ -8,18 +8,15 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.usa.soc.util.Randoms;
-import org.usa.soc.util.StringFormatter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class GHS {
+public class NASA_GHS {
 
     Graph<Node, DefaultEdge> graph = new SimpleWeightedGraph<>(DefaultEdge.class);
 
-    public GHS(List<Drone> agents, RealMatrix A){
+    public NASA_GHS(List<Drone> agents, RealMatrix A){
 
         int w0 = 0;
         for(Drone d: agents){

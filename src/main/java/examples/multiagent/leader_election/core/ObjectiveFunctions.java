@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election.core;
 
+import examples.multiagent.leader_election.core.data_structures.Tree;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
@@ -7,7 +8,7 @@ import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Commons;
 
 public class ObjectiveFunctions {
-    public static Pair<Double, Double> f(Drone.Tree t, RealMatrix gc, int index, Vector position){
+    public static Pair<Double, Double> f(Tree t, RealMatrix gc, int index, Vector position){
         try{
             RealMatrix xf = t.position.getClonedVector().toRealMatrix();
 
@@ -24,7 +25,7 @@ public class ObjectiveFunctions {
         }
     }
 
-    public static Pair<Double, Double> f(Drone.Tree t, RealMatrix gc, RealMatrix A, int index, Vector position){
+    public static Pair<Double, Double> f(Tree t, RealMatrix gc, RealMatrix A, int index, Vector position){
         try{
             RealMatrix x = position.toRealMatrix().scalarMultiply(A.getEntry(t.index,t.index));
             RealMatrix xf = t.position.getClonedVector().toRealMatrix().subtract(x);

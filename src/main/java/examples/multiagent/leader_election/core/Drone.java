@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election.core;
 
+import examples.multiagent.leader_election.core.data_structures.*;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
@@ -7,7 +8,6 @@ import org.usa.soc.comparators.ParetoComparator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
-import org.usa.soc.util.Commons;
 import org.usa.soc.util.HomogeneousTransformer;
 import org.usa.soc.util.ParetoUtils;
 import org.usa.soc.util.Randoms;
@@ -28,10 +28,6 @@ public class Drone extends Agent {
 
     Drone votedFor = null;
 
-    private long getElectionTimeOut(){
-        return (long) Randoms.rand(1000,3000);
-    }
-
     public int rank = -1;
 
     public Vector velocity = new Vector(2);
@@ -43,6 +39,10 @@ public class Drone extends Agent {
 
     public void moveUpper() {
         this.rank -=1;
+    }
+
+    private long getElectionTimeOut(){
+        return (long) Randoms.rand(1000,3000);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Drone extends Agent {
     private int getLogTerm() {
         if(log.isEmpty())
             return 0;
-        return log.get(log.size()-1).term;
+        return log.get(log.size()-1).getTerm();
     }
 
     private int getLogIndex() {
@@ -196,6 +196,13 @@ public class Drone extends Agent {
             this.getConncetions().remove(a.get());
         }
     }
+
+    /**
+     * TSOA
+     * @param count
+     * @param model
+     * @return
+     */
 
     public Tree executeTSOA(int count, StateSpaceModel model){
 
@@ -317,37 +324,7 @@ public class Drone extends Agent {
         t.index = getIndex();
         trees = null;
         gbest = null;
-        z = null;
         System.gc();
         return t;
-    }
-
-    public class Tree{
-        public int index =0;
-        Vector position;
-        double f1 =0, f2 =0, w=0, closenessCentrality;
-        double lambda =1.0;
-        double distance =0;
-        public Tree(Vector pos){
-            this.position =pos;
-        }
-
-        public double getCalculatedDistance(Vector predicted) {
-            this.distance = this.position.operate(Vector.OPERATOR.SUB, predicted).getMagnitude();
-            return this.distance;
-        }
-
-        public void updateLambda(double p, double totalLabmda, double totalDistance) {
-            lambda = (Math.pow(this.distance, -p) * this.w ) / ((totalDistance)* totalLabmda);
-        }
-
-        public void updateWeight(double totalFitnessValue) {
-            w = f1 / totalFitnessValue;
-        }
-
-        public void setFitnessValues(Pair<Double, Double> f) {
-            f1 = f.getFirst();
-            f2 = f.getSecond();
-        }
     }
 }

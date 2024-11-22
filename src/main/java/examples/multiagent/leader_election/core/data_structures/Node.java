@@ -1,4 +1,4 @@
-package examples.multiagent.leader_election.GHS_NASA_JPL;
+package examples.multiagent.leader_election.core.data_structures;
 
 public class Node {
 

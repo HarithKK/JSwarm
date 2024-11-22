@@ -2,6 +2,7 @@ package LF;
 
 import examples.multiagent.leader_election.Main;
 import examples.multiagent.leader_election.core.*;
+import examples.multiagent.leader_election.core.data_structures.WalkType;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.AfterAll;
 import org.usa.soc.core.ds.Margins;

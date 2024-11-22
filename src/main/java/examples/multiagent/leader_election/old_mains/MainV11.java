@@ -1,10 +1,9 @@
 package examples.multiagent.leader_election.old_mains;
 
-import examples.multiagent.leader_election.Main;
 import examples.multiagent.leader_election.core.Critarian;
 import examples.multiagent.leader_election.core.Drone;
-import examples.multiagent.leader_election.core.StateSpaceModel;
-import examples.multiagent.leader_election.core.WalkType;
+import examples.multiagent.leader_election.core.data_structures.StateSpaceModel;
+import examples.multiagent.leader_election.core.data_structures.WalkType;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;

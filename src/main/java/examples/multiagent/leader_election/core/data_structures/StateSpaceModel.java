@@ -1,4 +1,4 @@
-package examples.multiagent.leader_election.core;
+package examples.multiagent.leader_election.core.data_structures;
 
 import org.apache.commons.math3.analysis.UnivariateMatrixFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;

@@ -1,6 +1,6 @@
 package org.usa.soc.util;
 
-import examples.multiagent.leader_election.GHS_NASA_JPL.Node;
+import examples.multiagent.leader_election.core.data_structures.Node;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;

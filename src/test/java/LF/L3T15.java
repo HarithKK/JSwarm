@@ -1,7 +1,7 @@
 package LF;
 
 import examples.multiagent.leader_election.Main;
-import examples.multiagent.leader_election.core.WalkType;
+import examples.multiagent.leader_election.core.data_structures.WalkType;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInstance;

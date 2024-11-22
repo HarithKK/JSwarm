@@ -1,7 +1,7 @@
 package examples.multiagent.leader_election.old_mains;
 
 import examples.multiagent.leader_election.core.Drone;
-import examples.multiagent.leader_election.core.StateSpaceModel;
+import examples.multiagent.leader_election.core.data_structures.StateSpaceModel;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Margins;
 import org.usa.soc.core.ds.Vector;
