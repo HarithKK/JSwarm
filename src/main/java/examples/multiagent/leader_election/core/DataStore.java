@@ -116,7 +116,7 @@ public class DataStore {
 
     public void uploadToMongo(String name, int testId, Main m, String leaderElectionAlgorithm){
         String collection = "results-12";
-        MongoClient mongoClient = new MongoClient("leader-election");
+        MongoClient mongoClient = new MongoClient("127.0.0.1","27017","leader-election");
 
         Document doc = new Document();
         doc.append("desc", "Test- Change the OF");
