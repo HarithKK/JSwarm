@@ -1,15 +1,14 @@
 package examples.multiagent.leader_election.core;
 
+import examples.multiagent.leader_election.core.comparators.F1Comparator;
 import examples.multiagent.leader_election.core.data_structures.*;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
-import org.usa.soc.comparators.ParetoComparator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.ds.Vector;
 import org.usa.soc.multiagent.Agent;
 import org.usa.soc.util.HomogeneousTransformer;
-import org.usa.soc.util.ParetoUtils;
 import org.usa.soc.util.Randoms;
 
 import java.util.*;
@@ -204,38 +203,18 @@ public class Drone extends Agent {
      * @return
      */
 
-    public Tree executeTSOA(int count, StateSpaceModel model){
-
-        try {
-            Thread.sleep(Randoms.rand(30,100));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        RealMatrix gc = model.calcGcStep(model.getNN(), 1);
-        ParetoComparator<Tree> comparators = new ParetoComparator<>();
-        comparators.add(new Comparator<Tree>() {
-            @Override
-            public int compare(Tree o1, Tree o2) {
-                return Double.compare(o1.f1, o2.f1);
-            }
-        });
-        comparators.add(new Comparator<Tree>() {
-            @Override
-            public int compare(Tree o1, Tree o2) {
-                return Double.compare(o1.f2, o2.f2);
-            }
-        });
-
-        Vector gbest = new Vector(2);
-        Vector z = new Vector(2);
-
-        List<Tree> trees = new ArrayList<>();
-        Tree tt1 = new Tree(this.getPosition().getClonedVector());
-        tt1.setFitnessValues(ObjectiveFunctions.f(tt1,gc, getIndex(), getPosition()));
-        trees.add(tt1);
+    public TSOAResponse executeTSOA(int count, StateSpaceModel model){
 
         final int deligator = 7;
         final int seedsCount = 10;
+
+        Utils.addTransactionProcessingWeight();
+
+        RealMatrix gc = model.calcGcStep(model.getNN(), 1);
+        Vector gbest = new Vector(2);
+        Tree zTree = new Tree(new Vector(2));
+
+        List<Tree> trees = Arrays.asList(new Tree(this.getPosition().getClonedVector()).setFitnessValues(gc, this));
 
         for(int step=0; step<count; step++){
 
@@ -246,7 +225,7 @@ public class Drone extends Agent {
             for(int i =0; i <  trees.size(); i++){
                 Tree t = trees.get(i);
                 totalLabmda += t.lambda;
-                totalDistanceWithP += Math.pow(t.getCalculatedDistance(z), -1);
+                totalDistanceWithP += Math.pow(t.getCalculatedDistance(zTree.position.getClonedVector()), -1);
                 totalFitnessValue += t.f1;
             }
 
@@ -254,7 +233,7 @@ public class Drone extends Agent {
 
             for(int i=0; i<zSize ; i++){
                 Tree t = trees.get(i);
-                z = z.operate(Vector.OPERATOR.ADD, t.position.operate(Vector.OPERATOR.MULP, t.lambda));
+                zTree.position.setVector(zTree.position.operate(Vector.OPERATOR.ADD, t.position.operate(Vector.OPERATOR.MULP, t.lambda)));
                 t.updateWeight(totalFitnessValue);
                 t.updateLambda(-1, totalLabmda, totalDistanceWithP);
             }
@@ -262,7 +241,7 @@ public class Drone extends Agent {
             double minimumDistance = Double.MAX_VALUE;
             for(int i =0; i < trees.size(); i++){
                 Tree t = trees.get(i);
-                minimumDistance = Math.min(t.getCalculatedDistance(z), minimumDistance);
+                minimumDistance = Math.min(t.getCalculatedDistance(zTree.position.getClonedVector()), minimumDistance);
             }
 
             Tree t = trees.get(0);
@@ -282,7 +261,7 @@ public class Drone extends Agent {
                     newTree.setFitnessValues(ObjectiveFunctions.f(newTree,gc, model.GA , getIndex(), getPosition()));
                     newTree.lambda = 1.0;
                 }else{
-                    Vector v1 = z.getClonedVector().operate(Vector.OPERATOR.SUB, t.position)
+                    Vector v1 = zTree.position.getClonedVector().operate(Vector.OPERATOR.SUB, t.position)
                             .operate(Vector.OPERATOR.MULP, 2)
                             .operate(Vector.OPERATOR.MULP, Randoms.rand(0,1));
                     Vector v2 = gbest.getClonedVector()
@@ -297,34 +276,16 @@ public class Drone extends Agent {
                 trees.add(newTree);
             }
 
-            Collection<Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
-            trees = new ArrayList<>();
-            Iterator<Tree> itr = po.iterator();
-            while(itr.hasNext()) {
-                trees.add(itr.next());
-            }
-
-            trees.sort(new Comparator<Tree>() {
-                @Override
-                public int compare(Tree o1, Tree o2) {
-                    if(o1.f1 < o2.f1){
-                        return -1;
-                    }else{
-                        return 1;
-                    }
-                }
-            });
-            //Tree ty = trees.get(0);
+            trees.sort(new F1Comparator());
             int u = trees.size()/2 <= 0 ? 1 : trees.size()/2;
             trees = trees.subList(0, u);
-            //trees.add(ty);
         }
 
-        Tree t = trees.get(0);
-        t.index = getIndex();
+        zTree.setFitnessValues(gc, this);
+        Tree t = trees.get(0).setIndex(getIndex());
         trees = null;
         gbest = null;
         System.gc();
-        return t;
+        return new TSOAResponse(zTree, t);
     }
 }

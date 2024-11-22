@@ -5,11 +5,11 @@ import org.usa.soc.core.AbsAgent;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-public class ParetoComparator<AbsAgent> extends LinkedList<Comparator<AbsAgent>> implements Comparator<AbsAgent> {
+public class ParetoComparator<T> extends LinkedList<Comparator<T>> implements Comparator<T> {
 
-    public int compare(AbsAgent a, AbsAgent b) {
+    public int compare(T a, T b) {
         int reference = 0;
-        for (Comparator<AbsAgent> comparator : this) {
+        for (Comparator<T> comparator : this) {
             if (reference == 0) {
                 reference = (int) Math.signum(comparator.compare(a, b));
             } else {

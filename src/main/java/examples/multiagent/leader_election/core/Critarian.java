@@ -1,22 +1,22 @@
 package examples.multiagent.leader_election.core;
 
-import examples.multiagent.leader_election.core.data_structures.Node;
-import examples.multiagent.leader_election.core.data_structures.LogEntry;
-import examples.multiagent.leader_election.core.data_structures.RaftState;
-import examples.multiagent.leader_election.core.data_structures.StateSpaceModel;
-import examples.multiagent.leader_election.core.data_structures.Tree;
+import examples.multiagent.leader_election.core.comparators.ClosenessCentralityComparator;
+import examples.multiagent.leader_election.core.comparators.F1Comparator;
+import examples.multiagent.leader_election.core.data_structures.*;
 import examples.multiagent.leader_election.testcases.OF;
 import examples.si.algo.also.ALSO;
 import examples.si.algo.cso.CSO;
 import examples.si.algo.mfa.MFA;
 import examples.si.algo.pso.PSO;
 import examples.si.algo.tsoa.TSOA;
+import org.apache.commons.math3.linear.RealMatrix;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.scoring.ClosenessCentrality;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.usa.soc.comparators.ParetoComparator;
+import org.usa.soc.comparators.ParetoComparatorDecorator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
@@ -76,34 +76,41 @@ public class Critarian {
     }
 
     public Tree TSOA(StateSpaceModel model, List<Drone> layer) {
-        List<Tree> trees = new ArrayList<>();
-        ParetoComparator<Tree> comparators = new ParetoComparator<>();
-        comparators.add(new Comparator<Tree>() {
-            @Override
-            public int compare(Tree o1, Tree o2) {
-                return Double.compare(o1.f1, o2.f1);
-            }
-        });
-        comparators.add(new Comparator<Tree>() {
-            @Override
-            public int compare(Tree o1, Tree o2) {
-                return Double.compare(o1.closenessCentrality, o2.closenessCentrality);
-            }
-        });
 
+        List<TSOAResponse> tsoaResponses = new ArrayList<>();
         for(Drone d: layer){
-            trees.add(d.executeTSOA(10, model));
+            tsoaResponses.add(d.executeTSOA(10, model));
         }
 
-        Graph<Tree, DefaultEdge> g = new SimpleWeightedGraph<>(DefaultEdge.class);
+        ParetoComparator<Tree> comparators = new ParetoComparatorDecorator<Tree>()
+                .add(new F1Comparator())
+                .add(new ClosenessCentralityComparator())
+                .build();
 
-        for(Tree tr: trees){
-            g.addVertex(tr);
+        List<Tree> updatedTreeList = calculateTrueTreeCentralises(model.GA, tsoaResponses);
+
+        Collection<Tree> po = ParetoUtils.getMinimalFrontierOf(updatedTreeList, comparators);
+        Tree tx = po.iterator().next();
+        po.clear();
+        po = null;
+        updatedTreeList = null;
+        comparators = null;
+        System.gc();
+        return tx;
+    }
+
+    private List<Tree> calculateTrueTreeCentralises(RealMatrix GA, List<TSOAResponse> responses){
+
+        List<Tree> trees= new LinkedList<>();
+        Graph<Tree, DefaultEdge> g = new SimpleWeightedGraph<>(DefaultEdge.class);
+        for(TSOAResponse tr: responses){
+            g.addVertex(tr.current);
+            trees.add(tr.current);
         }
 
         for(Tree str: trees){
             for(Tree dtr: trees){
-                if(str != dtr && model.GA.getEntry(str.index, dtr.index) == 1){
+                if(str != dtr && GA.getEntry(str.index, dtr.index) == 1){
                     if(g.containsVertex(str) && g.containsVertex(dtr) && g.getEdge(str, dtr) == null){
                         DefaultEdge edge = g.addEdge(str,dtr);
                         g.setEdgeWeight(edge, str.position.getClonedVector().getDistance(dtr.position));
@@ -117,15 +124,7 @@ public class Critarian {
         for(Tree tr: trees){
             tr.closenessCentrality = ccScores.get(tr);
         }
-
-        Collection<Tree> po = ParetoUtils.getMinimalFrontierOf(trees, comparators);
-        Tree tx = po.iterator().next();
-        po.clear();
-        po = null;
-        trees = null;
-        comparators = null;
-        System.gc();
-        return tx;
+        return trees;
     }
 
     private SIAlgorithm getSIAlgorithm(ObjectiveFunction objectiveFunction, SICritatianType critatianType){
