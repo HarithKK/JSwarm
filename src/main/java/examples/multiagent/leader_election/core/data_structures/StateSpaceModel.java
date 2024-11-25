@@ -1,12 +1,16 @@
 package examples.multiagent.leader_election.core.data_structures;
 
+import examples.multiagent.leader_election.core.Drone;
 import org.apache.commons.math3.analysis.UnivariateMatrixFunction;
 import org.apache.commons.math3.analysis.integration.SimpsonIntegrator;
 import org.apache.commons.math3.analysis.integration.UnivariateIntegrator;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RRQRDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.usa.soc.core.AbsAgent;
 import org.usa.soc.util.Commons;
+
+import java.util.List;
 
 public class StateSpaceModel {
 
@@ -134,6 +138,38 @@ public class StateSpaceModel {
             GA.setEntry(index,i, val);
             GA.setEntry(i, index, val);
         }
+    }
+
+    public void formStateSpaceModel(List<AbsAgent> agents, int partialLinks) {
+        for(int i=0; i< agents.size(); i++){
+            for(int j=0; j< agents.size(); j++){
+                Drone ai = (Drone)agents.get(i);
+                Drone aj = (Drone)agents.get(j);
+
+                if(i == j){
+                    continue;
+                }
+
+                if(ai.rank == aj.rank){
+                    if(ai.nLayeredLinks < partialLinks && aj.nLayeredLinks < partialLinks){
+                        GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                        GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                        ai.nLayeredLinks++;
+                        aj.nLayeredLinks++;
+                    }
+                    continue;
+                }
+                if(ai.getConncetions().contains(aj)){
+                    GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
+                    GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                    if(ai.rank < aj.rank){
+                        GB.setEntry(ai.getIndex(), aj.getIndex(), -1);
+                        GB.setEntry(aj.getIndex(), ai.getIndex(), 1);
+                    }
+                }
+            }
+        }
+        derive();
     }
 
 }

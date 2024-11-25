@@ -5,7 +5,7 @@ public class Node {
     public int index;
 
     public int level = 0;
-    boolean inMST = false;
+    public boolean inMST = false;
 
     public double J;
 

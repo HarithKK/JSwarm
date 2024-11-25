@@ -1,5 +1,6 @@
 package examples.multiagent.leader_election;
 
+import examples.multiagent.leader_election.core.Critarian;
 import examples.multiagent.leader_election.core.Drone;
 import examples.multiagent.leader_election.core.data_structures.StateSpaceModel;
 import examples.multiagent.leader_election.core.data_structures.WalkType;
@@ -519,36 +520,8 @@ public class Main {
         }
     }
 
-    private void formStateSpaceModel() {
-        for(int i=0; i< agentsCount; i++){
-            for(int j=0; j< agentsCount; j++){
-                Drone ai = (Drone)algorithm.getFirstAgents().get(i);
-                Drone aj = (Drone)algorithm.getFirstAgents().get(j);
-
-                if(i == j){
-                    continue;
-                }
-
-                if(ai.rank == aj.rank){
-                    if(ai.nLayeredLinks < partialLinks && aj.nLayeredLinks < partialLinks){
-                        model.GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
-                        model.GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
-                        ai.nLayeredLinks++;
-                        aj.nLayeredLinks++;
-                    }
-                    continue;
-                }
-                if(ai.getConncetions().contains(aj)){
-                    model.GA.setEntry(ai.getIndex(), aj.getIndex(), 1);
-                    model.GA.setEntry(aj.getIndex(), ai.getIndex(), 1);
-                    if(ai.rank < aj.rank){
-                        model.GB.setEntry(ai.getIndex(), aj.getIndex(), -1);
-                        model.GB.setEntry(aj.getIndex(), ai.getIndex(), 1);
-                    }
-                }
-            }
-        }
-        model.derive();
+    public void formStateSpaceModel(){
+        model.formStateSpaceModel(algorithm.getFirstAgents(), partialLinks);
     }
 
     public List<Drone> getLayer(int l){
@@ -598,6 +571,14 @@ public class Main {
 
     public void performLE(int index, int expectedLayer) {
         electLeader(index, expectedLayer);
+    }
+
+    public void performLE(Drone d){
+        System.out.println("new Leader="+d.getIndex());
+        utmostLeader = d;
+        model.GA = model.GA.scalarMultiply(0);
+        model.GB = model.GB.scalarMultiply(0);
+        formStateSpaceModel();
     }
 
     public double getFreeMemory() {

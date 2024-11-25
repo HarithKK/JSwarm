@@ -115,7 +115,7 @@ public class DataStore {
     }
 
     public void uploadToMongo(String name, int testId, Main m, String leaderElectionAlgorithm){
-        String collection = "results-12";
+        String collection = "results-14-recursive-tsoa";
         MongoClient mongoClient = new MongoClient("127.0.0.1","27017","leader-election");
 
         Document doc = new Document();

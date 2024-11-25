@@ -130,7 +130,7 @@ public class Drone extends Agent {
         currentState = RaftState.LEADER;
     }
 
-    void updateCandidate(RealMatrix m, List<Drone> agents, int npLinks) throws InterruptedException {
+    void updateCandidate(RealMatrix m, List<Drone> agents, int npLinks){
         votedFor = this;
         for(Drone d: agents){
 
@@ -160,13 +160,13 @@ public class Drone extends Agent {
         }
     }
 
-    public Pair<Integer, Boolean> requestVoteRPC(int term, Drone candidate, int lastLogIndex, int lastLogTerm) throws InterruptedException {
+    public Pair<Integer, Boolean> requestVoteRPC(int term, Drone candidate, int lastLogIndex, int lastLogTerm){
         if(term < currentTerm){
             return new Pair<>(currentTerm, false);
         }else if(term > currentTerm){
             initFollower(term);
         }
-        Thread.sleep(Randoms.rand(500, 2000));
+        Utils.addTransactionProcessingWeight();
         if(votedFor == null || votedFor.equals(candidate)){
             if(getLogTerm() > lastLogTerm || getLogTerm() == lastLogTerm && getLogIndex() > lastLogIndex){
                 return new Pair<>(currentTerm, false);
@@ -196,6 +196,13 @@ public class Drone extends Agent {
         }
     }
 
+    public void removeConnection(Drone d) {
+        if(getConncetions().contains(d)){
+            this.getConncetions().remove(d);
+        }
+    }
+
+
     /**
      * TSOA
      * @param count
@@ -214,7 +221,8 @@ public class Drone extends Agent {
         Vector gbest = new Vector(2);
         Tree zTree = new Tree(new Vector(2));
 
-        List<Tree> trees = Arrays.asList(new Tree(this.getPosition().getClonedVector()).setFitnessValues(gc, this));
+        List<Tree> trees = new ArrayList<>();
+        trees.add(new Tree(this.getPosition().getClonedVector()).setFitnessValues(gc, this));
 
         for(int step=0; step<count; step++){
 
@@ -233,7 +241,7 @@ public class Drone extends Agent {
 
             for(int i=0; i<zSize ; i++){
                 Tree t = trees.get(i);
-                zTree.position.setVector(zTree.position.operate(Vector.OPERATOR.ADD, t.position.operate(Vector.OPERATOR.MULP, t.lambda)));
+                zTree.position.updateVector(t.position.operate(Vector.OPERATOR.MULP, t.lambda));
                 t.updateWeight(totalFitnessValue);
                 t.updateLambda(-1, totalLabmda, totalDistanceWithP);
             }
@@ -287,5 +295,11 @@ public class Drone extends Agent {
         gbest = null;
         System.gc();
         return new TSOAResponse(zTree, t);
+    }
+
+    @Override
+    public Drone clone() {
+        Drone clone = (Drone) super.clone();
+        return clone;
     }
 }

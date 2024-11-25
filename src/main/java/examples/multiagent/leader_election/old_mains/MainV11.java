@@ -2,6 +2,7 @@ package examples.multiagent.leader_election.old_mains;
 
 import examples.multiagent.leader_election.core.Critarian;
 import examples.multiagent.leader_election.core.Drone;
+import examples.multiagent.leader_election.core.Utils;
 import examples.multiagent.leader_election.core.data_structures.StateSpaceModel;
 import examples.multiagent.leader_election.core.data_structures.WalkType;
 import org.apache.commons.math3.linear.MatrixUtils;
@@ -380,6 +381,16 @@ public class MainV11 {
         formStateSpaceModel();
     }
 
+    public void performRecursiveLE() {
+
+        utmostLeader = new Critarian().recursiveTSOA(model, algorithm);
+
+        Executor.getInstance().getChartView().getView2D().redrawNetwork();
+        model.GA = model.GA.scalarMultiply(0);
+        model.GB = model.GB.scalarMultiply(0);
+        formStateSpaceModel();
+    }
+
     private void moveUp(Drone a){
         a.moveUpper();
         if(a.getConncetions().isEmpty())
@@ -454,17 +465,32 @@ public class MainV11 {
 
         Executor.getInstance().registerTable(new Table("Gc table", agentsCount, agentsCount));
         Executor.getInstance().registerTextBox(new TextField("Agents Count:"));
-        Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
+//        Executor.getInstance().registerTextButton(new Button("Remove Leader 0").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
+//            }
+//        }));
+//        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
+//                m.performRandomOnlyForFirstLayer();
+//            }
+//        }));
+
+        Executor.getInstance().registerTextButton(new Button("TSOA_Recursive").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
+                m.performRecursiveLE();
             }
         }));
-        Executor.getInstance().registerTextButton(new Button("Remove and Select Leader 0").addAction(new ActionListener() {
+
+        Executor.getInstance().registerTextButton(new Button("Draw Tree").addAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                m.removeAgent(m.algorithm.findAgentListIndex(m.utmostLeader.getIndex()));
-                m.performRandomOnlyForFirstLayer();
+                m.drawTreeModel();
             }
         }));
 
@@ -474,10 +500,10 @@ public class MainV11 {
                 .setLegend(true)
                 .setLegendPosition("S", false)
                 .setMaxLength(100));
+    }
 
-
-
-
+    private void drawTreeModel() {
+        Utils.drawModalTree(utmostLeader);
     }
 
 }

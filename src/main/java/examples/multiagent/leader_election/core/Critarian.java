@@ -9,7 +9,9 @@ import examples.si.algo.cso.CSO;
 import examples.si.algo.mfa.MFA;
 import examples.si.algo.pso.PSO;
 import examples.si.algo.tsoa.TSOA;
+import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.Pair;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.scoring.ClosenessCentrality;
 import org.jgrapht.graph.DefaultEdge;
@@ -20,6 +22,7 @@ import org.usa.soc.comparators.ParetoComparatorDecorator;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.StepAction;
 import org.usa.soc.core.ds.Vector;
+import org.usa.soc.multiagent.Algorithm;
 import org.usa.soc.si.ObjectiveFunction;
 import org.usa.soc.si.SIAlgorithm;
 import org.usa.soc.util.ParetoUtils;
@@ -97,6 +100,60 @@ public class Critarian {
         comparators = null;
         System.gc();
         return tx;
+    }
+
+    public Drone recursiveTSOA(StateSpaceModel model, Algorithm algorithm){
+        List<Drone> firstLayer = algorithm.getFirstAgents().stream().map(Drone::toDrone).filter(drone -> drone.rank == 1).collect(Collectors.toList());
+        RecursiveDTO response = recursiveTSOA(model, firstLayer, new RecursiveDTO());
+
+        Drone bestAgent = algorithm.getFirstAgents().stream().map(Drone::toDrone).filter(drone -> drone.getIndex() == response.bestAgent.getIndex()).findFirst().get();
+        Drone firstRankedAgent = algorithm.getFirstAgents().stream().map(Drone::toDrone).filter(drone -> drone.rank == 0).findFirst().get();
+
+        if(bestAgent != firstRankedAgent){
+            firstRankedAgent = Utils.swapDrones(algorithm.getFirstAgents(), firstRankedAgent, bestAgent).getFirst();
+        }
+
+        return firstRankedAgent;
+    }
+
+    private RecursiveDTO recursiveTSOA(StateSpaceModel model, List<Drone> affectedLowerLayerAgents, RecursiveDTO recursiveInput){
+
+        Utils.addTransactionProcessingWeight();
+        if(affectedLowerLayerAgents.isEmpty()){
+            return recursiveInput;
+        }
+
+        Tree selectedTree = TSOA(model, affectedLowerLayerAgents);
+        Drone selectedDrone = affectedLowerLayerAgents.stream().filter(drone -> drone.getIndex() == selectedTree.index).findFirst().get();
+        List<Drone> nonSelectedDrones = affectedLowerLayerAgents.stream().filter(drone -> drone.getIndex() != selectedTree.index).collect(Collectors.toList());
+        List<Drone> slaveDrones = selectedDrone.getConncetions().stream().map(Drone::toDrone).collect(Collectors.toList());
+
+        for(AbsAgent agent: selectedDrone.getConncetions()){
+            model.GA.setEntry(selectedDrone.getIndex(), agent.getIndex(), 0);
+            model.GB.setEntry(selectedDrone.getIndex(), agent.getIndex(), 0);
+        }
+        selectedDrone.setConncetions(nonSelectedDrones.stream().collect(Collectors.toSet()));
+        selectedDrone.rank -= 1;
+        for(AbsAgent agent: selectedDrone.getConncetions()){
+            model.GA.setEntry(selectedDrone.getIndex(), agent.getIndex(), 1);
+            model.GB.setEntry(selectedDrone.getIndex(), agent.getIndex(), 1);
+        }
+
+        if(recursiveInput.parentAgent != null){
+            recursiveInput.parentAgent.addConnection(selectedDrone);
+        }
+
+        if(recursiveInput.firstAgent == null){
+            recursiveInput.bestAgent = selectedDrone;
+            recursiveInput.firstAgent = selectedDrone;
+        }else{
+            if(selectedDrone.nodalEnergy < recursiveInput.bestAgent.nodalEnergy){
+                recursiveInput.bestAgent = selectedDrone;
+            }
+        }
+        recursiveInput.parentAgent = selectedDrone;
+
+        return recursiveTSOA(model, slaveDrones, recursiveInput);
     }
 
     private List<Tree> calculateTrueTreeCentralises(RealMatrix GA, List<TSOAResponse> responses){
@@ -266,23 +323,19 @@ public class Critarian {
 
         int candidateId =0;
         while(true){
-            try {
-                Thread.sleep(getRandomTimeOut());
+            Utils.addTransactionProcessingWeight();
 
-                Drone candidate = (Drone)agents.get(candidateId++);
-                candidate.initCandidate();
-                candidate.updateCandidate(model.GA, agents, npLinks);
+            Drone candidate = (Drone)agents.get(candidateId++);
+            candidate.initCandidate();
+            candidate.updateCandidate(model.GA, agents, npLinks);
 
-                System.out.println(candidate.getIndex() +": " +candidate.currentState.name()+", id="+candidateId);
-                if(candidate.currentState == RaftState.LEADER){
-                    return candidate;
-                }
+            System.out.println(candidate.getIndex() +": " +candidate.currentState.name()+", id="+candidateId);
+            if(candidate.currentState == RaftState.LEADER){
+                return candidate;
+            }
 
-                if(candidateId >= agents.size()){
-                    candidateId =0;
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if(candidateId >= agents.size()){
+                candidateId =0;
             }
         }
     }

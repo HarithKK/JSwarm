@@ -2,6 +2,7 @@ package LF;
 
 import examples.multiagent.leader_election.Main;
 import examples.multiagent.leader_election.core.*;
+import examples.multiagent.leader_election.core.data_structures.RecursiveDTO;
 import examples.multiagent.leader_election.core.data_structures.WalkType;
 import org.usa.soc.core.AbsAgent;
 import org.usa.soc.core.action.AfterAll;
@@ -294,7 +295,7 @@ public class Core {
         m.algorithm.run();
     }
 
-    public static void executeForwardTSOAInd(Main m, String testName, int testId, int leaderRemoveAt, int exitAt) throws Exception {
+    public static void executeForwardTSOA(Main m, String testName, int testId, int leaderRemoveAt, int exitAt) throws Exception {
 
         DataStore dataStore = new DataStore();
 
@@ -344,9 +345,11 @@ public class Core {
                     m.removeAgent(m.utmostLeader.getIndex());
                     long l = System.currentTimeMillis();
                     m.setFreeMemory();
-                    int index = new Critarian().TSOA(m.model, m.getLayer(1)).index;
+                    Drone d = new Critarian().recursiveTSOA(m.model, m.algorithm);
+                    //int index = new Critarian().TSOA(m.model, m.getLayer(1)).index;
                     dataStore.setTime(System.currentTimeMillis() - l);
-                    m.performLE(index, 0);
+                    //m.performLE(index, 0);
+                    m.performLE(d);
                     System.gc();
                     dataStore.setMemory(m);
                 }
