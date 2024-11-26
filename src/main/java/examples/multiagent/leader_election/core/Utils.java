@@ -2,6 +2,7 @@ package examples.multiagent.leader_election.core;
 
 import org.apache.commons.math3.util.Pair;
 import org.usa.soc.core.AbsAgent;
+import org.usa.soc.core.ds.Vector;
 import org.usa.soc.util.Randoms;
 
 import java.util.*;
@@ -120,5 +121,13 @@ public class Utils {
         for(AbsAgent a: agent.getConncetions()){
             drawModalTree((Drone)a);
         }
+    }
+
+    public static Vector calculateVirtualCenter(List<Drone> agents) {
+        Vector v = new Vector(2);
+        for(Drone d: agents){
+            v.updateVector(d.getPosition().getClonedVector());
+        }
+        return v.operate(Vector.OPERATOR.MULP, agents.size());
     }
 }

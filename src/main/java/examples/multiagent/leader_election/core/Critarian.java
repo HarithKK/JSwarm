@@ -9,6 +9,7 @@ import examples.si.algo.cso.CSO;
 import examples.si.algo.mfa.MFA;
 import examples.si.algo.pso.PSO;
 import examples.si.algo.tsoa.TSOA;
+import jdk.jshell.execution.Util;
 import org.apache.commons.math3.analysis.function.Abs;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
@@ -315,22 +316,26 @@ public class Critarian {
 
     public AbsAgent Raft(StateSpaceModel model, List<Drone> agents, int npLinks){
 
+        Vector center = Utils.calculateVirtualCenter(agents);
+
         // convert all agents as followers
         for(Drone dr: agents){
             dr.currentState = RaftState.FOLLOWER;
             dr.log.add(new LogEntry(1, -1, "start"));
+            dr.requestQualification(center);
         }
 
-        int candidateId =0;
         while(true){
             Utils.addTransactionProcessingWeight();
+            int candidateId =Randoms.rand(0, agents.size()-1);
 
-            Drone candidate = (Drone)agents.get(candidateId++);
+            Drone candidate = (Drone)agents.get(candidateId);
             candidate.initCandidate();
-            candidate.updateCandidate(model.GA, agents, npLinks);
+            candidate.updateCandidate(model.GA, agents, center);
 
-            System.out.println(candidate.getIndex() +": " +candidate.currentState.name()+", id="+candidateId);
+            System.out.println(+candidate.getIndex() +": " +candidate.currentState.name()+", id="+candidateId);
             if(candidate.currentState == RaftState.LEADER){
+                System.out.println("+++++   Leader=("+candidate.getIndex() +"): " +candidate.currentState.name()+", id="+candidateId);
                 return candidate;
             }
 

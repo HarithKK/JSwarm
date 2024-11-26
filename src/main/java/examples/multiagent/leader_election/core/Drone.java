@@ -2,6 +2,7 @@ package examples.multiagent.leader_election.core;
 
 import examples.multiagent.leader_election.core.comparators.F1Comparator;
 import examples.multiagent.leader_election.core.data_structures.*;
+import jdk.jshell.execution.Util;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Pair;
@@ -26,6 +27,8 @@ public class Drone extends Agent {
     List<LogEntry> log = new ArrayList<LogEntry>();
 
     Drone votedFor = null;
+
+    double Qdistance = 0;
 
     public int rank = -1;
 
@@ -108,7 +111,7 @@ public class Drone extends Agent {
 
     public void initCandidate() {
         currentState = RaftState.CANDIDATE;
-        currentTerm += 1;
+        currentTerm++;
         electionTimeDuration = getElectionTimeOut();
         startTime = System.currentTimeMillis();
     }
@@ -130,28 +133,30 @@ public class Drone extends Agent {
         currentState = RaftState.LEADER;
     }
 
-    void updateCandidate(RealMatrix m, List<Drone> agents, int npLinks){
+    void updateCandidate(RealMatrix m, List<Drone> agents, Vector center){
         votedFor = this;
+        int count =0;
         for(Drone d: agents){
 
             if(m.getEntry(this.getIndex(), d.getIndex()) == 0){
                 continue;
             }
+            count++;
             int lastLogIndex = getLogIndex();
             int lastLogTerm = getLogTerm();
-            Pair <Integer, Boolean> response = d.requestVoteRPC(currentTerm, this, lastLogIndex, lastLogTerm);
+            VoteRPCResponse response = d.requestVoteRPC(currentTerm, this, lastLogIndex, lastLogTerm, center);
 
-            if(response.getFirst() > currentTerm){
-                initFollower(response.getFirst());
+            if(response.currentTerm > currentTerm){
+                initFollower(response.currentTerm);
                 break;
             }
 
-            if(response.getSecond() == true){
+            if(response.isVoted == true && Qdistance > response.Q){
                 voteCount+=1;
             }
         }
 
-        if(voteCount > Math.ceil((npLinks+1)/2.0)){
+        if(voteCount > Math.ceil((count+1)/2.0)){
             initLeader();
         }else{
             initFollower(currentTerm);
@@ -160,22 +165,27 @@ public class Drone extends Agent {
         }
     }
 
-    public Pair<Integer, Boolean> requestVoteRPC(int term, Drone candidate, int lastLogIndex, int lastLogTerm){
+    public VoteRPCResponse requestVoteRPC(int term, Drone candidate, int lastLogIndex, int lastLogTerm, Vector center){
         if(term < currentTerm){
-            return new Pair<>(currentTerm, false);
+            return new VoteRPCResponse(currentTerm, false, Qdistance);
         }else if(term > currentTerm){
             initFollower(term);
         }
         Utils.addTransactionProcessingWeight();
         if(votedFor == null || votedFor.equals(candidate)){
             if(getLogTerm() > lastLogTerm || getLogTerm() == lastLogTerm && getLogIndex() > lastLogIndex){
-                return new Pair<>(currentTerm, false);
+                return new VoteRPCResponse(currentTerm, false, Qdistance);
             }else{
                 currentState = RaftState.CANDIDATE;
-                return new Pair<>(currentTerm, true);
+                return new VoteRPCResponse(currentTerm, true, Qdistance);
             }
         }
-        return new Pair<>(currentTerm, false);
+        return new VoteRPCResponse(currentTerm, false, Qdistance);
+    }
+
+    public void requestQualification(Vector center) {
+        Utils.addTransactionProcessingWeight();
+        Qdistance = 1 / Math.pow(this.position.getDistance(center),2);
     }
 
     /**
