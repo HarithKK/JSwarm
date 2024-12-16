@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite here if you use our SwarmX java platform to test your multi agent or swarm intelligence algorithms"
+authors:
+  - family-names: Warnakulasooriya
+    given-names: Kolitha
+    orcid: https://orcid.org/0000-0002-4619-7027
+title: "SwarmX"
+version: 2.0.0
+date-released: 2024-07-15
